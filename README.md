@@ -163,6 +163,21 @@ The radius summarisation (counts + per-category breakdown + nearest distance) is
 tested core; data acquisition is **Bring Your Own GeoDataFrame** so the library never depends
 on a live Overpass endpoint. Routing / isochrones stay out of scope (use OSMnx / pandana).
 
+## Geofencing / service areas (`[geo]`)
+
+```python
+zones = gb.to_canonical_geofencing(raw, system_id="lime")  # GeoDataFrame of operator polygons
+tagged = gb.zones_for_points(info, zones)                   # which zone each station sits in
+density = len(info) / gb.zone_area_km2(zones).sum()         # bikes per km² of *real* service area
+no_park = tagged[tagged["station_parking"] == False]        # stations in park-restricted zones
+```
+
+For free-floating / hybrid systems the real footprint is the operator's polygons, not a
+convex hull of stations. `to_canonical_geofencing` parses `geofencing_zones.json` (v2.x
+`ride_allowed` and v3.x `ride_start/ride_end_allowed` reconciled), `zones_for_points` is the
+point-in-zone spatial join, and `zone_area_km2` reprojects to an equal-area CRS so density is
+metric and latitude-comparable. The full per-vehicle-type `rules` list is preserved.
+
 ## Roadmap
 
 - **v0.1** — canonical model, catalogue discovery, cross-version normalisation,
@@ -175,6 +190,9 @@ on a live Overpass endpoint. Routing / isochrones stay out of scope (use OSMnx /
 - **v0.5** — `multimodal` (bikeshare ↔ transit feeders, BYOG GTFS).
 - **v0.6** — `osm` / surroundings: `features_within`, `station_surroundings`,
   `enrich_with_osm` (BYOG infrastructure enrichment within a radius).
+- **v0.7** — hardening (nullable dtypes, dockless-aware A7, antimeridian A5,
+  mass-conservation net flow) + `geofencing` (service-area polygons, point-in-zone
+  joins, equal-area density).
 
 ## How to cite
 

@@ -28,6 +28,15 @@ All notable changes are documented here ([Keep a Changelog](https://keepachangel
   **`pricing_plan_id`** (preserved, not parsed, for equity/pricing joins).
 
 ### Added
+- **Geofencing / service areas** (`geofencing`, extra `[geo]`):
+  `to_canonical_geofencing(raw, system_id=...)` parses `geofencing_zones.json` into a
+  canonical `GeoDataFrame` (one row per zone, shapely geometry in EPSG:4326; v2.x
+  `ride_allowed` and v3.x `ride_start/ride_end_allowed` reconciled; full per-vehicle-type
+  `rules` preserved). `zones_for_points` is the point-in-zone spatial join (which zone each
+  station/vehicle sits in), `zone_area_km2` reprojects to an equal-area CRS for metric,
+  latitude-comparable density, and `GBFSFeed.geofencing_zones()` fetches them live. Unlocks
+  sound spatial-density / equity analysis for free-floating & hybrid systems (the real
+  service area, not a station convex hull). New `GEOFENCING_COLUMNS` contract.
 - **Station surroundings / OSM** (`osm`, extra `[osm]`): `features_within(points, features,
   radius_m=300, category_col=...)` — the generic "what's nearby" primitive (counts within a
   radius + nearest distance + per-category `n_<cat>` breakdown, on `GeoKDTree`).

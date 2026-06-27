@@ -65,6 +65,22 @@ VEHICLE_STATUS_COLUMNS: list[str] = [
     "gbfs_version",
 ]
 
+#: Canonical geofencing-zone columns (``geofencing_zones.json``) — operator-defined
+#: service-area polygons. ``geometry`` holds a shapely (Multi)Polygon (EPSG:4326); the
+#: boolean/speed fields summarise the zone's *default* rule, with the full ``rules`` list
+#: preserved for per-vehicle-type detail. Requires the optional ``[geo]`` extra.
+GEOFENCING_COLUMNS: list[str] = [
+    "system_id",
+    "zone_id",
+    "name",
+    "ride_allowed",  # may a trip pass through / operate here (default rule)
+    "ride_through_allowed",
+    "maximum_speed_kph",
+    "station_parking",  # parking only at stations within this zone
+    "rules",  # full list of per-vehicle-type rule dicts (unparsed)
+    "geometry",
+]
+
 #: Station semantics recognised by the audit (drives A1/A3).
 STATION_TYPES: tuple[str, ...] = ("docked_bike", "free_floating", "carsharing")
 

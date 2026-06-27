@@ -40,6 +40,11 @@ from gbfs_toolkit.geo import (
     haversine_m,
     to_gdf,
 )
+from gbfs_toolkit.geofencing import (
+    to_canonical_geofencing,
+    zone_area_km2,
+    zones_for_points,
+)
 from gbfs_toolkit.models import AUDIT_FLAGS, RULES, SchemaError
 from gbfs_toolkit.multimodal import link_transit_stops
 from gbfs_toolkit.normalize import (
@@ -93,6 +98,10 @@ __all__ = [
     "station_surroundings",
     "enrich_with_osm",
     "fetch_osm_around",
+    # geofencing / service areas ([geo])
+    "to_canonical_geofencing",
+    "zones_for_points",
+    "zone_area_km2",
     # analysis & geo
     "station_state",
     "find_nearest_stations",

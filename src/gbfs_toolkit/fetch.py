@@ -39,6 +39,7 @@ _STATION_STATUS = ("station_status",)
 _VEHICLES = ("vehicle_status", "free_bike_status")  # v3, v2
 _VEHICLE_TYPES = ("vehicle_types",)
 _SYSTEM_INFO = ("system_information",)
+_GEOFENCING = ("geofencing_zones",)
 _AUDIT_COLS = ["system_id", "station_id", "audit_type", "flagged", "reason"]
 
 
@@ -243,6 +244,18 @@ class GBFSFeed:
     def vehicle_types(self) -> pd.DataFrame:
         """Canonical ``vehicle_types`` catalogue (form factor / propulsion / range)."""
         return to_canonical_vehicle_types(self._raw(_VEHICLE_TYPES), system_id=self.system_id)
+
+    def geofencing_zones(self) -> Any:
+        """Operator-defined service-area polygons as a ``GeoDataFrame`` (``[geo]`` extra).
+
+        Raises ``KeyError`` if the system publishes no ``geofencing_zones`` feed — check
+        :meth:`has` first. See :func:`~gbfs_toolkit.to_canonical_geofencing`.
+        """
+        from gbfs_toolkit.geofencing import to_canonical_geofencing
+
+        return to_canonical_geofencing(
+            self._raw(_GEOFENCING), system_id=self.system_id, gbfs_version=self.version
+        )
 
     def system_information(self) -> dict:
         """System metadata (name, **timezone**, language, operator), cached."""
