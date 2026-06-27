@@ -20,7 +20,10 @@ theme:
     - navigation.instant.progress
     - navigation.tracking
     - navigation.sections
+    - navigation.tabs
+    - navigation.tabs.sticky
     - navigation.top
+    - navigation.indexes
     - navigation.footer
     - toc.follow
     - search.suggest
@@ -127,7 +130,17 @@ markdown_extensions:
 
 nav:
   - Home: index.md
-  - Methodology: methodology.md
-  - Examples: examples.md
-  - API reference: api.md
-  - Changelog: changelog.md
+  - Getting started: getting-started.md
+  - Guides:
+      - Feature overview: guide.md
+      - Examples: examples.md
+  - Explanation:
+      - Methodology: methodology.md
+      - Glossary: glossary.md
+  - Reference:
+      - API reference: api.md
+      - Data model: data-model.md
+  - Project:
+      - Citing this work: citing.md
+      - Contributing: contributing.md
+      - Changelog: changelog.md

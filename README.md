@@ -90,6 +90,8 @@ JSON.
 `last_reported` and `fetched_at` are tz-aware **UTC** timestamps (`datetime64[ns, UTC]`) so
 feeds from different cities merge unambiguously.
 
+<!-- guide-start -->
+
 ## Daily ergonomics
 
 ```python
@@ -242,6 +244,8 @@ Built for scrapers that run for months: retries/backoff, conditional GETs (skip 
 snapshots), an offline catalogue cache, a `GBFSError` exception hierarchy, and provenance tools
 so a dataset is **citable and verifiable**. Missing data stays missing: `coverage_report`
 quantifies it rather than imputing.
+
+<!-- guide-end -->
 
 ## Examples
 

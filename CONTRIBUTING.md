@@ -15,7 +15,7 @@ ruff check . && ruff format --check .
 
 The library is deliberately bounded. In scope: ingesting/normalising GBFS, semantic & dynamic
 quality audit, longitudinal panels, descriptive statistics, geospatial joins. **Out of scope**
-(by design — see [`METHODOLOGY.md`](./METHODOLOGY.md)): routing/isochrones, OD/trip inference,
+(by design, see [`METHODOLOGY.md`](https://github.com/cycling-data-lab/gbfs-toolkit/blob/main/METHODOLOGY.md)): routing/isochrones, OD/trip inference,
 demand prediction or imputation, schedulers/daemons, and interactive visualisation. The library
 returns tidy `DataFrame`/`GeoDataFrame`; you bring the model and the map.
 
@@ -24,7 +24,7 @@ returns tidy `DataFrame`/`GeoDataFrame`; you bring the model and the map.
 - **Pure functions on canonical frames** (mirrored as `.gbfs` accessor methods). No hidden global
   state. Validate inputs with `require_columns` so a bad frame raises a clear `SchemaError`.
 - **Tz-aware UTC** timestamps and **nullable dtypes** everywhere; never silently impute.
-- Optional dependencies stay behind extras and lazy imports — the core is numpy/scipy/pandas only.
+- Optional dependencies stay behind extras and lazy imports, so the core is numpy/scipy/pandas only.
 - New behaviour needs a test; keep coverage ≥ 85% (CI enforces it). Run `ruff` before pushing.
 - Document any methodological assumption or threshold in `METHODOLOGY.md`.
 
