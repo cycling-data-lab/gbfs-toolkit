@@ -20,10 +20,12 @@ from typing import Any
 
 import pandas as pd
 
-from gbfs_toolkit.audit import audit_static
+from gbfs_toolkit.audit import audit_dynamic, audit_static
 from gbfs_toolkit.normalize import (
     to_canonical_station_info,
     to_canonical_station_status,
+    to_canonical_system_information,
+    to_canonical_vehicle_types,
     to_canonical_vehicles,
 )
 
@@ -35,6 +37,9 @@ JsonGetter = Callable[[str], dict]
 _STATION_INFO = ("station_information",)
 _STATION_STATUS = ("station_status",)
 _VEHICLES = ("vehicle_status", "free_bike_status")  # v3, v2
+_VEHICLE_TYPES = ("vehicle_types",)
+_SYSTEM_INFO = ("system_information",)
+_AUDIT_COLS = ["system_id", "station_id", "audit_type", "flagged", "reason"]
 
 
 def _get_json(url: str, *, timeout: int = 30) -> dict:
@@ -49,6 +54,18 @@ def _get_json(url: str, *, timeout: int = 30) -> dict:
     resp = requests.get(url, timeout=timeout, headers={"User-Agent": _USER_AGENT})
     resp.raise_for_status()
     return resp.json()
+
+
+def _utc_ts(value: Any) -> pd.Timestamp:
+    """Parse a GBFS top-level ``last_updated`` (unix or RFC3339) to a UTC Timestamp."""
+    if value is None:
+        return pd.NaT
+    if isinstance(value, (int, float)):
+        return pd.to_datetime(value, unit="s", utc=True)
+    try:
+        return pd.to_datetime(float(value), unit="s", utc=True)
+    except (TypeError, ValueError):
+        return pd.to_datetime(value, errors="coerce", utc=True)
 
 
 def parse_discovery(doc: dict, language: str | None = None) -> tuple[dict[str, str], str]:
@@ -101,6 +118,8 @@ class GBFSFeed:
         self._get_json: JsonGetter = get_json or (lambda url: _get_json(url, timeout=timeout))
         self._feeds: dict[str, str] | None = None
         self._version: str | None = None
+        self._doc: dict | None = None
+        self._sysinfo: dict | None = None
         self._raw_cache: dict[str, Any] = {}
 
     # -- constructors -------------------------------------------------------
@@ -130,7 +149,7 @@ class GBFSFeed:
     def language(self, value: str | None) -> None:
         if value != self._language:
             self._language = value
-            self._feeds = self._version = None
+            self._feeds = self._version = self._doc = None
             self._raw_cache.clear()
 
     @property
@@ -147,6 +166,26 @@ class GBFSFeed:
             self._discover()
         return self._version or "2.x"
 
+    @property
+    def ttl(self) -> int | None:
+        """Advertised refresh interval (seconds) from ``gbfs.json`` — feeds the staleness audit."""
+        if self._doc is None:
+            self._discover()
+        ttl = (self._doc or {}).get("ttl")
+        return int(ttl) if ttl is not None else None
+
+    @property
+    def last_updated(self) -> pd.Timestamp:
+        """When the discovery document was last updated (tz-aware UTC), or NaT."""
+        if self._doc is None:
+            self._discover()
+        return _utc_ts((self._doc or {}).get("last_updated"))
+
+    @property
+    def timezone(self) -> str | None:
+        """IANA timezone (e.g. ``"Europe/Paris"``) from ``system_information`` — for local time."""
+        return self.system_information().get("timezone")
+
     def has(self, *names: str) -> bool:
         """True if any of ``names`` is an available feed."""
         return any(n in self.feeds for n in names)
@@ -155,8 +194,8 @@ class GBFSFeed:
     def _discover(self) -> None:
         if self.gbfs_url is None:
             raise ValueError("no gbfs_url set; use GBFSFeed.from_url(...) or from_system_id(...)")
-        doc = self._get_json(self.gbfs_url)
-        self._feeds, self._version = parse_discovery(doc, self._language)
+        self._doc = self._get_json(self.gbfs_url)
+        self._feeds, self._version = parse_discovery(self._doc, self._language)
 
     def _raw(self, names: tuple[str, ...]) -> dict:
         feeds = self.feeds
@@ -186,21 +225,74 @@ class GBFSFeed:
             self._raw(_VEHICLES), system_id=self.system_id, gbfs_version=self.version
         )
 
+    def vehicle_types(self) -> pd.DataFrame:
+        """Canonical ``vehicle_types`` catalogue (form factor / propulsion / range)."""
+        return to_canonical_vehicle_types(self._raw(_VEHICLE_TYPES), system_id=self.system_id)
+
+    def system_information(self) -> dict:
+        """System metadata (name, **timezone**, language, operator), cached."""
+        if self._sysinfo is None:
+            self._sysinfo = to_canonical_system_information(
+                self._raw(_SYSTEM_INFO), system_id=self.system_id
+            )
+        return dict(self._sysinfo)
+
     def availability(self) -> pd.DataFrame:
         """**The daily one-liner**: live status joined with station info.
 
         Returns bikes/docks *and* name, coordinates, capacity and station type in a
-        single tidy frame — what you almost always actually want.
+        single tidy frame. Uses an **outer** join (operators routinely add/drop a
+        station from one endpoint mid-sync), with a ``presence`` indicator
+        (``both`` / ``status_only`` / ``info_only``) so orphaned rows are visible,
+        not silently dropped.
         """
         info = self.station_information()
         status = self.station_status()
-        return status.merge(
-            info.drop(columns=["system_id"]), on="station_id", how="left", suffixes=("", "_info")
+        merged = status.merge(
+            info.drop(columns=["system_id"]),
+            on="station_id",
+            how="outer",
+            suffixes=("", "_info"),
+            indicator="presence",
         )
+        merged["presence"] = (
+            merged["presence"]
+            .cat.rename_categories(
+                {"both": "both", "left_only": "status_only", "right_only": "info_only"}
+            )
+            .astype("string")
+        )
+        return merged
+
+    def to_local_time(
+        self, df: pd.DataFrame, columns: tuple[str, ...] = ("fetched_at",)
+    ) -> pd.DataFrame:
+        """Convert UTC timestamp columns to the system's local timezone (diurnal analysis)."""
+        tz = self.timezone
+        if not tz:
+            return df
+        out = df.copy()
+        for col in columns:
+            if col in out:
+                out[col] = pd.to_datetime(out[col], utc=True).dt.tz_convert(tz)
+        return out
 
     def audit(self) -> pd.DataFrame:
-        """Run the A1–A7 semantic audit on this feed's station inventory."""
-        return audit_static(self.station_information())
+        """Unified semantic audit: **static** (A1–A7) on the inventory **and** **dynamic**
+        (D1–D3) on live availability, stacked with an ``audit_type`` column.
+
+        Dynamic staleness uses the feed's advertised ``ttl``. Use
+        :func:`~gbfs_toolkit.audit.audit_static` / :func:`~gbfs_toolkit.audit.audit_dynamic`
+        directly if you need the per-rule boolean columns.
+        """
+        static = audit_static(self.station_information()).assign(audit_type="static")
+        parts = [static[_AUDIT_COLS]]
+        if self.has(*_STATION_STATUS):
+            dyn = audit_dynamic(self.availability(), ttl_seconds=self.ttl).assign(
+                audit_type="dynamic", system_id=self.system_id
+            )
+            parts.append(dyn[_AUDIT_COLS])
+        return pd.concat(parts, ignore_index=True)
 
     def snapshot(self) -> dict[str, pd.DataFrame]:
         """All available tidy frames at once: ``information``, ``status`` (+ ``vehicles``)."""

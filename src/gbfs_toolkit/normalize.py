@@ -17,6 +17,7 @@ from gbfs_toolkit.models import (
     STATION_INFO_COLUMNS,
     STATION_STATUS_COLUMNS,
     VEHICLE_STATUS_COLUMNS,
+    VEHICLE_TYPE_COLUMNS,
 )
 
 
@@ -86,6 +87,7 @@ def to_canonical_station_info(
                 "capacity": s.get("capacity"),
                 "station_type": station_type or _infer_station_type(s),
                 "is_virtual_station": bool(s.get("is_virtual_station", False)),
+                "region_id": s.get("region_id"),
             }
         )
     df = pd.DataFrame(rows, columns=STATION_INFO_COLUMNS)
@@ -184,3 +186,46 @@ def to_canonical_vehicles(
         df[col] = pd.to_numeric(df[col], errors="coerce")
     df["fetched_at"] = pd.to_datetime(df["fetched_at"], utc=True)
     return df
+
+
+def to_canonical_vehicle_types(raw: dict, *, system_id: str) -> pd.DataFrame:
+    """Parse ``vehicle_types.json`` into a canonical catalogue.
+
+    Resolves ``VehicleStatus.vehicle_type_id`` to a form factor / propulsion, so
+    "where are the e-bikes?" becomes a join. Returns
+    :data:`~gbfs_toolkit.models.VEHICLE_TYPE_COLUMNS`.
+    """
+    data = raw.get("data", raw)
+    types = data.get("vehicle_types", []) if isinstance(data, dict) else []
+    rows = [
+        {
+            "system_id": system_id,
+            "vehicle_type_id": str(t.get("vehicle_type_id")),
+            "form_factor": t.get("form_factor"),
+            "propulsion_type": t.get("propulsion_type"),
+            "max_range_meters": t.get("max_range_meters"),
+        }
+        for t in types
+    ]
+    df = pd.DataFrame(rows, columns=VEHICLE_TYPE_COLUMNS)
+    df["max_range_meters"] = pd.to_numeric(df["max_range_meters"], errors="coerce")
+    return df
+
+
+def to_canonical_system_information(raw: dict, *, system_id: str | None = None) -> dict[str, Any]:
+    """Parse ``system_information.json`` into a small dict of system metadata.
+
+    Crucially exposes ``timezone`` (e.g. ``"Europe/Paris"``) so UTC frames can be
+    converted to local diurnal time without a manual lookup per city.
+    """
+    data = raw.get("data", raw)
+    if not isinstance(data, dict):
+        data = {}
+    return {
+        "system_id": str(data.get("system_id") or system_id or ""),
+        "name": _name(data.get("name")),
+        "timezone": data.get("timezone"),
+        "language": data.get("language") or (data.get("languages") or [None])[0],
+        "operator": _name(data.get("operator")),
+        "url": data.get("url"),
+    }

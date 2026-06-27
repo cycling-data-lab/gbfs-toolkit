@@ -21,6 +21,17 @@ STATION_INFO_COLUMNS: list[str] = [
     "capacity",
     "station_type",  # one of STATION_TYPES
     "is_virtual_station",  # painted-box vs physical dock (GBFS 2.1+)
+    "region_id",  # groups stations by city/zone in multi-region operators
+]
+
+#: Canonical vehicle-type catalogue (``vehicle_types.json``) — resolves
+#: ``VehicleStatus.vehicle_type_id`` to a form factor and propulsion.
+VEHICLE_TYPE_COLUMNS: list[str] = [
+    "system_id",
+    "vehicle_type_id",
+    "form_factor",  # bicycle / scooter / car / …
+    "propulsion_type",  # human / electric_assist / electric / …
+    "max_range_meters",
 ]
 
 #: Canonical station-status columns (a timestamped availability snapshot).

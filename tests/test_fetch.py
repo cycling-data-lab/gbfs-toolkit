@@ -1,5 +1,6 @@
 """Offline tests for the fetch layer (GBFSFeed + discovery), via dependency injection."""
 
+import pandas as pd
 import pytest
 
 from gbfs_toolkit import GBFSFeed, availability, parse_discovery
@@ -147,8 +148,10 @@ def test_snapshot_and_audit():
     )
     snap = feed.snapshot()
     assert set(snap) == {"information", "status", "vehicles"}
-    verdict = feed.audit()
-    assert "flagged" in verdict.columns and len(verdict) == 2
+    verdict = feed.audit()  # unified: static (2) + dynamic (2)
+    assert set(verdict["audit_type"]) == {"static", "dynamic"}
+    assert {"flagged", "reason", "audit_type"} <= set(verdict.columns)
+    assert len(verdict) == 4
 
 
 def test_language_setter_clears_cache():
@@ -174,3 +177,119 @@ def test_missing_feed_raises():
     )
     with pytest.raises(KeyError):
         feed.station_status()
+
+
+# --- round-2 additions -----------------------------------------------------
+
+GBFS_FULL = {
+    "version": "2.3",
+    "ttl": 60,
+    "last_updated": 1_700_000_500,
+    "data": {
+        "en": {
+            "feeds": [
+                {"name": "system_information", "url": "sys"},
+                {"name": "station_information", "url": "info"},
+                {"name": "station_status", "url": "status"},
+                {"name": "vehicle_types", "url": "vtypes"},
+            ]
+        }
+    },
+}
+SYSINFO = {
+    "data": {
+        "system_id": "demo",
+        "name": "Demo Bikes",
+        "timezone": "Europe/Paris",
+        "language": "fr",
+    }
+}
+VTYPES = {
+    "data": {
+        "vehicle_types": [
+            {
+                "vehicle_type_id": "e1",
+                "form_factor": "bicycle",
+                "propulsion_type": "electric_assist",
+                "max_range_meters": 60000,
+            },
+        ]
+    }
+}
+INFO_ORPHAN = {
+    "data": {
+        "stations": [
+            {"station_id": "1", "name": "A", "lat": 48.85, "lon": 2.35, "capacity": 20},
+            {"station_id": "99", "name": "InfoOnly", "lat": 48.9, "lon": 2.4, "capacity": 10},
+        ]
+    }
+}
+STATUS_ORPHAN = {
+    "data": {
+        "stations": [
+            {
+                "station_id": "1",
+                "num_bikes_available": 5,
+                "num_docks_available": 15,
+                "last_reported": 1_700_000_000,
+            },
+            {
+                "station_id": "42",
+                "num_bikes_available": 2,
+                "num_docks_available": 3,
+                "last_reported": 1_700_000_000,
+            },
+        ]
+    }
+}
+
+
+def _full_feed():
+    return GBFSFeed.from_url(
+        "g",
+        system_id="demo",
+        get_json=_fake_getter(
+            {
+                "g": GBFS_FULL,
+                "sys": SYSINFO,
+                "info": INFO_ORPHAN,
+                "status": STATUS_ORPHAN,
+                "vtypes": VTYPES,
+            }
+        ),
+    )
+
+
+def test_ttl_and_last_updated():
+    feed = _full_feed()
+    assert feed.ttl == 60
+    assert feed.last_updated == pd.Timestamp(1_700_000_500, unit="s", tz="UTC")
+
+
+def test_system_information_and_timezone():
+    feed = _full_feed()
+    info = feed.system_information()
+    assert info["timezone"] == "Europe/Paris" and info["name"] == "Demo Bikes"
+    assert feed.timezone == "Europe/Paris"
+
+
+def test_vehicle_types():
+    vt = _full_feed().vehicle_types()
+    assert vt.loc[0, "form_factor"] == "bicycle"
+    assert vt.loc[0, "propulsion_type"] == "electric_assist"
+    assert vt.loc[0, "max_range_meters"] == 60000
+
+
+def test_availability_outer_join_keeps_orphans():
+    avail = _full_feed().availability()
+    present = dict(zip(avail["station_id"], avail["presence"], strict=True))
+    assert present["1"] == "both"
+    assert present["42"] == "status_only"  # in status, not info
+    assert present["99"] == "info_only"  # in info, not status
+
+
+def test_to_local_time():
+    feed = _full_feed()
+    df = feed.station_status()
+    local = feed.to_local_time(df, columns=("fetched_at", "last_reported"))
+    assert str(local["fetched_at"].dt.tz) == "Europe/Paris"

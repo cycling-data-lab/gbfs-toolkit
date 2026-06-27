@@ -17,7 +17,13 @@ DYNAMIC_FLAGS = ("D1_negative", "D2_over_capacity", "D3_stale")
 _REQUIRED = ["station_id", "num_bikes_available", "num_docks_available"]
 
 
-def audit_dynamic(availability: pd.DataFrame, *, stale_after_minutes: float = 60.0) -> pd.DataFrame:
+def audit_dynamic(
+    availability: pd.DataFrame,
+    *,
+    ttl_seconds: float | None = None,
+    stale_after_minutes: float = 60.0,
+    buffer_seconds: float = 60.0,
+) -> pd.DataFrame:
     """Logic checks on a live availability frame.
 
     Parameters
@@ -27,8 +33,15 @@ def audit_dynamic(availability: pd.DataFrame, *, stale_after_minutes: float = 60
         ``station_id, num_bikes_available, num_docks_available``. Uses
         ``capacity`` and the UTC timestamps ``last_reported`` / ``fetched_at``
         when present.
+    ttl_seconds : float, optional
+        The feed's advertised TTL. When given, staleness is
+        ``fetched_at − last_reported > ttl_seconds + buffer_seconds`` (the correct,
+        feed-specific rule — pass ``GBFSFeed.ttl``). Falls back to
+        ``stale_after_minutes`` otherwise.
     stale_after_minutes : float, default 60
-        A station is ``D3_stale`` if ``fetched_at − last_reported`` exceeds this.
+        Fallback staleness window when ``ttl_seconds`` is not provided.
+    buffer_seconds : float, default 60
+        Grace period added to ``ttl_seconds`` (clock skew / fetch latency).
 
     Returns
     -------
@@ -51,11 +64,18 @@ def audit_dynamic(availability: pd.DataFrame, *, stale_after_minutes: float = 60
     else:
         out["D2_over_capacity"] = False
 
+    if ttl_seconds is not None:
+        threshold = pd.Timedelta(seconds=ttl_seconds + buffer_seconds)
+        stale_label = f"stale (> ttl {ttl_seconds:g}s + {buffer_seconds:g}s)"
+    else:
+        threshold = pd.Timedelta(minutes=stale_after_minutes)
+        stale_label = f"stale (> {stale_after_minutes:g} min)"
+
     if "last_reported" in df and "fetched_at" in df:
         lag = pd.to_datetime(df["fetched_at"], utc=True, errors="coerce") - pd.to_datetime(
             df["last_reported"], utc=True, errors="coerce"
         )
-        out["D3_stale"] = lag > pd.Timedelta(minutes=stale_after_minutes)
+        out["D3_stale"] = lag > threshold
     else:
         out["D3_stale"] = False
 
@@ -64,7 +84,7 @@ def audit_dynamic(availability: pd.DataFrame, *, stale_after_minutes: float = 60
     labels = {
         "D1_negative": "negative count",
         "D2_over_capacity": "bikes+docks > capacity",
-        "D3_stale": f"stale (> {stale_after_minutes:g} min)",
+        "D3_stale": stale_label,
     }
     out["flagged"] = flags.any(axis=1)
     out["reason"] = [

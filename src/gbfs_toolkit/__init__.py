@@ -31,6 +31,8 @@ from gbfs_toolkit.models import AUDIT_FLAGS, RULES, SchemaError
 from gbfs_toolkit.normalize import (
     to_canonical_station_info,
     to_canonical_station_status,
+    to_canonical_system_information,
+    to_canonical_vehicle_types,
     to_canonical_vehicles,
 )
 
@@ -50,6 +52,8 @@ __all__ = [
     "to_canonical_station_info",
     "to_canonical_station_status",
     "to_canonical_vehicles",
+    "to_canonical_vehicle_types",
+    "to_canonical_system_information",
     # catalogue
     "systems_catalog",
     "filter_catalog",
