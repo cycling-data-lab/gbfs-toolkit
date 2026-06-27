@@ -3,7 +3,11 @@
 All notable changes are documented here ([Keep a Changelog](https://keepachangelog.com),
 [SemVer](https://semver.org)).
 
-## [Unreleased]
+## [1.0.0rc1] — first public release candidate
+
+Frozen canonical schema and public API after three peer-review passes. Adds `METHODOLOGY.md`
+(audit thresholds, the polling/aliasing limit, spatial-stat caveats), `CONTRIBUTING.md`, and a
+PyPI Trusted-Publishing release workflow. The sections below list everything since 0.1.0.
 
 ### Added (library-API conventions)
 - **`.gbfs` pandas accessor** — fluent chaining over the pure functions: `df.gbfs.audit()`,

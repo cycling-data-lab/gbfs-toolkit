@@ -266,6 +266,12 @@ turnover), and a network equity/coverage report.
   joins, equal-area density), `fleet` reconciliation (docked ↔ free-floating dedup),
   and parquet column/predicate pushdown for large panels.
 
+## Methodology & limitations
+
+[`METHODOLOGY.md`](./METHODOLOGY.md) documents the A1–A7 thresholds, the dynamic checks, the
+polling/aliasing limit on flows, and what the spatial statistics can and cannot claim — read it
+before building a study on the toolkit.
+
 ## How to cite
 
 See [`CITATION.cff`](./CITATION.cff). The semantic taxonomy is from the
