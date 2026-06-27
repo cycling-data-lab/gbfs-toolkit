@@ -379,7 +379,7 @@ class GBFSFeed:
         ``presence`` indicator). For offline frames (e.g. from a Parquet lake), call
         ``join_availability(info, status)`` directly.
         """
-        from gbfs_toolkit.analytics.analysis import join_availability
+        from gbfs_toolkit.analytics.frames import join_availability
 
         return join_availability(self.station_information(), self.station_status())
 

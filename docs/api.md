@@ -94,34 +94,67 @@ Requires the `[parquet]` extra.
       show_root_toc_entry: false
       heading_level: 3
 
-## Analysis helpers
+## Derived frame helpers
 
-Research conveniences distilled from the lab's notebooks: stockout episodes, turnover,
-flow balance, frozen-station detection, network diffs, and vehicle-type joins.
+Generic derived-frame conveniences distilled from the lab's notebooks: occupancy and station
+state, availability joins, network diffs, and vehicle-type and pricing joins.
 
-::: gbfs_toolkit.analytics.analysis
+::: gbfs_toolkit.analytics.frames
     options:
       show_root_heading: false
       show_root_toc_entry: false
       heading_level: 3
 
-## Descriptive and spatial statistics
+## Level of service and equity of access
 
-Strictly descriptive summaries and standard spatial and inequality algorithms
-(Moran's I, Ripley's K and L, Clark–Evans, Gini, Theil, Lorenz). Deterministic,
-numpy and scipy only.
+Descriptive service-quality metrics: reliability, outage rates, recovery survival, docking
+pressure, and capacity utilisation.
 
-::: gbfs_toolkit.analytics.stats
+::: gbfs_toolkit.analytics.service
     options:
       show_root_heading: false
       show_root_toc_entry: false
       heading_level: 3
 
-## Research indicators
+## Observed flow dynamics
 
-The descriptive research-indicator layer (service, equity, dynamics, sampling, spatial).
+Reconstructions of observed inventory change: cumulative drift, flow asymmetry, turnover proxy,
+and aliasing vulnerability.
 
-::: gbfs_toolkit.analytics.metrics
+::: gbfs_toolkit.analytics.dynamics
+    options:
+      show_root_heading: false
+      show_root_toc_entry: false
+      heading_level: 3
+
+## Temporal structure of usage
+
+Temporal autocorrelation, peaking, diurnal profiles and bimodality, synchrony networks,
+calendar context, and exogenous-series alignment.
+
+::: gbfs_toolkit.analytics.temporal
+    options:
+      show_root_heading: false
+      show_root_toc_entry: false
+      heading_level: 3
+
+## Inequality and system profiles
+
+Strictly descriptive summaries and inequality algorithms (Gini, Theil, Lorenz, dynamic Gini)
+plus system profiles and comparisons.
+
+::: gbfs_toolkit.analytics.distribution
+    options:
+      show_root_heading: false
+      show_root_toc_entry: false
+      heading_level: 3
+
+## Spatial statistics
+
+Standard spatial algorithms (Moran's I global and local, Ripley's K and L, Clark–Evans,
+Shannon entropy, fleet centre of mass, 2SFCA accessibility). Deterministic, numpy and scipy only.
+
+::: gbfs_toolkit.spatial.analytics
     options:
       show_root_heading: false
       show_root_toc_entry: false

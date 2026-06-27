@@ -15,9 +15,32 @@ Quick start
     >>> clean = stations[~verdict["flagged"].to_numpy()]
 """
 
-from gbfs_toolkit.analytics.analysis import (
-    capacity_utilization,
-    cyclical_time_features,
+from gbfs_toolkit.analytics.clustering import (
+    cluster_diurnal_profiles,
+    cluster_spatial,
+    cluster_spectral,
+    diurnal_profiles,
+    label_diurnal_typology,
+)
+from gbfs_toolkit.analytics.distribution import (
+    compare_systems,
+    concentration_metrics,
+    dynamic_gini_index,
+    lorenz_curve,
+    system_profile,
+)
+from gbfs_toolkit.analytics.dynamics import (
+    aliasing_vulnerability,
+    cumulative_imbalance,
+    fleet_turnover_proxy,
+    flow_asymmetry_ratio,
+)
+from gbfs_toolkit.analytics.fleet import (
+    detect_ghost_vehicles,
+    reconcile_fleet_state,
+    vehicle_idle_time,
+)
+from gbfs_toolkit.analytics.frames import (
     ebikes,
     filter_vehicles,
     join_availability,
@@ -26,49 +49,24 @@ from gbfs_toolkit.analytics.analysis import (
     network_changes,
     occupancy,
     station_state,
-    temporal_context_features,
 )
-from gbfs_toolkit.analytics.clustering import (
-    cluster_diurnal_profiles,
-    cluster_spatial,
-    cluster_spectral,
-    diurnal_profiles,
-    label_diurnal_typology,
-)
-from gbfs_toolkit.analytics.fleet import (
-    detect_ghost_vehicles,
-    reconcile_fleet_state,
-    vehicle_idle_time,
-)
-from gbfs_toolkit.analytics.metrics import (
-    aliasing_vulnerability,
-    availability_synchrony,
-    cumulative_imbalance,
-    diurnal_bimodality,
-    diurnal_summary_stats,
+from gbfs_toolkit.analytics.service import (
+    capacity_utilization,
     docking_pressure,
-    dynamic_gini_index,
-    fleet_turnover_proxy,
-    flow_asymmetry_ratio,
-    join_exogenous_timeseries,
-    local_morans_i,
     outage_survival,
     service_reliability_index,
-    spatial_center_of_mass,
-    spatial_entropy,
     station_outage_rates,
+)
+from gbfs_toolkit.analytics.temporal import (
+    availability_stats,
+    availability_synchrony,
+    cyclical_time_features,
+    diurnal_bimodality,
+    diurnal_summary_stats,
+    join_exogenous_timeseries,
     temporal_autocorrelation,
     temporal_concentration,
-)
-from gbfs_toolkit.analytics.stats import (
-    availability_stats,
-    compare_systems,
-    concentration_metrics,
-    coverage_stats,
-    lorenz_curve,
-    morans_i,
-    ripley_k,
-    system_profile,
+    temporal_context_features,
 )
 from gbfs_toolkit.audit import audit_dynamic, audit_frames, audit_static, drop_flagged
 from gbfs_toolkit.core import models
@@ -125,6 +123,15 @@ from gbfs_toolkit.io.timeseries import (
     stockout_episodes,
     turnover,
 )
+from gbfs_toolkit.spatial.analytics import (
+    coverage_stats,
+    local_morans_i,
+    morans_i,
+    ripley_k,
+    spatial_center_of_mass,
+    spatial_entropy,
+    two_step_fca,
+)
 from gbfs_toolkit.spatial.geofencing import (
     to_canonical_geofencing,
     zone_area_km2,
@@ -138,7 +145,6 @@ from gbfs_toolkit.spatial.geometry import (
     stations_near,
     to_gdf,
     to_geojson,
-    two_step_fca,
 )
 from gbfs_toolkit.spatial.multimodal import link_transit_stops
 from gbfs_toolkit.spatial.osm import enrich_with_osm, station_surroundings

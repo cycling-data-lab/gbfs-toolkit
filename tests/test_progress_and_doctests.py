@@ -2,7 +2,8 @@
 
 import doctest
 
-import gbfs_toolkit.analytics.analysis as analysis
+import gbfs_toolkit.analytics.frames as frames
+import gbfs_toolkit.analytics.temporal as temporal
 from gbfs_toolkit.io.fetch import _with_progress
 
 
@@ -18,5 +19,6 @@ def test_with_progress_handles_empty():
 
 
 def test_analysis_doctests_pass():
-    result = doctest.testmod(analysis, verbose=False)
-    assert result.failed == 0, f"{result.failed} doctest(s) failed in analysis"
+    for module in (frames, temporal):
+        result = doctest.testmod(module, verbose=False)
+        assert result.failed == 0, f"{result.failed} doctest(s) failed in {module.__name__}"

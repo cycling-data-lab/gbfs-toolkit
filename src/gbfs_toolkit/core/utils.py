@@ -41,6 +41,13 @@ def project_meters(lat, lon) -> np.ndarray:
     return np.column_stack([x, y])
 
 
+def num(df: pd.DataFrame, col: str) -> pd.Series:
+    """Numeric view of a column (NaN where absent/unparseable)."""
+    if col not in df.columns:
+        return pd.Series(np.nan, index=df.index, dtype="float64")
+    return pd.to_numeric(df[col], errors="coerce")
+
+
 def gini(values) -> float:
     """Gini coefficient of non-negative values (0 = perfectly even, 1 = maximally concentrated)."""
     v = np.sort(np.asarray(values, dtype="float64"))

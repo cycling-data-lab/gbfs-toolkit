@@ -131,7 +131,7 @@ def test_diurnal_summary_stats(panel):
 
 def test_temporal_context_features(panel):
     out = gb.temporal_context_features(panel)
-    assert set(out["time_block"].cat.categories) == set(gb.analytics.analysis.TIME_BLOCKS)
+    assert set(out["time_block"].cat.categories) == set(gb.analytics.temporal.TIME_BLOCKS)
     assert "is_holiday" not in out.columns  # not added without a holidays argument
     with_hol = gb.temporal_context_features(panel, holidays=["2026-06-01"])
     assert "is_holiday" in with_hol.columns

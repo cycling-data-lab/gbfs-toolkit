@@ -1,4 +1,4 @@
-"""Derived, ready-to-use metrics on canonical availability frames.
+"""Generic derived-frame helpers on canonical availability and vehicle frames.
 
 Small, safe, broadly-applicable transforms that every analysis re-implements,
 deliberately *not* trip/OD inference (left to dedicated research code).
@@ -10,7 +10,6 @@ import numpy as np
 import pandas as pd
 
 from gbfs_toolkit.core.models import require_columns
-from gbfs_toolkit.core.utils import panel_frame
 from gbfs_toolkit.spatial.geometry import haversine_m
 
 #: Ordered categories returned by :func:`station_state`.
@@ -47,50 +46,6 @@ def join_availability(info: pd.DataFrame, status: pd.DataFrame) -> pd.DataFrame:
     )
     merged["presence"] = pd.Categorical(mapped, categories=list(PRESENCE_STATES))
     return merged
-
-
-#: Period of each cyclic calendar field, for sin/cos encoding.
-_CYCLE_PERIODS = {
-    "minute": 60,
-    "hour": 24,
-    "dayofweek": 7,
-    "day": 31,
-    "month": 12,
-    "dayofyear": 366,
-}
-
-
-def cyclical_time_features(
-    timestamps: object, *, fields: tuple[str, ...] = ("hour", "dayofweek", "month")
-) -> pd.DataFrame:
-    """Encode calendar fields as (sin, cos) pairs: the one everyone re-implements.
-
-    Periodic time variables (hour-of-day, day-of-week, month) are discontinuous as raw integers
-    (23:00 is adjacent to 00:00 but ``23`` is far from ``0``); sin/cos on the circle fixes that.
-    Pass any datetime-like (Series / Index / array); returns two columns per field.
-
-    Parameters
-    ----------
-    fields : tuple of str
-        Any of ``minute, hour, dayofweek, day, month, dayofyear``.
-
-    Returns
-    -------
-    pandas.DataFrame
-        ``{field}_sin`` / ``{field}_cos`` per requested field, aligned to the input order.
-    """
-    ts = pd.to_datetime(
-        pd.Series(list(timestamps) if not hasattr(timestamps, "dt") else timestamps)
-    )
-    ts = ts.reset_index(drop=True)
-    out: dict[str, np.ndarray] = {}
-    for f in fields:
-        if f not in _CYCLE_PERIODS:
-            raise ValueError(f"unknown field {f!r}; choose from {sorted(_CYCLE_PERIODS)}")
-        angle = 2 * np.pi * getattr(ts.dt, f).to_numpy() / _CYCLE_PERIODS[f]
-        out[f"{f}_sin"] = np.sin(angle)
-        out[f"{f}_cos"] = np.cos(angle)
-    return pd.DataFrame(out)
 
 
 def occupancy(availability: pd.DataFrame) -> pd.Series:
@@ -289,104 +244,3 @@ def join_pricing(vehicles: pd.DataFrame, plans: pd.DataFrame) -> pd.DataFrame:
         }
     )
     return vehicles.merge(p, on="pricing_plan_id", how="left")
-
-
-#: Ordered time-of-day blocks added by :func:`temporal_context_features`.
-TIME_BLOCKS = ["night", "am_peak", "midday", "pm_peak", "evening"]
-
-
-def _time_values(df: pd.DataFrame, time_col: str) -> pd.DatetimeIndex:
-    """Datetime values from a column or a matching MultiIndex level."""
-    names = list(df.index.names or [])
-    if isinstance(df.index, pd.MultiIndex) and time_col in names:
-        return pd.DatetimeIndex(df.index.get_level_values(time_col))
-    require_columns(df, [time_col], what="temporal_context_features")
-    return pd.DatetimeIndex(pd.to_datetime(df[time_col]))
-
-
-def temporal_context_features(
-    panel: pd.DataFrame, *, time_col: str = "fetched_at", holidays: object = None
-) -> pd.DataFrame:
-    """Add standard calendar context columns for descriptive temporal analysis.
-
-    Every descriptive model or test on bike-share data needs to isolate peaks, weekends and
-    holidays. This adds them once, consistently, from a tz-aware timestamp, so each study does not
-    re-derive error-prone ``dt.dayofweek`` and ``pd.cut`` rules (and the UTC-versus-local traps
-    that come with them). Convert to local time first for local-calendar semantics.
-
-    Parameters
-    ----------
-    panel : pandas.DataFrame
-        Any frame with a tz-aware datetime in ``time_col`` (a column or a MultiIndex level).
-    time_col : str, default "fetched_at"
-        The timestamp to derive context from.
-    holidays : optional
-        A collection of dates (anything :func:`pandas.to_datetime` accepts). When given, an
-        ``is_holiday`` boolean column is added; omitted otherwise (no silent assumption).
-
-    Returns
-    -------
-    pandas.DataFrame
-        A copy of ``panel`` with ``is_weekend`` (boolean), ``time_block`` (ordered Categorical of
-        :data:`TIME_BLOCKS`) and, when ``holidays`` is given, ``is_holiday`` (boolean).
-
-    Examples
-    --------
-    >>> import pandas as pd
-    >>> from gbfs_toolkit import temporal_context_features
-    >>> df = pd.DataFrame({"fetched_at": pd.to_datetime(
-    ...     ["2026-06-27 08:30", "2026-06-29 23:00"], utc=True)})
-    >>> out = temporal_context_features(df)
-    >>> list(out["time_block"])
-    ['am_peak', 'evening']
-    >>> out["is_weekend"].tolist()
-    [True, False]
-    """
-    out = panel.copy()
-    ts = _time_values(out, time_col)
-    hour = ts.hour
-    block = np.select(
-        [hour < 7, hour < 10, hour < 16, hour < 19],
-        ["night", "am_peak", "midday", "pm_peak"],
-        default="evening",
-    )
-    out["is_weekend"] = pd.array(ts.dayofweek >= 5, dtype="boolean")
-    out["time_block"] = pd.Categorical(block, categories=TIME_BLOCKS, ordered=True)
-    if holidays is not None:
-        hol = set(pd.DatetimeIndex(pd.to_datetime(list(holidays))).normalize())
-        out["is_holiday"] = pd.array(pd.DatetimeIndex(ts.normalize()).isin(hol), dtype="boolean")
-    return out
-
-
-def capacity_utilization(panel: pd.DataFrame, info: pd.DataFrame) -> pd.DataFrame:
-    """Add ``utilization_rate`` = available bikes / station capacity.
-
-    Normalising by capacity makes stations and whole networks comparable: ten bikes in a 15-dock
-    station (67%) is not ten bikes in a 40-dock station (25%). This is the standard step before a
-    cross-city ANOVA or regression. Virtual or zero-capacity stations yield ``pd.NA`` rather than a
-    divide-by-zero.
-
-    Parameters
-    ----------
-    panel : pandas.DataFrame
-        Panel or snapshot with ``station_id`` and ``num_bikes_available`` (and ``capacity`` if
-        already present).
-    info : pandas.DataFrame
-        Canonical station inventory providing ``capacity`` (joined on the shared id columns) when
-        ``panel`` does not already carry it.
-
-    Returns
-    -------
-    pandas.DataFrame
-        A copy of ``panel`` with a nullable ``utilization_rate`` column in ``[0, 1]``.
-    """
-    out = panel_frame(panel)
-    require_columns(out, ["station_id", "num_bikes_available"], what="capacity_utilization")
-    if "capacity" not in out.columns:
-        require_columns(info, ["station_id", "capacity"], what="capacity_utilization(info)")
-        keys = [k for k in ("system_id", "station_id") if k in out.columns and k in info.columns]
-        out = out.merge(info[[*keys, "capacity"]].drop_duplicates(keys), on=keys, how="left")
-    cap = pd.to_numeric(out["capacity"], errors="coerce")
-    bikes = pd.to_numeric(out["num_bikes_available"], errors="coerce")
-    out["utilization_rate"] = (bikes / cap.where(cap > 0)).astype("Float64")
-    return out
