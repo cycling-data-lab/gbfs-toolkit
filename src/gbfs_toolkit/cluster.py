@@ -121,73 +121,228 @@ def _occupancy(df: pd.DataFrame) -> pd.Series:
     return occ.clip(0.0, 1.0)
 
 
+def diurnal_profiles(
+    panel: pd.DataFrame,
+    *,
+    time_col: str = "fetched_at",
+    split_weekday: bool = False,
+    min_obs: int = 12,
+) -> tuple[pd.DataFrame, pd.Series]:
+    """Build each station's mean occupancy profile by hour of day.
+
+    Robust to irregular sampling (aggregates by hour), fills an unobserved hour with the
+    station's own mean. With ``split_weekday`` the profile is 48-dim (weekday ``wd*`` +
+    weekend ``we*``), capturing commute-vs-leisure rhythms separately.
+
+    Returns ``(profiles, n_obs)`` — ``profiles`` indexed by ``(system_id, station_id)``
+    with hour columns, and the per-station observation count.
+    """
+    df = panel.reset_index() if isinstance(panel.index, pd.MultiIndex) else panel.copy()
+    df = df.copy()
+    df["_occ"] = _occupancy(df)
+    ts = pd.to_datetime(df[time_col], utc=True)
+    df["_hour"] = ts.dt.hour
+    n_obs = df.groupby(["system_id", "station_id"])["_occ"].count()
+
+    if split_weekday:
+        df["_seg"] = np.where(ts.dt.dayofweek < 5, "wd", "we")
+        df["_col"] = df["_seg"] + df["_hour"].map(lambda h: f"{h:02d}")
+        order = [f"{s}{h:02d}" for s in ("wd", "we") for h in range(24)]
+    else:
+        df["_col"] = df["_hour"].map(lambda h: f"h{h:02d}")
+        order = [f"h{h:02d}" for h in range(24)]
+
+    prof = df.pivot_table(index=["system_id", "station_id"], columns="_col", values="_occ")
+    prof = prof.reindex(columns=order)
+    prof = prof.apply(lambda row: row.fillna(row.mean()), axis=1).dropna(how="any")
+    keep = n_obs[n_obs >= min_obs].index
+    prof = prof.loc[prof.index.intersection(keep)]
+    return prof, n_obs
+
+
+def _select_k(x: np.ndarray, k_range: tuple[int, int], random_state: int) -> int:
+    """Pick the number of clusters maximising the silhouette score over ``k_range``."""
+    from sklearn.cluster import KMeans
+    from sklearn.metrics import silhouette_score
+
+    lo, hi = k_range
+    hi = min(hi, len(x) - 1)
+    if hi < lo or len(x) <= 2:
+        return max(2, min(lo, len(x)))
+    best_k, best_s = lo, -1.0
+    for k in range(lo, hi + 1):
+        labels = KMeans(n_clusters=k, n_init=10, random_state=random_state).fit_predict(x)
+        if len(set(labels)) < 2:
+            continue
+        s = silhouette_score(x, labels)
+        if s > best_s:
+            best_k, best_s = k, s
+    return best_k
+
+
 def cluster_diurnal_profiles(
     panel: pd.DataFrame,
     *,
-    n_clusters: int = 4,
+    n_clusters: int | str = "auto",
+    method: str = "kmeans",
+    normalize: str = "none",
+    split_weekday: bool = False,
     min_obs: int = 12,
+    k_range: tuple[int, int] = (2, 8),
     time_col: str = "fetched_at",
     random_state: int = 0,
 ) -> pd.DataFrame:
     """Cluster stations by their **daily rhythm** (the crown jewel of the longitudinal layer).
 
-    Builds each station's 24-hour occupancy profile (mean fraction-of-capacity by hour of
-    day — robust to irregular sampling and missing ticks), then k-means clusters the
-    profiles into typologies (commuter origin, recreational, always-full, …).
+    Builds each station's occupancy-by-hour profile, then clusters into typologies
+    (commuter origin, recreational, always-full, …).
 
     Parameters
     ----------
     panel : pandas.DataFrame
-        A panel from :func:`~gbfs_toolkit.build_availability_panel` (MultiIndexed) or a flat
-        frame with ``system_id, station_id, num_bikes_available`` and a timestamp column.
-        Pass a *local-time* panel (``GBFSFeed.to_local_time``) if you care about local
-        diurnal phase; otherwise hours are UTC.
-    n_clusters : int, default 4
+        A panel from :func:`~gbfs_toolkit.build_availability_panel` (or a flat frame with
+        ``system_id, station_id, num_bikes_available`` + a timestamp). Pass a *local-time*
+        panel (``GBFSFeed.to_local_time``) for local diurnal phase; else hours are UTC.
+    n_clusters : int or "auto", default "auto"
+        Fixed k, or ``"auto"`` to pick the best k by silhouette over ``k_range``.
+    method : {"kmeans", "gmm", "dtw"}, default "kmeans"
+        ``gmm`` = soft Gaussian-mixture (adds a ``cluster_confidence`` column);
+        ``dtw`` = shape-aware time-series k-means (needs ``tslearn``).
+    normalize : {"none", "zscore"}, default "none"
+        ``zscore`` clusters by rhythm *shape* (per-station standardised), ignoring the
+        average occupancy level — usually what you want for "commuter vs leisure".
+    split_weekday : bool, default False
+        Profile weekday and weekend separately (48-dim).
     min_obs : int, default 12
-        Minimum observations for a station to be profiled (others are dropped).
-    time_col : str, default "fetched_at"
-        Timestamp column used for the hour-of-day.
+        Minimum observations for a station to be profiled.
 
     Returns
     -------
     pandas.DataFrame
-        One row per profiled station: ``system_id, station_id, cluster, n_obs`` and the
-        24 profile columns ``h00 … h23``.
+        ``system_id, station_id, cluster, n_obs`` (+ ``cluster_confidence`` for gmm) and the
+        profile columns.
     """
     _require_sklearn()
-    from sklearn.cluster import KMeans
 
-    df = panel.reset_index() if isinstance(panel.index, pd.MultiIndex) else panel.copy()
-    df = df.copy()
-    df["_occ"] = _occupancy(df)
-    df["_hour"] = pd.to_datetime(df[time_col], utc=True).dt.hour
-
-    n_obs = df.groupby(["system_id", "station_id"])["_occ"].count()
-    prof = df.pivot_table(
-        index=["system_id", "station_id"], columns="_hour", values="_occ"
-    ).reindex(columns=range(24))
-    # fill an unobserved hour by the station's own mean (don't model data outages)
-    prof = prof.apply(lambda row: row.fillna(row.mean()), axis=1).dropna(how="any")
-    keep = n_obs[n_obs >= min_obs].index
-    prof = prof.loc[prof.index.intersection(keep)]
+    prof, n_obs = diurnal_profiles(
+        panel, time_col=time_col, split_weekday=split_weekday, min_obs=min_obs
+    )
+    cols = list(prof.columns)
     if prof.empty:
-        return pd.DataFrame(
-            columns=[
-                "system_id",
-                "station_id",
-                "cluster",
-                "n_obs",
-                *[f"h{h:02d}" for h in range(24)],
-            ]
-        )
+        return pd.DataFrame(columns=["system_id", "station_id", "cluster", "n_obs", *cols])
 
-    k = min(n_clusters, len(prof))
-    labels = KMeans(n_clusters=k, n_init=10, random_state=random_state).fit_predict(prof.to_numpy())
+    x = prof.to_numpy(dtype="float64")
+    if normalize == "zscore":  # cluster by shape, not level
+        mu = x.mean(axis=1, keepdims=True)
+        sd = x.std(axis=1, keepdims=True)
+        x = (x - mu) / np.where(sd > 0, sd, 1.0)
+
+    k = (
+        _select_k(x, k_range, random_state)
+        if n_clusters == "auto"
+        else min(int(n_clusters), len(x))
+    )
+
+    confidence = None
+    if method == "kmeans":
+        from sklearn.cluster import KMeans
+
+        labels = KMeans(n_clusters=k, n_init=10, random_state=random_state).fit_predict(x)
+    elif method == "gmm":
+        from sklearn.mixture import GaussianMixture
+
+        gmm = GaussianMixture(n_components=k, random_state=random_state).fit(x)
+        labels = gmm.predict(x)
+        confidence = gmm.predict_proba(x).max(axis=1)
+    elif method == "dtw":
+        try:
+            from tslearn.clustering import TimeSeriesKMeans
+        except ImportError as e:  # pragma: no cover
+            raise ImportError("method='dtw' requires tslearn (`pip install tslearn`).") from e
+        labels = TimeSeriesKMeans(
+            n_clusters=k, metric="dtw", random_state=random_state
+        ).fit_predict(x.reshape(x.shape[0], x.shape[1], 1))
+    else:
+        raise ValueError(f"unknown method {method!r}; use 'kmeans', 'gmm' or 'dtw'")
 
     out = prof.copy()
-    out.columns = [f"h{h:02d}" for h in range(24)]
-    out["cluster"] = labels.astype("int64")
+    out["cluster"] = np.asarray(labels).astype("int64")
+    if confidence is not None:
+        out["cluster_confidence"] = confidence
     out = out.reset_index()
     out["n_obs"] = out.set_index(["system_id", "station_id"]).index.map(n_obs).to_numpy()
     front = ["system_id", "station_id", "cluster", "n_obs"]
+    if confidence is not None:
+        front.append("cluster_confidence")
     return out[front + [c for c in out.columns if c not in front]]
+
+
+#: Behavioural typology names returned by :func:`label_diurnal_typology`.
+DIURNAL_TYPOLOGIES = (
+    "mostly_empty",
+    "mostly_full",
+    "morning_origin",
+    "morning_destination",
+    "evening_origin",
+    "recreational",
+    "stable",
+)
+
+
+def label_diurnal_typology(profiles: pd.DataFrame, *, amplitude: float = 0.15) -> pd.Series:
+    """Assign a **human-readable behavioural type** to each station from its 24-h profile.
+
+    Interprets the occupancy curve (columns ``h00 … h23``) into named types — far more useful
+    than integer cluster ids:
+
+    * ``morning_origin`` — empties in the morning (commuters depart): a residential origin.
+    * ``morning_destination`` — fills in the morning (commuters arrive): a job/transit hub.
+    * ``evening_origin`` — empties in the evening.
+    * ``recreational`` — midday/afternoon peak.
+    * ``mostly_empty`` / ``mostly_full`` — chronically saturated either way.
+    * ``stable`` — little diurnal variation.
+
+    Parameters
+    ----------
+    profiles : pandas.DataFrame
+        Output of :func:`cluster_diurnal_profiles` / :func:`diurnal_profiles` with ``h00..h23``.
+    amplitude : float, default 0.15
+        Minimum morning/evening swing (fraction of capacity) to call a directional type.
+
+    Returns
+    -------
+    pandas.Series
+        Categorical typology, aligned to ``profiles`` rows.
+    """
+    hours = [f"h{h:02d}" for h in range(24)]
+    missing = [h for h in hours if h not in profiles.columns]
+    if missing:
+        raise KeyError(f"label_diurnal_typology needs 24-hour columns; missing {missing[:3]}…")
+    p = profiles[hours].to_numpy(dtype="float64")
+    night = p[:, list(range(0, 5))].mean(axis=1)
+    morning = p[:, list(range(7, 11))].mean(axis=1)
+    midday = p[:, list(range(11, 16))].mean(axis=1)
+    evening = p[:, list(range(17, 21))].mean(axis=1)
+    mean_occ = p.mean(axis=1)
+    morning_delta = morning - night
+    evening_delta = evening - midday
+
+    out = np.full(p.shape[0], "stable", dtype=object)
+    for i in range(p.shape[0]):
+        if mean_occ[i] < 0.1:
+            out[i] = "mostly_empty"
+        elif mean_occ[i] > 0.9:
+            out[i] = "mostly_full"
+        elif morning_delta[i] <= -amplitude:
+            out[i] = "morning_origin"
+        elif morning_delta[i] >= amplitude:
+            out[i] = "morning_destination"
+        elif evening_delta[i] <= -amplitude:
+            out[i] = "evening_origin"
+        elif midday[i] - (night[i] + evening[i]) / 2 >= amplitude:
+            out[i] = "recreational"
+    return pd.Series(
+        pd.Categorical(out, categories=list(DIURNAL_TYPOLOGIES)),
+        index=profiles.index,
+        name="typology",
+    )

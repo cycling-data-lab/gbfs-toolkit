@@ -43,6 +43,7 @@ fetch = ["requests>=2.31"]
 geo = ["geopandas>=0.14"]
 parquet = ["pyarrow>=15.0"]
 cluster = ["scikit-learn>=1.4"]
+dtw = ["tslearn>=0.6"]  # shape-aware time-series clustering (method="dtw")
 dev = [
     "pytest>=8.0",
     "pytest-cov>=4.0",

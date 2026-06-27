@@ -6,7 +6,13 @@ import pytest
 
 pytest.importorskip("sklearn")
 
-from gbfs_toolkit import cluster_diurnal_profiles, cluster_spatial, cluster_spectral  # noqa: E402
+from gbfs_toolkit import (  # noqa: E402
+    cluster_diurnal_profiles,
+    cluster_spatial,
+    cluster_spectral,
+    diurnal_profiles,
+    label_diurnal_typology,
+)
 
 
 def _two_blobs(n=12, sep=0.05):
@@ -72,6 +78,37 @@ def test_cluster_diurnal_profiles_separates_typologies():
     # commuter station A is full at midnight, empty at noon
     a = out[out.station_id == "A"].iloc[0]
     assert a["h00"] > a["h12"]
+
+
+def test_cluster_diurnal_auto_k_and_zscore():
+    out = cluster_diurnal_profiles(
+        _diurnal_panel(), n_clusters="auto", normalize="zscore", k_range=(2, 3), min_obs=12
+    )
+    assert out["station_id"].nunique() == 2
+    assert (
+        dict(zip(out["station_id"], out["cluster"], strict=True))["A"]
+        != dict(zip(out["station_id"], out["cluster"], strict=True))["B"]
+    )
+
+
+def test_cluster_diurnal_gmm_confidence():
+    out = cluster_diurnal_profiles(_diurnal_panel(), n_clusters=2, method="gmm", min_obs=12)
+    assert "cluster_confidence" in out.columns
+    assert (out["cluster_confidence"].between(0, 1)).all()
+
+
+def test_diurnal_profiles_split_weekday_dims():
+    prof, _ = diurnal_profiles(_diurnal_panel(), split_weekday=True, min_obs=1)
+    # 2 segments (wd/we) × 24 hours = 48 profile columns
+    assert prof.shape[1] == 48
+    assert any(c.startswith("we") for c in prof.columns)
+
+
+def test_label_diurnal_typology():
+    prof, _ = diurnal_profiles(_diurnal_panel(), min_obs=12)
+    types = label_diurnal_typology(prof)
+    # station A empties in the morning → residential origin
+    assert types.xs("A", level="station_id").iloc[0] == "morning_origin"
 
 
 def test_cluster_diurnal_drops_sparse_stations():

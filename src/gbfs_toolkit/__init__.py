@@ -23,6 +23,8 @@ from gbfs_toolkit.cluster import (
     cluster_diurnal_profiles,
     cluster_spatial,
     cluster_spectral,
+    diurnal_profiles,
+    label_diurnal_typology,
 )
 from gbfs_toolkit.fetch import (
     GBFSFeed,
@@ -76,6 +78,8 @@ __all__ = [
     "cluster_spatial",
     "cluster_spectral",
     "cluster_diurnal_profiles",
+    "diurnal_profiles",
+    "label_diurnal_typology",
     # analysis & geo
     "station_state",
     "find_nearest_stations",

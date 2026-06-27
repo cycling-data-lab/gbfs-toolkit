@@ -8,8 +8,13 @@ All notable changes are documented here ([Keep a Changelog](https://keepachangel
 ### Added
 - **Station clustering** (`cluster`, extra `[cluster]`): `cluster_spatial`
   (HDBSCAN/DBSCAN on projected metres), `cluster_spectral` (geographic-affinity spectral
-  clustering), and `cluster_diurnal_profiles` (k-means on 24-hour occupancy profiles →
-  behavioural typologies; the payoff of the longitudinal layer).
+  clustering), and `cluster_diurnal_profiles` (occupancy-profile clustering → typologies).
+  Modern options: automatic k by **silhouette** (`n_clusters="auto"`), shape clustering
+  (`normalize="zscore"`), **soft GMM** (`method="gmm"`, with `cluster_confidence`),
+  shape-aware **DTW** (`method="dtw"`, extra `[dtw]`/tslearn), and weekday/weekend split.
+  Plus `diurnal_profiles` (reusable profile matrix) and `label_diurnal_typology`
+  (human-readable station types: morning_origin / morning_destination / evening_origin /
+  recreational / mostly_empty / mostly_full / stable).
 - **Longitudinal data lake** (`timeseries`, extra `[parquet]`): `append_to_parquet`
   (Hive-partitioned by `system_id`/`date`, append-only, concurrent-safe),
   `build_availability_panel` (PyArrow partition-pruned read + dedup on
