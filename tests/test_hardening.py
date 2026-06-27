@@ -32,6 +32,17 @@ def test_station_status_nullable_dtypes_and_is_installed():
     assert "is_installed" in df.columns and bool(df["is_installed"].iloc[0])
 
 
+def test_station_status_v3_num_vehicles_available():
+    # GBFS 3.0 renamed num_bikes_available → num_vehicles_available
+    raw = {
+        "data": {
+            "stations": [{"station_id": "a", "num_vehicles_available": 7, "num_docks_available": 2}]
+        }
+    }
+    df = to_canonical_station_status(raw, system_id="x", gbfs_version="3.0")
+    assert df["num_bikes_available"].iloc[0] == 7
+
+
 def test_vehicles_preserves_range_and_pricing():
     raw = {
         "data": {

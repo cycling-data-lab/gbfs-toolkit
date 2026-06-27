@@ -138,7 +138,12 @@ def to_canonical_station_status(
         {
             "system_id": system_id,
             "station_id": str(s.get("station_id")),
-            "num_bikes_available": s.get("num_bikes_available"),
+            # GBFS 3.0 renamed num_bikes_available → num_vehicles_available; accept both.
+            "num_bikes_available": (
+                s["num_bikes_available"]
+                if s.get("num_bikes_available") is not None
+                else s.get("num_vehicles_available")
+            ),
             "num_docks_available": s.get("num_docks_available"),
             "is_renting": bool(s.get("is_renting", True)),
             "is_returning": bool(s.get("is_returning", True)),

@@ -3,6 +3,13 @@
 All notable changes are documented here ([Keep a Changelog](https://keepachangelog.com),
 [SemVer](https://semver.org)).
 
+## [1.0.1]
+
+### Fixed
+- `to_canonical_station_status` now reads the GBFS 3.0 **`num_vehicles_available`** field as a
+  fallback for `num_bikes_available` (3.0 renamed it). Surfaced while migrating a real consumer
+  (bikeshare-data-explorer) onto the toolkit.
+
 ## [1.0.0] — first stable release
 
 Promotes `1.0.0rc1` unchanged (validated by a clean install from PyPI and the full test suite).
