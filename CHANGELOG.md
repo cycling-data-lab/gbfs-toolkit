@@ -6,6 +6,10 @@ All notable changes are documented here ([Keep a Changelog](https://keepachangel
 ## [Unreleased]
 
 ### Added
+- **Station clustering** (`cluster`, extra `[cluster]`): `cluster_spatial`
+  (HDBSCAN/DBSCAN on projected metres), `cluster_spectral` (geographic-affinity spectral
+  clustering), and `cluster_diurnal_profiles` (k-means on 24-hour occupancy profiles →
+  behavioural typologies; the payoff of the longitudinal layer).
 - **Longitudinal data lake** (`timeseries`, extra `[parquet]`): `append_to_parquet`
   (Hive-partitioned by `system_id`/`date`, append-only, concurrent-safe),
   `build_availability_panel` (PyArrow partition-pruned read + dedup on

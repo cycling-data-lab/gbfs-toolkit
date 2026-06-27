@@ -118,6 +118,21 @@ flow  = gb.calculate_net_flow(panel)   # Δ bikes/station + is_rebalancing_suspe
 de-duplicates redundant polls (same `station_id` + `last_reported`), and optionally
 resamples each station to a fixed cadence.
 
+## Station clustering (`[cluster]`)
+
+Three lenses on "which stations belong together" — spatial, topological, behavioural:
+
+```python
+gb.cluster_spatial(info, method="hdbscan")          # density zones (projected metres)
+gb.cluster_spectral(info, k=6)                       # network/topology groups
+gb.cluster_diurnal_profiles(panel, n_clusters=4)    # daily-rhythm typologies ⭐
+```
+
+`cluster_diurnal_profiles` turns the longitudinal panel into station **typologies** —
+e.g. "morning commuter origin" (full at night, empty by day) vs "recreational" — from each
+station's 24-hour occupancy profile (robust to irregular sampling). The payoff of the
+data lake.
+
 ## Roadmap
 
 - **v0.1** — canonical model, catalogue discovery, cross-version normalisation,
@@ -126,8 +141,8 @@ resamples each station to a fixed cadence.
   (D1–D3), `station_state`, geo (`GeoKDTree`, `find_nearest_stations`), schema hardening.
 - **v0.3 (this)** — longitudinal data lake: `append_to_parquet`,
   `build_availability_panel`, `calculate_net_flow`.
-- **next** — advanced extras: `multimodal` (transit links), `cluster`
-  (spatial / spectral / diurnal profiles), `osm` (BYOG infrastructure enrichment).
+- **v0.4** — `cluster` (spatial / spectral / **diurnal profiles**).
+- **next** — `multimodal` (transit links), `osm` (BYOG infrastructure enrichment).
 
 ## How to cite
 

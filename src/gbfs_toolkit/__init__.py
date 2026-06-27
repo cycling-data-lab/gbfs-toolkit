@@ -19,6 +19,11 @@ from gbfs_toolkit import models
 from gbfs_toolkit.analysis import station_state
 from gbfs_toolkit.audit import audit_dynamic, audit_static
 from gbfs_toolkit.catalog import filter_catalog, resolve, systems_catalog
+from gbfs_toolkit.cluster import (
+    cluster_diurnal_profiles,
+    cluster_spatial,
+    cluster_spectral,
+)
 from gbfs_toolkit.fetch import (
     GBFSFeed,
     audit_feed,
@@ -67,6 +72,10 @@ __all__ = [
     "append_to_parquet",
     "build_availability_panel",
     "calculate_net_flow",
+    # clustering ([cluster])
+    "cluster_spatial",
+    "cluster_spectral",
+    "cluster_diurnal_profiles",
     # analysis & geo
     "station_state",
     "find_nearest_stations",
