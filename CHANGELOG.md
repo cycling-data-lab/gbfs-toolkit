@@ -3,6 +3,12 @@
 All notable changes are documented here ([Keep a Changelog](https://keepachangelog.com),
 [SemVer](https://semver.org)).
 
+## [1.0.0] — first stable release
+
+Promotes `1.0.0rc1` unchanged (validated by a clean install from PyPI and the full test suite).
+The canonical schema and public API are now stable under SemVer. Development status →
+Production/Stable.
+
 ## [1.0.0rc1] — first public release candidate
 
 Frozen canonical schema and public API after three peer-review passes. Adds `METHODOLOGY.md`

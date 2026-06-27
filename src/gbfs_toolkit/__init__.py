@@ -116,7 +116,7 @@ from gbfs_toolkit.timeseries import (
     turnover,
 )
 
-__version__ = "1.0.0rc1"
+__version__ = "1.0.0"
 
 __all__ = [
     # audit (the flagship)
