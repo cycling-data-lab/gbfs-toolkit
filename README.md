@@ -229,6 +229,12 @@ snapshots), an offline catalogue cache, a `GBFSError` exception hierarchy, and p
 so a dataset is **citable and verifiable**. Missing data stays missing — `coverage_report`
 quantifies it rather than imputing.
 
+## Examples
+
+Runnable, end-to-end scripts live in [`examples/`](./examples) — auditing an unknown feed,
+cron-driven collection into a Parquet lake, longitudinal analysis (coverage, typologies,
+turnover), and a network equity/coverage report.
+
 ## Roadmap
 
 - **v0.1** — canonical model, catalogue discovery, cross-version normalisation,
