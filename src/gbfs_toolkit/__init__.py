@@ -58,6 +58,12 @@ from gbfs_toolkit.normalize import (
     to_canonical_vehicles,
 )
 from gbfs_toolkit.osm import enrich_with_osm, station_surroundings
+from gbfs_toolkit.stats import (
+    availability_stats,
+    compare_systems,
+    concentration_metrics,
+    system_profile,
+)
 from gbfs_toolkit.timeseries import (
     append_to_parquet,
     build_availability_panel,
@@ -110,6 +116,11 @@ __all__ = [
     "zone_area_km2",
     # fleet reconciliation
     "reconcile_fleet_state",
+    # descriptive stats
+    "system_profile",
+    "compare_systems",
+    "concentration_metrics",
+    "availability_stats",
     # analysis & geo
     "station_state",
     "find_nearest_stations",

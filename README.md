@@ -161,6 +161,21 @@ The radius summarisation (counts + per-category breakdown + nearest distance) is
 tested core; data acquisition is **Bring Your Own GeoDataFrame** so the library never depends
 on a live Overpass endpoint. Routing / isochrones stay out of scope (use OSMnx / pandana).
 
+## Descriptive stats — the bikeshare `describe()`
+
+```python
+gb.system_profile(av)                       # stations, capacity, occupancy, % empty/full/…
+gb.compare_systems({"velib": av1, "bixi": av2})   # one comparison row per city
+gb.concentration_metrics(info)              # capacity Gini + top-decile hub share (equity)
+gb.availability_stats(panel)                # per-station: occupancy, peak hour, volatility
+```
+
+Readable, comparable summaries — strictly descriptive (no OD/trip inference). `system_profile`
+is a one-glance numeric card of a snapshot; `concentration_metrics` is an equity lens (kept
+*outside* the published A1–A7 audit, since it's a metric not a quality verdict);
+`availability_stats` turns a longitudinal panel into per-station scalars (pass a `target_tz`
+panel for local-time peaks).
+
 ## Fleet reconciliation — where are the bikes, really?
 
 ```python
