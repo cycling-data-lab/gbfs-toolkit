@@ -153,3 +153,62 @@ def detect_ghost_vehicles(
     return out[
         ["first_seen", "last_seen", "n_obs", "observed_days", "max_displacement_m", "is_ghost"]
     ]
+
+
+def vehicle_idle_time(
+    vehicle_panel: pd.DataFrame,
+    *,
+    threshold_hours: float = 48.0,
+    move_threshold_m: float = 50.0,
+) -> pd.DataFrame:
+    """Fraction of the fleet that has not moved for ``threshold_hours``, as a time series.
+
+    Operators advertise large fleets, but researchers suspect a sizeable share is abandoned,
+    broken (without an ``is_disabled`` flag) or stuck in courtyards. For each snapshot this reports
+    the share of vehicles whose position has not changed (beyond ``move_threshold_m``) for at least
+    ``threshold_hours``, quantifying the "zombie fleet".
+
+    Requires stable ``vehicle_id`` over the window. GBFS 2.1+ rotates ids for privacy; idle
+    detection is only meaningful where the feed keeps them stable.
+
+    Parameters
+    ----------
+    vehicle_panel : pandas.DataFrame
+        Long frame of vehicle snapshots with ``system_id, vehicle_id, lat, lon, fetched_at``.
+    threshold_hours : float, default 48.0
+        Idle duration above which a vehicle counts as idle.
+    move_threshold_m : float, default 50.0
+        Displacement (great-circle metres) above which a vehicle is considered to have moved.
+
+    Returns
+    -------
+    pandas.DataFrame
+        ``system_id, fetched_at, n_vehicles, n_idle, idle_fraction`` (one row per snapshot).
+    """
+    df = (
+        vehicle_panel.reset_index()
+        if isinstance(vehicle_panel.index, pd.MultiIndex)
+        else vehicle_panel.copy()
+    )
+    require_columns(
+        df, ["system_id", "vehicle_id", "lat", "lon", "fetched_at"], what="vehicle_idle_time"
+    )
+    df = df.sort_values(["system_id", "vehicle_id", "fetched_at"]).reset_index(drop=True)
+    keys = [df["system_id"], df["vehicle_id"]]
+    grp = df.groupby(["system_id", "vehicle_id"], sort=False)
+    prev_lat = grp["lat"].shift().to_numpy()
+    prev_lon = grp["lon"].shift().to_numpy()
+    disp = pd.Series(
+        haversine_m(df["lat"].to_numpy(), df["lon"].to_numpy(), prev_lat, prev_lon), index=df.index
+    )
+    moved = (disp > move_threshold_m).mask(disp.isna(), True)
+    move_time = pd.to_datetime(df["fetched_at"]).where(moved.to_numpy()).groupby(keys).ffill()
+    idle_hours = (pd.to_datetime(df["fetched_at"]) - move_time).dt.total_seconds() / 3600.0
+    df["_idle"] = (idle_hours >= threshold_hours).to_numpy()
+    out = (
+        df.groupby(["system_id", "fetched_at"])
+        .agg(n_vehicles=("vehicle_id", "size"), n_idle=("_idle", "sum"))
+        .reset_index()
+    )
+    out["idle_fraction"] = out["n_idle"] / out["n_vehicles"]
+    return out

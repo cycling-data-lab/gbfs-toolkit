@@ -20,6 +20,7 @@ from gbfs_toolkit import (
     models,
 )
 from gbfs_toolkit.analysis import (
+    capacity_utilization,
     cyclical_time_features,
     ebikes,
     filter_vehicles,
@@ -29,6 +30,7 @@ from gbfs_toolkit.analysis import (
     network_changes,
     occupancy,
     station_state,
+    temporal_context_features,
 )
 from gbfs_toolkit.audit import audit_dynamic, audit_frames, audit_static, drop_flagged
 from gbfs_toolkit.catalog import filter_catalog, normalize_operator, resolve, systems_catalog
@@ -58,7 +60,7 @@ from gbfs_toolkit.fetch import (
     fetch_multiple,
     parse_discovery,
 )
-from gbfs_toolkit.fleet import detect_ghost_vehicles, reconcile_fleet_state
+from gbfs_toolkit.fleet import detect_ghost_vehicles, reconcile_fleet_state, vehicle_idle_time
 from gbfs_toolkit.geo import (
     GeoKDTree,
     features_within,
@@ -67,6 +69,7 @@ from gbfs_toolkit.geo import (
     stations_near,
     to_gdf,
     to_geojson,
+    two_step_fca,
 )
 from gbfs_toolkit.geofencing import (
     to_canonical_geofencing,
@@ -99,24 +102,37 @@ from gbfs_toolkit.stats import (
     compare_systems,
     concentration_metrics,
     coverage_stats,
+    diurnal_summary_stats,
+    dynamic_gini_index,
     lorenz_curve,
     morans_i,
     ripley_k,
+    spatial_center_of_mass,
+    spatial_entropy,
     system_profile,
 )
 from gbfs_toolkit.timeseries import (
+    aliasing_vulnerability,
     append_to_parquet,
     build_availability_panel,
     calculate_net_flow,
     coverage_report,
+    cumulative_imbalance,
     detect_frozen_stations,
+    docking_pressure,
+    fleet_turnover_proxy,
+    flow_asymmetry_ratio,
     flow_balance,
     generate_manifest,
+    join_exogenous_timeseries,
+    service_reliability_index,
+    station_outage_rates,
     stockout_episodes,
+    temporal_autocorrelation,
     turnover,
 )
 
-__version__ = "1.2.0"
+__version__ = "1.3.0"
 
 __all__ = [
     # audit (the flagship)
@@ -214,6 +230,24 @@ __all__ = [
     "SCHEMAS",
     "load_example",
     "show_versions",
+    # research indicators (1.3.0): service, equity, dynamics, sampling, calendar
+    "service_reliability_index",
+    "station_outage_rates",
+    "capacity_utilization",
+    "dynamic_gini_index",
+    "two_step_fca",
+    "flow_asymmetry_ratio",
+    "fleet_turnover_proxy",
+    "cumulative_imbalance",
+    "docking_pressure",
+    "spatial_center_of_mass",
+    "spatial_entropy",
+    "temporal_autocorrelation",
+    "aliasing_vulnerability",
+    "diurnal_summary_stats",
+    "temporal_context_features",
+    "vehicle_idle_time",
+    "join_exogenous_timeseries",
     # meta
     "models",
     "RULES",

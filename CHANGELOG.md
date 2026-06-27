@@ -3,6 +3,27 @@
 All notable changes are documented here ([Keep a Changelog](https://keepachangelog.com),
 [SemVer](https://semver.org)).
 
+## [1.3.0] - descriptive research indicators
+
+### Added
+Seventeen pure, descriptive indicators that turn the panel into publication-ready summary
+statistics. All are strictly descriptive (no origin-destination, routing, prediction or
+imputation), operate on the canonical frames, and are exposed on the `.gbfs` accessor.
+
+- **Service and equity**: `service_reliability_index` (level-of-service probability per station
+  and time-of-day), `station_outage_rates` (stockout and saturation fractions),
+  `capacity_utilization` (bikes over capacity, nullable), `dynamic_gini_index` (Gini of available
+  bikes over time), `two_step_fca` (two-step floating catchment area accessibility, `[geo]`).
+- **Observed dynamics**: `flow_asymmetry_ratio` (inflow over outflow), `fleet_turnover_proxy`
+  (a lower-bound usage rate per vehicle), `cumulative_imbalance` (drift), `docking_pressure`
+  (typical inflow over free docks), `spatial_center_of_mass` (fleet centre of gravity over time),
+  `spatial_entropy` (Shannon entropy of the free-floating distribution).
+- **Temporal and sampling**: `temporal_autocorrelation` (ACF at hour/day/week lags),
+  `aliasing_vulnerability` (a Nyquist-limit diagnostic), `diurnal_summary_stats` (hour-of-day
+  mean/median/P5/P95), `temporal_context_features` (is_weekend, time_block, optional is_holiday).
+- **Fleet and exogenous**: `vehicle_idle_time` (zombie-fleet share over time),
+  `join_exogenous_timeseries` (safe `merge_asof` of weather/traffic onto the panel, bring your own).
+
 ## [1.2.0] - reproduce the audit catalogue from the library
 
 ### Added

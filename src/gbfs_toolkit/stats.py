@@ -12,6 +12,7 @@ import numpy as np
 import pandas as pd
 
 from gbfs_toolkit.analysis import STATION_STATES, station_state
+from gbfs_toolkit.models import require_columns
 
 
 def _num(df: pd.DataFrame, col: str) -> pd.Series:
@@ -413,3 +414,197 @@ def availability_stats(panel: pd.DataFrame, *, time_col: str = "fetched_at") -> 
         res["diurnal_amplitude"] = np.nan
         res["peak_hour"] = np.nan
     return res
+
+
+def _gini(values: np.ndarray) -> float:
+    """Gini coefficient of non-negative values (0 = equal, 1 = maximally concentrated)."""
+    v = np.sort(np.asarray(values, dtype="float64"))
+    v = v[np.isfinite(v)]
+    n = v.size
+    if n == 0 or v.sum() == 0:
+        return float("nan")
+    cum = np.cumsum(v)
+    return float((n + 1 - 2 * np.sum(cum) / cum[-1]) / n)
+
+
+def spatial_entropy(
+    vehicle_panel: pd.DataFrame, *, grid_size_m: float = 200.0, time_col: str = "fetched_at"
+) -> pd.DataFrame:
+    """Shannon entropy of the free-floating fleet's spatial distribution over time.
+
+    A free-floating system tends to collapse entropically (vehicles pile into city centres or
+    topographic low points). Tracking the Shannon entropy of the per-snapshot distribution over a
+    fixed metric grid objectifies that concentration without depending on administrative
+    boundaries: high entropy is an even spread, low entropy is concentration.
+
+    For each snapshot, vehicles are binned into ``grid_size_m`` cells (equirectangular projection)
+    and :math:`H = -\\sum_i p_i \\ln p_i` is computed over the occupied cells, where :math:`p_i` is
+    the share of the fleet in cell :math:`i`. ``evenness`` normalises by :math:`\\ln(\\text{cells})`
+    so it is comparable across snapshots with different footprints.
+
+    Parameters
+    ----------
+    vehicle_panel : pandas.DataFrame
+        A history of canonical ``VehicleStatus`` rows; needs ``lat, lon`` and ``time_col``.
+    grid_size_m : float, default 200.0
+        Grid cell size in metres.
+    time_col : str, default "fetched_at"
+        Snapshot timestamp to group by.
+
+    Returns
+    -------
+    pandas.DataFrame
+        One row per snapshot: ``<time_col>, n_vehicles, n_cells, shannon_entropy, evenness``.
+    """
+    df = (
+        vehicle_panel.reset_index()
+        if isinstance(vehicle_panel.index, pd.MultiIndex)
+        else vehicle_panel.copy()
+    )
+    require_columns(df, ["lat", "lon", time_col], what="spatial_entropy")
+    lat = pd.to_numeric(df["lat"], errors="coerce")
+    lon = pd.to_numeric(df["lon"], errors="coerce")
+    finite = lat.notna() & lon.notna()
+    df = df.loc[finite].copy()
+    if df.empty:
+        return pd.DataFrame(
+            columns=[time_col, "n_vehicles", "n_cells", "shannon_entropy", "evenness"]
+        )
+    lat_f, lon_f = lat[finite].to_numpy(), lon[finite].to_numpy()
+    mean_lat = np.deg2rad(np.mean(lat_f))
+    x = _EARTH_RADIUS_M * np.deg2rad(lon_f) * np.cos(mean_lat)
+    y = _EARTH_RADIUS_M * np.deg2rad(lat_f)
+    df["_cell"] = list(
+        zip(
+            np.floor(x / grid_size_m).astype("int64"),
+            np.floor(y / grid_size_m).astype("int64"),
+            strict=True,
+        )
+    )
+
+    rows = []
+    for t, g in df.groupby(time_col, sort=True):
+        counts = g.groupby("_cell").size().to_numpy()
+        p = counts / counts.sum()
+        h = float(-(p * np.log(p)).sum())
+        n_cells = int(len(counts))
+        rows.append(
+            {
+                time_col: t,
+                "n_vehicles": int(len(g)),
+                "n_cells": n_cells,
+                "shannon_entropy": h,
+                "evenness": h / np.log(n_cells) if n_cells > 1 else 0.0,
+            }
+        )
+    return pd.DataFrame(rows)
+
+
+def dynamic_gini_index(
+    panel: pd.DataFrame, *, target_col: str = "num_bikes_available", time_col: str = "fetched_at"
+) -> pd.DataFrame:
+    """Gini coefficient of available bikes across stations, as a time series.
+
+    Capacity-based concentration (see :func:`concentration_metrics`) measures a network's static
+    design. This measures the *dynamic* inequality of where the bikes actually are: a system with
+    evenly distributed capacity can still become deeply unequal at 18:00, when the fleet piles into
+    one district. A rising curve over the day objectifies that loss of equity.
+
+    Parameters
+    ----------
+    panel : pandas.DataFrame
+        From :func:`build_availability_panel` or a flat frame with ``station_id``, ``time_col`` and
+        ``target_col``.
+    target_col : str, default "num_bikes_available"
+        The per-station quantity whose distribution is measured.
+    time_col : str, default "fetched_at"
+        Snapshot timestamp.
+
+    Returns
+    -------
+    pandas.DataFrame
+        ``<time_col>, gini, n_stations`` (one row per snapshot).
+    """
+    df = panel.reset_index() if isinstance(panel.index, pd.MultiIndex) else panel.copy()
+    require_columns(df, [time_col, target_col], what="dynamic_gini_index")
+    vals = pd.to_numeric(df[target_col], errors="coerce")
+    rows = []
+    for t, idx in df.groupby(time_col, sort=True).groups.items():
+        v = vals.loc[idx].dropna().to_numpy()
+        rows.append({time_col: t, "gini": _gini(v), "n_stations": int(v.size)})
+    return pd.DataFrame(rows)
+
+
+def spatial_center_of_mass(
+    panel: pd.DataFrame,
+    *,
+    freq: str = "1h",
+    weight_col: str = "num_bikes_available",
+    time_col: str = "fetched_at",
+) -> pd.DataFrame:
+    """Fleet centre of gravity over time: the weighted-mean station coordinate per period.
+
+    Summarises the whole network's spatial dynamics as one moving point. In hilly or monocentric
+    cities the centre of mass drifts downhill or toward the centre over the day, which is the
+    signature of the pendular migration that forces heavy evening rebalancing.
+
+    Parameters
+    ----------
+    panel : pandas.DataFrame
+        A panel joined with station coordinates: needs ``lat, lon, time_col`` and ``weight_col``.
+    freq : str, default "1h"
+        Aggregation bin (a pandas offset alias).
+    weight_col : str, default "num_bikes_available"
+        Weight for the mean (e.g. available bikes).
+
+    Returns
+    -------
+    pandas.DataFrame
+        ``period, center_lat, center_lon, total_weight``.
+    """
+    df = panel.reset_index() if isinstance(panel.index, pd.MultiIndex) else panel.copy()
+    require_columns(df, ["lat", "lon", time_col, weight_col], what="spatial_center_of_mass")
+    w = pd.to_numeric(df[weight_col], errors="coerce").fillna(0.0).to_numpy()
+    lat = pd.to_numeric(df["lat"], errors="coerce").to_numpy()
+    lon = pd.to_numeric(df["lon"], errors="coerce").to_numpy()
+    period = pd.to_datetime(df[time_col]).dt.floor(freq)
+    work = pd.DataFrame({"period": period.to_numpy(), "_wlat": w * lat, "_wlon": w * lon, "_w": w})
+    agg = work.groupby("period").sum()
+    out = pd.DataFrame(
+        {
+            "period": agg.index,
+            "center_lat": agg["_wlat"] / agg["_w"].where(agg["_w"] > 0),
+            "center_lon": agg["_wlon"] / agg["_w"].where(agg["_w"] > 0),
+            "total_weight": agg["_w"].to_numpy(),
+        }
+    ).reset_index(drop=True)
+    return out
+
+
+def diurnal_summary_stats(
+    panel: pd.DataFrame, *, value_col: str = "num_bikes_available", time_col: str = "fetched_at"
+) -> pd.DataFrame:
+    """Hour-of-day summary of a quantity: mean, median and robust P5/P95 bands.
+
+    The aggregation behind the classic diurnal usage curve with its uncertainty ribbon. Provided
+    once so studies do not re-derive ``groupby(hour).agg(...)`` with ad-hoc, outlier-sensitive
+    percentiles. Convert the panel to local time first for local-hour semantics.
+
+    Returns
+    -------
+    pandas.DataFrame
+        ``hour`` (0 to 23) with ``mean, median, p05, p95, n``.
+    """
+    df = panel.reset_index() if isinstance(panel.index, pd.MultiIndex) else panel.copy()
+    require_columns(df, [value_col, time_col], what="diurnal_summary_stats")
+    work = pd.DataFrame(
+        {
+            "hour": pd.to_datetime(df[time_col]).dt.hour.to_numpy(),
+            "_v": pd.to_numeric(df[value_col], errors="coerce").to_numpy(),
+        }
+    )
+    g = work.groupby("hour")["_v"]
+    out = g.agg(["mean", "median", "size"]).rename(columns={"size": "n"})
+    out["p05"] = g.quantile(0.05)
+    out["p95"] = g.quantile(0.95)
+    return out.reset_index()[["hour", "mean", "median", "p05", "p95", "n"]]

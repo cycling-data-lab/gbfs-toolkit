@@ -13,6 +13,8 @@ from typing import TYPE_CHECKING, Any
 import numpy as np
 import pandas as pd
 
+from gbfs_toolkit.models import require_columns
+
 if TYPE_CHECKING:  # pragma: no cover
     import geopandas as gpd
 
@@ -267,3 +269,102 @@ def to_geojson(
 
     Path(path).write_text(text, encoding="utf-8")
     return path
+
+
+def _decay_weights(d: np.ndarray, d_max: float, decay: str) -> np.ndarray:
+    """Distance-decay weights for a catchment of radius ``d_max``."""
+    if decay == "none":
+        return np.ones_like(d, dtype="float64")
+    if decay == "linear":
+        return np.clip(1.0 - d / d_max, 0.0, None)
+    if decay == "gaussian":
+        sigma = d_max / 3.0  # the catchment edge sits at ~3 sigma
+        return np.exp(-0.5 * (d / sigma) ** 2)
+    raise ValueError(f"decay must be 'gaussian', 'linear' or 'none', got {decay!r}")
+
+
+def _point_latlon(frame: pd.DataFrame) -> tuple[np.ndarray, np.ndarray]:
+    """Latitude / longitude arrays from lat/lon columns or a GeoDataFrame geometry."""
+    if "lat" in frame.columns and "lon" in frame.columns:
+        return (
+            pd.to_numeric(frame["lat"], errors="coerce").to_numpy(),
+            pd.to_numeric(frame["lon"], errors="coerce").to_numpy(),
+        )
+    if hasattr(frame, "geometry"):
+        geom = frame.geometry
+        return geom.y.to_numpy(dtype="float64"), geom.x.to_numpy(dtype="float64")
+    raise ValueError("demand needs 'lat'/'lon' columns or a GeoDataFrame point geometry")
+
+
+def two_step_fca(
+    info: pd.DataFrame,
+    demand: pd.DataFrame,
+    *,
+    max_distance_m: float = 800.0,
+    decay: str = "gaussian",
+    supply_col: str = "capacity",
+    demand_col: str = "population",
+) -> pd.Series:
+    """Two-step floating catchment area (2SFCA) accessibility, a spatial-equity measure.
+
+    Concentration measures (Gini, Theil) capture inequality *inside* the network; 2SFCA captures
+    equity of access *to* the network from where people are, the metric health geographers use to
+    find mobility deserts. Step 1 computes a supply-to-demand ratio at each station (capacity over
+    the distance-weighted population in its catchment); step 2 sums those ratios, distance-weighted,
+    over the stations reachable from each demand location.
+
+    Straight-line (great-circle) proximity only; no routing. Bring your own demand layer (no
+    network calls).
+
+    Parameters
+    ----------
+    info : pandas.DataFrame
+        Canonical station inventory with ``lat, lon`` and ``supply_col``.
+    demand : pandas.DataFrame or geopandas.GeoDataFrame
+        Demand locations with ``demand_col`` and either ``lat``/``lon`` columns or a point geometry.
+    max_distance_m : float, default 800.0
+        Catchment radius in metres.
+    decay : {"gaussian", "linear", "none"}, default "gaussian"
+        Distance-decay weighting within the catchment.
+    supply_col, demand_col : str
+        Columns holding station capacity and location demand (e.g. population).
+
+    Returns
+    -------
+    pandas.Series
+        Accessibility score per demand location, aligned to ``demand.index``
+        (``name="accessibility_2sfca"``). Higher is better served.
+
+    References
+    ----------
+    Luo and Wang (2003); Radke and Mu (2000). Applied to bike-share equity by e.g. Qian et al. (2020).
+    """
+    require_columns(info, ["lat", "lon", supply_col], what="two_step_fca")
+    require_columns(demand, [demand_col], what="two_step_fca")
+    slat = pd.to_numeric(info["lat"], errors="coerce").to_numpy()
+    slon = pd.to_numeric(info["lon"], errors="coerce").to_numpy()
+    supply = pd.to_numeric(info[supply_col], errors="coerce").fillna(0.0).to_numpy()
+    dlat, dlon = _point_latlon(demand)
+    dem = pd.to_numeric(demand[demand_col], errors="coerce").fillna(0.0).to_numpy()
+
+    # Step 1: supply-to-demand ratio R_j at each station.
+    r_j = np.zeros(len(supply), dtype="float64")
+    demand_tree = GeoKDTree(dlat, dlon)
+    for j, idx in enumerate(demand_tree.query_radius(slat, slon, radius_m=max_distance_m)):
+        if idx.size == 0:
+            continue
+        d = haversine_m(slat[j], slon[j], dlat[idx], dlon[idx])
+        weighted_demand = float((dem[idx] * _decay_weights(d, max_distance_m, decay)).sum())
+        if weighted_demand > 0:
+            r_j[j] = supply[j] / weighted_demand
+
+    # Step 2: sum the reachable ratios at each demand location.
+    access = np.zeros(len(dem), dtype="float64")
+    supply_tree = GeoKDTree(slat, slon)
+    for i, idx in enumerate(supply_tree.query_radius(dlat, dlon, radius_m=max_distance_m)):
+        if idx.size == 0:
+            continue
+        d = haversine_m(dlat[i], dlon[i], slat[idx], slon[idx])
+        access[i] = float((r_j[idx] * _decay_weights(d, max_distance_m, decay)).sum())
+
+    return pd.Series(access, index=demand.index, name="accessibility_2sfca")

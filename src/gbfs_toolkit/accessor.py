@@ -12,7 +12,7 @@ from __future__ import annotations
 
 import pandas as pd
 
-from gbfs_toolkit import analysis, audit, geo, models, stats, timeseries
+from gbfs_toolkit import analysis, audit, fleet, geo, models, stats, timeseries
 
 
 @pd.api.extensions.register_dataframe_accessor("gbfs")
@@ -103,3 +103,56 @@ class GBFSAccessor:
     def network_changes(self, new: pd.DataFrame, **kw) -> pd.DataFrame:
         """``old.gbfs.network_changes(new)`` → added/removed/recapacitated/moved."""
         return analysis.network_changes(self._df, new, **kw)
+
+    # -- research indicators (1.3.0), single-frame --------------------------
+    def service_reliability_index(self, **kw) -> pd.DataFrame:
+        return timeseries.service_reliability_index(self._df, **kw)
+
+    def station_outage_rates(self) -> pd.DataFrame:
+        return timeseries.station_outage_rates(self._df)
+
+    def flow_asymmetry_ratio(self, **kw) -> pd.DataFrame:
+        return timeseries.flow_asymmetry_ratio(self._df, **kw)
+
+    def fleet_turnover_proxy(self, **kw) -> pd.DataFrame:
+        return timeseries.fleet_turnover_proxy(self._df, **kw)
+
+    def cumulative_imbalance(self, **kw) -> pd.DataFrame:
+        return timeseries.cumulative_imbalance(self._df, **kw)
+
+    def docking_pressure(self) -> pd.DataFrame:
+        return timeseries.docking_pressure(self._df)
+
+    def temporal_autocorrelation(self, **kw) -> pd.DataFrame:
+        return timeseries.temporal_autocorrelation(self._df, **kw)
+
+    def aliasing_vulnerability(self) -> pd.DataFrame:
+        return timeseries.aliasing_vulnerability(self._df)
+
+    def dynamic_gini_index(self, **kw) -> pd.DataFrame:
+        return stats.dynamic_gini_index(self._df, **kw)
+
+    def spatial_center_of_mass(self, **kw) -> pd.DataFrame:
+        return stats.spatial_center_of_mass(self._df, **kw)
+
+    def spatial_entropy(self, **kw) -> pd.DataFrame:
+        return stats.spatial_entropy(self._df, **kw)
+
+    def diurnal_summary_stats(self, **kw) -> pd.DataFrame:
+        return stats.diurnal_summary_stats(self._df, **kw)
+
+    def temporal_context_features(self, **kw) -> pd.DataFrame:
+        return analysis.temporal_context_features(self._df, **kw)
+
+    def vehicle_idle_time(self, **kw) -> pd.DataFrame:
+        return fleet.vehicle_idle_time(self._df, **kw)
+
+    # -- research indicators (1.3.0), needing a second frame ----------------
+    def capacity_utilization(self, info: pd.DataFrame) -> pd.DataFrame:
+        return analysis.capacity_utilization(self._df, info)
+
+    def two_step_fca(self, demand: pd.DataFrame, **kw) -> pd.Series:
+        return geo.two_step_fca(self._df, demand, **kw)
+
+    def join_exogenous(self, exogenous: pd.DataFrame, **kw) -> pd.DataFrame:
+        return timeseries.join_exogenous_timeseries(self._df, exogenous, **kw)
