@@ -6,6 +6,10 @@ All notable changes are documented here ([Keep a Changelog](https://keepachangel
 ## [Unreleased]
 
 ### Added
+- **Multimodal** (`multimodal`): `link_transit_stops(info, gtfs_stops_df, radius_m=200)` —
+  flags first/last-mile feeder docks near rail/bus by spatial proximity (GeoKDTree;
+  Bring-Your-Own GTFS `stops`, no transit API, no schedules). Adds `nearest_stop_id`,
+  `nearest_stop_dist_m`, `n_transit_within`, `is_transit_feeder`.
 - **Station clustering** (`cluster`, extra `[cluster]`): `cluster_spatial`
   (HDBSCAN/DBSCAN on projected metres), `cluster_spectral` (geographic-affinity spectral
   clustering), and `cluster_diurnal_profiles` (occupancy-profile clustering → typologies).

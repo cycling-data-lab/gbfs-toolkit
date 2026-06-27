@@ -130,8 +130,21 @@ gb.cluster_diurnal_profiles(panel, n_clusters=4)    # daily-rhythm typologies �
 
 `cluster_diurnal_profiles` turns the longitudinal panel into station **typologies** —
 e.g. "morning commuter origin" (full at night, empty by day) vs "recreational" — from each
-station's 24-hour occupancy profile (robust to irregular sampling). The payoff of the
-data lake.
+station's 24-hour occupancy profile (robust to irregular sampling). Modern options:
+auto-`k` by silhouette, shape clustering (`normalize="zscore"`), soft GMM, DTW
+(`method="dtw"`, extra `[dtw]`), weekday/weekend split. And `label_diurnal_typology`
+turns clusters into **named** types. The payoff of the data lake.
+
+## Multimodal — bikeshare ↔ transit
+
+```python
+stops = pd.read_csv("gtfs/stops.txt")               # bring your own GTFS stops
+linked = gb.link_transit_stops(info, stops, radius_m=200)
+feeders = linked[linked["is_transit_feeder"]]       # first/last-mile docks near rail/bus
+```
+
+Pure spatial proximity on `GeoKDTree` (no transit API, no schedules) — `is_transit_feeder`,
+`nearest_stop_dist_m`, `n_transit_within`.
 
 ## Roadmap
 
@@ -141,8 +154,9 @@ data lake.
   (D1–D3), `station_state`, geo (`GeoKDTree`, `find_nearest_stations`), schema hardening.
 - **v0.3 (this)** — longitudinal data lake: `append_to_parquet`,
   `build_availability_panel`, `calculate_net_flow`.
-- **v0.4** — `cluster` (spatial / spectral / **diurnal profiles**).
-- **next** — `multimodal` (transit links), `osm` (BYOG infrastructure enrichment).
+- **v0.4** — `cluster` (spatial / spectral / **diurnal profiles** + named typologies).
+- **v0.5** — `multimodal` (bikeshare ↔ transit feeders, BYOG GTFS).
+- **next** — `osm` (BYOG infrastructure enrichment).
 
 ## How to cite
 

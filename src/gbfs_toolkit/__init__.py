@@ -35,6 +35,7 @@ from gbfs_toolkit.fetch import (
 )
 from gbfs_toolkit.geo import GeoKDTree, find_nearest_stations, haversine_m, to_gdf
 from gbfs_toolkit.models import AUDIT_FLAGS, RULES, SchemaError
+from gbfs_toolkit.multimodal import link_transit_stops
 from gbfs_toolkit.normalize import (
     to_canonical_station_info,
     to_canonical_station_status,
@@ -80,6 +81,8 @@ __all__ = [
     "cluster_diurnal_profiles",
     "diurnal_profiles",
     "label_diurnal_typology",
+    # multimodal
+    "link_transit_stops",
     # analysis & geo
     "station_state",
     "find_nearest_stations",
