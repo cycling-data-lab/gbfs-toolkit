@@ -608,3 +608,175 @@ def diurnal_summary_stats(
     out["p05"] = g.quantile(0.05)
     out["p95"] = g.quantile(0.95)
     return out.reset_index()[["hour", "mean", "median", "p05", "p95", "n"]]
+
+
+def local_morans_i(
+    info: pd.DataFrame,
+    value_col: str,
+    *,
+    k: int = 8,
+    permutations: int = 999,
+    seed: int = 0,
+) -> pd.DataFrame:
+    """Local Moran's I (LISA): per-station spatial-autocorrelation hotspots and cold spots.
+
+    Where :func:`morans_i` returns one global number ("is there a pattern?"), LISA localises it:
+    each station gets a local statistic, a permutation pseudo p-value, and a cluster label, so a
+    study can map *where* the low-availability cold spots or high-turnover hot spots are.
+
+    With deviations :math:`z_i = x_i - \\bar{x}` and row-standardised k-nearest-neighbour weights,
+    the local statistic is :math:`I_i = (z_i / m_2)\\sum_j w_{ij} z_j`, where
+    :math:`m_2 = \\frac{1}{n}\\sum_i z_i^2`. Significance is a conditional-permutation pseudo
+    p-value; each station is labelled ``HH`` (high value, high neighbours), ``LL``, ``HL`` or
+    ``LH`` (spatial outliers) when significant, else ``ns``. Requires scipy (``[geo]`` weights).
+
+    Parameters
+    ----------
+    info : pandas.DataFrame
+        Canonical station inventory with ``lat, lon`` and ``value_col``.
+    value_col : str
+        The variable to test (for example occupancy or turnover).
+    k : int, default 8
+        Number of nearest neighbours for the spatial weights.
+    permutations : int, default 999
+        Permutations for the pseudo p-value.
+    seed : int, default 0
+        Seed for the permutation draw (reproducible).
+
+    Returns
+    -------
+    pandas.DataFrame
+        Aligned to ``info``: ``local_i, z_score, p_value, cluster_type`` (and ``station_id`` when
+        present). Non-finite inputs yield ``NaN`` / ``"ns"``.
+
+    References
+    ----------
+    Anselin, L. (1995). Local Indicators of Spatial Association (LISA). *Geographical Analysis*,
+    27(2), 93-115.
+    """
+    from gbfs_toolkit.geo import GeoKDTree
+
+    require_columns(info, ["lat", "lon", value_col], what="local_morans_i")
+    base = info.reset_index(drop=True)
+    lat = pd.to_numeric(base["lat"], errors="coerce").to_numpy()
+    lon = pd.to_numeric(base["lon"], errors="coerce").to_numpy()
+    x = _num(base, value_col).to_numpy()
+    finite = np.isfinite(lat) & np.isfinite(lon) & np.isfinite(x)
+
+    out = pd.DataFrame(index=base.index)
+    if "station_id" in base.columns:
+        out["station_id"] = base["station_id"]
+    out["local_i"] = np.nan
+    out["z_score"] = np.nan
+    out["p_value"] = np.nan
+    out["cluster_type"] = "ns"
+
+    n = int(finite.sum())
+    kk = min(k, n - 1)
+    if n < 3 or kk < 1:
+        return out
+
+    pos = np.where(finite)[0]
+    lat_f, lon_f, xf = lat[pos], lon[pos], x[pos]
+    _, idx = GeoKDTree(lat_f, lon_f).query(lat_f, lon_f, k=kk + 1)
+    neighbours = np.asarray(idx)[:, 1 : kk + 1]  # drop self
+
+    z = xf - xf.mean()
+    m2 = float((z**2).mean())
+    if m2 == 0:
+        return out
+    lag = z[neighbours].mean(axis=1)
+    local_i = (z / m2) * lag
+
+    rng = np.random.default_rng(seed)
+    abs_obs = np.abs(local_i)
+    ge = np.zeros(n)
+    s1 = np.zeros(n)
+    s2 = np.zeros(n)
+    for _ in range(permutations):
+        pz = rng.permutation(z)
+        i_perm = (z / m2) * pz[neighbours].mean(axis=1)
+        ge += np.abs(i_perm) >= abs_obs
+        s1 += i_perm
+        s2 += i_perm**2
+    p = (ge + 1.0) / (permutations + 1.0)
+    mean_perm = s1 / permutations
+    std_perm = np.sqrt(np.maximum(s2 / permutations - mean_perm**2, 1e-12))
+    zscore = (local_i - mean_perm) / std_perm
+
+    sig = p <= 0.05
+    hi_z, hi_lag = z > 0, lag > 0
+    ctype = np.full(n, "ns", dtype=object)
+    ctype[sig & hi_z & hi_lag] = "HH"
+    ctype[sig & ~hi_z & ~hi_lag] = "LL"
+    ctype[sig & hi_z & ~hi_lag] = "HL"
+    ctype[sig & ~hi_z & hi_lag] = "LH"
+
+    out.loc[pos, "local_i"] = local_i
+    out.loc[pos, "z_score"] = zscore
+    out.loc[pos, "p_value"] = p
+    out.loc[pos, "cluster_type"] = ctype
+    return out
+
+
+def diurnal_bimodality(
+    panel: pd.DataFrame, *, value_col: str = "num_bikes_available", time_col: str = "fetched_at"
+) -> pd.DataFrame:
+    """Sarle's bimodality coefficient of each station's diurnal profile.
+
+    Clustering yields unsupervised typologies; this yields a single, continuous, thresholded
+    scalar that separates commuter stations (a bimodal morning/evening profile) from recreational
+    or residential ones (unimodal). For the mean hourly profile with sample skewness :math:`g_1`
+    and excess kurtosis :math:`g_2`,
+
+    .. math::
+        \\mathrm{BC} = \\frac{g_1^2 + 1}{g_2 + \\frac{3(n-1)^2}{(n-2)(n-3)}},
+
+    and ``BC > 5/9 ≈ 0.555`` suggests bimodality.
+
+    Returns
+    -------
+    pandas.DataFrame
+        Per station: ``bimodality_coefficient`` (float), ``is_bimodal`` (boolean) and
+        ``peak_hour`` (hour of the busiest bin).
+
+    References
+    ----------
+    Pfister et al. (2013); Sarle's bimodality coefficient. Bikeshare diurnal context: Vogel et al.
+    (2011).
+    """
+    from scipy.stats import kurtosis, skew
+
+    df = panel.reset_index() if isinstance(panel.index, pd.MultiIndex) else panel.copy()
+    require_columns(df, ["station_id", value_col, time_col], what="diurnal_bimodality")
+    work = pd.DataFrame(
+        {
+            "station_id": df["station_id"].to_numpy(),
+            "hour": pd.to_datetime(df[time_col]).dt.hour.to_numpy(),
+            "_v": pd.to_numeric(df[value_col], errors="coerce").to_numpy(),
+        }
+    )
+    profiles = work.groupby(["station_id", "hour"])["_v"].mean().unstack("hour")
+    rows = []
+    for sid, profile in profiles.iterrows():
+        a = profile.dropna().to_numpy()
+        n = a.size
+        if n < 4 or np.allclose(a, a[0]):
+            bc = np.nan
+        else:
+            g1 = float(skew(a, bias=False))
+            g2 = float(kurtosis(a, fisher=True, bias=False))
+            denom = g2 + 3.0 * (n - 1) ** 2 / ((n - 2) * (n - 3))
+            bc = (g1**2 + 1.0) / denom if denom != 0 else np.nan
+        peak_hour = int(profile.idxmax()) if profile.notna().any() else -1
+        rows.append(
+            {
+                "station_id": sid,
+                "bimodality_coefficient": bc,
+                "is_bimodal": pd.NA if np.isnan(bc) else bool(bc > 5 / 9),
+                "peak_hour": peak_hour,
+            }
+        )
+    out = pd.DataFrame(rows)
+    out["is_bimodal"] = out["is_bimodal"].astype("boolean")
+    return out

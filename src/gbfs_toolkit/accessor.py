@@ -156,3 +156,19 @@ class GBFSAccessor:
 
     def join_exogenous(self, exogenous: pd.DataFrame, **kw) -> pd.DataFrame:
         return timeseries.join_exogenous_timeseries(self._df, exogenous, **kw)
+
+    # -- advanced analytics (1.4.0) -----------------------------------------
+    def local_morans_i(self, value_col: str, **kw) -> pd.DataFrame:
+        return stats.local_morans_i(self._df, value_col, **kw)
+
+    def diurnal_bimodality(self, **kw) -> pd.DataFrame:
+        return stats.diurnal_bimodality(self._df, **kw)
+
+    def availability_synchrony(self, **kw) -> pd.DataFrame:
+        return timeseries.availability_synchrony(self._df, **kw)
+
+    def outage_survival(self, **kw) -> pd.DataFrame:
+        return timeseries.outage_survival(self._df, **kw)
+
+    def temporal_concentration(self, **kw) -> pd.DataFrame:
+        return timeseries.temporal_concentration(self._df, **kw)

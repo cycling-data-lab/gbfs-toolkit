@@ -3,6 +3,25 @@
 All notable changes are documented here ([Keep a Changelog](https://keepachangelog.com),
 [SemVer](https://semver.org)).
 
+## [1.4.0] - advanced descriptive analytics
+
+### Added
+Five research-grade descriptive functions, all on the `.gbfs` accessor and within the descriptive
+scope (no origin-destination, routing, prediction or imputation). Closes #2.
+
+- `local_morans_i` (LISA): per-station spatial-autocorrelation hotspots and cold spots with
+  conditional-permutation pseudo p-values and HH/LL/HL/LH cluster labels, where the global
+  `morans_i` only gives one number. `[geo]`/scipy. Anselin (1995).
+- `availability_synchrony`: pairwise correlation of station availability series over their common
+  support, returned as an upper-triangle edge list for downstream network analysis (bring your own
+  graph). Correlates observed availability only, never trips. O'Brien et al. (2014).
+- `diurnal_bimodality`: Sarle's bimodality coefficient of each station's diurnal profile, a
+  continuous scalar separating commuter (bimodal) from recreational (unimodal) stations.
+- `outage_survival`: empirical survival function and median / P90 time-to-recovery of stockout
+  episodes, with the right-censoring caveat stated and never imputed. Kaplan-Meier (1958).
+- `temporal_concentration`: per-station Gini of activity across time-of-day bins (temporal peaking),
+  the temporal analogue of `dynamic_gini_index`.
+
 ## [1.3.0] - descriptive research indicators
 
 ### Added

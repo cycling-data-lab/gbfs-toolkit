@@ -928,3 +928,193 @@ def fleet_turnover_proxy(panel: pd.DataFrame, *, freq: str = "1D") -> pd.DataFra
     out = pd.concat([activity.rename("activity"), fleet.rename("fleet_size")], axis=1).reset_index()
     out["turnover_proxy"] = out["activity"] / out["fleet_size"].where(out["fleet_size"] > 0)
     return out
+
+
+def _gini(values: np.ndarray) -> float:
+    """Gini coefficient of non-negative values (0 = even, 1 = concentrated)."""
+    v = np.sort(np.asarray(values, dtype="float64"))
+    v = v[np.isfinite(v)]
+    n = v.size
+    if n == 0 or v.sum() == 0:
+        return float("nan")
+    cum = np.cumsum(v)
+    return float((n + 1 - 2 * np.sum(cum) / cum[-1]) / n)
+
+
+def availability_synchrony(
+    panel: pd.DataFrame,
+    *,
+    value_col: str = "num_bikes_available",
+    freq: str = "1h",
+    method: str = "pearson",
+    min_overlap: int = 24,
+    threshold: float | None = None,
+) -> pd.DataFrame:
+    """Pairwise correlation of station availability series: a functional synchrony network.
+
+    Resamples each station to ``freq`` and correlates every pair over their common support
+    (requiring ``min_overlap`` shared observations), returning the upper-triangle **edge list**.
+    This is the descriptive adjacency that precedes community detection of co-fluctuating stations.
+    It correlates observed availability only; it infers no trips and no direction (no OD). Bring
+    your own graph library (NetworkX, igraph) for the network analysis itself.
+
+    Parameters
+    ----------
+    panel : pandas.DataFrame
+        From :func:`build_availability_panel` or a flat frame with ``station_id, fetched_at`` and
+        ``value_col``.
+    freq : str, default "1h"
+        Resampling bin for the per-station series.
+    method : {"pearson", "spearman", "kendall"}, default "pearson"
+        Correlation method.
+    min_overlap : int, default 24
+        Minimum shared observations for a pair to be reported.
+    threshold : float, optional
+        If given, keep only edges with ``abs(corr) >= threshold``.
+
+    Returns
+    -------
+    pandas.DataFrame
+        ``station_a, station_b, corr, n_overlap`` (upper triangle, unmatched pairs dropped).
+
+    References
+    ----------
+    O'Brien, Cheshire and Batty (2014); the functional-connectivity correlation-network idiom.
+    """
+    df = _panel_frame(panel)
+    require_columns(df, ["station_id", "fetched_at", value_col], what="availability_synchrony")
+    wide = pd.DataFrame(
+        {
+            "_t": pd.to_datetime(df["fetched_at"]).dt.floor(freq).to_numpy(),
+            "station_id": df["station_id"].to_numpy(),
+            "_v": pd.to_numeric(df[value_col], errors="coerce").to_numpy(),
+        }
+    )
+    mat = wide.pivot_table(index="_t", columns="station_id", values="_v", aggfunc="mean")
+    cols = mat.columns.to_numpy()
+    if cols.size < 2:
+        return pd.DataFrame(columns=["station_a", "station_b", "corr", "n_overlap"])
+    corr = mat.corr(method=method, min_periods=min_overlap).to_numpy()
+    present = mat.notna().astype("int64")
+    n_overlap = present.T.to_numpy() @ present.to_numpy()
+    ii, jj = np.triu_indices(cols.size, k=1)
+    edges = pd.DataFrame(
+        {
+            "station_a": cols[ii],
+            "station_b": cols[jj],
+            "corr": corr[ii, jj],
+            "n_overlap": n_overlap[ii, jj],
+        }
+    ).dropna(subset=["corr"])
+    if threshold is not None:
+        edges = edges[edges["corr"].abs() >= threshold]
+    return edges.reset_index(drop=True)
+
+
+def outage_survival(episodes: pd.DataFrame, *, by: str | None = None) -> pd.DataFrame:
+    """Empirical survival function of outage durations: the time-to-recovery view.
+
+    From the :func:`stockout_episodes` event table, the empirical survival
+    :math:`S(t) = \\Pr(\\text{duration} > t)` of outage durations, optionally grouped, with the
+    median and P90 time-to-recovery. Strictly empirical (Kaplan-Meier reduces to the ECDF without
+    censoring). Episodes still open at the observation window's edge are right-censored in the data;
+    they are not imputed, so read the longest durations as lower bounds.
+
+    Parameters
+    ----------
+    episodes : pandas.DataFrame
+        Output of :func:`stockout_episodes` (needs ``duration_minutes``).
+    by : str, optional
+        A grouping column (e.g. ``"station_id"`` or ``"kind"``); one survival curve per group.
+
+    Returns
+    -------
+    pandas.DataFrame
+        ``[<by>,] duration_minutes, survival, at_risk, n_episodes, median_recovery, p90_recovery``.
+
+    References
+    ----------
+    Kaplan and Meier (1958), used here as a descriptive empirical survival estimator.
+    """
+    require_columns(episodes, ["duration_minutes"], what="outage_survival")
+
+    def _curve(group: pd.DataFrame) -> pd.DataFrame:
+        d = np.sort(pd.to_numeric(group["duration_minutes"], errors="coerce").dropna().to_numpy())
+        if d.size == 0:
+            return pd.DataFrame(
+                columns=[
+                    "duration_minutes",
+                    "survival",
+                    "at_risk",
+                    "n_episodes",
+                    "median_recovery",
+                    "p90_recovery",
+                ]
+            )
+        uniq = np.unique(d)
+        return pd.DataFrame(
+            {
+                "duration_minutes": uniq,
+                "survival": [float((d > t).mean()) for t in uniq],
+                "at_risk": [int((d >= t).sum()) for t in uniq],
+                "n_episodes": int(d.size),
+                "median_recovery": float(np.median(d)),
+                "p90_recovery": float(np.quantile(d, 0.9)),
+            }
+        )
+
+    if by is None:
+        return _curve(episodes).reset_index(drop=True)
+    parts = []
+    for value, group in episodes.groupby(by, sort=True):
+        curve = _curve(group)
+        curve.insert(0, by, value)
+        parts.append(curve)
+    if not parts:
+        return _curve(episodes.iloc[:0])
+    return pd.concat(parts, ignore_index=True)
+
+
+def temporal_concentration(panel: pd.DataFrame, *, freq: str = "1h") -> pd.DataFrame:
+    """Per-station temporal peaking: the Gini of activity across time-of-day bins.
+
+    Distributes each station's activity (turnover :math:`\\sum|\\Delta|`) across the day's ``freq``
+    bins and takes the Gini of that distribution: ``1`` means all activity in one peak bin, ``0``
+    means uniform. The temporal analogue of the spatial :func:`dynamic_gini_index`, for sizing
+    peak-hour infrastructure and rebalancing windows. Convert to local time first for local hours.
+
+    Returns
+    -------
+    pandas.DataFrame
+        ``system_id, station_id, temporal_gini, peak_share, peak_bin`` (``peak_bin`` is minutes
+        since midnight of the busiest bin).
+    """
+    flow = calculate_net_flow(panel).dropna(subset=["net_flow"])
+    if flow.empty:
+        return pd.DataFrame(
+            columns=["system_id", "station_id", "temporal_gini", "peak_share", "peak_bin"]
+        )
+    step_min = pd.tseries.frequencies.to_offset(freq).nanos / 6e10
+    ts = pd.to_datetime(flow["fetched_at"])
+    minutes = ts.dt.hour * 60 + ts.dt.minute + ts.dt.second / 60
+    tod = (np.floor(minutes / step_min) * step_min).astype("int64")
+    by_bin = (
+        flow.assign(activity=flow["net_flow"].abs(), _tod=tod.to_numpy())
+        .groupby(["system_id", "station_id", "_tod"])["activity"]
+        .sum()
+    )
+    rows = []
+    for (sysid, stid), series in by_bin.groupby(level=["system_id", "station_id"]):
+        vals = series.to_numpy()
+        total = vals.sum()
+        bins = series.index.get_level_values("_tod").to_numpy()
+        rows.append(
+            {
+                "system_id": sysid,
+                "station_id": stid,
+                "temporal_gini": _gini(vals),
+                "peak_share": float(vals.max() / total) if total > 0 else np.nan,
+                "peak_bin": int(bins[np.argmax(vals)]) if total > 0 else -1,
+            }
+        )
+    return pd.DataFrame(rows)

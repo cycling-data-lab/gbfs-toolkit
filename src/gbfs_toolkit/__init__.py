@@ -102,8 +102,10 @@ from gbfs_toolkit.stats import (
     compare_systems,
     concentration_metrics,
     coverage_stats,
+    diurnal_bimodality,
     diurnal_summary_stats,
     dynamic_gini_index,
+    local_morans_i,
     lorenz_curve,
     morans_i,
     ripley_k,
@@ -114,6 +116,7 @@ from gbfs_toolkit.stats import (
 from gbfs_toolkit.timeseries import (
     aliasing_vulnerability,
     append_to_parquet,
+    availability_synchrony,
     build_availability_panel,
     calculate_net_flow,
     coverage_report,
@@ -125,14 +128,16 @@ from gbfs_toolkit.timeseries import (
     flow_balance,
     generate_manifest,
     join_exogenous_timeseries,
+    outage_survival,
     service_reliability_index,
     station_outage_rates,
     stockout_episodes,
     temporal_autocorrelation,
+    temporal_concentration,
     turnover,
 )
 
-__version__ = "1.3.0"
+__version__ = "1.4.0"
 
 __all__ = [
     # audit (the flagship)
@@ -248,6 +253,12 @@ __all__ = [
     "temporal_context_features",
     "vehicle_idle_time",
     "join_exogenous_timeseries",
+    # advanced analytics (1.4.0): spatial LISA, synchrony, bimodality, survival, peaking
+    "local_morans_i",
+    "availability_synchrony",
+    "diurnal_bimodality",
+    "outage_survival",
+    "temporal_concentration",
     # meta
     "models",
     "RULES",
