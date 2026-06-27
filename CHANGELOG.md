@@ -3,6 +3,20 @@
 All notable changes are documented here ([Keep a Changelog](https://keepachangelog.com),
 [SemVer](https://semver.org)).
 
+## [1.2.0] - reproduce the audit catalogue from the library
+
+### Added
+- `audit_static` gains two keyword options so the published `gbfs-audit-catalogue` verdicts
+  can be reproduced exactly from the library:
+  - **`a7_scope="docked"` (default) or `"all"`**. The default keeps A7 dockless-aware (the
+    toolkit's behaviour since 1.0). `"all"` evaluates the null-capacity rate over every
+    station, reproducing the catalogue's original A7, under which a fully free-floating system
+    with null capacities is flagged.
+  - **`a4_sigma=3.0` (default)**. Exposes the A4 nearest-neighbour outlier multiplier for
+    sensitivity analysis, so a threshold sweep no longer needs to monkey-patch a module constant.
+- Verified byte-identical against the 46 307-station catalogue: with `a7_scope="all"`, all of
+  A1 to A7 match the published flags, and `a4_sigma` reproduces the published 2.0 to 4.0 sweep.
+
 ## [1.1.0] - conformance & robustness (from real-world migration)
 
 ### Added

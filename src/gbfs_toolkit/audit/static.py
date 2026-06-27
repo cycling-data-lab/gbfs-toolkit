@@ -89,8 +89,9 @@ def _flag_a2(df: pd.DataFrame) -> pd.Series:
     return df["system_id"].isin(flagged)
 
 
-def _flag_a4(df: pd.DataFrame, projected: np.ndarray) -> np.ndarray:
-    """A4: geospatial outliers via a robust 3-sigma rule on nearest-neighbour distance."""
+def _flag_a4(df: pd.DataFrame, projected: np.ndarray, a4_sigma: float = A4_SIGMA) -> np.ndarray:
+    """A4: geospatial outliers via a robust ``a4_sigma``-sigma rule on nearest-neighbour
+    distance (default :data:`~gbfs_toolkit.models.A4_SIGMA`)."""
     from scipy.spatial import cKDTree
 
     n = len(df)
@@ -114,7 +115,7 @@ def _flag_a4(df: pd.DataFrame, projected: np.ndarray) -> np.ndarray:
         mad = float(np.median(np.abs(nn - nn_med)))
         sigma = 1.4826 * mad
         if sigma > 0.0:
-            threshold = max(nn_med + A4_SIGMA * sigma, A4_MIN_THRESHOLD_M)
+            threshold = max(nn_med + a4_sigma * sigma, A4_MIN_THRESHOLD_M)
         else:
             threshold = max(10.0 * nn_med, A4_MIN_THRESHOLD_M)
         flag[idx_f[nn > threshold]] = True
@@ -160,22 +161,32 @@ def _flag_a6(df: pd.DataFrame) -> pd.Series:
     return df["system_id"].isin(flagged)
 
 
-def _flag_a7(df: pd.DataFrame) -> pd.Series:
-    """A7: at least 50% of a system's *docked* stations declare capacity = NaN.
+def _flag_a7(df: pd.DataFrame, scope: str = "docked") -> pd.Series:
+    """A7: at least 50% of a system's stations declare capacity = NaN.
 
-    Restricted to docked stations: free-floating / virtual anchors legitimately carry
-    null capacity, so counting them would flag every dockless system spuriously.
+    Parameters
+    ----------
+    scope : {"docked", "all"}, default "docked"
+        ``"docked"`` restricts the rate to physical docked stations, so free-floating
+        and virtual anchors (which legitimately carry null capacity) do not flag every
+        dockless system spuriously. ``"all"`` evaluates the rate over every station in
+        the system, reproducing the original ``gbfs-audit-catalogue`` definition, under
+        which a fully free-floating system with null capacities does trip A7.
     """
-    docked = df[_docked_mask(df)]
-    if docked.empty:
+    if scope not in ("docked", "all"):
+        raise ValueError(f"a7_scope must be 'docked' or 'all', got {scope!r}")
+    sub = df if scope == "all" else df[_docked_mask(df)]
+    if sub.empty:
         return pd.Series(False, index=df.index)
-    rate = docked["capacity"].isna().groupby(docked["system_id"]).mean()
-    size = docked.groupby("system_id").size()
+    rate = sub["capacity"].isna().groupby(sub["system_id"]).mean()
+    size = sub.groupby("system_id").size()
     flagged = set(rate.index[(rate >= A7_RATE_THRESHOLD) & (size >= A7_MIN_STATIONS)])
     return df["system_id"].isin(flagged)
 
 
-def audit_static(stations: pd.DataFrame) -> pd.DataFrame:
+def audit_static(
+    stations: pd.DataFrame, *, a7_scope: str = "docked", a4_sigma: float = A4_SIGMA
+) -> pd.DataFrame:
     """Run the A1–A7 semantic audit on a canonical station-information frame.
 
     Parameters
@@ -183,6 +194,13 @@ def audit_static(stations: pd.DataFrame) -> pd.DataFrame:
     stations : pandas.DataFrame
         Canonical station inventory; requires
         ``system_id, station_id, station_type, capacity, lat, lon``.
+    a7_scope : {"docked", "all"}, default "docked"
+        Scope of the A7 null-capacity rule. ``"docked"`` (default) counts only physical
+        docked stations, so dockless systems are not flagged spuriously. ``"all"`` counts
+        every station, reproducing the original ``gbfs-audit-catalogue`` verdicts.
+    a4_sigma : float, default :data:`~gbfs_toolkit.models.A4_SIGMA`
+        Multiplier of the robust (MAD-rescaled) scale in the A4 nearest-neighbour outlier
+        rule. Exposed for sensitivity analysis; the published default is ``3.0``.
 
     Returns
     -------
@@ -201,10 +219,10 @@ def audit_static(stations: pd.DataFrame) -> pd.DataFrame:
     out["A1"] = (df["station_type"] == "carsharing").to_numpy()
     out["A2"] = _flag_a2(df).to_numpy()
     out["A3"] = (df["station_type"] == "free_floating").to_numpy()
-    out["A4"] = _flag_a4(df, projected)
+    out["A4"] = _flag_a4(df, projected, a4_sigma=a4_sigma)
     out["A5"] = _flag_a5(df)
     out["A6"] = _flag_a6(df).to_numpy()
-    out["A7"] = _flag_a7(df).to_numpy()
+    out["A7"] = _flag_a7(df, scope=a7_scope).to_numpy()
 
     flags = out[list(AUDIT_FLAGS)].to_numpy()
     out["flagged"] = flags.any(axis=1)

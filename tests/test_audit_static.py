@@ -83,6 +83,21 @@ def test_a7_null_capacity():
     assert v["A7"].all()
 
 
+def test_a7_scope_all_flags_dockless_system():
+    # A fully free-floating system with null capacity: docked-aware A7 ignores it,
+    # a7_scope="all" reproduces the gbfs-audit-catalogue verdict (flag the system).
+    df = _docked_grid(n=30)
+    df["station_type"] = "free_floating"
+    df["capacity"] = np.nan
+    assert not audit_static(df)["A7"].any()  # default docked scope: not flagged
+    assert audit_static(df, a7_scope="all")["A7"].all()  # all scope: flagged
+
+
+def test_a7_scope_invalid_raises():
+    with pytest.raises(ValueError, match="a7_scope"):
+        audit_static(_docked_grid(), a7_scope="bogus")
+
+
 def test_flags_and_reason_consistent():
     df = _docked_grid()
     df.loc[0, "station_type"] = "carsharing"
