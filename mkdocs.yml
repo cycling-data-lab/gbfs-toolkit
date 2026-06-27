@@ -1,0 +1,47 @@
+site_name: gbfs-toolkit
+site_description: Research-grade ingestion and semantic A1–A7 quality audit for GBFS feeds
+repo_url: https://github.com/cycling-data-lab/gbfs-toolkit
+repo_name: cycling-data-lab/gbfs-toolkit
+
+theme:
+  name: material
+  features:
+    - navigation.sections
+    - navigation.top
+    - content.code.copy
+    - search.suggest
+  palette:
+    - scheme: default
+      primary: teal
+      toggle: { icon: material/weather-night, name: Dark mode }
+    - scheme: slate
+      primary: teal
+      toggle: { icon: material/weather-sunny, name: Light mode }
+
+plugins:
+  - search
+  - include-markdown
+  - mkdocstrings:
+      handlers:
+        python:
+          options:
+            docstring_style: numpy
+            show_source: false
+            show_root_heading: true
+            members_order: source
+            separate_signature: true
+            filters: ["!^_"]
+
+markdown_extensions:
+  - admonition
+  - pymdownx.highlight
+  - pymdownx.superfences
+  - tables
+  - toc: { permalink: true }
+
+nav:
+  - Home: index.md
+  - Methodology: methodology.md
+  - Examples: examples.md
+  - API reference: api.md
+  - Changelog: changelog.md

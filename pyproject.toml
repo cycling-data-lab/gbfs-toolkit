@@ -45,6 +45,11 @@ osm = ["geopandas>=0.14"]  # enrich_with_osm (BYOG); fetch_osm_around also needs
 parquet = ["pyarrow>=15.0"]
 cluster = ["scikit-learn>=1.4"]
 dtw = ["tslearn>=0.6"]  # shape-aware time-series clustering (method="dtw")
+docs = [
+    "mkdocs-material>=9.5",
+    "mkdocstrings[python]>=0.25",
+    "mkdocs-include-markdown-plugin>=6.0",
+]
 dev = [
     "pytest>=8.0",
     "pytest-cov>=4.0",
