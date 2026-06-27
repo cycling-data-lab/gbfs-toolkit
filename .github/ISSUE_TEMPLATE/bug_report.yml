@@ -1,0 +1,33 @@
+name: Bug report
+description: Report incorrect behaviour with a minimal reproducer
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for the report. A minimal, runnable reproducer is the single most useful thing you
+        can provide. Methodological disputes about the A1-A7 taxonomy belong in the
+        [gbfs-audit-catalogue](https://github.com/cycling-data-lab/gbfs-audit-catalogue) repository.
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened, and what did you expect?
+      placeholder: A clear description of the bug and the expected behaviour.
+    validations:
+      required: true
+  - type: textarea
+    id: reproducer
+    attributes:
+      label: Minimal reproducer
+      description: A self-contained snippet that reproduces the issue (ideally using `gb.load_example()`).
+      render: python
+    validations:
+      required: true
+  - type: textarea
+    id: versions
+    attributes:
+      label: Environment
+      description: Paste the output of `python -c "import gbfs_toolkit as gb; gb.show_versions()"`.
+      render: text
+    validations:
+      required: true
