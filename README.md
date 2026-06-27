@@ -1,25 +1,25 @@
 # gbfs-toolkit
 
 [![CI](https://github.com/cycling-data-lab/gbfs-toolkit/actions/workflows/ci.yml/badge.svg)](https://github.com/cycling-data-lab/gbfs-toolkit/actions/workflows/ci.yml)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/cycling-data-lab/gbfs-toolkit/blob/main/LICENSE)
 [![Python 3.10+](https://img.shields.io/badge/Python-3.10+-blue.svg)](https://www.python.org/)
 
 **Research-grade ingestion and *semantic* quality audit for GBFS bike-share feeds.**
 
 MobilityData's [`gbfs-validator`](https://github.com/MobilityData/gbfs-validator) checks
 that a feed is *syntactically* valid. `gbfs-toolkit` checks whether it is *semantically*
-trustworthy and analysis-ready — the **A1–A7 quality taxonomy** of Fossé & Pallares
-([`gbfs-audit-catalogue`](https://github.com/cycling-data-lab/gbfs-audit-catalogue)) — and
-normalises feeds into a **stable, version-independent data model** you can reuse across
+trustworthy and analysis-ready. It implements the **A1–A7 quality taxonomy** of Fossé & Pallares
+([`gbfs-audit-catalogue`](https://github.com/cycling-data-lab/gbfs-audit-catalogue)) and
+normalises feeds into a **stable, version-independent data model** that can be reused across
 studies.
 
 ## Why
 
-Every bike-share study re-implements the same plumbing — discover feeds, normalise GBFS
-1.x/2.x/3.x, and (the hard part) cope with the semantic defects the syntactic validator
-cannot see: placeholder capacities, phantom docks, transposed coordinates, out-of-perimeter
-stations. This package consolidates that into one tested interface so the audit is a verdict
-per station, not a re-run of someone's notebook.
+Every bike-share study re-implements the same plumbing: discover feeds, normalise GBFS
+1.x/2.x/3.x, and, in the more difficult case, cope with the semantic defects that the syntactic validator
+cannot see, such as placeholder capacities, phantom docks, transposed coordinates, and out-of-perimeter
+stations. This package consolidates that work into one tested interface, so the audit is a verdict
+per station rather than a re-run of someone's notebook.
 
 ## Install
 
@@ -36,7 +36,7 @@ Core depends only on numpy / scipy / pandas. Network discovery/fetch uses the op
 ```python
 import gbfs_toolkit as gb
 
-info, status = gb.load_example()          # bundled sample — no network needed
+info, status = gb.load_example()          # bundled sample, no network needed
 av = info.gbfs.join_status(status)        # fluent .gbfs accessor (or gb.join_availability)
 clean = info.gbfs.drop_flagged()          # audit A1–A7 and keep the trustworthy stations
 av.gbfs.occupancy()                       # bikes / (bikes + docks), NaN-safe
@@ -78,7 +78,7 @@ Thresholds match the published catalogue, so verdicts reproduce.
 
 ## Canonical data model (the stable contract)
 
-Ingestion is normalised **once** into version-independent frames; audit and analysis then
+Ingestion is normalised **once** into version-independent frames. Audit and analysis then
 operate purely on these. Downstream code depends on these column names, never on raw GBFS
 JSON.
 
@@ -113,7 +113,7 @@ feeds = gb.fetch_multiple(["velib", "bixi", "lyon"], max_workers=5)
 ## Longitudinal data lake
 
 Turn a stream of snapshots into an analysis-ready panel. The library owns the
-formatting / dedup / I/O; your orchestrator (cron, Airflow…) owns the polling loop.
+formatting / dedup / I/O; your orchestrator (cron, Airflow, and similar) owns the polling loop.
 Requires the optional `[parquet]` extra (`pyarrow`).
 
 ```python
@@ -134,22 +134,22 @@ resamples each station to a fixed cadence.
 
 ## Station clustering (`[cluster]`)
 
-Three lenses on "which stations belong together" — spatial, topological, behavioural:
+Three lenses on "which stations belong together": spatial, topological, and behavioural.
 
 ```python
 gb.cluster_spatial(info, method="hdbscan")          # density zones (projected metres)
 gb.cluster_spectral(info, k=6)                       # network/topology groups
-gb.cluster_diurnal_profiles(panel, n_clusters=4)    # daily-rhythm typologies ⭐
+gb.cluster_diurnal_profiles(panel, n_clusters=4)    # daily-rhythm typologies
 ```
 
-`cluster_diurnal_profiles` turns the longitudinal panel into station **typologies** —
-e.g. "morning commuter origin" (full at night, empty by day) vs "recreational" — from each
-station's 24-hour occupancy profile (robust to irregular sampling). Modern options:
+`cluster_diurnal_profiles` turns the longitudinal panel into station **typologies**,
+for example "morning commuter origin" (full at night, empty by day) versus "recreational", from each
+station's 24-hour occupancy profile (robust to irregular sampling). Available options include
 auto-`k` by silhouette, shape clustering (`normalize="zscore"`), soft GMM, DTW
-(`method="dtw"`, extra `[dtw]`), weekday/weekend split. And `label_diurnal_typology`
-turns clusters into **named** types. The payoff of the data lake.
+(`method="dtw"`, extra `[dtw]`), and weekday/weekend split. `label_diurnal_typology`
+turns clusters into **named** types. This analysis is a primary use of the data lake.
 
-## Multimodal — bikeshare ↔ transit
+## Multimodal: bikeshare ↔ transit
 
 ```python
 stops = pd.read_csv("gtfs/stops.txt")               # bring your own GTFS stops
@@ -157,13 +157,13 @@ linked = gb.link_transit_stops(info, stops, radius_m=200)
 feeders = linked[linked["is_transit_feeder"]]       # first/last-mile docks near rail/bus
 ```
 
-Pure spatial proximity on `GeoKDTree` (no transit API, no schedules) — `is_transit_feeder`,
+Pure spatial proximity on `GeoKDTree` (no transit API, no schedules): `is_transit_feeder`,
 `nearest_stop_dist_m`, `n_transit_within`.
 
-## Station surroundings — what's around each dock (`[osm]`)
+## Station surroundings: what is around each dock (`[osm]`)
 
 ```python
-# generic "what's nearby" — works for any point dataset (POIs, shops, …)
+# generic "what's nearby", works for any point dataset (POIs, shops, …)
 gb.features_within(info, pois, radius_m=300, category_col="amenity")  # n_within, n_cafe, …
 
 # bring your own OSM frame (fetch it yourself, e.g. osmnx.features_from_point)
@@ -171,11 +171,11 @@ gb.features_within(info, pois, radius_m=300, category_col="amenity")  # n_within
 ctx = gb.station_surroundings(info, transit=stops, osm=osm_gdf, radius_m=300)
 ```
 
-The radius summarisation (counts + per-category breakdown + nearest distance) is the durable,
-tested core; data acquisition is **Bring Your Own GeoDataFrame** so the library never depends
-on a live Overpass endpoint. Routing / isochrones stay out of scope (use OSMnx / pandana).
+The radius summarisation (counts, per-category breakdown, and nearest distance) is the durable,
+tested core. Data acquisition follows a **Bring Your Own GeoDataFrame** model, so the library never depends
+on a live Overpass endpoint. Routing and isochrones stay out of scope (use OSMnx / pandana).
 
-## Descriptive stats — the bikeshare `describe()`
+## Descriptive stats: the bikeshare `describe()`
 
 ```python
 gb.system_profile(av)                       # stations, capacity, occupancy, % empty/full/…
@@ -193,13 +193,13 @@ gb.ripley_k(info, radii=[100, 250, 500])    # multi-scale clustering: L>0 cluste
 gb.lorenz_curve(info)                       # inequality curve to plot (Gini/Theil in concentration_metrics)
 ```
 
-Readable, comparable summaries — strictly descriptive (no OD/trip inference). `system_profile`
-is a one-glance numeric card of a snapshot; `concentration_metrics` is an equity lens (kept
-*outside* the published A1–A7 audit, since it's a metric not a quality verdict);
+These produce readable, comparable summaries that are strictly descriptive (no OD/trip inference). `system_profile`
+is a one-glance numeric card of a snapshot. `concentration_metrics` is an equity lens (kept
+*outside* the published A1–A7 audit, since it is a metric and not a quality verdict).
 `availability_stats` turns a longitudinal panel into per-station scalars (pass a `target_tz`
 panel for local-time peaks).
 
-## Fleet reconciliation — where are the bikes, really?
+## Fleet reconciliation: where the bikes actually are
 
 ```python
 tally = gb.reconcile_fleet_state(status, vehicles)   # or feed.reconcile_fleet()
@@ -208,7 +208,7 @@ tally["total_rentable"]        # available in stations + available free-floating
 tally["double_count_avoided"]  # vehicles a naive sum would have counted twice
 ```
 
-GBFS reports the same fleet twice — aggregate docked counts in `station_status` and
+GBFS reports the same fleet twice: aggregate docked counts in `station_status` and
 individual units (some parked at stations) in `vehicle_status`. Naively adding them
 double-counts every vehicle sitting at a dock. The reconciler excludes station-parked
 vehicles from the deployed total and surfaces the overlap instead of hiding it.
@@ -240,43 +240,32 @@ gb.generate_manifest("lake/")                # SHA-256 per partition + summary �
 
 Built for scrapers that run for months: retries/backoff, conditional GETs (skip unchanged
 snapshots), an offline catalogue cache, a `GBFSError` exception hierarchy, and provenance tools
-so a dataset is **citable and verifiable**. Missing data stays missing — `coverage_report`
+so a dataset is **citable and verifiable**. Missing data stays missing: `coverage_report`
 quantifies it rather than imputing.
 
 ## Examples
 
-Runnable, end-to-end scripts live in [`examples/`](./examples) — auditing an unknown feed,
+Runnable, end-to-end scripts live in [`examples/`](https://github.com/cycling-data-lab/gbfs-toolkit/tree/main/examples): auditing an unknown feed,
 cron-driven collection into a Parquet lake, longitudinal analysis (coverage, typologies,
 turnover), and a network equity/coverage report.
 
-## Roadmap
+## Project status
 
-- **v0.1** — canonical model, catalogue discovery, cross-version normalisation,
-  static audit (A1–A7), CLI.
-- **v0.2** — fetch/scrape (`GBFSFeed`, one-liners, `fetch_multiple`), dynamic audit
-  (D1–D3), `station_state`, geo (`GeoKDTree`, `find_nearest_stations`), schema hardening.
-- **v0.3 (this)** — longitudinal data lake: `append_to_parquet`,
-  `build_availability_panel`, `calculate_net_flow`.
-- **v0.4** — `cluster` (spatial / spectral / **diurnal profiles** + named typologies).
-- **v0.5** — `multimodal` (bikeshare ↔ transit feeders, BYOG GTFS).
-- **v0.6** — `osm` / surroundings: `features_within`, `station_surroundings`,
-  `enrich_with_osm` (BYOG infrastructure enrichment within a radius).
-- **v0.7** — hardening (nullable dtypes, dockless-aware A7, antimeridian A5,
-  mass-conservation net flow) + `geofencing` (service-area polygons, point-in-zone
-  joins, equal-area density), `fleet` reconciliation (docked ↔ free-floating dedup),
-  and parquet column/predicate pushdown for large panels.
+The package is stable at 1.1.0 and follows semantic versioning. The canonical schema and
+the public API are frozen, so studies built on the data model and function signatures remain
+reproducible across releases. See the Changelog for the full release history.
 
 ## Methodology & limitations
 
-[`METHODOLOGY.md`](./METHODOLOGY.md) documents the A1–A7 thresholds, the dynamic checks, the
-polling/aliasing limit on flows, and what the spatial statistics can and cannot claim — read it
+[`METHODOLOGY.md`](https://github.com/cycling-data-lab/gbfs-toolkit/blob/main/METHODOLOGY.md) documents the A1–A7 thresholds, the dynamic checks, the
+polling/aliasing limit on flows, and what the spatial statistics can and cannot claim. Read it
 before building a study on the toolkit.
 
 ## How to cite
 
-See [`CITATION.cff`](./CITATION.cff). The semantic taxonomy is from the
+See [`CITATION.cff`](https://github.com/cycling-data-lab/gbfs-toolkit/blob/main/CITATION.cff). The semantic taxonomy is from the
 `gbfs-audit-catalogue` dataset paper (Fossé & Pallares, 2026).
 
 ## License
 
-[MIT](./LICENSE). Affiliated with [CESI LINEACT (EA 7527)](https://lineact.cesi.fr), Montpellier, France.
+[MIT](https://github.com/cycling-data-lab/gbfs-toolkit/blob/main/LICENSE). Affiliated with [CESI LINEACT (EA 7527)](https://lineact.cesi.fr), Montpellier, France.

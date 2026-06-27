@@ -1,22 +1,72 @@
 site_name: gbfs-toolkit
-site_description: Research-grade ingestion and semantic A1–A7 quality audit for GBFS feeds
+site_description: Research-grade ingestion and semantic A1–A7 quality audit for GBFS bike-share feeds
+site_author: Rohan Fossé, Gaël Pallares
+site_url: https://cycling-data-lab.github.io/gbfs-toolkit/
 repo_url: https://github.com/cycling-data-lab/gbfs-toolkit
 repo_name: cycling-data-lab/gbfs-toolkit
+edit_uri: edit/main/docs/
+copyright: >-
+  Copyright © 2026 Rohan Fossé and Gaël Pallares.
+  CESI LINEACT (EA 7527), Montpellier, France. Released under the MIT License.
 
 theme:
   name: material
+  language: en
+  icon:
+    repo: fontawesome/brands/github
+    logo: material/bike
   features:
+    - navigation.instant
+    - navigation.instant.progress
+    - navigation.tracking
     - navigation.sections
     - navigation.top
-    - content.code.copy
+    - navigation.footer
+    - toc.follow
     - search.suggest
+    - search.highlight
+    - search.share
+    - content.code.copy
+    - content.code.annotate
+    - content.tooltips
   palette:
-    - scheme: default
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
       primary: teal
-      toggle: { icon: material/weather-night, name: Dark mode }
-    - scheme: slate
+      accent: teal
+      toggle:
+        icon: material/weather-night
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
       primary: teal
-      toggle: { icon: material/weather-sunny, name: Light mode }
+      accent: teal
+      toggle:
+        icon: material/weather-sunny
+        name: Switch to light mode
+  font:
+    text: Inter
+    code: JetBrains Mono
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/cycling-data-lab/gbfs-toolkit
+      name: Source on GitHub
+    - icon: fontawesome/brands/python
+      link: https://pypi.org/project/gbfs-toolkit/
+      name: gbfs-toolkit on PyPI
+    - icon: fontawesome/brands/orcid
+      link: https://orcid.org/0009-0002-2195-0198
+      name: Rohan Fossé (ORCID)
+  generator: false
+
+extra_css:
+  - stylesheets/extra.css
+
+extra_javascript:
+  - javascripts/mathjax.js
+  - https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js
 
 plugins:
   - search
@@ -26,18 +76,54 @@ plugins:
         python:
           options:
             docstring_style: numpy
+            docstring_section_style: table
             show_source: false
             show_root_heading: true
-            members_order: source
+            show_root_full_path: false
+            show_symbol_type_heading: true
+            show_symbol_type_toc: true
+            show_signature_annotations: true
+            signature_crossrefs: true
             separate_signature: true
-            filters: ["!^_"]
+            merge_init_into_class: true
+            members_order: source
+            group_by_category: true
+            show_if_no_docstring: false
+            filters:
+              - "!^_"
 
 markdown_extensions:
+  - abbr
   - admonition
-  - pymdownx.highlight
-  - pymdownx.superfences
+  - attr_list
+  - def_list
+  - footnotes
+  - md_in_html
   - tables
-  - toc: { permalink: true }
+  - toc:
+      permalink: true
+      toc_depth: 3
+  - pymdownx.arithmatex:
+      generic: true
+  - pymdownx.caret
+  - pymdownx.details
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.keys
+  - pymdownx.mark
+  - pymdownx.snippets
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - pymdownx.tilde
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
 
 nav:
   - Home: index.md

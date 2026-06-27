@@ -3,7 +3,7 @@
 All notable changes are documented here ([Keep a Changelog](https://keepachangelog.com),
 [SemVer](https://semver.org)).
 
-## [1.1.0] — conformance & robustness (from real-world migration)
+## [1.1.0] - conformance & robustness (from real-world migration)
 
 ### Added
 - `detect_frozen_stations` gains **`strict=True`** (a column counts as frozen only if it never
@@ -28,63 +28,63 @@ All notable changes are documented here ([Keep a Changelog](https://keepachangel
   fallback for `num_bikes_available` (3.0 renamed it). Surfaced while migrating a real consumer
   (bikeshare-data-explorer) onto the toolkit.
 
-## [1.0.0] — first stable release
+## [1.0.0] - first stable release
 
 Promotes `1.0.0rc1` unchanged (validated by a clean install from PyPI and the full test suite).
 The canonical schema and public API are now stable under SemVer. Development status →
 Production/Stable.
 
-## [1.0.0rc1] — first public release candidate
+## [1.0.0rc1] - first public release candidate
 
 Frozen canonical schema and public API after three peer-review passes. Adds `METHODOLOGY.md`
 (audit thresholds, the polling/aliasing limit, spatial-stat caveats), `CONTRIBUTING.md`, and a
 PyPI Trusted-Publishing release workflow. The sections below list everything since 0.1.0.
 
 ### Added (library-API conventions)
-- **`.gbfs` pandas accessor** — fluent chaining over the pure functions: `df.gbfs.audit()`,
+- **`.gbfs` pandas accessor**: fluent chaining over the pure functions: `df.gbfs.audit()`,
   `av.gbfs.occupancy()`, `panel.gbfs.net_flow()`, `info.gbfs.join_status(status)`. Single-frame
   ops map directly; two-frame ops take the second frame as the argument.
-- **`load_example()`** — a small, deterministic bundled GBFS snapshot (central Paris) for docs,
+- **`load_example()`**: a small, deterministic bundled GBFS snapshot (central Paris) for docs,
   doctests and offline tests; returns canonical `(station_info, station_status)`.
-- **`show_versions()`** — environment/dependency diagnostic for bug reports.
-- **`validate_schema(df, schema)` / `coerce_schema(df, schema)`** — public schema check/cast over
+- **`show_versions()`**: environment/dependency diagnostic for bug reports.
+- **`validate_schema(df, schema)` / `coerce_schema(df, schema)`**: public schema check/cast over
   the canonical contracts (`SCHEMAS` registry); assert or repair a mutated frame before writing it.
-- **`GBFSFeed.__repr__` / `_repr_html_`** — readable repr in shells/Jupyter (cached state only —
+- **`GBFSFeed.__repr__` / `_repr_html_`**: readable repr in shells/Jupyter (cached state only,
   never triggers a network call).
 
 ### Added (distilled from the lab's research code)
-- **`detect_frozen_stations(panel)`** — flags a value stuck unchanged over an active window
+- **`detect_frozen_stations(panel)`**: flags a value stuck unchanged over an active window
   while the feed stays fresh (dead sensor), distinct from staleness (D3) and stockouts. Seen
   reimplemented across three dynamic-audit repos.
-- **`flow_balance(panel)`** — per-station inflow/outflow split + source↔sink balance ratio
+- **`flow_balance(panel)`**: per-station inflow/outflow split + source↔sink balance ratio
   (the "Keq" several notebooks computed by hand).
-- **`turnover(..., normalize="capacity")`** — capacity-normalised activity, comparable across
+- **`turnover(..., normalize="capacity")`**: capacity-normalised activity, comparable across
   station sizes.
-- **`normalize_operator(name)`** — canonical operator brand from a system id/name
+- **`normalize_operator(name)`**: canonical operator brand from a system id/name
   (`smovengo` → `Vélib' Métropole`); non-lossy. Lifted from the audit-catalogue's `detect_operator`.
-- **`cyclical_time_features(timestamps)`** — sin/cos calendar encoding (the single most
+- **`cyclical_time_features(timestamps)`**: sin/cos calendar encoding (the single most
   duplicated helper across the lab's repos).
 
 ### Added (ergonomic one-liners)
-- **`drop_flagged(stations)`** — audit and keep the clean subset in one call.
-- **`occupancy(availability)`** — the bikes/(bikes+docks) ratio, vectorised, NaN-safe on the
+- **`drop_flagged(stations)`**: audit and keep the clean subset in one call.
+- **`occupancy(availability)`**: the bikes/(bikes+docks) ratio, vectorised, NaN-safe on the
   empty-and-no-docks case (everyone was recomputing it inconsistently).
-- **`filter_vehicles(vehicles, types, form_factor=…, propulsion=…)`** and **`ebikes(...)`** —
+- **`filter_vehicles(vehicles, types, form_factor=…, propulsion=…)`** and **`ebikes(...)`**:
   resolve vehicle types and filter in one call ("where are the e-bikes?").
 - **In-process catalogue cache**: `systems_catalog` now memoises the parsed registry for the
   process (with `refresh=True` to force), so resolving many systems in a loop downloads once.
 
 ### Added (research convenience helpers)
-- **`stockout_episodes(panel)`** — contiguous empty/full outage *events* per station (start, end,
+- **`stockout_episodes(panel)`**: contiguous empty/full outage *events* per station (start, end,
   duration, n_obs); the service-quality complement to `coverage_report` / `availability_stats`.
-- **`turnover(panel, freq="1D")`** — per-station Σ|net_flow| activity proxy (a documented lower
+- **`turnover(panel, freq="1D")`**: per-station Σ|net_flow| activity proxy (a documented lower
   bound, by the aliasing argument).
-- **`network_changes(old, new)`** — diff two station inventories: stations added / removed /
+- **`network_changes(old, new)`**: diff two station inventories: stations added / removed /
   recapacitated / moved (with distance), for longitudinal studies that span network growth.
-- **`stations_near(points, info, radius_m)`** — accessibility primitive: per external POI, count
+- **`stations_near(points, info, radius_m)`**: accessibility primitive: per external POI, count
   of stations within a radius + nearest distance/id (the inverse of `features_within`, for equity).
-- **`to_geojson(frame_or_gdf, path=...)`** — export stations/zones to GeoJSON for QGIS / kepler.gl.
-- **`join_vehicle_types` / `join_pricing`** — resolve `vehicle_type_id` / `pricing_plan_id` onto a
+- **`to_geojson(frame_or_gdf, path=...)`**: export stations/zones to GeoJSON for QGIS / kepler.gl.
+- **`join_vehicle_types` / `join_pricing`**: resolve `vehicle_type_id` / `pricing_plan_id` onto a
   vehicles frame so "where are the e-bikes?" / cost joins are one call.
 
 ### Quality
@@ -103,21 +103,21 @@ PyPI Trusted-Publishing release workflow. The sections below list everything sin
   vehicle panel. Returns per-vehicle `first_seen, last_seen, n_obs, observed_days,
   max_displacement_m, is_ghost`. Completes the dynamic fleet-health story alongside D1–D3.
 
-## [0.8.0] — v1.0-readiness pass (provenance, robustness, methodology)
+## [0.8.0] - v1.0-readiness pass (provenance, robustness, methodology)
 
 ### Added
 - **Provenance / citability** (`timeseries`): `coverage_report(panel, expected_freq)` quantifies
   per-station uptime and longest gap (missingness without imputation); `generate_manifest(lake_dir)`
   emits a SHA-256-per-partition manifest + dataset summary for Zenodo/Dataverse deposits.
 - **Polite networking** (`fetch`): `build_session()` (pooled `requests.Session` with
-  retry/backoff on 429/5xx — now the default in `fetch_multiple`); `fetch_feed_json(url, etag=...,
+  retry/backoff on 429/5xx, now the default in `fetch_multiple`); `fetch_feed_json(url, etag=...,
   last_modified=...)` does conditional GETs and raises `GBFSNotModified` on HTTP 304; structured
   logging under the `gbfs_toolkit` logger.
 - **Exception hierarchy** (`errors`): `GBFSError` base with `GBFSFetchError`, `GBFSDiscoveryError`
   (also a `KeyError` for back-compat), `GBFSValidationError`, `GBFSNotModified`. `SchemaError` now
   subclasses `GBFSValidationError` (and still `ValueError`).
 - **New canonical endpoints**: `to_canonical_system_regions` (region lookup) and
-  `to_canonical_alerts` (`system_alerts` — disruptions that explain data anomalies), plus
+  `to_canonical_alerts` (`system_alerts`: disruptions that explain data anomalies), plus
   `GBFSFeed.system_regions()` / `.alerts()`.
 - **Catalogue offline fallback**: `systems_catalog` caches successful downloads and falls back to
   the cached copy (with a warning) when the registry is unreachable.
@@ -131,15 +131,15 @@ PyPI Trusted-Publishing release workflow. The sections below list everything sin
 
 ## [Unreleased]
 
-### Changed / Removed (pre-1.0 consolidation — second peer-review pass)
+### Changed / Removed (pre-1.0 consolidation, second peer-review pass)
 - **Decoupled analysis from fetching.** The join and audit logic are now pure functions on
-  canonical frames — `join_availability(info, status)` and `audit_frames(info, status=...,
-  ttl_seconds=..., system_id=...)` — so they work on frames read back from a Parquet lake, not
+  canonical frames: `join_availability(info, status)` and `audit_frames(info, status=...,
+  ttl_seconds=..., system_id=...)`, so they work on frames read back from a Parquet lake, not
   only on a live `GBFSFeed`. `GBFSFeed.availability()` / `.audit()` are kept as thin
   delegators (no behaviour change for online use).
 - The `availability()` `presence` column is now a **fixed-category `Categorical`**
   (`both` / `info_only` / `status_only`) instead of a free string.
-- **Removed `osm.fetch_osm_around`** — fetching from OSM's rate-limited Overpass endpoint
+- **Removed `osm.fetch_osm_around`**: fetching from OSM's rate-limited Overpass endpoint
   violated the no-HTTP / Bring-Your-Own-GeoDataFrame contract and was a CI/issue liability.
   Fetch with `osmnx` in your own script and pass the result to `enrich_with_osm`.
 - **`calculate_net_flow` now reports the observed Δ only.** Removed `account_for_system`,
@@ -147,15 +147,15 @@ PyPI Trusted-Publishing release workflow. The sections below list everything sin
   organic demand is not identifiable from availability counts (even with system-wide mass
   conservation), so the library no longer ships a misleading cause label.
 
-### Changed / Fixed (hardening — peer-review pass)
+### Changed / Fixed (hardening, peer-review pass)
 - **Nullable dtypes** in `to_canonical_station_status` (`Int64` counts, `boolean` flags) and
-  `to_canonical_vehicles` — so the `availability()` **outer join** inserts `pd.NA` instead of
+  `to_canonical_vehicles`, so the `availability()` **outer join** inserts `pd.NA` instead of
   silently upcasting integer counts and boolean flags to `float64` (which corrupted equality
   and boolean logic on orphaned stations).
-- **A7 (null capacity) is now dockless-aware** — restricted to physical docked stations
+- **A7 (null capacity) is now dockless-aware**: restricted to physical docked stations
   (excludes free-floating *and* virtual anchors, like A2/A6 already did). Mostly-dockless
   systems (Lime/Tier/Bird), whose capacity is null by design, no longer trip A7 spuriously.
-- **A5 (bounding box) is antimeridian-safe** — longitudinal extent now uses the smallest
+- **A5 (bounding box) is antimeridian-safe**: longitudinal extent now uses the smallest
   covering arc, so a system straddling ±180° is no longer reported as Earth-spanning.
 - `calculate_net_flow(account_for_system=True)` adds **mass-conservation** context: a
   `system_net_flow` column and a corroborated `is_rebalancing_suspected` that fires only when
@@ -170,13 +170,13 @@ PyPI Trusted-Publishing release workflow. The sections below list everything sin
   **`pricing_plan_id`** (preserved, not parsed, for equity/pricing joins).
 
 ### Added
-- **Descriptive stats** (`stats`): `system_profile` (one-glance numeric card of a snapshot —
+- **Descriptive stats** (`stats`): `system_profile` (one-glance numeric card of a snapshot:
   stations, capacity, occupancy, % empty/full/disabled/virtual, staleness), `compare_systems`
   (stacks profiles across cities into one table), `concentration_metrics` (capacity Gini +
-  top-decile hub share — an equity lens kept *outside* the A1–A7 audit), and
+  top-decile hub share, an equity lens kept *outside* the A1–A7 audit), and
   `availability_stats` (per-station longitudinal scalars: occupancy, time empty/full,
   volatility, diurnal amplitude, peak hour), and `coverage_stats` (station density,
-  nearest-neighbour spacing, and the **Clark–Evans** dispersion index — density measured
+  nearest-neighbour spacing, and the **Clark–Evans** dispersion index: density measured
   against the convex hull, or the real geofencing **service area** when zones are passed).
   Pure, pandas-only, strictly descriptive.
 - **Standard spatial / inequality algorithms** (`stats`, numpy/scipy only, deterministic):
@@ -186,19 +186,19 @@ PyPI Trusted-Publishing release workflow. The sections below list everything sin
   `concentration_metrics`.
 - **Per-vehicle-type station counts** (`to_canonical_station_vehicle_counts`): melts GBFS
   2.2+/3.x `vehicle_types_available` into a long frame (`STATION_VEHICLE_COUNTS_COLUMNS`), so
-  "where are the e-bikes?" is a join — the aggregate `num_bikes_available` can't answer it.
+  "where are the e-bikes?" is a join: the aggregate `num_bikes_available` can't answer it.
 - **Pricing-plan lookup** (`to_canonical_pricing_plans`): parses `system_pricing_plans.json`
   into `PRICING_PLAN_COLUMNS`, resolving the `pricing_plan_id` foreign key for cost/equity work.
-- **`target_tz`** on `build_availability_panel` — converts `fetched_at`/`last_reported` to a
+- **`target_tz`** on `build_availability_panel`: converts `fetched_at`/`last_reported` to a
   local zone *before* dedup/resample, so daily aggregations cut at local midnight (UTC-midnight
   cuts silently corrupted diurnal analysis).
-- **Parquet pushdown** in `build_availability_panel(columns=..., filters=...)` — project only
+- **Parquet pushdown** in `build_availability_panel(columns=..., filters=...)`: project only
   the columns you need (join/dedup keys always read) and AND an extra `pyarrow.dataset`
   predicate with the built-in system/date filter, so multi-month / multi-city panels prune
   row-groups *before* materialising instead of OOM-ing.
 - **Fleet reconciliation** (`fleet`): `reconcile_fleet_state(station_status, vehicles)` (and
   `GBFSFeed.reconcile_fleet()`) merge the docked aggregate counts and the per-vehicle feed
-  into one labelled tally — `available_in_stations`, `free_floating_available/_reserved/
+  into one labelled tally: `available_in_stations`, `free_floating_available/_reserved/
   _disabled`, `total_deployed`, `total_rentable`. Vehicles carrying a `station_id` are
   excluded from the deployed total (so the two feeds don't double-count) and the overlap is
   reported as `docked_in_vehicle_feed` / `double_count_avoided`. `VEHICLE_STATUS_COLUMNS`
@@ -213,13 +213,13 @@ PyPI Trusted-Publishing release workflow. The sections below list everything sin
   sound spatial-density / equity analysis for free-floating & hybrid systems (the real
   service area, not a station convex hull). New `GEOFENCING_COLUMNS` contract.
 - **Station surroundings / OSM** (`osm`, extra `[osm]`): `features_within(points, features,
-  radius_m=300, category_col=...)` — the generic "what's nearby" primitive (counts within a
+  radius_m=300, category_col=...)`: the generic "what's nearby" primitive (counts within a
   radius + nearest distance + per-category `n_<cat>` breakdown, on `GeoKDTree`).
-  `station_surroundings(info, transit=..., osm=..., radius_m=300)` — one-shot context frame
+  `station_surroundings(info, transit=..., osm=..., radius_m=300)`: one-shot context frame
   combining transit feeders and OSM features. `enrich_with_osm` (reduces any GeoDataFrame
   geometry to representative points; Bring-Your-Own-GeoDataFrame) and the optional
   network-bound `fetch_osm_around` (osmnx). Routing/isochrones stay out of scope.
-- **Multimodal** (`multimodal`): `link_transit_stops(info, gtfs_stops_df, radius_m=200)` —
+- **Multimodal** (`multimodal`): `link_transit_stops(info, gtfs_stops_df, radius_m=200)`:
   flags first/last-mile feeder docks near rail/bus by spatial proximity (GeoKDTree;
   Bring-Your-Own GTFS `stops`, no transit API, no schedules). Adds `nearest_stop_id`,
   `nearest_stop_dist_m`, `n_transit_within`, `is_transit_feeder`.
@@ -245,21 +245,21 @@ PyPI Trusted-Publishing release workflow. The sections below list everything sin
   `fetch_multiple(system_ids)` (threaded, per-system error isolation). `get_json` is
   dependency-injectable for offline use.
 - **Dynamic audit** `audit_dynamic` (D1 negative counts, D2 bikes+docks > capacity,
-  D3 staleness) — the real-time counterpart to the static A1–A7 audit.
+  D3 staleness): the real-time counterpart to the static A1–A7 audit.
 - **Derived metrics** `station_state` (empty/full/disabled/normal).
 - **Geo helpers** `find_nearest_stations`, `haversine_m`, `to_gdf` (lazy geopandas, `[geo]`).
-- **Catalogue** `filter_catalog(country_code=, city=, name=)` — find a system by place.
+- **Catalogue** `filter_catalog(country_code=, city=, name=)`: find a system by place.
 
-### Changed (canonical model — pre-1.0 schema hardening)
+### Changed (canonical model, pre-1.0 schema hardening)
 - StationInfo gains `is_virtual_station`.
 - StationStatus gains `is_renting`, `is_returning`.
 - VehicleStatus gains `vehicle_type_id` (pedal / e-bike / scooter).
 - `last_reported` and `fetched_at` are now tz-aware **UTC** `datetime64[ns, UTC]`
   (previously unix ints) for unambiguous cross-city merges.
 
-## [0.1.0] — 2026-06
+## [0.1.0] - 2026-06
 
-Initial scaffold — consolidates GBFS tooling that was scattered across the lab's
+Initial scaffold, consolidates GBFS tooling that was scattered across the lab's
 research repositories into one tested, installable package.
 
 ### Added
@@ -273,7 +273,7 @@ research repositories into one tested, installable package.
   2.x string names and 3.x localized-array names; station-type inference.
 - **Catalogue discovery** (`catalog.systems_catalog`, `catalog.resolve`): the
   MobilityData global `systems.csv`.
-- **CLI**: `gbfs audit <station_information.json>` — the semantic counterpart to
+- **CLI**: `gbfs audit <station_information.json>`: the semantic counterpart to
   MobilityData's syntactic `gbfs-validator`.
 - PEP 561 `py.typed`, CI (py3.10–3.13 + ruff + build), packaging, 14 unit tests.
 
