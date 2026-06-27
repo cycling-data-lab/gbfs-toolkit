@@ -5,12 +5,34 @@ import pandas as pd
 
 from gbfs_toolkit import (
     GBFSFeed,
+    GeoKDTree,
     audit_dynamic,
     filter_catalog,
     find_nearest_stations,
     haversine_m,
     station_state,
 )
+
+
+def test_geokdtree_query_and_radius():
+    # three points; query around the first
+    lat = [48.85, 48.90, 49.50]
+    lon = [2.35, 2.40, 3.00]
+    tree = GeoKDTree(lat, lon)
+    assert len(tree) == 3
+    dist, idx = tree.query(48.851, 2.351, k=2)
+    assert list(np.ravel(idx)) == [0, 1]
+    assert np.ravel(dist)[0] < 200  # within ~150 m of point 0
+    hits = tree.query_radius(48.851, 2.351, radius_m=1000)
+    assert list(hits[0]) == [0]  # only the first point within 1 km
+
+
+def test_geokdtree_distance_matches_haversine():
+    tree = GeoKDTree([51.5074], [-0.1278])  # London
+    dist, _ = tree.query(48.8566, 2.3522, k=1)  # Paris
+    ref = float(haversine_m(48.8566, 2.3522, 51.5074, -0.1278))
+    assert abs(float(np.ravel(dist)[0]) - ref) < 100  # agree to <100 m on ~343 km
+
 
 _GBFS = {
     "version": "2.3",

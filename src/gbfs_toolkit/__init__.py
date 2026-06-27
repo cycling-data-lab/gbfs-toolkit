@@ -26,7 +26,7 @@ from gbfs_toolkit.fetch import (
     fetch_multiple,
     parse_discovery,
 )
-from gbfs_toolkit.geo import find_nearest_stations, haversine_m, to_gdf
+from gbfs_toolkit.geo import GeoKDTree, find_nearest_stations, haversine_m, to_gdf
 from gbfs_toolkit.models import AUDIT_FLAGS, RULES, SchemaError
 from gbfs_toolkit.normalize import (
     to_canonical_station_info,
@@ -62,6 +62,7 @@ __all__ = [
     "station_state",
     "find_nearest_stations",
     "haversine_m",
+    "GeoKDTree",
     "to_gdf",
     # meta
     "models",
