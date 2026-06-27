@@ -12,7 +12,7 @@ from __future__ import annotations
 
 import pandas as pd
 
-from gbfs_toolkit import analysis, audit, fleet, geo, models, stats, timeseries
+from gbfs_toolkit import analysis, audit, fleet, geo, metrics, models, stats, timeseries
 
 
 @pd.api.extensions.register_dataframe_accessor("gbfs")
@@ -106,40 +106,40 @@ class GBFSAccessor:
 
     # -- research indicators (1.3.0), single-frame --------------------------
     def service_reliability_index(self, **kw) -> pd.DataFrame:
-        return timeseries.service_reliability_index(self._df, **kw)
+        return metrics.service_reliability_index(self._df, **kw)
 
     def station_outage_rates(self) -> pd.DataFrame:
-        return timeseries.station_outage_rates(self._df)
+        return metrics.station_outage_rates(self._df)
 
     def flow_asymmetry_ratio(self, **kw) -> pd.DataFrame:
-        return timeseries.flow_asymmetry_ratio(self._df, **kw)
+        return metrics.flow_asymmetry_ratio(self._df, **kw)
 
     def fleet_turnover_proxy(self, **kw) -> pd.DataFrame:
-        return timeseries.fleet_turnover_proxy(self._df, **kw)
+        return metrics.fleet_turnover_proxy(self._df, **kw)
 
     def cumulative_imbalance(self, **kw) -> pd.DataFrame:
-        return timeseries.cumulative_imbalance(self._df, **kw)
+        return metrics.cumulative_imbalance(self._df, **kw)
 
     def docking_pressure(self) -> pd.DataFrame:
-        return timeseries.docking_pressure(self._df)
+        return metrics.docking_pressure(self._df)
 
     def temporal_autocorrelation(self, **kw) -> pd.DataFrame:
-        return timeseries.temporal_autocorrelation(self._df, **kw)
+        return metrics.temporal_autocorrelation(self._df, **kw)
 
     def aliasing_vulnerability(self) -> pd.DataFrame:
-        return timeseries.aliasing_vulnerability(self._df)
+        return metrics.aliasing_vulnerability(self._df)
 
     def dynamic_gini_index(self, **kw) -> pd.DataFrame:
-        return stats.dynamic_gini_index(self._df, **kw)
+        return metrics.dynamic_gini_index(self._df, **kw)
 
     def spatial_center_of_mass(self, **kw) -> pd.DataFrame:
-        return stats.spatial_center_of_mass(self._df, **kw)
+        return metrics.spatial_center_of_mass(self._df, **kw)
 
     def spatial_entropy(self, **kw) -> pd.DataFrame:
-        return stats.spatial_entropy(self._df, **kw)
+        return metrics.spatial_entropy(self._df, **kw)
 
     def diurnal_summary_stats(self, **kw) -> pd.DataFrame:
-        return stats.diurnal_summary_stats(self._df, **kw)
+        return metrics.diurnal_summary_stats(self._df, **kw)
 
     def temporal_context_features(self, **kw) -> pd.DataFrame:
         return analysis.temporal_context_features(self._df, **kw)
@@ -155,20 +155,20 @@ class GBFSAccessor:
         return geo.two_step_fca(self._df, demand, **kw)
 
     def join_exogenous(self, exogenous: pd.DataFrame, **kw) -> pd.DataFrame:
-        return timeseries.join_exogenous_timeseries(self._df, exogenous, **kw)
+        return metrics.join_exogenous_timeseries(self._df, exogenous, **kw)
 
     # -- advanced analytics (1.4.0) -----------------------------------------
     def local_morans_i(self, value_col: str, **kw) -> pd.DataFrame:
-        return stats.local_morans_i(self._df, value_col, **kw)
+        return metrics.local_morans_i(self._df, value_col, **kw)
 
     def diurnal_bimodality(self, **kw) -> pd.DataFrame:
-        return stats.diurnal_bimodality(self._df, **kw)
+        return metrics.diurnal_bimodality(self._df, **kw)
 
     def availability_synchrony(self, **kw) -> pd.DataFrame:
-        return timeseries.availability_synchrony(self._df, **kw)
+        return metrics.availability_synchrony(self._df, **kw)
 
     def outage_survival(self, **kw) -> pd.DataFrame:
-        return timeseries.outage_survival(self._df, **kw)
+        return metrics.outage_survival(self._df, **kw)
 
     def temporal_concentration(self, **kw) -> pd.DataFrame:
-        return timeseries.temporal_concentration(self._df, **kw)
+        return metrics.temporal_concentration(self._df, **kw)

@@ -117,6 +117,16 @@ numpy and scipy only.
       show_root_toc_entry: false
       heading_level: 3
 
+## Research indicators
+
+The descriptive research-indicator layer (service, equity, dynamics, sampling, spatial).
+
+::: gbfs_toolkit.metrics
+    options:
+      show_root_heading: false
+      show_root_toc_entry: false
+      heading_level: 3
+
 ## Station clustering
 
 Spatial, topological, and behavioural clustering, including diurnal-profile typologies.
