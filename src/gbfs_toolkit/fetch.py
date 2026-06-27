@@ -56,6 +56,21 @@ def _get_json(url: str, *, timeout: int = 30) -> dict:
     return resp.json()
 
 
+def _session_getter(session: Any, *, timeout: int = 30) -> JsonGetter:
+    """A ``url -> dict`` getter bound to a ``requests.Session`` (connection reuse).
+
+    Sharing one pooled session across many systems avoids opening/closing a TCP
+    connection per request — essential when polling dozens of feeds on a schedule.
+    """
+
+    def _get(url: str) -> dict:
+        resp = session.get(url, timeout=timeout, headers={"User-Agent": _USER_AGENT})
+        resp.raise_for_status()
+        return resp.json()
+
+    return _get
+
+
 def _utc_ts(value: Any) -> pd.Timestamp:
     """Parse a GBFS top-level ``last_updated`` (unix or RFC3339) to a UTC Timestamp."""
     if value is None:
@@ -340,6 +355,7 @@ def fetch_multiple(
     *,
     catalog: pd.DataFrame | None = None,
     max_workers: int = 5,
+    session: Any = None,
     **kwargs: Any,
 ) -> dict[str, GBFSFeed | Exception]:
     """Resolve and open many systems concurrently (threaded) for comparative studies.
@@ -347,12 +363,18 @@ def fetch_multiple(
     Returns ``{system_id: GBFSFeed}``, or the ``Exception`` for systems that failed —
     so one dead feed never sinks a 50-city pull. Discovery runs eagerly so failures
     surface here; data fetches stay lazy on each returned feed.
+
+    Pass a shared ``requests.Session`` to pool connections across all systems (strongly
+    recommended for repeated polling — avoids TCP/port exhaustion). Ignored if you also
+    pass your own ``get_json``.
     """
     from concurrent.futures import ThreadPoolExecutor
 
     from gbfs_toolkit.catalog import systems_catalog
 
     cat = catalog if catalog is not None else systems_catalog()
+    if session is not None and "get_json" not in kwargs:
+        kwargs = {**kwargs, "get_json": _session_getter(session, timeout=kwargs.get("timeout", 30))}
 
     def _open(sid: str) -> GBFSFeed:
         feed = GBFSFeed.from_system_id(sid, catalog=cat, **kwargs)

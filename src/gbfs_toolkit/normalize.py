@@ -138,6 +138,7 @@ def to_canonical_station_status(
             "num_docks_available": s.get("num_docks_available"),
             "is_renting": bool(s.get("is_renting", True)),
             "is_returning": bool(s.get("is_returning", True)),
+            "is_installed": bool(s.get("is_installed", True)),
             "last_reported": _utc(s.get("last_reported")),
             "fetched_at": fetched_at,
             "gbfs_version": gbfs_version,
@@ -145,8 +146,12 @@ def to_canonical_station_status(
         for s in stations
     ]
     df = pd.DataFrame(rows, columns=STATION_STATUS_COLUMNS)
+    # Nullable extension dtypes so a later outer join (e.g. availability()) inserts
+    # pd.NA without silently upcasting counts/flags to float and corrupting equality.
     for col in ("num_bikes_available", "num_docks_available"):
-        df[col] = pd.to_numeric(df[col], errors="coerce")
+        df[col] = pd.to_numeric(df[col], errors="coerce").astype("Int64")
+    for col in ("is_renting", "is_returning", "is_installed"):
+        df[col] = df[col].astype("boolean")
     for col in ("last_reported", "fetched_at"):
         df[col] = pd.to_datetime(df[col], utc=True)
     return df
@@ -176,14 +181,19 @@ def to_canonical_vehicles(
             "lon": v.get("lon"),
             "is_reserved": bool(v.get("is_reserved", False)),
             "is_disabled": bool(v.get("is_disabled", False)),
+            "current_range_meters": v.get("current_range_meters"),
+            "pricing_plan_id": v.get("pricing_plan_id"),
             "fetched_at": fetched_at,
             "gbfs_version": gbfs_version,
         }
         for v in items
     ]
     df = pd.DataFrame(rows, columns=VEHICLE_STATUS_COLUMNS)
-    for col in ("lat", "lon"):
+    for col in ("lat", "lon", "current_range_meters"):
         df[col] = pd.to_numeric(df[col], errors="coerce")
+    for col in ("is_reserved", "is_disabled"):
+        df[col] = df[col].astype("boolean")
+    df["pricing_plan_id"] = df["pricing_plan_id"].astype("string")
     df["fetched_at"] = pd.to_datetime(df["fetched_at"], utc=True)
     return df
 

@@ -5,6 +5,28 @@ All notable changes are documented here ([Keep a Changelog](https://keepachangel
 
 ## [Unreleased]
 
+### Changed / Fixed (hardening — peer-review pass)
+- **Nullable dtypes** in `to_canonical_station_status` (`Int64` counts, `boolean` flags) and
+  `to_canonical_vehicles` — so the `availability()` **outer join** inserts `pd.NA` instead of
+  silently upcasting integer counts and boolean flags to `float64` (which corrupted equality
+  and boolean logic on orphaned stations).
+- **A7 (null capacity) is now dockless-aware** — restricted to physical docked stations
+  (excludes free-floating *and* virtual anchors, like A2/A6 already did). Mostly-dockless
+  systems (Lime/Tier/Bird), whose capacity is null by design, no longer trip A7 spuriously.
+- **A5 (bounding box) is antimeridian-safe** — longitudinal extent now uses the smallest
+  covering arc, so a system straddling ±180° is no longer reported as Earth-spanning.
+- `calculate_net_flow(account_for_system=True)` adds **mass-conservation** context: a
+  `system_net_flow` column and a corroborated `is_rebalancing_suspected` that fires only when
+  a station spike coincides with a same-sign system-wide change (fleet injection/removal).
+  Internal van moves stay indistinguishable from organic demand at panel resolution (documented).
+- `fetch_multiple(..., session=...)` accepts a shared `requests.Session` to pool connections
+  across systems (avoids TCP/port exhaustion when polling many feeds on a schedule).
+
+### Schema (future-proofing before 1.0)
+- `STATION_STATUS_COLUMNS` gains **`is_installed`** (hardware deployed vs. `is_renting`).
+- `VEHICLE_STATUS_COLUMNS` gains **`current_range_meters`** (e-bike/battery research) and
+  **`pricing_plan_id`** (preserved, not parsed, for equity/pricing joins).
+
 ### Added
 - **Station surroundings / OSM** (`osm`, extra `[osm]`): `features_within(points, features,
   radius_m=300, category_col=...)` — the generic "what's nearby" primitive (counts within a

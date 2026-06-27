@@ -135,14 +135,31 @@ def build_availability_panel(
     return df.set_index(["system_id", "station_id", "fetched_at"]).sort_index()
 
 
-def calculate_net_flow(panel: pd.DataFrame, *, rebalancing_threshold: int = 3) -> pd.DataFrame:
+def calculate_net_flow(
+    panel: pd.DataFrame,
+    *,
+    rebalancing_threshold: int = 3,
+    account_for_system: bool = False,
+) -> pd.DataFrame:
     """Period-over-period change in available bikes per station.
 
-    Adds ``net_flow`` (Δ ``num_bikes_available`` vs the previous poll of the same station)
-    and ``is_rebalancing_suspected`` (``|net_flow| > rebalancing_threshold`` in one step —
-    a van move, not organic demand). ``net_flow`` is ``NaN`` across polls where
-    ``last_reported`` did not change (the feed re-served an identical observation), so you
-    don't read spurious zero-flows.
+    Adds ``net_flow`` (Δ ``num_bikes_available`` vs the previous poll of the same station).
+    ``net_flow`` is ``NaN`` across polls where ``last_reported`` did not change (the feed
+    re-served an identical observation), so you don't read spurious zero-flows.
+
+    Rebalancing heuristic
+    ---------------------
+    By default ``is_rebalancing_suspected`` is the *naive* test ``|net_flow| >
+    rebalancing_threshold``. This conflates a rebalancing van with a burst of organic
+    demand (e.g. a train disgorging riders), so treat it as a coarse screen.
+
+    With ``account_for_system=True`` the function also computes the **system-wide**
+    available-bike total per timestamp and its change (``system_net_flow``), and a station
+    spike is flagged only when it is *corroborated* by a same-sign system-level change of
+    comparable size — i.e. the system's mass actually changed (a van injected or removed
+    bikes). This reliably catches fleet injection/removal; it cannot, at panel resolution,
+    distinguish an *internal* van move (A→B, system flat) from organic demand — those stay
+    unflagged. Use it when you have full-system coverage in the panel.
 
     Accepts a panel from :func:`build_availability_panel` (MultiIndexed) or a flat frame;
     returns a flat frame with ``system_id, station_id, fetched_at`` columns.
@@ -155,5 +172,26 @@ def calculate_net_flow(panel: pd.DataFrame, *, rebalancing_threshold: int = 3) -
     if "last_reported" in df:
         unchanged = grp["last_reported"].diff().eq(pd.Timedelta(0))
         df.loc[unchanged, "net_flow"] = np.nan
-    df["is_rebalancing_suspected"] = df["net_flow"].abs() > rebalancing_threshold
+
+    big = df["net_flow"].abs() > rebalancing_threshold
+    if account_for_system:
+        totals = (
+            df.groupby(["system_id", "fetched_at"])["num_bikes_available"]
+            .sum()
+            .rename("system_total")
+            .reset_index()
+            .sort_values(["system_id", "fetched_at"])
+        )
+        totals["system_net_flow"] = totals.groupby("system_id")["system_total"].diff()
+        df = df.merge(
+            totals[["system_id", "fetched_at", "system_net_flow"]],
+            on=["system_id", "fetched_at"],
+            how="left",
+        )
+        corroborated = (np.sign(df["net_flow"]) == np.sign(df["system_net_flow"])) & (
+            df["system_net_flow"].abs() >= rebalancing_threshold
+        )
+        df["is_rebalancing_suspected"] = big & corroborated.fillna(False)
+    else:
+        df["is_rebalancing_suspected"] = big
     return df.reset_index(drop=True)

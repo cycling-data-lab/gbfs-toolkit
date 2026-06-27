@@ -44,6 +44,7 @@ STATION_STATUS_COLUMNS: list[str] = [
     "num_docks_available",
     "is_renting",  # station accepts rentals right now
     "is_returning",  # station accepts returns right now
+    "is_installed",  # hardware physically deployed on the street (GBFS: distinct from is_renting)
     "last_reported",  # UTC datetime (feed-reported)
     "fetched_at",  # UTC datetime (when *we* fetched it)
     "gbfs_version",
@@ -58,6 +59,8 @@ VEHICLE_STATUS_COLUMNS: list[str] = [
     "lon",
     "is_reserved",
     "is_disabled",
+    "current_range_meters",  # remaining range — the core e-bike/battery research signal
+    "pricing_plan_id",  # preserved (not parsed) for equity / pricing joins
     "fetched_at",  # UTC datetime
     "gbfs_version",
 ]

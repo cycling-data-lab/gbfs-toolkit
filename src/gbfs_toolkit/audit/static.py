@@ -33,6 +33,34 @@ _EARTH_RADIUS_M = 6_371_000.0
 _REQUIRED = ["system_id", "station_id", "station_type", "capacity", "lat", "lon"]
 
 
+def _docked_mask(df: pd.DataFrame) -> pd.Series:
+    """Physical docked stations only — excludes free-floating *and* virtual anchors.
+
+    Capacity-distribution rules (A2/A6/A7) must ignore virtual/free-float "stations",
+    whose capacity is routinely 0/null by design; otherwise a mostly free-floating
+    system (Lime/Tier/Bird) trips every capacity flag as a false positive.
+    """
+    mask = df["station_type"] == "docked_bike"
+    if "is_virtual_station" in df.columns:
+        mask &= ~df["is_virtual_station"].fillna(False).astype(bool)
+    return mask
+
+
+def _lon_span_deg(lon: np.ndarray) -> float:
+    """Smallest longitudinal arc (degrees) covering all points — anti-meridian safe.
+
+    Plain ``max(lon) - min(lon)`` reports ~360° for a cluster straddling ±180°. The
+    true extent is ``360 - (largest gap between adjacent longitudes)``.
+    """
+    lon = np.sort(np.mod(np.asarray(lon, dtype="float64"), 360.0))
+    if lon.size < 2:
+        return 0.0
+    gaps = np.diff(lon)
+    wrap_gap = 360.0 - (lon[-1] - lon[0])
+    largest_gap = max(float(gaps.max()), wrap_gap)
+    return 360.0 - largest_gap
+
+
 def _project_meters(lat: np.ndarray, lon: np.ndarray) -> np.ndarray:
     """Equirectangular projection to local metres around the dataset mean."""
     lat_r = np.deg2rad(np.asarray(lat, dtype="float64"))
@@ -47,7 +75,7 @@ def _project_meters(lat: np.ndarray, lon: np.ndarray) -> np.ndarray:
 
 def _flag_a2(df: pd.DataFrame) -> pd.Series:
     """A2 — placeholder capacity: constant non-zero capacity across a docked system."""
-    docked = df[df["station_type"] == "docked_bike"]
+    docked = df[_docked_mask(df)]
     caps = (
         docked.dropna(subset=["capacity"])
         .groupby("system_id")["capacity"]
@@ -93,38 +121,56 @@ def _flag_a4(df: pd.DataFrame, projected: np.ndarray) -> np.ndarray:
     return flag
 
 
-def _flag_a5(df: pd.DataFrame, projected: np.ndarray) -> np.ndarray:
-    """A5 — out-of-perimeter: system bounding box larger than the threshold area."""
+def _flag_a5(df: pd.DataFrame) -> np.ndarray:
+    """A5 — out-of-perimeter: system bounding box larger than the threshold area.
+
+    The longitudinal extent uses the smallest covering arc (:func:`_lon_span_deg`), so a
+    system straddling the ±180° antimeridian is not falsely reported as Earth-spanning.
+    """
     n = len(df)
     flag = np.zeros(n, dtype=bool)
     if n == 0:
         return flag
+    lat = df["lat"].to_numpy(dtype="float64")
+    lon = df["lon"].to_numpy(dtype="float64")
     sys_codes, _ = pd.factorize(df["system_id"].to_numpy())
     for code in np.unique(sys_codes):
         idx = np.where(sys_codes == code)[0]
-        pts = projected[idx]
-        pts = pts[np.isfinite(pts).all(axis=1)]
-        if len(pts) < 2:
+        finite = np.isfinite(lat[idx]) & np.isfinite(lon[idx])
+        if finite.sum() < 2:
             continue
-        area_km2 = ((pts[:, 0].max() - pts[:, 0].min()) * (pts[:, 1].max() - pts[:, 1].min())) / 1e6
-        if area_km2 > A5_BBOX_MAX_KM2:
+        slat, slon = lat[idx][finite], lon[idx][finite]
+        height_m = _EARTH_RADIUS_M * np.deg2rad(slat.max() - slat.min())
+        mean_lat_r = np.deg2rad(float(np.mean(slat)))
+        width_m = _EARTH_RADIUS_M * np.deg2rad(_lon_span_deg(slon)) * np.cos(mean_lat_r)
+        if (width_m * height_m) / 1e6 > A5_BBOX_MAX_KM2:
             flag[idx] = True
     return flag
 
 
 def _flag_a6(df: pd.DataFrame) -> pd.Series:
     """A6 — at least 1% of a system's docked stations declare capacity = 0."""
-    is_zero = (df["capacity"].fillna(-1) == 0) & (df["station_type"] == "docked_bike")
-    rate = is_zero.groupby(df["system_id"]).mean()
-    size = df.groupby("system_id").size()
+    docked = df[_docked_mask(df)]
+    if docked.empty:
+        return pd.Series(False, index=df.index)
+    is_zero = docked["capacity"].fillna(-1) == 0
+    rate = is_zero.groupby(docked["system_id"]).mean()
+    size = docked.groupby("system_id").size()
     flagged = set(rate.index[(rate >= A6_RATE_THRESHOLD) & (size >= A6_MIN_STATIONS)])
     return df["system_id"].isin(flagged)
 
 
 def _flag_a7(df: pd.DataFrame) -> pd.Series:
-    """A7 — at least 50% of a system's stations declare capacity = NaN."""
-    rate = df["capacity"].isna().groupby(df["system_id"]).mean()
-    size = df.groupby("system_id").size()
+    """A7 — at least 50% of a system's *docked* stations declare capacity = NaN.
+
+    Restricted to docked stations: free-floating / virtual anchors legitimately carry
+    null capacity, so counting them would flag every dockless system spuriously.
+    """
+    docked = df[_docked_mask(df)]
+    if docked.empty:
+        return pd.Series(False, index=df.index)
+    rate = docked["capacity"].isna().groupby(docked["system_id"]).mean()
+    size = docked.groupby("system_id").size()
     flagged = set(rate.index[(rate >= A7_RATE_THRESHOLD) & (size >= A7_MIN_STATIONS)])
     return df["system_id"].isin(flagged)
 
@@ -156,7 +202,7 @@ def audit_static(stations: pd.DataFrame) -> pd.DataFrame:
     out["A2"] = _flag_a2(df).to_numpy()
     out["A3"] = (df["station_type"] == "free_floating").to_numpy()
     out["A4"] = _flag_a4(df, projected)
-    out["A5"] = _flag_a5(df, projected)
+    out["A5"] = _flag_a5(df)
     out["A6"] = _flag_a6(df).to_numpy()
     out["A7"] = _flag_a7(df).to_numpy()
 
