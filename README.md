@@ -146,6 +146,23 @@ feeders = linked[linked["is_transit_feeder"]]       # first/last-mile docks near
 Pure spatial proximity on `GeoKDTree` (no transit API, no schedules) — `is_transit_feeder`,
 `nearest_stop_dist_m`, `n_transit_within`.
 
+## Station surroundings — what's around each dock (`[osm]`)
+
+```python
+# generic "what's nearby" — works for any point dataset (POIs, shops, …)
+gb.features_within(info, pois, radius_m=300, category_col="amenity")  # n_within, n_cafe, …
+
+# one-shot context: transit feeders + OSM features, in one frame
+ctx = gb.station_surroundings(info, transit=stops, osm=osm_gdf, radius_m=300)
+
+# optional interactive fetch (network; otherwise Bring Your Own GeoDataFrame)
+osm_gdf = gb.fetch_osm_around(48.85, 2.35, radius_m=500)              # needs osmnx
+```
+
+The radius summarisation (counts + per-category breakdown + nearest distance) is the durable,
+tested core; data acquisition is **Bring Your Own GeoDataFrame** so the library never depends
+on a live Overpass endpoint. Routing / isochrones stay out of scope (use OSMnx / pandana).
+
 ## Roadmap
 
 - **v0.1** — canonical model, catalogue discovery, cross-version normalisation,
@@ -156,7 +173,8 @@ Pure spatial proximity on `GeoKDTree` (no transit API, no schedules) — `is_tra
   `build_availability_panel`, `calculate_net_flow`.
 - **v0.4** — `cluster` (spatial / spectral / **diurnal profiles** + named typologies).
 - **v0.5** — `multimodal` (bikeshare ↔ transit feeders, BYOG GTFS).
-- **next** — `osm` (BYOG infrastructure enrichment).
+- **v0.6** — `osm` / surroundings: `features_within`, `station_surroundings`,
+  `enrich_with_osm` (BYOG infrastructure enrichment within a radius).
 
 ## How to cite
 

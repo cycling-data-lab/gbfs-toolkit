@@ -126,6 +126,59 @@ def find_nearest_stations(
     return out.head(k).reset_index(drop=True)
 
 
+def features_within(
+    points: pd.DataFrame,
+    features: pd.DataFrame,
+    *,
+    radius_m: float = 300.0,
+    category_col: str | None = None,
+    feature_lat: str = "lat",
+    feature_lon: str = "lon",
+    prefix: str = "n_",
+) -> pd.DataFrame:
+    """Summarise the ``features`` around each point — the generic "what's nearby" primitive.
+
+    Works for any point dataset (transit stops, OSM POIs, shops, …). For every row of
+    ``points`` it counts features within ``radius_m`` and the distance to the nearest one;
+    with ``category_col`` it also breaks the count down per category (``n_<category>``).
+
+    Parameters
+    ----------
+    points : pandas.DataFrame
+        Query points with ``lat``/``lon`` (e.g. a canonical StationInfo frame).
+    features : pandas.DataFrame
+        Surrounding things, with ``feature_lat``/``feature_lon`` columns.
+    radius_m : float, default 300
+    category_col : str, optional
+        A column in ``features`` (e.g. ``amenity``) to produce per-category counts.
+
+    Returns
+    -------
+    pandas.DataFrame
+        ``points`` + ``{prefix}within``, ``nearest_dist_m`` and, if ``category_col`` is
+        given, one ``{prefix}<category>`` count per category.
+    """
+    out = points.reset_index(drop=True).copy()
+    if out.empty:
+        return out
+    if features.empty:
+        out[f"{prefix}within"] = 0
+        out["nearest_dist_m"] = np.inf
+        return out
+    tree = GeoKDTree(features[feature_lat], features[feature_lon])
+    lat, lon = out["lat"].to_numpy(), out["lon"].to_numpy()
+    within = tree.query_radius(lat, lon, radius_m=radius_m)
+    dist, _ = tree.query(lat, lon, k=1)
+    out[f"{prefix}within"] = [len(h) for h in within]
+    out["nearest_dist_m"] = np.asarray(dist).ravel()
+    if category_col is not None and category_col in features:
+        cats = features[category_col].to_numpy()
+        for c in sorted(pd.unique(pd.Series(cats).dropna())):
+            col = f"{prefix}{c}"
+            out[col] = [int((cats[h] == c).sum()) for h in within]
+    return out
+
+
 def to_gdf(
     df: pd.DataFrame, *, lat: str = "lat", lon: str = "lon", crs: str = "EPSG:4326"
 ) -> gpd.GeoDataFrame:

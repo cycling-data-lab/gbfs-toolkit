@@ -41,6 +41,7 @@ dependencies = [
 [project.optional-dependencies]
 fetch = ["requests>=2.31"]
 geo = ["geopandas>=0.14"]
+osm = ["geopandas>=0.14"]  # enrich_with_osm (BYOG); fetch_osm_around also needs `osmnx`
 parquet = ["pyarrow>=15.0"]
 cluster = ["scikit-learn>=1.4"]
 dtw = ["tslearn>=0.6"]  # shape-aware time-series clustering (method="dtw")

@@ -6,6 +6,13 @@ All notable changes are documented here ([Keep a Changelog](https://keepachangel
 ## [Unreleased]
 
 ### Added
+- **Station surroundings / OSM** (`osm`, extra `[osm]`): `features_within(points, features,
+  radius_m=300, category_col=...)` — the generic "what's nearby" primitive (counts within a
+  radius + nearest distance + per-category `n_<cat>` breakdown, on `GeoKDTree`).
+  `station_surroundings(info, transit=..., osm=..., radius_m=300)` — one-shot context frame
+  combining transit feeders and OSM features. `enrich_with_osm` (reduces any GeoDataFrame
+  geometry to representative points; Bring-Your-Own-GeoDataFrame) and the optional
+  network-bound `fetch_osm_around` (osmnx). Routing/isochrones stay out of scope.
 - **Multimodal** (`multimodal`): `link_transit_stops(info, gtfs_stops_df, radius_m=200)` —
   flags first/last-mile feeder docks near rail/bus by spatial proximity (GeoKDTree;
   Bring-Your-Own GTFS `stops`, no transit API, no schedules). Adds `nearest_stop_id`,

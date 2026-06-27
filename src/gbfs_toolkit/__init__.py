@@ -33,7 +33,13 @@ from gbfs_toolkit.fetch import (
     fetch_multiple,
     parse_discovery,
 )
-from gbfs_toolkit.geo import GeoKDTree, find_nearest_stations, haversine_m, to_gdf
+from gbfs_toolkit.geo import (
+    GeoKDTree,
+    features_within,
+    find_nearest_stations,
+    haversine_m,
+    to_gdf,
+)
 from gbfs_toolkit.models import AUDIT_FLAGS, RULES, SchemaError
 from gbfs_toolkit.multimodal import link_transit_stops
 from gbfs_toolkit.normalize import (
@@ -43,6 +49,7 @@ from gbfs_toolkit.normalize import (
     to_canonical_vehicle_types,
     to_canonical_vehicles,
 )
+from gbfs_toolkit.osm import enrich_with_osm, fetch_osm_around, station_surroundings
 from gbfs_toolkit.timeseries import (
     append_to_parquet,
     build_availability_panel,
@@ -81,11 +88,15 @@ __all__ = [
     "cluster_diurnal_profiles",
     "diurnal_profiles",
     "label_diurnal_typology",
-    # multimodal
+    # multimodal & surroundings
     "link_transit_stops",
+    "station_surroundings",
+    "enrich_with_osm",
+    "fetch_osm_around",
     # analysis & geo
     "station_state",
     "find_nearest_stations",
+    "features_within",
     "haversine_m",
     "GeoKDTree",
     "to_gdf",
