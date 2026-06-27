@@ -1,4 +1,4 @@
-"""Longitudinal layer — turn a stream of snapshots into a research data lake.
+"""Longitudinal layer: turn a stream of snapshots into a research data lake.
 
 The library owns the *formatting, deduplication and I/O*; your orchestrator (cron /
 Airflow / Dagster) owns the polling loop. Requires the optional ``[parquet]`` extra
@@ -6,7 +6,7 @@ Airflow / Dagster) owns the polling loop. Requires the optional ``[parquet]`` ex
 
 Workflow
 --------
-1. A poller calls :func:`append_to_parquet` on each fetched snapshot — fast, append-only,
+1. A poller calls :func:`append_to_parquet` on each fetched snapshot: fast, append-only,
    Hive-partitioned by ``system_id`` / ``date``.
 2. Analysis calls :func:`build_availability_panel` to read a system/time window back
    (PyArrow filters partitions *before* loading), de-duplicated and optionally resampled.
@@ -98,10 +98,10 @@ def build_availability_panel(
     For multi-month / multi-city panels that would not fit in memory, push the work down
     into PyArrow:
 
-    - ``columns`` — project only the columns you need (the keys ``system_id``,
+    - ``columns``: project only the columns you need (the keys ``system_id``,
       ``station_id``, ``fetched_at`` and, when de-duplicating, ``last_reported`` are always
       read). Fewer columns ⇒ less I/O and RAM.
-    - ``filters`` — an extra ``pyarrow.dataset`` predicate ANDed with the built-in
+    - ``filters``: an extra ``pyarrow.dataset`` predicate ANDed with the built-in
       system/date filter, applied *before* materialising (row-group pruning). Build it with
       ``import pyarrow.dataset as ds; ds.field("num_bikes_available") == 0``.
 
@@ -109,7 +109,7 @@ def build_availability_panel(
     ----------
     Pass ``target_tz`` (e.g. ``"America/Los_Angeles"``) to convert ``fetched_at`` /
     ``last_reported`` to that zone **before** any dedup or resample. Resampling tz-aware UTC
-    data would otherwise cut "days" at UTC midnight — i.e. mid-afternoon local time —
+    data would otherwise cut "days" at UTC midnight (i.e. mid-afternoon local time),
     silently corrupting diurnal/daily aggregations.
 
     Returns
@@ -179,12 +179,12 @@ def build_availability_panel(
 def calculate_net_flow(panel: pd.DataFrame) -> pd.DataFrame:
     """Period-over-period change in available bikes per station.
 
-    Adds ``net_flow`` — the Δ in ``num_bikes_available`` vs the previous poll of the same
+    Adds ``net_flow``: the Δ in ``num_bikes_available`` vs the previous poll of the same
     station. ``net_flow`` is ``NaN`` across polls where ``last_reported`` did not change (the
     feed re-served an identical observation), so you don't read spurious zero-flows.
 
     This intentionally reports the **observed flow only**, not its cause. Attributing a flow to
-    rebalancing vs. organic demand is not identifiable from availability counts alone — a
+    rebalancing vs. organic demand is not identifiable from availability counts alone: a
     station spike can be a van drop *or* a burst of returns, and system-wide mass conservation
     cannot separate an internal van move from coincident organic trips. Apply your own,
     explicitly-stated heuristic downstream rather than trusting a built-in label.
@@ -229,13 +229,13 @@ _EPISODE_COLUMNS = [
 def stockout_episodes(
     panel: pd.DataFrame, *, kinds: tuple[str, ...] = ("empty", "full")
 ) -> pd.DataFrame:
-    """Discrete empty/full episodes per station — the service-quality view of a panel.
+    """Discrete empty/full episodes per station: the service-quality view of a panel.
 
     Where :func:`coverage_report` and ``availability_stats`` give *fractions* of time, this
     returns the individual outage **events**: each contiguous run of empty (no bikes) or full
     (no docks) snapshots becomes one row, so you can study how *often* stockouts happen and how
     *long* they last. Durations span the observed snapshots in the run (a single-observation
-    episode has duration 0) — read them together with :func:`coverage_report`.
+    episode has duration 0); read them together with :func:`coverage_report`.
 
     Parameters
     ----------
@@ -292,7 +292,7 @@ def stockout_episodes(
 def turnover(
     panel: pd.DataFrame, *, freq: str = "1D", normalize: str | None = None
 ) -> pd.DataFrame:
-    """Per-station activity proxy — summed absolute net flow per period.
+    """Per-station activity proxy: summed absolute net flow per period.
 
     A cheap, model-free measure of how busy a station is. It is a **lower bound**: by the
     aliasing argument in :func:`calculate_net_flow`, trips that cancel within a polling interval
@@ -305,7 +305,7 @@ def turnover(
         Aggregation bin (a pandas offset alias).
     normalize : {None, "capacity"}
         If ``"capacity"``, divide each station's turnover by its capacity (requires a
-        ``capacity`` column in ``panel``) — comparable across stations of different sizes.
+        ``capacity`` column in ``panel``); comparable across stations of different sizes.
 
     Returns
     -------
@@ -338,7 +338,7 @@ def flow_balance(panel: pd.DataFrame) -> pd.DataFrame:
 
     Splits :func:`calculate_net_flow` into bikes gained (``inflow`` = Σ positive Δ) and lost
     (``outflow`` = Σ |negative Δ|), with ``balance = outflow / inflow``: ``>1`` ⇒ a net
-    *source* (more departures than arrivals — a morning residential origin), ``<1`` ⇒ a net
+    *source* (more departures than arrivals, a morning residential origin), ``<1`` ⇒ a net
     *sink* (destination). Like turnover, these are lower bounds (intra-interval trips cancel).
 
     Returns
@@ -393,10 +393,10 @@ def detect_frozen_stations(
     active_hours: tuple[int, int] | None = (6, 22),
     strict: bool = False,
 ) -> pd.DataFrame:
-    """Flag "frozen" stations — a value stuck unchanged while the feed keeps updating.
+    """Flag "frozen" stations: a value stuck unchanged while the feed keeps updating.
 
     Distinct from staleness (D3, where ``last_reported`` itself goes stale) and from a genuine
-    stockout: here the feed is fresh but the value never moves — the signature of a dead sensor
+    stockout: here the feed is fresh but the value never moves, the signature of a dead sensor
     or a station the operator forgot. Restricting to ``active_hours`` (local hour of
     ``fetched_at`` as stored) avoids flagging the legitimate overnight flatline.
 
@@ -406,7 +406,7 @@ def detect_frozen_stations(
         The column expected to vary (used when ``columns`` is not given).
     columns : tuple of str, optional
         Require *all* these columns to be frozen, e.g. ``("num_bikes_available",
-        "num_docks_available")`` — a stricter, both-counters-stuck signal. Defaults to
+        "num_docks_available")``: a stricter, both-counters-stuck signal. Defaults to
         ``(value_col,)``.
     min_run_hours : float, default 6
         Minimum span (of an unchanged run, or of the whole series in ``strict`` mode) to call a
@@ -415,7 +415,7 @@ def detect_frozen_stations(
         Keep only observations in ``[lo, hi)`` local hours; ``None`` to use all.
     strict : bool, default False
         If ``True``, a column counts as frozen only when it **never changes** across the entire
-        observed window (span ≥ ``min_run_hours``) — not merely a long constant *run*. This
+        observed window (span ≥ ``min_run_hours``), not merely a long constant *run*. This
         matches a "never-moved" zombie definition; the default (``False``) is the broader
         "stuck for ≥ ``min_run_hours`` at some point".
 
@@ -468,7 +468,7 @@ def detect_frozen_stations(
 
 
 def coverage_report(panel: pd.DataFrame, *, expected_freq: str = "5min") -> pd.DataFrame:
-    """Per-station longitudinal coverage — quantify missingness *before* you model.
+    """Per-station longitudinal coverage: quantify missingness *before* you model.
 
     Operators go offline and scrapers crash; ``calculate_net_flow`` / clustering silently
     assume continuity. This reports how complete each station's series is, against the
@@ -517,7 +517,7 @@ def coverage_report(panel: pd.DataFrame, *, expected_freq: str = "5min") -> pd.D
 
 
 def generate_manifest(lake_dir: str | Path, *, chunk_size: int = 1 << 20) -> dict:
-    """A cryptographic manifest of a Parquet lake — for citable, reproducible datasets.
+    """A cryptographic manifest of a Parquet lake, for citable, reproducible datasets.
 
     Walks every ``*.parquet`` partition file, records its SHA-256 and size, and summarises
     the dataset (systems, date span, row count). Drop the returned dict next to a Zenodo /
@@ -563,6 +563,6 @@ def generate_manifest(lake_dir: str | Path, *, chunk_size: int = 1 << 20) -> dic
             if "date" in meta and len(meta):
                 manifest["min_date"] = str(meta["date"].min())
                 manifest["max_date"] = str(meta["date"].max())
-    except Exception:  # noqa: BLE001 — summary is best-effort; the hashes are the point
+    except Exception:  # noqa: BLE001 (summary is best-effort; the hashes are the point)
         pass
     return manifest

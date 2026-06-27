@@ -204,7 +204,7 @@ def to_canonical_station_vehicle_counts(
     GBFS 2.2+/3.x stations may report ``vehicle_types_available`` (a list of
     ``{vehicle_type_id, count}``). This explodes it to one row per station × vehicle type
     (:data:`~gbfs_toolkit.models.STATION_VEHICLE_COUNTS_COLUMNS`), so "where are the e-bikes?"
-    is a join to :func:`to_canonical_vehicle_types` — the aggregate ``num_bikes_available``
+    is a join to :func:`to_canonical_vehicle_types`; the aggregate ``num_bikes_available``
     cannot answer it. Stations without the field contribute no rows.
     """
     fetched_at = fetched_at if fetched_at is not None else _now_utc()

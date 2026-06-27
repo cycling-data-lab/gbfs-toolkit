@@ -1,4 +1,4 @@
-"""Bundled example data — for docs, tutorials, doctests and offline tests.
+"""Bundled example data for docs, tutorials, doctests and offline tests.
 
 A tiny, deterministic GBFS snapshot (a handful of central-Paris stations) so the README and
 notebooks run in seconds without hitting a live operator feed. Parsed through the real
@@ -11,7 +11,7 @@ import pandas as pd
 
 from gbfs_toolkit.normalize import to_canonical_station_info, to_canonical_station_status
 
-# (station_id, name, lat, lon, capacity, bikes, docks) — central Paris, hand-written.
+# (station_id, name, lat, lon, capacity, bikes, docks): central Paris, hand-written.
 _PARIS = [
     ("16107", "Benjamin Godard - Victor Hugo", 48.865983, 2.275725, 35, 4, 31),
     ("9020", "Toudouze - Clauzel", 48.879406, 2.337446, 21, 18, 2),
@@ -69,7 +69,10 @@ def load_example(
         results are deterministic for doctests).
     """
     if name not in DATASETS:
-        raise ValueError(f"unknown dataset {name!r}; choose from {list(DATASETS)}")
+        raise ValueError(
+            f"unknown dataset {name!r}; choose from {list(DATASETS)}. "
+            f"Call load_example() with no argument for the default sample."
+        )
     ts = (
         pd.Timestamp(fetched_at) if fetched_at is not None else pd.Timestamp("2026-01-05T08:00:00Z")
     )

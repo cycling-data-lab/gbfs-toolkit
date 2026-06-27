@@ -1,4 +1,4 @@
-"""Fleet state — reconcile "where are the bikes?" and find immobile (ghost) vehicles.
+"""Fleet state: reconcile "where are the bikes?" and find immobile (ghost) vehicles.
 
 GBFS routinely reports the same fleet two ways: docked bikes as aggregate counts in
 ``station_status``, and individual units (some parked at stations) in
@@ -36,15 +36,15 @@ def reconcile_fleet_state(
     Returns
     -------
     pandas.Series (``Int64``) with:
-        ``available_in_stations`` — Σ ``num_bikes_available`` (docked, rentable).
-        ``free_floating_available`` / ``_reserved`` / ``_disabled`` — vehicles **not** at a
+        ``available_in_stations``: Σ ``num_bikes_available`` (docked, rentable).
+        ``free_floating_available`` / ``_reserved`` / ``_disabled``: vehicles **not** at a
         station, split by state.
-        ``docked_in_vehicle_feed`` — vehicles that *are* at a station (overlap with the
+        ``docked_in_vehicle_feed``: vehicles that *are* at a station (overlap with the
         station counts).
-        ``total_deployed`` — physically on the street: stations + all free-floating
+        ``total_deployed``: physically on the street: stations + all free-floating
         (available + reserved + disabled), overlap excluded.
-        ``total_rentable`` — available in stations + available free-floating.
-        ``double_count_avoided`` — vehicles that a naive sum would have double-counted
+        ``total_rentable``: available in stations + available free-floating.
+        ``double_count_avoided``: vehicles that a naive sum would have double-counted
         (non-zero only when both feeds are given).
     """
     out: dict[str, int] = {}
@@ -92,7 +92,7 @@ def detect_ghost_vehicles(
     """Flag immobile ("ghost") vehicles from a longitudinal vehicle panel.
 
     A unit advertised at (essentially) the same coordinates for a long stretch is almost
-    certainly lost, broken, or abandoned — yet it inflates availability. Given a panel of
+    certainly lost, broken, or abandoned, yet it inflates availability. Given a panel of
     free-floating vehicle snapshots over time, this measures each vehicle's displacement from
     its first observed position and flags those that never moved beyond ``move_threshold_m``
     across a span of at least ``idle_days``.
@@ -102,7 +102,7 @@ def detect_ghost_vehicles(
     vehicle_panel : pandas.DataFrame
         Long frame of vehicle snapshots with ``system_id, vehicle_id, lat, lon, fetched_at``
         (e.g. concatenated :func:`~gbfs_toolkit.to_canonical_vehicles` outputs). Note GBFS 2.1+
-        rotates ``vehicle_id`` for privacy — ghost detection is only meaningful where the feed
+        rotates ``vehicle_id`` for privacy; ghost detection is only meaningful where the feed
         keeps stable ids.
     idle_days : float, default 14
         Minimum observed span (first→last sighting) for a vehicle to qualify.

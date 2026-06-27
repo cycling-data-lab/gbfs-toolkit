@@ -1,4 +1,4 @@
-"""Static semantic audit of a docked GBFS system — the A1–A7 taxonomy.
+"""Static semantic audit of a docked GBFS system: the A1–A7 taxonomy.
 
 Ported from the published ``gbfs-audit-catalogue`` pipeline (Fossé & Pallares),
 adapted to the toolkit's canonical :data:`~gbfs_toolkit.models.STATION_INFO_COLUMNS`
@@ -34,7 +34,7 @@ _REQUIRED = ["system_id", "station_id", "station_type", "capacity", "lat", "lon"
 
 
 def _docked_mask(df: pd.DataFrame) -> pd.Series:
-    """Physical docked stations only — excludes free-floating *and* virtual anchors.
+    """Physical docked stations only; excludes free-floating *and* virtual anchors.
 
     Capacity-distribution rules (A2/A6/A7) must ignore virtual/free-float "stations",
     whose capacity is routinely 0/null by design; otherwise a mostly free-floating
@@ -47,7 +47,7 @@ def _docked_mask(df: pd.DataFrame) -> pd.Series:
 
 
 def _lon_span_deg(lon: np.ndarray) -> float:
-    """Smallest longitudinal arc (degrees) covering all points — anti-meridian safe.
+    """Smallest longitudinal arc (degrees) covering all points; anti-meridian safe.
 
     Plain ``max(lon) - min(lon)`` reports ~360° for a cluster straddling ±180°. The
     true extent is ``360 - (largest gap between adjacent longitudes)``.
@@ -74,7 +74,7 @@ def _project_meters(lat: np.ndarray, lon: np.ndarray) -> np.ndarray:
 
 
 def _flag_a2(df: pd.DataFrame) -> pd.Series:
-    """A2 — placeholder capacity: constant non-zero capacity across a docked system."""
+    """A2, placeholder capacity: constant non-zero capacity across a docked system."""
     docked = df[_docked_mask(df)]
     caps = (
         docked.dropna(subset=["capacity"])
@@ -90,7 +90,7 @@ def _flag_a2(df: pd.DataFrame) -> pd.Series:
 
 
 def _flag_a4(df: pd.DataFrame, projected: np.ndarray) -> np.ndarray:
-    """A4 — geospatial outliers via a robust 3-sigma rule on nearest-neighbour distance."""
+    """A4: geospatial outliers via a robust 3-sigma rule on nearest-neighbour distance."""
     from scipy.spatial import cKDTree
 
     n = len(df)
@@ -122,7 +122,7 @@ def _flag_a4(df: pd.DataFrame, projected: np.ndarray) -> np.ndarray:
 
 
 def _flag_a5(df: pd.DataFrame) -> np.ndarray:
-    """A5 — out-of-perimeter: system bounding box larger than the threshold area.
+    """A5, out-of-perimeter: system bounding box larger than the threshold area.
 
     The longitudinal extent uses the smallest covering arc (:func:`_lon_span_deg`), so a
     system straddling the ±180° antimeridian is not falsely reported as Earth-spanning.
@@ -149,7 +149,7 @@ def _flag_a5(df: pd.DataFrame) -> np.ndarray:
 
 
 def _flag_a6(df: pd.DataFrame) -> pd.Series:
-    """A6 — at least 1% of a system's docked stations declare capacity = 0."""
+    """A6: at least 1% of a system's docked stations declare capacity = 0."""
     docked = df[_docked_mask(df)]
     if docked.empty:
         return pd.Series(False, index=df.index)
@@ -161,7 +161,7 @@ def _flag_a6(df: pd.DataFrame) -> pd.Series:
 
 
 def _flag_a7(df: pd.DataFrame) -> pd.Series:
-    """A7 — at least 50% of a system's *docked* stations declare capacity = NaN.
+    """A7: at least 50% of a system's *docked* stations declare capacity = NaN.
 
     Restricted to docked stations: free-floating / virtual anchors legitimately carry
     null capacity, so counting them would flag every dockless system spuriously.

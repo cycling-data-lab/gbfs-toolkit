@@ -1,8 +1,8 @@
-"""gbfs-toolkit — research-grade ingestion + semantic quality audit for GBFS feeds.
+"""gbfs-toolkit: research-grade ingestion + semantic quality audit for GBFS feeds.
 
 The community's :mod:`gbfs-validator` checks that a feed is *syntactically* valid;
-this package checks whether it is *semantically* trustworthy and analysis-ready —
-the A1–A7 taxonomy of Fossé & Pallares — and normalises feeds into a stable,
+this package checks whether it is *semantically* trustworthy and analysis-ready
+(the A1–A7 taxonomy of Fossé & Pallares) and normalises feeds into a stable,
 version-independent data model you can reuse across studies.
 
 Quick start
@@ -16,7 +16,7 @@ Quick start
 """
 
 from gbfs_toolkit import (
-    accessor,  # noqa: F401 — registers the `.gbfs` DataFrame accessor
+    accessor,  # noqa: F401 (registers the `.gbfs` DataFrame accessor)
     models,
 )
 from gbfs_toolkit.analysis import (

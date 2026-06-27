@@ -1,4 +1,4 @@
-"""Feed discovery — the global MobilityData systems catalogue and per-feed resolution.
+"""Feed discovery: the global MobilityData systems catalogue and per-feed resolution.
 
 The community registry of GBFS systems is MobilityData's ``systems.csv``. This
 module loads it (from a URL or a local copy) into a tidy frame and resolves a
@@ -51,7 +51,7 @@ def normalize_operator(value: str | None, *, default: str | None = None) -> str 
     Métropole"``).
 
     Pattern-matches against :data:`OPERATOR_PATTERNS` (case-insensitive). On no match returns
-    ``default`` if given, else the original value unchanged (non-lossy) — safe to apply across a
+    ``default`` if given, else the original value unchanged (non-lossy); safe to apply across a
     whole catalogue so only recognised brands get collapsed.
     """
     if value is None:
@@ -149,7 +149,7 @@ def filter_catalog(
     city: str | None = None,
     name: str | None = None,
 ) -> pd.DataFrame:
-    """Filter the systems catalogue — because you know "Paris", not the system_id.
+    """Filter the systems catalogue, because you know "Paris", not the system_id.
 
     All filters are case-insensitive; ``city`` / ``name`` match as substrings against
     the catalogue's ``location`` / ``name`` columns (whichever are present).

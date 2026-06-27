@@ -1,4 +1,4 @@
-"""Environment introspection — paste the output into a bug report."""
+"""Environment introspection; paste the output into a bug report."""
 
 from __future__ import annotations
 

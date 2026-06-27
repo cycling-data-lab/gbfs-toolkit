@@ -1,7 +1,7 @@
-"""Descriptive statistics — readable summaries of canonical frames.
+"""Descriptive statistics: readable summaries of canonical frames.
 
 The plumbing (ingest / audit / panel) turns feeds into tidy data; this module turns tidy
-data into the numbers a researcher actually reports. Strictly **descriptive** — no OD/trip
+data into the numbers a researcher actually reports. Strictly **descriptive**: no OD/trip
 inference, no prediction (those belong in dedicated research code). All functions are pure
 and pandas-only.
 """
@@ -22,7 +22,7 @@ def _num(df: pd.DataFrame, col: str) -> pd.Series:
 
 
 def system_profile(availability: pd.DataFrame) -> pd.Series:
-    """A one-glance numeric profile of one availability snapshot — the bikeshare ``describe()``.
+    """A one-glance numeric profile of one availability snapshot: the bikeshare ``describe()``.
 
     Parameters
     ----------
@@ -107,11 +107,11 @@ def _theil(x: np.ndarray) -> float:
 
 
 def concentration_metrics(info: pd.DataFrame, *, value_col: str = "capacity") -> pd.Series:
-    """How concentrated is capacity across stations? — an equity / coverage lens.
+    """How concentrated is capacity across stations? An equity / coverage lens.
 
     Reports the **Gini coefficient** and **Theil T index** of ``value_col`` and the share held
     by the top decile of stations (a system can claim wide coverage yet stash most bikes in a
-    few central hubs). Deliberately *outside* the published A1–A7 audit taxonomy — these are
+    few central hubs). Deliberately *outside* the published A1–A7 audit taxonomy; these are
     descriptive metrics, not a feed-quality verdict. See :func:`lorenz_curve` for the curve.
 
     Returns
@@ -181,10 +181,10 @@ def _knn_weights(lat: np.ndarray, lon: np.ndarray, k: int):
 
 
 def morans_i(info: pd.DataFrame, value_col: str, *, k: int = 8) -> pd.Series:
-    """Global **Moran's I** — spatial autocorrelation of ``value_col`` across stations.
+    """Global **Moran's I**: spatial autocorrelation of ``value_col`` across stations.
 
     Answers "are similar values geographically clustered?" (e.g. are empty/low-occupancy
-    stations grouped together — an equity / accessibility signal). Uses row-standardised
+    stations grouped together, an equity / accessibility signal). Uses row-standardised
     binary k-nearest-neighbour weights; significance is the analytic z-score / p-value under
     the normality assumption. ``I > E[I]`` ⇒ clustering, ``< E[I]`` ⇒ dispersion/checkerboard.
 
@@ -242,7 +242,7 @@ def morans_i(info: pd.DataFrame, value_col: str, *, k: int = 8) -> pd.Series:
 
 
 def ripley_k(info: pd.DataFrame, radii: object, *, area_km2: float | None = None) -> pd.DataFrame:
-    """**Ripley's K / L** — multi-scale clustering of station locations.
+    """**Ripley's K / L**: multi-scale clustering of station locations.
 
     For each radius, ``K(r)`` is proportional to the mean number of other stations within
     ``r``; ``L(r) = sqrt(K(r)/π) − r`` linearises it: ``L(r) > 0`` ⇒ clustering at scale ``r``,
@@ -306,11 +306,11 @@ def _hull_area_km2(lat: np.ndarray, lon: np.ndarray) -> float:
 
 
 def coverage_stats(info: pd.DataFrame, *, zones: object = None) -> pd.Series:
-    """Spatial coverage of a station network — density and dispersion.
+    """Spatial coverage of a station network: density and dispersion.
 
     Reports nearest-neighbour spacing and station density. The density denominator is the
-    convex hull of the stations by default, or — far more accurate for free-floating / hybrid
-    systems — the **real service area** if you pass the operator's geofencing ``zones``
+    convex hull of the stations by default, or (far more accurate for free-floating / hybrid
+    systems) the **real service area** if you pass the operator's geofencing ``zones``
     (a GeoDataFrame from :func:`~gbfs_toolkit.to_canonical_geofencing`; needs the ``[geo]``
     extra). Also reports the **Clark–Evans index** (observed mean NN distance ÷ the value
     expected under spatial randomness: ``<1`` clustered, ``≈1`` random, ``>1`` dispersed).
@@ -367,7 +367,7 @@ def availability_stats(panel: pd.DataFrame, *, time_col: str = "fetched_at") -> 
     panel : pandas.DataFrame
         A panel from :func:`~gbfs_toolkit.build_availability_panel` (MultiIndexed) or a flat
         frame with ``system_id, station_id, num_bikes_available, num_docks_available`` and a
-        time column. Hour-of-day uses ``time_col`` **as stored** — pass a panel built with
+        time column. Hour-of-day uses ``time_col`` **as stored**; pass a panel built with
         ``target_tz`` for local-time peaks.
 
     Returns

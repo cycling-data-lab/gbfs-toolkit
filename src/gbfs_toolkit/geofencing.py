@@ -1,4 +1,4 @@
-"""Geofencing / service-area zones — operator-defined polygons (``geofencing_zones.json``).
+"""Geofencing / service-area zones: operator-defined polygons (``geofencing_zones.json``).
 
 For free-floating and hybrid systems the *real* service area is the operator's polygons,
 not a convex hull of stations. Parsing them unlocks scientifically sound spatial density and
@@ -6,7 +6,7 @@ equity analysis: bikes per km² within the **actual** service area, no-ride/no-p
 coverage of a given set of neighbourhoods.
 
 Requires the optional ``[geo]`` extra (geopandas + shapely). True to the BYOG philosophy,
-nothing here touches the network — feed acquisition stays in :mod:`gbfs_toolkit.fetch`.
+nothing here touches the network; feed acquisition stays in :mod:`gbfs_toolkit.fetch`.
 """
 
 from __future__ import annotations
@@ -37,7 +37,7 @@ def _require_geo():
 
 
 def _default_rule(rules: list[dict]) -> dict:
-    """The zone's general rule — the first that applies to all vehicle types, else the first."""
+    """The zone's general rule: the first that applies to all vehicle types, else the first."""
     if not rules:
         return {}
     for r in rules:
@@ -121,7 +121,7 @@ def zones_for_points(
 ) -> gpd.GeoDataFrame:
     """Tag each point (station / vehicle) with the geofencing zone(s) that contain it.
 
-    A spatial join — e.g. "which stations sit inside a no-parking zone?". Points outside
+    A spatial join, e.g. "which stations sit inside a no-parking zone?". Points outside
     every zone keep null zone columns (left join). Requires the ``[geo]`` extra.
 
     Parameters
@@ -158,7 +158,7 @@ def zone_area_km2(zones: gpd.GeoDataFrame, *, equal_area_crs: str = "EPSG:6933")
     """Area of each zone in km², computed in an equal-area projection (not in degrees).
 
     Reprojects to ``EPSG:6933`` (World Cylindrical Equal Area) so areas are metric and
-    comparable across latitudes — the denominator for bikes-per-km² density. Requires ``[geo]``.
+    comparable across latitudes: the denominator for bikes-per-km² density. Requires ``[geo]``.
     """
     _require_geo()
     return zones.to_crs(equal_area_crs).geometry.area / 1e6

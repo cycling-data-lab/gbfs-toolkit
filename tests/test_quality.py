@@ -25,6 +25,27 @@ def test_validation_guards_raise_schema_error():
         gb.link_transit_stops(pd.DataFrame({"station_id": ["a"]}), pd.DataFrame({"stop_lat": [1]}))
 
 
+def test_schema_error_is_didactic_and_structured():
+    from gbfs_toolkit.models import require_columns
+
+    with pytest.raises(SchemaError) as exc:
+        require_columns(
+            pd.DataFrame({"station_id": ["a"]}),
+            ["station_id", "capacity"],
+            what="audit_static",
+        )
+    err = exc.value
+    # human-readable: names the operation, the missing column, and a fix
+    message = str(err)
+    assert "audit_static" in message
+    assert "capacity" in message
+    assert "fix:" in message
+    # machine-readable: structured fields a pipeline can branch on
+    assert err.missing == ["capacity"]
+    assert err.present == ["station_id"]
+    assert err.what == "audit_static"
+
+
 # --- stats: empty / degenerate inputs ---------------------------------------
 
 

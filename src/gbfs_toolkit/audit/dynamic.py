@@ -1,4 +1,4 @@
-"""Dynamic semantic audit — logic checks on live availability payloads.
+"""Dynamic semantic audit: logic checks on live availability payloads.
 
 Where the static audit (A1–A7) inspects the inventory, the dynamic audit inspects
 the *real-time* numbers, which break constantly in ways a syntactic validator never
@@ -36,7 +36,7 @@ def audit_dynamic(
     ttl_seconds : float, optional
         The feed's advertised TTL. When given, staleness is
         ``fetched_at − last_reported > ttl_seconds + buffer_seconds`` (the correct,
-        feed-specific rule — pass ``GBFSFeed.ttl``). Falls back to
+        feed-specific rule; pass ``GBFSFeed.ttl``). Falls back to
         ``stale_after_minutes`` otherwise.
     stale_after_minutes : float, default 60
         Fallback staleness window when ``ttl_seconds`` is not provided.

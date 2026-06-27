@@ -1,8 +1,8 @@
-"""Bikeshare ↔ public transit — first/last-mile linkage.
+"""Bikeshare ↔ public transit: first/last-mile linkage.
 
 Identify which docks act as feeders for rail/bus by spatial proximity to GTFS stops.
-Pure spatial joins on the shared :class:`~gbfs_toolkit.GeoKDTree`; **Bring Your Own GTFS**
-— you pass a plain ``stops`` DataFrame (the universally-available ``stops.txt``), so the
+Pure spatial joins on the shared :class:`~gbfs_toolkit.GeoKDTree`; **Bring Your Own GTFS**:
+you pass a plain ``stops`` DataFrame (the universally-available ``stops.txt``), so the
 library never touches a transit API and never breaks when a GTFS schema shifts. No
 schedules / ``stop_times`` (proximity only, by design).
 """

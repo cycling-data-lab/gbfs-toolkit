@@ -3,7 +3,7 @@
 The library's functions stay pure (``f(df, ...)``); this registers a thin namespace so the
 same operations also read as ``df.gbfs.audit()``. Single-frame operations map directly;
 operations that need a *second* frame (join info+status, reconcile against vehicles, …) take
-it as an argument — so ``info.gbfs.join_status(status)`` reads left-to-right.
+it as an argument, so ``info.gbfs.join_status(status)`` reads left-to-right.
 
 Importing :mod:`gbfs_toolkit` registers the accessor as a side effect.
 """
@@ -17,7 +17,7 @@ from gbfs_toolkit import analysis, audit, geo, models, stats, timeseries
 
 @pd.api.extensions.register_dataframe_accessor("gbfs")
 class GBFSAccessor:
-    """Fluent access to gbfs-toolkit operations — e.g. ``df.gbfs.occupancy()``."""
+    """Fluent access to gbfs-toolkit operations, e.g. ``df.gbfs.occupancy()``."""
 
     def __init__(self, pandas_obj: pd.DataFrame) -> None:
         self._df = pandas_obj

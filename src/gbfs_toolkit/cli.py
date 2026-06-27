@@ -35,7 +35,7 @@ def _cmd_audit(args: argparse.Namespace) -> int:
     verdict = audit_static(stations)
     n = len(verdict)
     n_flagged = int(verdict["flagged"].sum())
-    print(f"gbfs-toolkit {__version__} — semantic audit of '{args.system_id}'")
+    print(f"gbfs-toolkit {__version__}: semantic audit of '{args.system_id}'")
     print(f"  stations: {n}   flagged: {n_flagged} ({100 * n_flagged / n:.1f}%)")
     for flag in AUDIT_FLAGS:
         c = int(verdict[flag].sum())

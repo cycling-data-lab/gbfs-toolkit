@@ -1,6 +1,6 @@
 """Derived, ready-to-use metrics on canonical availability frames.
 
-Small, safe, broadly-applicable transforms that every analysis re-implements —
+Small, safe, broadly-applicable transforms that every analysis re-implements,
 deliberately *not* trip/OD inference (left to dedicated research code).
 """
 
@@ -20,11 +20,11 @@ PRESENCE_STATES = ("both", "info_only", "status_only")
 
 
 def join_availability(info: pd.DataFrame, status: pd.DataFrame) -> pd.DataFrame:
-    """Join a status snapshot onto the station inventory — the analysis-ready availability frame.
+    """Join a status snapshot onto the station inventory: the analysis-ready availability frame.
 
     A pure function on canonical frames (no feed object needed), so it works equally on live
-    data and on frames read back from a Parquet lake. Uses an **outer** join — operators
-    routinely add/drop a station from one endpoint mid-sync — with a ``presence`` indicator
+    data and on frames read back from a Parquet lake. Uses an **outer** join (operators
+    routinely add/drop a station from one endpoint mid-sync) with a ``presence`` indicator
     (Categorical ``both`` / ``info_only`` / ``status_only``) so orphaned rows stay visible
     instead of being silently dropped.
 
@@ -62,7 +62,7 @@ _CYCLE_PERIODS = {
 def cyclical_time_features(
     timestamps: object, *, fields: tuple[str, ...] = ("hour", "dayofweek", "month")
 ) -> pd.DataFrame:
-    """Encode calendar fields as (sin, cos) pairs — the one everyone re-implements.
+    """Encode calendar fields as (sin, cos) pairs: the one everyone re-implements.
 
     Periodic time variables (hour-of-day, day-of-week, month) are discontinuous as raw integers
     (23:00 is adjacent to 00:00 but ``23`` is far from ``0``); sin/cos on the circle fixes that.
@@ -93,7 +93,7 @@ def cyclical_time_features(
 
 
 def occupancy(availability: pd.DataFrame) -> pd.Series:
-    """Occupancy ratio — bikes / (bikes + docks) per station.
+    """Occupancy ratio: bikes / (bikes + docks) per station.
 
     The quantity everyone recomputes by hand. Returns ``NaN`` where there are no bikes *and*
     no docks (a virtual/dead station), so the divide-by-zero is handled once, consistently.
@@ -112,7 +112,7 @@ def filter_vehicles(
     form_factor: str | None = None,
     propulsion: str | None = None,
 ) -> pd.DataFrame:
-    """Resolve vehicle types then keep only matching vehicles — "where are the X?" in one call.
+    """Resolve vehicle types then keep only matching vehicles: "where are the X?" in one call.
 
     ``form_factor`` matches exactly (e.g. ``"bicycle"``, ``"scooter"``); ``propulsion`` matches
     as a substring (so ``"electric"`` catches both ``electric`` and ``electric_assist``).
@@ -194,7 +194,7 @@ _CHANGE_COLUMNS = ["system_id", "station_id", "change", "old_value", "new_value"
 def network_changes(
     old: pd.DataFrame, new: pd.DataFrame, *, move_threshold_m: float = 50.0
 ) -> pd.DataFrame:
-    """Diff two station inventories — how the network itself changed between two dates.
+    """Diff two station inventories: how the network itself changed between two dates.
 
     A multi-month study spans network growth, not a fixed graph. This compares two canonical
     ``station_information`` frames and reports stations **added**, **removed**,
@@ -204,7 +204,7 @@ def network_changes(
     Returns
     -------
     pandas.DataFrame
-        ``system_id, station_id, change, old_value, new_value, distance_m`` — ``old/new_value``
+        ``system_id, station_id, change, old_value, new_value, distance_m``; ``old/new_value``
         carry the capacity for recapacitations; ``distance_m`` the move distance for moves.
     """
     require_columns(old, ["station_id"], what="network_changes(old)")

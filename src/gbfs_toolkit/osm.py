@@ -1,8 +1,8 @@
-"""What's around a station — OSM infrastructure / POIs within a radius, and a unified
+"""What's around a station: OSM infrastructure / POIs within a radius, and a unified
 "station surroundings" context combining transit + OSM.
 
 Design: the **summarisation within a radius** is the durable, testable value and lives here;
-the **data acquisition** is *Bring Your Own GeoDataFrame* — fetch OSM in your own script
+the **data acquisition** is *Bring Your Own GeoDataFrame*: fetch OSM in your own script
 (e.g. ``osmnx.features_from_point``) and pass the result in, so the library never depends on
 a live, rate-limited Overpass endpoint. Routing / isochrones stay out of scope (OSMnx / pandana).
 """
@@ -74,7 +74,7 @@ def station_surroundings(
     transit_radius_m: float | None = None,
     osm_category_col: str | None = None,
 ) -> pd.DataFrame:
-    """**One-shot "what's around each station"** — transit feeders + OSM features in a radius.
+    """**One-shot "what's around each station"**: transit feeders + OSM features in a radius.
 
     Combines :func:`~gbfs_toolkit.link_transit_stops` and :func:`enrich_with_osm` /
     :func:`~gbfs_toolkit.features_within` into a single context frame.

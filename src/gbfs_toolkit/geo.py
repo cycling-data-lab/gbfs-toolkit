@@ -1,4 +1,4 @@
-"""Lightweight geospatial helpers — the shared spatial-join primitive for the toolkit.
+"""Lightweight geospatial helpers: the shared spatial-join primitive for the toolkit.
 
 All coordinates are contractually **EPSG:4326** (WGS-84 lat/lon in degrees). ``GeoKDTree``
 is the one radius/k-NN abstraction every module (geo, multimodal, osm) builds on, so spatial
@@ -136,7 +136,7 @@ def features_within(
     feature_lon: str = "lon",
     prefix: str = "n_",
 ) -> pd.DataFrame:
-    """Summarise the ``features`` around each point — the generic "what's nearby" primitive.
+    """Summarise the ``features`` around each point: the generic "what's nearby" primitive.
 
     Works for any point dataset (transit stops, OSM POIs, shops, …). For every row of
     ``points`` it counts features within ``radius_m`` and the distance to the nearest one;
@@ -187,11 +187,11 @@ def stations_near(
     point_lat: str = "lat",
     point_lon: str = "lon",
 ) -> pd.DataFrame:
-    """For each external point, how many stations are nearby — the accessibility primitive.
+    """For each external point, how many stations are nearby: the accessibility primitive.
 
     The inverse of :func:`features_within`: there you summarise things *around stations*; here
     you ask, for arbitrary places (clinics, schools, neighbourhood centroids), *how well each is
-    served by stations*. Straight-line (great-circle) proximity only — no routing.
+    served by stations*. Straight-line (great-circle) proximity only; no routing.
 
     Parameters
     ----------

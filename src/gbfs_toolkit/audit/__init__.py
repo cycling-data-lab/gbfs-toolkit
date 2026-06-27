@@ -18,7 +18,7 @@ def audit_frames(
     ttl_seconds: int | None = None,
     system_id: str = "system",
 ) -> pd.DataFrame:
-    """Unified semantic audit on canonical frames — static (A1–A7) and, if given, dynamic (D1–D3).
+    """Unified semantic audit on canonical frames: static (A1–A7) and, if given, dynamic (D1–D3).
 
     A pure function (no feed object), so it audits feeds you fetched yourself *or* frames read
     back from a Parquet lake. Results are stacked with an ``audit_type`` column. Use
@@ -40,7 +40,7 @@ def audit_frames(
 def drop_flagged(stations: pd.DataFrame) -> pd.DataFrame:
     """The analysis-ready subset: stations that pass the static A1–A7 audit, in one call.
 
-    Shorthand for running :func:`audit_static` and keeping the unflagged rows — the first thing
+    Shorthand for running :func:`audit_static` and keeping the unflagged rows: the first thing
     most studies do before anything else.
     """
     verdict = audit_static(stations)

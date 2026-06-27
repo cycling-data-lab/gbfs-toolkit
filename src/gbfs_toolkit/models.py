@@ -1,4 +1,4 @@
-"""Canonical data model for GBFS feeds — the stable contract every other module
+"""Canonical data model for GBFS feeds: the stable contract every other module
 (and every downstream research script) builds on.
 
 The whole point of the toolkit is that *ingestion* (which varies across GBFS
@@ -26,7 +26,7 @@ STATION_INFO_COLUMNS: list[str] = [
     "region_id",  # groups stations by city/zone in multi-region operators
 ]
 
-#: Canonical vehicle-type catalogue (``vehicle_types.json``) — resolves
+#: Canonical vehicle-type catalogue (``vehicle_types.json``); resolves
 #: ``VehicleStatus.vehicle_type_id`` to a form factor and propulsion.
 VEHICLE_TYPE_COLUMNS: list[str] = [
     "system_id",
@@ -62,14 +62,14 @@ VEHICLE_STATUS_COLUMNS: list[str] = [
     "lon",
     "is_reserved",
     "is_disabled",
-    "current_range_meters",  # remaining range — the core e-bike/battery research signal
+    "current_range_meters",  # remaining range: the core e-bike/battery research signal
     "current_fuel_percent",  # remaining battery as a 0–1 fraction (GBFS 3.0)
     "pricing_plan_id",  # preserved (not parsed) for equity / pricing joins
     "fetched_at",  # UTC datetime
     "gbfs_version",
 ]
 
-#: Canonical geofencing-zone columns (``geofencing_zones.json``) — operator-defined
+#: Canonical geofencing-zone columns (``geofencing_zones.json``); operator-defined
 #: service-area polygons. ``geometry`` holds a shapely (Multi)Polygon (EPSG:4326); the
 #: boolean/speed fields summarise the zone's *default* rule, with the full ``rules`` list
 #: preserved for per-vehicle-type detail. Requires the optional ``[geo]`` extra.
@@ -86,7 +86,7 @@ GEOFENCING_COLUMNS: list[str] = [
 ]
 
 #: Canonical per-vehicle-type availability at docked stations (GBFS 2.2+/3.x
-#: ``vehicle_types_available``) — *melted* (long), one row per station × vehicle type.
+#: ``vehicle_types_available``): *melted* (long), one row per station × vehicle type.
 #: ``num_bikes_available`` aggregates these; this schema preserves the breakdown so
 #: "where are the e-bikes?" is answerable. Joins to :data:`VEHICLE_TYPE_COLUMNS`.
 STATION_VEHICLE_COUNTS_COLUMNS: list[str] = [
@@ -97,7 +97,7 @@ STATION_VEHICLE_COUNTS_COLUMNS: list[str] = [
     "fetched_at",  # UTC datetime
 ]
 
-#: Canonical pricing-plan lookup (``system_pricing_plans.json``) — resolves the
+#: Canonical pricing-plan lookup (``system_pricing_plans.json``); resolves the
 #: ``pricing_plan_id`` foreign key carried on vehicles, for equity / cost research.
 PRICING_PLAN_COLUMNS: list[str] = [
     "system_id",
@@ -109,7 +109,7 @@ PRICING_PLAN_COLUMNS: list[str] = [
     "description",
 ]
 
-#: Canonical region lookup (``system_regions.json``) — resolves the ``region_id`` foreign key
+#: Canonical region lookup (``system_regions.json``); resolves the ``region_id`` foreign key
 #: carried on stations, so large multi-region networks can be subset/aggregated by region name.
 SYSTEM_REGION_COLUMNS: list[str] = [
     "system_id",
@@ -117,7 +117,7 @@ SYSTEM_REGION_COLUMNS: list[str] = [
     "name",
 ]
 
-#: Canonical service alerts (``system_alerts.json``) — disruptions that explain anomalies in
+#: Canonical service alerts (``system_alerts.json``): disruptions that explain anomalies in
 #: the data (a strike, a closure, a weather event). ``start``/``end`` are tz-aware UTC.
 ALERT_COLUMNS: list[str] = [
     "system_id",
@@ -135,8 +135,8 @@ STATION_TYPES: tuple[str, ...] = ("docked_bike", "free_floating", "carsharing")
 
 # ---------------------------------------------------------------------------
 # The semantic-audit taxonomy (Fossé & Pallares, gbfs-audit-catalogue).
-# Row-level: A1, A3, A4 — this particular station.
-# System-level: A2, A5, A6, A7 — every row of a flagged system carries the flag.
+# Row-level: A1, A3, A4 (this particular station).
+# System-level: A2, A5, A6, A7 (every row of a flagged system carries the flag).
 # ---------------------------------------------------------------------------
 
 AUDIT_FLAGS: tuple[str, ...] = ("A1", "A2", "A3", "A4", "A5", "A6", "A7")
@@ -189,14 +189,51 @@ class SchemaError(GBFSValidationError, ValueError):
 
     Subclasses both :class:`~gbfs_toolkit.errors.GBFSValidationError` (so
     ``except GBFSError`` catches it) and :class:`ValueError` (backward compatibility).
+
+    For schema-mismatch cases the exception also carries structured fields, so an
+    automated pipeline can branch on them without parsing the message: ``missing`` (the
+    absent columns), ``present`` (the columns that were supplied), and ``what`` (the
+    operation that required them). They are ``None`` for other validation failures.
     """
+
+    def __init__(
+        self,
+        message: str,
+        *,
+        missing: list[str] | None = None,
+        present: list[str] | None = None,
+        what: str | None = None,
+    ) -> None:
+        super().__init__(message)
+        self.missing = missing
+        self.present = present
+        self.what = what
+
+
+#: Canonical data-model reference, cited in schema-error messages.
+_DATA_MODEL_URL = "https://cycling-data-lab.github.io/gbfs-toolkit/data-model/"
 
 
 def require_columns(df: pd.DataFrame, columns: list[str], *, what: str) -> None:
-    """Raise :class:`SchemaError` if ``df`` is missing any of ``columns``."""
+    """Raise a didactic :class:`SchemaError` if ``df`` is missing any of ``columns``.
+
+    The message names the missing columns, lists the columns that were present, gives the
+    likely cause, and points to a concrete fix, so the most common user error (passing a
+    frame that did not come from a ``to_canonical_*`` normaliser) explains itself.
+    """
     missing = [c for c in columns if c not in df.columns]
-    if missing:
-        raise SchemaError(f"{what}: missing required columns {missing}; got {list(df.columns)}")
+    if not missing:
+        return
+    present = list(df.columns)
+    message = (
+        f"{what}: missing required column(s) {missing}.\n"
+        f"  present columns: {present}\n"
+        f"  likely cause: this frame did not come from a to_canonical_* normaliser, or an "
+        f"optional GBFS field is absent for this system.\n"
+        f"  fix: normalise the raw feed with the matching to_canonical_* function, or add the "
+        f"column(s) before calling. Canonical schema: {_DATA_MODEL_URL}"
+    )
+    raise SchemaError(message, missing=missing, present=present, what=what)
 
 
 #: Named canonical schemas (column contracts) addressable by :func:`validate_schema`.
@@ -236,15 +273,18 @@ _DATETIME_COLUMNS = frozenset({"last_reported", "fetched_at", "start", "end", "l
 
 def _schema_columns(schema: str) -> list[str]:
     if schema not in SCHEMAS:
-        raise SchemaError(f"unknown schema {schema!r}; choose from {sorted(SCHEMAS)}")
+        raise SchemaError(
+            f"unknown schema {schema!r}; choose from {sorted(SCHEMAS)}. "
+            f"These are the named canonical contracts in models.SCHEMAS."
+        )
     return SCHEMAS[schema]
 
 
 def validate_schema(df: pd.DataFrame, schema: str) -> pd.DataFrame:
     """Assert a frame still obeys a canonical schema, then return it (for chaining).
 
-    Use after slicing/grouping/mutating a canonical frame — e.g. before appending to the
-    Parquet lake — to fail fast with a clear :class:`SchemaError` instead of corrupting the
+    Use after slicing/grouping/mutating a canonical frame (e.g. before appending to the
+    Parquet lake) to fail fast with a clear :class:`SchemaError` instead of corrupting the
     dataset. ``schema`` is one of :data:`SCHEMAS` (``"station_status"``, ``"vehicle_status"``…).
     """
     require_columns(df, _schema_columns(schema), what=f"validate_schema({schema!r})")

@@ -1,13 +1,13 @@
-"""Station clustering & zoning — geographic, topological, and behavioural.
+"""Station clustering & zoning: geographic, topological, and behavioural.
 
 Three lenses on "which stations belong together":
 
-* :func:`cluster_spatial` — physical proximity (HDBSCAN/DBSCAN on projected metres).
-* :func:`cluster_spectral` — network/topological groups (geographic affinity → graph
+* :func:`cluster_spatial`: physical proximity (HDBSCAN/DBSCAN on projected metres).
+* :func:`cluster_spectral`: network/topological groups (geographic affinity → graph
   Laplacian eigenvectors → k-means, via scikit-learn). For the research-grade spectral
   *profile* of a network (R²_spec bound, localization), use the sibling ``spectral-mobility``.
-* :func:`cluster_diurnal_profiles` — **behavioural typologies** from a longitudinal panel
-  (e.g. "morning commuter origin", "nightlife hub") — the payoff of the longitudinal layer.
+* :func:`cluster_diurnal_profiles`: **behavioural typologies** from a longitudinal panel
+  (e.g. "morning commuter origin", "nightlife hub"), the payoff of the longitudinal layer.
 
 Requires the optional ``[cluster]`` extra (``scikit-learn``).
 """
@@ -134,7 +134,7 @@ def diurnal_profiles(
     station's own mean. With ``split_weekday`` the profile is 48-dim (weekday ``wd*`` +
     weekend ``we*``), capturing commute-vs-leisure rhythms separately.
 
-    Returns ``(profiles, n_obs)`` — ``profiles`` indexed by ``(system_id, station_id)``
+    Returns ``(profiles, n_obs)``; ``profiles`` indexed by ``(system_id, station_id)``
     with hour columns, and the per-station observation count.
     """
     df = panel.reset_index() if isinstance(panel.index, pd.MultiIndex) else panel.copy()
@@ -210,7 +210,7 @@ def cluster_diurnal_profiles(
         ``dtw`` = shape-aware time-series k-means (needs ``tslearn``).
     normalize : {"none", "zscore"}, default "none"
         ``zscore`` clusters by rhythm *shape* (per-station standardised), ignoring the
-        average occupancy level — usually what you want for "commuter vs leisure".
+        average occupancy level, usually what you want for "commuter vs leisure".
     split_weekday : bool, default False
         Profile weekday and weekend separately (48-dim).
     min_obs : int, default 12
@@ -292,15 +292,15 @@ DIURNAL_TYPOLOGIES = (
 def label_diurnal_typology(profiles: pd.DataFrame, *, amplitude: float = 0.15) -> pd.Series:
     """Assign a **human-readable behavioural type** to each station from its 24-h profile.
 
-    Interprets the occupancy curve (columns ``h00 … h23``) into named types — far more useful
+    Interprets the occupancy curve (columns ``h00 … h23``) into named types, far more useful
     than integer cluster ids:
 
-    * ``morning_origin`` — empties in the morning (commuters depart): a residential origin.
-    * ``morning_destination`` — fills in the morning (commuters arrive): a job/transit hub.
-    * ``evening_origin`` — empties in the evening.
-    * ``recreational`` — midday/afternoon peak.
-    * ``mostly_empty`` / ``mostly_full`` — chronically saturated either way.
-    * ``stable`` — little diurnal variation.
+    * ``morning_origin``: empties in the morning (commuters depart): a residential origin.
+    * ``morning_destination``: fills in the morning (commuters arrive): a job/transit hub.
+    * ``evening_origin``: empties in the evening.
+    * ``recreational``: midday/afternoon peak.
+    * ``mostly_empty`` / ``mostly_full``: chronically saturated either way.
+    * ``stable``: little diurnal variation.
 
     Parameters
     ----------

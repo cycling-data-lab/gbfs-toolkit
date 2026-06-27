@@ -1,4 +1,4 @@
-"""Fetch / scrape live GBFS data with one line — discovery + a friendly feed object.
+"""Fetch / scrape live GBFS data with one line: discovery + a friendly feed object.
 
 The goal is to make GBFS *trivial*: point at a ``gbfs.json`` (or a system id) and
 get tidy, canonical DataFrames back, regardless of GBFS version or language.
@@ -69,7 +69,7 @@ def build_session(
     backoff_factor: float = 0.5,
     status_forcelist: tuple[int, ...] = (429, 500, 502, 503, 504),
 ) -> Any:
-    """A pooled ``requests.Session`` with polite retry/backoff — the right default for scraping.
+    """A pooled ``requests.Session`` with polite retry/backoff: the right default for scraping.
 
     Transient 429/5xx responses from operator API gateways are routine; this retries them with
     exponential backoff instead of failing the whole poll. Reusing one session across systems
@@ -123,7 +123,7 @@ def fetch_feed_json(
     last_modified: str | None = None,
     timeout: int = 30,
 ) -> FeedResponse:
-    """Conditionally fetch a feed, honouring HTTP caching — the polite way to poll.
+    """Conditionally fetch a feed, honouring HTTP caching: the polite way to poll.
 
     Pass the ``etag`` / ``last_modified`` returned by the previous call; if the server replies
     **304 Not Modified**, this raises :class:`~gbfs_toolkit.errors.GBFSNotModified` so your
@@ -169,7 +169,7 @@ def parse_discovery(doc: dict, language: str | None = None) -> tuple[dict[str, s
     data = doc.get("data", {})
     if isinstance(data, dict) and "feeds" in data:  # GBFS 3.x
         feeds = data["feeds"]
-    elif isinstance(data, dict) and data:  # GBFS 1.x / 2.x — keyed by language
+    elif isinstance(data, dict) and data:  # GBFS 1.x / 2.x, keyed by language
         key = language if (language and language in data) else next(iter(data))
         feeds = data.get(key, {}).get("feeds", [])
     else:
@@ -224,7 +224,7 @@ class GBFSFeed:
         if self._feeds is None:
             feeds = "<em>not discovered yet</em>"
         else:
-            feeds = ", ".join(f"<code>{f}</code>" for f in sorted(self._feeds)) or "—"
+            feeds = ", ".join(f"<code>{f}</code>" for f in sorted(self._feeds)) or "none"
         return (
             f"<b>GBFSFeed</b> <code>{self.system_id}</code>"
             f"<br>version: {self._version or '?'}<br>feeds: {feeds}"
@@ -276,7 +276,7 @@ class GBFSFeed:
 
     @property
     def ttl(self) -> int | None:
-        """Advertised refresh interval (seconds) from ``gbfs.json`` — feeds the staleness audit."""
+        """Advertised refresh interval (seconds) from ``gbfs.json``; feeds the staleness audit."""
         if self._doc is None:
             self._discover()
         ttl = (self._doc or {}).get("ttl")
@@ -291,7 +291,7 @@ class GBFSFeed:
 
     @property
     def timezone(self) -> str | None:
-        """IANA timezone (e.g. ``"Europe/Paris"``) from ``system_information`` — for local time."""
+        """IANA timezone (e.g. ``"Europe/Paris"``) from ``system_information``, for local time."""
         return self.system_information().get("timezone")
 
     def has(self, *names: str) -> bool:
@@ -342,7 +342,7 @@ class GBFSFeed:
     def geofencing_zones(self) -> Any:
         """Operator-defined service-area polygons as a ``GeoDataFrame`` (``[geo]`` extra).
 
-        Raises ``KeyError`` if the system publishes no ``geofencing_zones`` feed — check
+        Raises ``KeyError`` if the system publishes no ``geofencing_zones`` feed; check
         :meth:`has` first. See :func:`~gbfs_toolkit.to_canonical_geofencing`.
         """
         from gbfs_toolkit.geofencing import to_canonical_geofencing
@@ -374,7 +374,7 @@ class GBFSFeed:
     def availability(self) -> pd.DataFrame:
         """**The daily one-liner**: live status joined with station info.
 
-        Thin convenience over :func:`~gbfs_toolkit.join_availability` — returns bikes/docks
+        Thin convenience over :func:`~gbfs_toolkit.join_availability`; returns bikes/docks
         *and* name, coordinates, capacity and station type in one tidy frame (outer join with a
         ``presence`` indicator). For offline frames (e.g. from a Parquet lake), call
         ``join_availability(info, status)`` directly.
@@ -432,7 +432,7 @@ class GBFSFeed:
         return out
 
     def summary(self) -> pd.Series:
-        """A one-glance health card: counts, staleness, version — ideal in a notebook."""
+        """A one-glance health card: counts, staleness, version; ideal in a notebook."""
         data: dict[str, Any] = {
             "system_id": self.system_id,
             "gbfs_version": self.version,
@@ -475,12 +475,12 @@ def fetch_multiple(
 ) -> dict[str, GBFSFeed | Exception]:
     """Resolve and open many systems concurrently (threaded) for comparative studies.
 
-    Returns ``{system_id: GBFSFeed}``, or the ``Exception`` for systems that failed —
+    Returns ``{system_id: GBFSFeed}``, or the ``Exception`` for systems that failed,
     so one dead feed never sinks a 50-city pull. Discovery runs eagerly so failures
     surface here; data fetches stay lazy on each returned feed.
 
     Pass a shared ``requests.Session`` to pool connections across all systems (strongly
-    recommended for repeated polling — avoids TCP/port exhaustion). Ignored if you also
+    recommended for repeated polling, avoids TCP/port exhaustion). Ignored if you also
     pass your own ``get_json``.
     """
     from concurrent.futures import ThreadPoolExecutor
@@ -505,6 +505,6 @@ def fetch_multiple(
             sid = futures[fut]
             try:
                 results[sid] = fut.result()
-            except Exception as exc:  # noqa: BLE001 — we deliberately capture per-system
+            except Exception as exc:  # noqa: BLE001 (we deliberately capture per-system)
                 results[sid] = exc
     return results
