@@ -5,6 +5,15 @@ All notable changes are documented here ([Keep a Changelog](https://keepachangel
 
 ## [Unreleased]
 
+### Quality
+- **Input-validation guards**: `join_availability`, `calculate_net_flow`, `coverage_report`,
+  `detect_ghost_vehicles` and `link_transit_stops` now raise a clear `SchemaError` naming the
+  missing columns instead of a cryptic `KeyError` deep in the call.
+- **Test & coverage pass**: 99 → 115 tests, coverage 83% → 94%; added a CI coverage gate
+  (`--cov-fail-under=85`). New coverage for the dynamic audit, `fetch_multiple` / module
+  one-liners / feed delegators (offline), conditional GET, catalogue cache, the OSM geopandas
+  path, panel resampling, manifests, and stats on empty/degenerate inputs.
+
 ### Added
 - **Ghost-vehicle detection** (`fleet.detect_ghost_vehicles(vehicle_panel, idle_days=14,
   move_threshold_m=50)`): flags free-floating units advertised at the same spot for a long

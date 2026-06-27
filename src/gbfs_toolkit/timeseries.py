@@ -23,6 +23,8 @@ from typing import Any
 import numpy as np
 import pandas as pd
 
+from gbfs_toolkit.models import require_columns
+
 
 def _require_pyarrow():
     try:
@@ -198,6 +200,11 @@ def calculate_net_flow(panel: pd.DataFrame) -> pd.DataFrame:
     returns a flat frame with ``system_id, station_id, fetched_at`` columns.
     """
     df = panel.reset_index() if isinstance(panel.index, pd.MultiIndex) else panel.copy()
+    require_columns(
+        df,
+        ["system_id", "station_id", "fetched_at", "num_bikes_available"],
+        what="calculate_net_flow",
+    )
     df = df.sort_values(["system_id", "station_id", "fetched_at"])
     grp = df.groupby(["system_id", "station_id"], sort=False)
 
@@ -230,6 +237,7 @@ def coverage_report(panel: pd.DataFrame, *, expected_freq: str = "5min") -> pd.D
         ``uptime_pct``, ``longest_gap_minutes``.
     """
     df = panel.reset_index() if isinstance(panel.index, pd.MultiIndex) else panel.copy()
+    require_columns(df, ["system_id", "station_id", "fetched_at"], what="coverage_report")
     df = df[["system_id", "station_id", "fetched_at"]].copy()
     df["fetched_at"] = pd.to_datetime(df["fetched_at"])
     step = pd.Timedelta(expected_freq)

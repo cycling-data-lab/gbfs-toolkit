@@ -13,6 +13,7 @@ from __future__ import annotations
 import pandas as pd
 
 from gbfs_toolkit.geo import haversine_m
+from gbfs_toolkit.models import require_columns
 
 
 def _bool_col(df: pd.DataFrame, col: str) -> pd.Series:
@@ -119,6 +120,9 @@ def detect_ghost_vehicles(
         vehicle_panel.reset_index()
         if isinstance(vehicle_panel.index, pd.MultiIndex)
         else vehicle_panel.copy()
+    )
+    require_columns(
+        df, ["system_id", "vehicle_id", "lat", "lon", "fetched_at"], what="detect_ghost_vehicles"
     )
     df = df[["system_id", "vehicle_id", "lat", "lon", "fetched_at"]].copy()
     df["fetched_at"] = pd.to_datetime(df["fetched_at"], utc=True)

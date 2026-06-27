@@ -13,6 +13,7 @@ import numpy as np
 import pandas as pd
 
 from gbfs_toolkit.geo import GeoKDTree
+from gbfs_toolkit.models import require_columns
 
 # GTFS stops.txt column aliases (lat/lon naming varies a little in the wild).
 _LAT_ALIASES = ("stop_lat", "lat", "latitude")
@@ -51,6 +52,7 @@ def link_transit_stops(
         ``info`` plus ``nearest_stop_id``, ``nearest_stop_dist_m``,
         ``n_transit_within`` (stops within ``radius_m``) and ``is_transit_feeder`` (bool).
     """
+    require_columns(info, ["lat", "lon"], what="link_transit_stops(info)")
     out = info.reset_index(drop=True).copy()
     if out.empty:
         out["nearest_stop_id"] = pd.Series(dtype="object")

@@ -24,7 +24,7 @@ jobs:
       - name: Format check (ruff)
         run: ruff format --check .
       - name: Tests
-        run: pytest -q
+        run: pytest -q --cov=gbfs_toolkit --cov-report=term-missing --cov-fail-under=85
 
   build:
     name: Build sdist + wheel

@@ -44,6 +44,12 @@ def test_cluster_spectral_labels():
     assert out["spectral_cluster"].nunique() == 2
 
 
+def test_cluster_spatial_dbscan():
+    out = cluster_spatial(_two_blobs(), method="dbscan", eps_m=200, min_cluster_size=4)
+    assert "cluster" in out.columns
+    assert len({c for c in out["cluster"] if c != -1}) == 2
+
+
 def _diurnal_panel():
     """Two stations with opposite daily rhythms, one day of hourly polls."""
     rows = []
