@@ -13,12 +13,11 @@ from typing import TYPE_CHECKING, Any
 import numpy as np
 import pandas as pd
 
+from gbfs_toolkit._internal import EARTH_RADIUS_M
 from gbfs_toolkit.models import require_columns
 
 if TYPE_CHECKING:  # pragma: no cover
     import geopandas as gpd
-
-_EARTH_RADIUS_M = 6_371_000.0
 
 
 def haversine_m(lat1: Any, lon1: Any, lat2: Any, lon2: Any) -> np.ndarray:
@@ -28,7 +27,7 @@ def haversine_m(lat1: Any, lon1: Any, lat2: Any, lon2: Any) -> np.ndarray:
     )
     dlat, dlon = lat2 - lat1, lon2 - lon1
     a = np.sin(dlat / 2) ** 2 + np.cos(lat1) * np.cos(lat2) * np.sin(dlon / 2) ** 2
-    return _EARTH_RADIUS_M * 2 * np.arctan2(np.sqrt(a), np.sqrt(1 - a))
+    return EARTH_RADIUS_M * 2 * np.arctan2(np.sqrt(a), np.sqrt(1 - a))
 
 
 def _to_xyz(lat: Any, lon: Any) -> np.ndarray:
@@ -36,19 +35,19 @@ def _to_xyz(lat: Any, lon: Any) -> np.ndarray:
     lat_r = np.radians(np.asarray(lat, dtype="float64"))
     lon_r = np.radians(np.asarray(lon, dtype="float64"))
     cos_lat = np.cos(lat_r)
-    return _EARTH_RADIUS_M * np.column_stack(
+    return EARTH_RADIUS_M * np.column_stack(
         [cos_lat * np.cos(lon_r), cos_lat * np.sin(lon_r), np.sin(lat_r)]
     )
 
 
 def _chord_to_arc_m(chord: np.ndarray) -> np.ndarray:
     """Convert a 3-D chord length back to great-circle (arc) metres."""
-    return 2 * _EARTH_RADIUS_M * np.arcsin(np.clip(chord / (2 * _EARTH_RADIUS_M), -1.0, 1.0))
+    return 2 * EARTH_RADIUS_M * np.arcsin(np.clip(chord / (2 * EARTH_RADIUS_M), -1.0, 1.0))
 
 
 def _arc_to_chord_m(arc_m: float) -> float:
     """Convert a great-circle radius (metres) to the 3-D chord length cKDTree expects."""
-    return 2 * _EARTH_RADIUS_M * np.sin(arc_m / (2 * _EARTH_RADIUS_M))
+    return 2 * EARTH_RADIUS_M * np.sin(arc_m / (2 * EARTH_RADIUS_M))
 
 
 class GeoKDTree:

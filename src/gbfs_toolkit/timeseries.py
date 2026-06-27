@@ -23,6 +23,7 @@ from typing import Any
 import numpy as np
 import pandas as pd
 
+from gbfs_toolkit._internal import gini, panel_frame
 from gbfs_toolkit.models import require_columns
 
 
@@ -568,11 +569,6 @@ def generate_manifest(lake_dir: str | Path, *, chunk_size: int = 1 << 20) -> dic
     return manifest
 
 
-def _panel_frame(panel: pd.DataFrame) -> pd.DataFrame:
-    """Flatten a MultiIndexed panel to a frame with the index levels as columns."""
-    return panel.reset_index() if isinstance(panel.index, pd.MultiIndex) else panel.copy()
-
-
 def service_reliability_index(
     panel: pd.DataFrame,
     *,
@@ -609,7 +605,7 @@ def service_reliability_index(
     ----------
     Vogel, Greiser and Mattfeld (2011), Understanding bike-sharing systems using data mining.
     """
-    df = _panel_frame(panel)
+    df = panel_frame(panel)
     require_columns(
         df,
         ["system_id", "station_id", "fetched_at", "num_bikes_available", "num_docks_available"],
@@ -680,7 +676,7 @@ def temporal_autocorrelation(
     ----------
     O'Brien, Cheshire and Batty (2014), Mining bike-sharing data for sustainable transport.
     """
-    df = _panel_frame(panel)
+    df = panel_frame(panel)
     require_columns(
         df, ["system_id", "station_id", "fetched_at", column], what="temporal_autocorrelation"
     )
@@ -820,7 +816,7 @@ def join_exogenous_timeseries(
     pandas.DataFrame
         The flattened panel with the exogenous columns merged in (unmatched rows carry ``NaN``).
     """
-    df = _panel_frame(panel)
+    df = panel_frame(panel)
     exo_time = exo_time or on_time
     require_columns(df, [on_time], what="join_exogenous_timeseries")
     require_columns(exogenous, [exo_time], what="join_exogenous_timeseries(exogenous)")
@@ -851,7 +847,7 @@ def station_outage_rates(panel: pd.DataFrame) -> pd.DataFrame:
     pandas.DataFrame
         ``system_id, station_id, stockout_rate, saturation_rate, n_obs`` (rates in ``[0, 1]``).
     """
-    df = _panel_frame(panel)
+    df = panel_frame(panel)
     require_columns(
         df,
         ["system_id", "station_id", "num_bikes_available", "num_docks_available"],
@@ -930,17 +926,6 @@ def fleet_turnover_proxy(panel: pd.DataFrame, *, freq: str = "1D") -> pd.DataFra
     return out
 
 
-def _gini(values: np.ndarray) -> float:
-    """Gini coefficient of non-negative values (0 = even, 1 = concentrated)."""
-    v = np.sort(np.asarray(values, dtype="float64"))
-    v = v[np.isfinite(v)]
-    n = v.size
-    if n == 0 or v.sum() == 0:
-        return float("nan")
-    cum = np.cumsum(v)
-    return float((n + 1 - 2 * np.sum(cum) / cum[-1]) / n)
-
-
 def availability_synchrony(
     panel: pd.DataFrame,
     *,
@@ -981,7 +966,7 @@ def availability_synchrony(
     ----------
     O'Brien, Cheshire and Batty (2014); the functional-connectivity correlation-network idiom.
     """
-    df = _panel_frame(panel)
+    df = panel_frame(panel)
     require_columns(df, ["station_id", "fetched_at", value_col], what="availability_synchrony")
     wide = pd.DataFrame(
         {
@@ -1112,7 +1097,7 @@ def temporal_concentration(panel: pd.DataFrame, *, freq: str = "1h") -> pd.DataF
             {
                 "system_id": sysid,
                 "station_id": stid,
-                "temporal_gini": _gini(vals),
+                "temporal_gini": gini(vals),
                 "peak_share": float(vals.max() / total) if total > 0 else np.nan,
                 "peak_bin": int(bins[np.argmax(vals)]) if total > 0 else -1,
             }

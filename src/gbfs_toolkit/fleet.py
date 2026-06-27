@@ -12,6 +12,7 @@ from __future__ import annotations
 
 import pandas as pd
 
+from gbfs_toolkit._internal import panel_frame
 from gbfs_toolkit.geo import haversine_m
 from gbfs_toolkit.models import require_columns
 
@@ -116,11 +117,7 @@ def detect_ghost_vehicles(
         Indexed by ``(system_id, vehicle_id)``: ``first_seen``, ``last_seen``, ``n_obs``,
         ``observed_days``, ``max_displacement_m``, ``is_ghost``.
     """
-    df = (
-        vehicle_panel.reset_index()
-        if isinstance(vehicle_panel.index, pd.MultiIndex)
-        else vehicle_panel.copy()
-    )
+    df = panel_frame(vehicle_panel)
     require_columns(
         df, ["system_id", "vehicle_id", "lat", "lon", "fetched_at"], what="detect_ghost_vehicles"
     )
@@ -185,11 +182,7 @@ def vehicle_idle_time(
     pandas.DataFrame
         ``system_id, fetched_at, n_vehicles, n_idle, idle_fraction`` (one row per snapshot).
     """
-    df = (
-        vehicle_panel.reset_index()
-        if isinstance(vehicle_panel.index, pd.MultiIndex)
-        else vehicle_panel.copy()
-    )
+    df = panel_frame(vehicle_panel)
     require_columns(
         df, ["system_id", "vehicle_id", "lat", "lon", "fetched_at"], what="vehicle_idle_time"
     )

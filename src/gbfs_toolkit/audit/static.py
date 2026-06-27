@@ -14,6 +14,7 @@ from __future__ import annotations
 import numpy as np
 import pandas as pd
 
+from gbfs_toolkit._internal import EARTH_RADIUS_M, project_meters
 from gbfs_toolkit.models import (
     A2_MIN_STATIONS,
     A4_MIN_STATIONS,
@@ -29,7 +30,6 @@ from gbfs_toolkit.models import (
     require_columns,
 )
 
-_EARTH_RADIUS_M = 6_371_000.0
 _REQUIRED = ["system_id", "station_id", "station_type", "capacity", "lat", "lon"]
 
 
@@ -59,18 +59,6 @@ def _lon_span_deg(lon: np.ndarray) -> float:
     wrap_gap = 360.0 - (lon[-1] - lon[0])
     largest_gap = max(float(gaps.max()), wrap_gap)
     return 360.0 - largest_gap
-
-
-def _project_meters(lat: np.ndarray, lon: np.ndarray) -> np.ndarray:
-    """Equirectangular projection to local metres around the dataset mean."""
-    lat_r = np.deg2rad(np.asarray(lat, dtype="float64"))
-    lon_r = np.deg2rad(np.asarray(lon, dtype="float64"))
-    if lat_r.size == 0:
-        return np.empty((0, 2), dtype="float64")
-    mean_lat = float(np.nanmean(lat_r))
-    x = _EARTH_RADIUS_M * lon_r * np.cos(mean_lat)
-    y = _EARTH_RADIUS_M * lat_r
-    return np.column_stack([x, y])
 
 
 def _flag_a2(df: pd.DataFrame) -> pd.Series:
@@ -141,9 +129,9 @@ def _flag_a5(df: pd.DataFrame) -> np.ndarray:
         if finite.sum() < 2:
             continue
         slat, slon = lat[idx][finite], lon[idx][finite]
-        height_m = _EARTH_RADIUS_M * np.deg2rad(slat.max() - slat.min())
+        height_m = EARTH_RADIUS_M * np.deg2rad(slat.max() - slat.min())
         mean_lat_r = np.deg2rad(float(np.mean(slat)))
-        width_m = _EARTH_RADIUS_M * np.deg2rad(_lon_span_deg(slon)) * np.cos(mean_lat_r)
+        width_m = EARTH_RADIUS_M * np.deg2rad(_lon_span_deg(slon)) * np.cos(mean_lat_r)
         if (width_m * height_m) / 1e6 > A5_BBOX_MAX_KM2:
             flag[idx] = True
     return flag
@@ -211,7 +199,7 @@ def audit_static(
     """
     require_columns(stations, _REQUIRED, what="audit_static")
     df = stations.reset_index(drop=True)
-    projected = _project_meters(
+    projected = project_meters(
         df["lat"].to_numpy(dtype="float64"), df["lon"].to_numpy(dtype="float64")
     )
 

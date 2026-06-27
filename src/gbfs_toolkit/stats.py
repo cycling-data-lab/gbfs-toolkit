@@ -11,6 +11,7 @@ from __future__ import annotations
 import numpy as np
 import pandas as pd
 
+from gbfs_toolkit._internal import EARTH_RADIUS_M, gini
 from gbfs_toolkit.analysis import STATION_STATES, station_state
 from gbfs_toolkit.models import require_columns
 
@@ -87,17 +88,6 @@ def compare_systems(frames: dict[str, pd.DataFrame]) -> pd.DataFrame:
     return out
 
 
-def _gini(x: np.ndarray) -> float:
-    """Gini coefficient of a non-negative array (0 = equal, →1 = concentrated)."""
-    x = np.sort(x)
-    n = x.size
-    total = x.sum()
-    if n == 0 or total == 0:
-        return float("nan")
-    idx = np.arange(1, n + 1)
-    return float((2 * np.sum(idx * x)) / (n * total) - (n + 1) / n)
-
-
 def _theil(x: np.ndarray) -> float:
     """Theil T index of a positive array (0 = equal; decomposable alternative to Gini)."""
     mu = x.mean()
@@ -130,7 +120,7 @@ def concentration_metrics(info: pd.DataFrame, *, value_col: str = "capacity") ->
         out["top_decile_share"] = float("nan")
         return pd.Series(out)
     out["total_capacity"] = float(x.sum())
-    out["gini"] = round(_gini(x), 4)
+    out["gini"] = round(gini(x), 4)
     out["theil"] = round(_theil(x), 4)
     k = max(1, int(np.ceil(0.1 * x.size)))
     out["top_decile_share"] = round(float(x[-k:].sum() / x.sum()), 4)
@@ -289,17 +279,14 @@ def ripley_k(info: pd.DataFrame, radii: object, *, area_km2: float | None = None
     return pd.DataFrame({"radius_m": radii, "k": k_arr, "l": l_arr})
 
 
-_EARTH_RADIUS_M = 6_371_000.0
-
-
 def _hull_area_km2(lat: np.ndarray, lon: np.ndarray) -> float:
     """Convex-hull area (km²) of points, via an equal-area-ish local projection."""
     from scipy.spatial import ConvexHull, QhullError
 
     lat_r, lon_r = np.radians(lat), np.radians(lon)
     mean_lat = float(np.mean(lat_r))
-    x = _EARTH_RADIUS_M * lon_r * np.cos(mean_lat)
-    y = _EARTH_RADIUS_M * lat_r
+    x = EARTH_RADIUS_M * lon_r * np.cos(mean_lat)
+    y = EARTH_RADIUS_M * lat_r
     try:
         return float(ConvexHull(np.column_stack([x, y])).volume) / 1e6  # 2-D hull volume = area
     except (QhullError, ValueError):  # collinear / degenerate
@@ -416,17 +403,6 @@ def availability_stats(panel: pd.DataFrame, *, time_col: str = "fetched_at") -> 
     return res
 
 
-def _gini(values: np.ndarray) -> float:
-    """Gini coefficient of non-negative values (0 = equal, 1 = maximally concentrated)."""
-    v = np.sort(np.asarray(values, dtype="float64"))
-    v = v[np.isfinite(v)]
-    n = v.size
-    if n == 0 or v.sum() == 0:
-        return float("nan")
-    cum = np.cumsum(v)
-    return float((n + 1 - 2 * np.sum(cum) / cum[-1]) / n)
-
-
 def spatial_entropy(
     vehicle_panel: pd.DataFrame, *, grid_size_m: float = 200.0, time_col: str = "fetched_at"
 ) -> pd.DataFrame:
@@ -472,8 +448,8 @@ def spatial_entropy(
         )
     lat_f, lon_f = lat[finite].to_numpy(), lon[finite].to_numpy()
     mean_lat = np.deg2rad(np.mean(lat_f))
-    x = _EARTH_RADIUS_M * np.deg2rad(lon_f) * np.cos(mean_lat)
-    y = _EARTH_RADIUS_M * np.deg2rad(lat_f)
+    x = EARTH_RADIUS_M * np.deg2rad(lon_f) * np.cos(mean_lat)
+    y = EARTH_RADIUS_M * np.deg2rad(lat_f)
     df["_cell"] = list(
         zip(
             np.floor(x / grid_size_m).astype("int64"),
@@ -531,7 +507,7 @@ def dynamic_gini_index(
     rows = []
     for t, idx in df.groupby(time_col, sort=True).groups.items():
         v = vals.loc[idx].dropna().to_numpy()
-        rows.append({time_col: t, "gini": _gini(v), "n_stations": int(v.size)})
+        rows.append({time_col: t, "gini": gini(v), "n_stations": int(v.size)})
     return pd.DataFrame(rows)
 
 

@@ -9,6 +9,7 @@ from __future__ import annotations
 import numpy as np
 import pandas as pd
 
+from gbfs_toolkit._internal import panel_frame
 from gbfs_toolkit.geo import haversine_m
 from gbfs_toolkit.models import require_columns
 
@@ -379,7 +380,7 @@ def capacity_utilization(panel: pd.DataFrame, info: pd.DataFrame) -> pd.DataFram
     pandas.DataFrame
         A copy of ``panel`` with a nullable ``utilization_rate`` column in ``[0, 1]``.
     """
-    out = panel.reset_index() if isinstance(panel.index, pd.MultiIndex) else panel.copy()
+    out = panel_frame(panel)
     require_columns(out, ["station_id", "num_bikes_available"], what="capacity_utilization")
     if "capacity" not in out.columns:
         require_columns(info, ["station_id", "capacity"], what="capacity_utilization(info)")

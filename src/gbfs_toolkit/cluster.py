@@ -19,7 +19,7 @@ from typing import Any
 import numpy as np
 import pandas as pd
 
-_EARTH_RADIUS_M = 6_371_000.0
+from gbfs_toolkit._internal import EARTH_RADIUS_M
 
 
 def _require_sklearn():
@@ -36,7 +36,7 @@ def _project_xy(lat: Any, lon: Any) -> np.ndarray:
     lat_r = np.radians(np.asarray(lat, dtype="float64"))
     lon_r = np.radians(np.asarray(lon, dtype="float64"))
     mean_lat = float(np.nanmean(lat_r)) if lat_r.size else 0.0
-    return np.column_stack([_EARTH_RADIUS_M * lon_r * np.cos(mean_lat), _EARTH_RADIUS_M * lat_r])
+    return np.column_stack([EARTH_RADIUS_M * lon_r * np.cos(mean_lat), EARTH_RADIUS_M * lat_r])
 
 
 def cluster_spatial(
