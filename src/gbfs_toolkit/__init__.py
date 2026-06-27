@@ -18,16 +18,32 @@ Quick start
 from gbfs_toolkit import models
 from gbfs_toolkit.audit import audit_static
 from gbfs_toolkit.catalog import resolve, systems_catalog
+from gbfs_toolkit.fetch import GBFSFeed, audit_feed, availability, parse_discovery
 from gbfs_toolkit.models import AUDIT_FLAGS, RULES, SchemaError
-from gbfs_toolkit.normalize import to_canonical_station_info
+from gbfs_toolkit.normalize import (
+    to_canonical_station_info,
+    to_canonical_station_status,
+    to_canonical_vehicles,
+)
 
 __version__ = "0.1.0"
 
 __all__ = [
+    # audit
     "audit_static",
+    "audit_feed",
+    # fetch / scrape (daily drivers)
+    "GBFSFeed",
+    "availability",
+    "parse_discovery",
+    # normalise
     "to_canonical_station_info",
+    "to_canonical_station_status",
+    "to_canonical_vehicles",
+    # catalogue
     "systems_catalog",
     "resolve",
+    # meta
     "models",
     "RULES",
     "AUDIT_FLAGS",

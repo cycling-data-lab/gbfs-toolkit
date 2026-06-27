@@ -13,7 +13,11 @@ from typing import Any
 
 import pandas as pd
 
-from gbfs_toolkit.models import STATION_INFO_COLUMNS
+from gbfs_toolkit.models import (
+    STATION_INFO_COLUMNS,
+    STATION_STATUS_COLUMNS,
+    VEHICLE_STATUS_COLUMNS,
+)
 
 
 def _name(value: Any) -> str | None:
@@ -85,5 +89,83 @@ def to_canonical_station_info(
         )
     df = pd.DataFrame(rows, columns=STATION_INFO_COLUMNS)
     for col in ("lat", "lon", "capacity"):
+        df[col] = pd.to_numeric(df[col], errors="coerce")
+    return df
+
+
+def _to_unix(value: Any) -> float | None:
+    """GBFS 2.x ``last_reported`` is unix seconds; GBFS 3.x is an RFC3339 string."""
+    if value is None:
+        return None
+    if isinstance(value, (int, float)):
+        return float(value)
+    try:
+        return float(value)
+    except (TypeError, ValueError):
+        ts = pd.to_datetime(value, errors="coerce", utc=True)
+        return None if ts is pd.NaT else ts.timestamp()
+
+
+def to_canonical_station_status(
+    raw: dict, *, system_id: str, gbfs_version: str = "2.x", fetched_at: float | None = None
+) -> pd.DataFrame:
+    """Parse a ``station_status.json`` document into a canonical frame.
+
+    Returns :data:`~gbfs_toolkit.models.STATION_STATUS_COLUMNS`. ``fetched_at`` is
+    stamped on every row (defaults to *now*) for provenance.
+    """
+    import time
+
+    if fetched_at is None:
+        fetched_at = time.time()
+    data = raw.get("data", raw)
+    stations = data.get("stations", []) if isinstance(data, dict) else []
+    rows = [
+        {
+            "system_id": system_id,
+            "station_id": str(s.get("station_id")),
+            "num_bikes_available": s.get("num_bikes_available"),
+            "num_docks_available": s.get("num_docks_available"),
+            "last_reported": _to_unix(s.get("last_reported")),
+            "fetched_at": fetched_at,
+            "gbfs_version": gbfs_version,
+        }
+        for s in stations
+    ]
+    df = pd.DataFrame(rows, columns=STATION_STATUS_COLUMNS)
+    for col in ("num_bikes_available", "num_docks_available"):
+        df[col] = pd.to_numeric(df[col], errors="coerce")
+    return df
+
+
+def to_canonical_vehicles(
+    raw: dict, *, system_id: str, gbfs_version: str = "2.x", fetched_at: float | None = None
+) -> pd.DataFrame:
+    """Parse ``free_bike_status`` (2.x) or ``vehicle_status`` (3.x) into a canonical frame.
+
+    Returns :data:`~gbfs_toolkit.models.VEHICLE_STATUS_COLUMNS`.
+    """
+    import time
+
+    if fetched_at is None:
+        fetched_at = time.time()
+    data = raw.get("data", raw)
+    # v3 → "vehicles", v2 → "bikes"
+    items = (data.get("vehicles") or data.get("bikes") or []) if isinstance(data, dict) else []
+    rows = [
+        {
+            "system_id": system_id,
+            "vehicle_id": str(v.get("vehicle_id") or v.get("bike_id")),
+            "lat": v.get("lat"),
+            "lon": v.get("lon"),
+            "is_reserved": bool(v.get("is_reserved", False)),
+            "is_disabled": bool(v.get("is_disabled", False)),
+            "fetched_at": fetched_at,
+            "gbfs_version": gbfs_version,
+        }
+        for v in items
+    ]
+    df = pd.DataFrame(rows, columns=VEHICLE_STATUS_COLUMNS)
+    for col in ("lat", "lon"):
         df[col] = pd.to_numeric(df[col], errors="coerce")
     return df
