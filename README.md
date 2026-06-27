@@ -68,10 +68,33 @@ Ingestion is normalised **once** into version-independent frames; audit and anal
 operate purely on these. Downstream code depends on these column names, never on raw GBFS
 JSON.
 
-- **StationInfo**: `system_id, station_id, name, lat, lon, capacity, station_type`
-- **StationStatus**: `system_id, station_id, num_bikes_available, num_docks_available, last_reported, fetched_at, gbfs_version`
-- **VehicleStatus**: `system_id, vehicle_id, lat, lon, is_reserved, is_disabled, fetched_at, gbfs_version`
+- **StationInfo**: `system_id, station_id, name, lat, lon, capacity, station_type, is_virtual_station`
+- **StationStatus**: `system_id, station_id, num_bikes_available, num_docks_available, is_renting, is_returning, last_reported, fetched_at, gbfs_version`
+- **VehicleStatus**: `system_id, vehicle_id, vehicle_type_id, lat, lon, is_reserved, is_disabled, fetched_at, gbfs_version`
 - **AuditVerdict**: `system_id, station_id, A1…A7, flagged, reason`
+
+`last_reported` and `fetched_at` are tz-aware **UTC** timestamps (`datetime64[ns, UTC]`) so
+feeds from different cities merge unambiguously.
+
+## Daily ergonomics
+
+```python
+import gbfs_toolkit as gb
+
+# discover by city (you rarely know the system_id)
+cat   = gb.systems_catalog()
+paris = gb.filter_catalog(cat, country_code="FR", city="Paris")
+
+feed  = gb.GBFSFeed.from_url(url)
+feed.summary()                       # one-glance card: stations, bikes, staleness, version
+avail = feed.availability()          # bikes/docks + name/coords/capacity, one frame
+avail["state"] = gb.station_state(avail)          # empty / full / disabled / normal
+problems = gb.audit_dynamic(avail)                # negative counts, over-capacity, stale
+near  = gb.find_nearest_stations(48.85, 2.35, feed.station_information(), k=3)
+
+# many systems at once (threaded), broken feeds isolated as Exceptions
+feeds = gb.fetch_multiple(["velib", "bixi", "lyon"], max_workers=5)
+```
 
 ## Roadmap
 

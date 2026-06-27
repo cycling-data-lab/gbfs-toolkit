@@ -85,6 +85,7 @@ def to_canonical_station_info(
                 "lon": s.get("lon"),
                 "capacity": s.get("capacity"),
                 "station_type": station_type or _infer_station_type(s),
+                "is_virtual_station": bool(s.get("is_virtual_station", False)),
             }
         )
     df = pd.DataFrame(rows, columns=STATION_INFO_COLUMNS)
@@ -93,31 +94,38 @@ def to_canonical_station_info(
     return df
 
 
-def _to_unix(value: Any) -> float | None:
-    """GBFS 2.x ``last_reported`` is unix seconds; GBFS 3.x is an RFC3339 string."""
+def _utc(value: Any) -> pd.Timestamp:
+    """Parse a GBFS timestamp to a tz-aware UTC ``Timestamp`` (NaT if unparseable).
+
+    GBFS 2.x ``last_reported`` is unix seconds; GBFS 3.x is an RFC3339 string.
+    """
     if value is None:
-        return None
+        return pd.NaT
     if isinstance(value, (int, float)):
-        return float(value)
-    try:
-        return float(value)
+        return pd.to_datetime(value, unit="s", utc=True)
+    try:  # numeric strings still mean unix seconds
+        return pd.to_datetime(float(value), unit="s", utc=True)
     except (TypeError, ValueError):
-        ts = pd.to_datetime(value, errors="coerce", utc=True)
-        return None if ts is pd.NaT else ts.timestamp()
+        return pd.to_datetime(value, errors="coerce", utc=True)
+
+
+def _now_utc() -> pd.Timestamp:
+    return pd.Timestamp.now(tz="UTC")
 
 
 def to_canonical_station_status(
-    raw: dict, *, system_id: str, gbfs_version: str = "2.x", fetched_at: float | None = None
+    raw: dict,
+    *,
+    system_id: str,
+    gbfs_version: str = "2.x",
+    fetched_at: pd.Timestamp | None = None,
 ) -> pd.DataFrame:
     """Parse a ``station_status.json`` document into a canonical frame.
 
-    Returns :data:`~gbfs_toolkit.models.STATION_STATUS_COLUMNS`. ``fetched_at`` is
-    stamped on every row (defaults to *now*) for provenance.
+    Returns :data:`~gbfs_toolkit.models.STATION_STATUS_COLUMNS`. ``fetched_at`` is a
+    tz-aware UTC timestamp stamped on every row (defaults to *now*) for provenance.
     """
-    import time
-
-    if fetched_at is None:
-        fetched_at = time.time()
+    fetched_at = fetched_at if fetched_at is not None else _now_utc()
     data = raw.get("data", raw)
     stations = data.get("stations", []) if isinstance(data, dict) else []
     rows = [
@@ -126,7 +134,9 @@ def to_canonical_station_status(
             "station_id": str(s.get("station_id")),
             "num_bikes_available": s.get("num_bikes_available"),
             "num_docks_available": s.get("num_docks_available"),
-            "last_reported": _to_unix(s.get("last_reported")),
+            "is_renting": bool(s.get("is_renting", True)),
+            "is_returning": bool(s.get("is_returning", True)),
+            "last_reported": _utc(s.get("last_reported")),
             "fetched_at": fetched_at,
             "gbfs_version": gbfs_version,
         }
@@ -135,20 +145,23 @@ def to_canonical_station_status(
     df = pd.DataFrame(rows, columns=STATION_STATUS_COLUMNS)
     for col in ("num_bikes_available", "num_docks_available"):
         df[col] = pd.to_numeric(df[col], errors="coerce")
+    for col in ("last_reported", "fetched_at"):
+        df[col] = pd.to_datetime(df[col], utc=True)
     return df
 
 
 def to_canonical_vehicles(
-    raw: dict, *, system_id: str, gbfs_version: str = "2.x", fetched_at: float | None = None
+    raw: dict,
+    *,
+    system_id: str,
+    gbfs_version: str = "2.x",
+    fetched_at: pd.Timestamp | None = None,
 ) -> pd.DataFrame:
     """Parse ``free_bike_status`` (2.x) or ``vehicle_status`` (3.x) into a canonical frame.
 
     Returns :data:`~gbfs_toolkit.models.VEHICLE_STATUS_COLUMNS`.
     """
-    import time
-
-    if fetched_at is None:
-        fetched_at = time.time()
+    fetched_at = fetched_at if fetched_at is not None else _now_utc()
     data = raw.get("data", raw)
     # v3 → "vehicles", v2 → "bikes"
     items = (data.get("vehicles") or data.get("bikes") or []) if isinstance(data, dict) else []
@@ -156,6 +169,7 @@ def to_canonical_vehicles(
         {
             "system_id": system_id,
             "vehicle_id": str(v.get("vehicle_id") or v.get("bike_id")),
+            "vehicle_type_id": v.get("vehicle_type_id"),
             "lat": v.get("lat"),
             "lon": v.get("lon"),
             "is_reserved": bool(v.get("is_reserved", False)),
@@ -168,4 +182,5 @@ def to_canonical_vehicles(
     df = pd.DataFrame(rows, columns=VEHICLE_STATUS_COLUMNS)
     for col in ("lat", "lon"):
         df[col] = pd.to_numeric(df[col], errors="coerce")
+    df["fetched_at"] = pd.to_datetime(df["fetched_at"], utc=True)
     return df

@@ -209,6 +209,26 @@ class GBFSFeed:
             out["vehicles"] = self.vehicles()
         return out
 
+    def summary(self) -> pd.Series:
+        """A one-glance health card: counts, staleness, version — ideal in a notebook."""
+        data: dict[str, Any] = {
+            "system_id": self.system_id,
+            "gbfs_version": self.version,
+            "feeds": ", ".join(sorted(self.feeds)),
+        }
+        if self.has(*_STATION_INFO):
+            data["total_stations"] = int(len(self.station_information()))
+        if self.has(*_STATION_STATUS):
+            status = self.station_status()
+            data["total_bikes_available"] = int(
+                pd.to_numeric(status["num_bikes_available"], errors="coerce").fillna(0).sum()
+            )
+            lag = status["fetched_at"] - status["last_reported"]
+            data["feed_staleness_min"] = round(float(lag.dt.total_seconds().median() / 60), 1)
+        if self.has(*_VEHICLES):
+            data["total_vehicles"] = int(len(self.vehicles()))
+        return pd.Series(data)
+
 
 # -- top-level convenience (the "simplify GBFS to one line" surface) --------
 
@@ -221,3 +241,39 @@ def availability(gbfs_url: str, **kwargs: Any) -> pd.DataFrame:
 def audit_feed(gbfs_url: str, **kwargs: Any) -> pd.DataFrame:
     """One-liner: A1–A7 semantic audit of a live feed."""
     return GBFSFeed.from_url(gbfs_url, **kwargs).audit()
+
+
+def fetch_multiple(
+    system_ids: list[str],
+    *,
+    catalog: pd.DataFrame | None = None,
+    max_workers: int = 5,
+    **kwargs: Any,
+) -> dict[str, GBFSFeed | Exception]:
+    """Resolve and open many systems concurrently (threaded) for comparative studies.
+
+    Returns ``{system_id: GBFSFeed}``, or the ``Exception`` for systems that failed —
+    so one dead feed never sinks a 50-city pull. Discovery runs eagerly so failures
+    surface here; data fetches stay lazy on each returned feed.
+    """
+    from concurrent.futures import ThreadPoolExecutor
+
+    from gbfs_toolkit.catalog import systems_catalog
+
+    cat = catalog if catalog is not None else systems_catalog()
+
+    def _open(sid: str) -> GBFSFeed:
+        feed = GBFSFeed.from_system_id(sid, catalog=cat, **kwargs)
+        _ = feed.feeds  # force discovery so a broken gbfs.json fails now
+        return feed
+
+    results: dict[str, GBFSFeed | Exception] = {}
+    with ThreadPoolExecutor(max_workers=max_workers) as pool:
+        futures = {pool.submit(_open, sid): sid for sid in system_ids}
+        for fut in futures:
+            sid = futures[fut]
+            try:
+                results[sid] = fut.result()
+            except Exception as exc:  # noqa: BLE001 — we deliberately capture per-system
+                results[sid] = exc
+    return results

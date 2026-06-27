@@ -44,6 +44,30 @@ def systems_catalog(source: str | None = None, *, timeout: int = 30) -> pd.DataF
     return df
 
 
+def filter_catalog(
+    catalog: pd.DataFrame,
+    *,
+    country_code: str | None = None,
+    city: str | None = None,
+    name: str | None = None,
+) -> pd.DataFrame:
+    """Filter the systems catalogue — because you know "Paris", not the system_id.
+
+    All filters are case-insensitive; ``city`` / ``name`` match as substrings against
+    the catalogue's ``location`` / ``name`` columns (whichever are present).
+    """
+    out = catalog
+    if country_code is not None and "country_code" in out.columns:
+        out = out[out["country_code"].astype(str).str.lower() == country_code.lower()]
+    if city is not None:
+        col = next((c for c in ("location", "city", "name") if c in out.columns), None)
+        if col:
+            out = out[out[col].astype(str).str.contains(city, case=False, na=False)]
+    if name is not None and "name" in out.columns:
+        out = out[out["name"].astype(str).str.contains(name, case=False, na=False)]
+    return out.reset_index(drop=True)
+
+
 def resolve(system_id: str, catalog: pd.DataFrame) -> dict:
     """Resolve a system's discovery endpoint from a loaded catalogue.
 

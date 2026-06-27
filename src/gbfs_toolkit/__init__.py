@@ -16,9 +16,17 @@ Quick start
 """
 
 from gbfs_toolkit import models
-from gbfs_toolkit.audit import audit_static
-from gbfs_toolkit.catalog import resolve, systems_catalog
-from gbfs_toolkit.fetch import GBFSFeed, audit_feed, availability, parse_discovery
+from gbfs_toolkit.analysis import station_state
+from gbfs_toolkit.audit import audit_dynamic, audit_static
+from gbfs_toolkit.catalog import filter_catalog, resolve, systems_catalog
+from gbfs_toolkit.fetch import (
+    GBFSFeed,
+    audit_feed,
+    availability,
+    fetch_multiple,
+    parse_discovery,
+)
+from gbfs_toolkit.geo import find_nearest_stations, haversine_m, to_gdf
 from gbfs_toolkit.models import AUDIT_FLAGS, RULES, SchemaError
 from gbfs_toolkit.normalize import (
     to_canonical_station_info,
@@ -29,12 +37,14 @@ from gbfs_toolkit.normalize import (
 __version__ = "0.1.0"
 
 __all__ = [
-    # audit
+    # audit (the flagship)
     "audit_static",
+    "audit_dynamic",
     "audit_feed",
     # fetch / scrape (daily drivers)
     "GBFSFeed",
     "availability",
+    "fetch_multiple",
     "parse_discovery",
     # normalise
     "to_canonical_station_info",
@@ -42,7 +52,13 @@ __all__ = [
     "to_canonical_vehicles",
     # catalogue
     "systems_catalog",
+    "filter_catalog",
     "resolve",
+    # analysis & geo
+    "station_state",
+    "find_nearest_stations",
+    "haversine_m",
+    "to_gdf",
     # meta
     "models",
     "RULES",

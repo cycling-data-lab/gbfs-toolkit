@@ -3,6 +3,27 @@
 All notable changes are documented here ([Keep a Changelog](https://keepachangelog.com),
 [SemVer](https://semver.org)).
 
+## [Unreleased]
+
+### Added
+- **Fetch / scrape layer**: `GBFSFeed` (discover once, then `.station_information()`,
+  `.station_status()`, `.vehicles()`, `.availability()`, `.audit()`, `.snapshot()`,
+  `.summary()`); `parse_discovery`; one-liners `availability(url)` / `audit_feed(url)`;
+  `fetch_multiple(system_ids)` (threaded, per-system error isolation). `get_json` is
+  dependency-injectable for offline use.
+- **Dynamic audit** `audit_dynamic` (D1 negative counts, D2 bikes+docks > capacity,
+  D3 staleness) — the real-time counterpart to the static A1–A7 audit.
+- **Derived metrics** `station_state` (empty/full/disabled/normal).
+- **Geo helpers** `find_nearest_stations`, `haversine_m`, `to_gdf` (lazy geopandas, `[geo]`).
+- **Catalogue** `filter_catalog(country_code=, city=, name=)` — find a system by place.
+
+### Changed (canonical model — pre-1.0 schema hardening)
+- StationInfo gains `is_virtual_station`.
+- StationStatus gains `is_renting`, `is_returning`.
+- VehicleStatus gains `vehicle_type_id` (pedal / e-bike / scooter).
+- `last_reported` and `fetched_at` are now tz-aware **UTC** `datetime64[ns, UTC]`
+  (previously unix ints) for unambiguous cross-city merges.
+
 ## [0.1.0] — 2026-06
 
 Initial scaffold — consolidates GBFS tooling that was scattered across the lab's

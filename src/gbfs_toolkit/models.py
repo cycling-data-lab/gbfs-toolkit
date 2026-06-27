@@ -20,16 +20,21 @@ STATION_INFO_COLUMNS: list[str] = [
     "lon",
     "capacity",
     "station_type",  # one of STATION_TYPES
+    "is_virtual_station",  # painted-box vs physical dock (GBFS 2.1+)
 ]
 
 #: Canonical station-status columns (a timestamped availability snapshot).
+#: ``last_reported`` and ``fetched_at`` are tz-aware UTC timestamps
+#: (``datetime64[ns, UTC]``) so feeds from different cities merge unambiguously.
 STATION_STATUS_COLUMNS: list[str] = [
     "system_id",
     "station_id",
     "num_bikes_available",
     "num_docks_available",
-    "last_reported",  # unix seconds (feed-reported)
-    "fetched_at",  # unix seconds (when *we* fetched it)
+    "is_renting",  # station accepts rentals right now
+    "is_returning",  # station accepts returns right now
+    "last_reported",  # UTC datetime (feed-reported)
+    "fetched_at",  # UTC datetime (when *we* fetched it)
     "gbfs_version",
 ]
 
@@ -37,11 +42,12 @@ STATION_STATUS_COLUMNS: list[str] = [
 VEHICLE_STATUS_COLUMNS: list[str] = [
     "system_id",
     "vehicle_id",
+    "vehicle_type_id",  # pedal / e-bike / scooter (the key modern axis)
     "lat",
     "lon",
     "is_reserved",
     "is_disabled",
-    "fetched_at",
+    "fetched_at",  # UTC datetime
     "gbfs_version",
 ]
 
