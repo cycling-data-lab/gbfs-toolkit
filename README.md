@@ -171,6 +171,14 @@ gb.coverage_stats(info, zones=zones)        # density, nearest-neighbour, Clark�
 gb.availability_stats(panel)                # per-station: occupancy, peak hour, volatility
 ```
 
+Standard spatial / inequality algorithms (numpy/scipy only, deterministic):
+
+```python
+gb.morans_i(info, "occupancy")              # spatial autocorrelation (+ z-score / p-value)
+gb.ripley_k(info, radii=[100, 250, 500])    # multi-scale clustering: L>0 clustered, <0 dispersed
+gb.lorenz_curve(info)                       # inequality curve to plot (Gini/Theil in concentration_metrics)
+```
+
 Readable, comparable summaries — strictly descriptive (no OD/trip inference). `system_profile`
 is a one-glance numeric card of a snapshot; `concentration_metrics` is an equity lens (kept
 *outside* the published A1–A7 audit, since it's a metric not a quality verdict);

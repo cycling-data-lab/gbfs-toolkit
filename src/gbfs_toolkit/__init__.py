@@ -63,6 +63,9 @@ from gbfs_toolkit.stats import (
     compare_systems,
     concentration_metrics,
     coverage_stats,
+    lorenz_curve,
+    morans_i,
+    ripley_k,
     system_profile,
 )
 from gbfs_toolkit.timeseries import (
@@ -121,8 +124,11 @@ __all__ = [
     "system_profile",
     "compare_systems",
     "concentration_metrics",
+    "lorenz_curve",
     "coverage_stats",
     "availability_stats",
+    "morans_i",
+    "ripley_k",
     # analysis & geo
     "station_state",
     "find_nearest_stations",

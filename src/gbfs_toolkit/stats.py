@@ -97,18 +97,27 @@ def _gini(x: np.ndarray) -> float:
     return float((2 * np.sum(idx * x)) / (n * total) - (n + 1) / n)
 
 
+def _theil(x: np.ndarray) -> float:
+    """Theil T index of a positive array (0 = equal; decomposable alternative to Gini)."""
+    mu = x.mean()
+    if mu == 0:
+        return float("nan")
+    r = x / mu
+    return float(np.mean(r * np.log(r)))
+
+
 def concentration_metrics(info: pd.DataFrame, *, value_col: str = "capacity") -> pd.Series:
     """How concentrated is capacity across stations? — an equity / coverage lens.
 
-    Reports the **Gini coefficient** of ``value_col`` and the share held by the top decile of
-    stations (a system can claim wide coverage yet stash most bikes in a few central hubs).
-    Deliberately *outside* the published A1–A7 audit taxonomy — this is a descriptive metric,
-    not a feed-quality verdict.
+    Reports the **Gini coefficient** and **Theil T index** of ``value_col`` and the share held
+    by the top decile of stations (a system can claim wide coverage yet stash most bikes in a
+    few central hubs). Deliberately *outside* the published A1–A7 audit taxonomy — these are
+    descriptive metrics, not a feed-quality verdict. See :func:`lorenz_curve` for the curve.
 
     Returns
     -------
     pandas.Series
-        ``n_stations``, ``total_capacity``, ``gini``, ``top_decile_share``.
+        ``n_stations``, ``total_capacity``, ``gini``, ``theil``, ``top_decile_share``.
     """
     x = _num(info, value_col).dropna().to_numpy()
     x = np.sort(x[x > 0])
@@ -116,13 +125,160 @@ def concentration_metrics(info: pd.DataFrame, *, value_col: str = "capacity") ->
     if x.size == 0:
         out["total_capacity"] = 0.0
         out["gini"] = float("nan")
+        out["theil"] = float("nan")
         out["top_decile_share"] = float("nan")
         return pd.Series(out)
     out["total_capacity"] = float(x.sum())
     out["gini"] = round(_gini(x), 4)
+    out["theil"] = round(_theil(x), 4)
     k = max(1, int(np.ceil(0.1 * x.size)))
     out["top_decile_share"] = round(float(x[-k:].sum() / x.sum()), 4)
     return pd.Series(out)
+
+
+def lorenz_curve(info: pd.DataFrame, *, value_col: str = "capacity") -> pd.DataFrame:
+    """Lorenz-curve points for plotting capacity inequality.
+
+    Returns the cumulative share of stations vs. cumulative share of ``value_col``, starting
+    at the origin ``(0, 0)``. The diagonal is perfect equality; the area between it and the
+    curve is half the Gini. Pairs with :func:`concentration_metrics`.
+
+    Returns
+    -------
+    pandas.DataFrame
+        ``cum_population_share``, ``cum_value_share`` (both in ``[0, 1]``, ascending).
+    """
+    x = _num(info, value_col).dropna().to_numpy()
+    x = np.sort(x[x > 0])
+    if x.size == 0:
+        return pd.DataFrame({"cum_population_share": [0.0], "cum_value_share": [0.0]})
+    cum_pop = np.arange(1, x.size + 1) / x.size
+    cum_val = np.cumsum(x) / x.sum()
+    return pd.DataFrame(
+        {
+            "cum_population_share": np.concatenate([[0.0], cum_pop]),
+            "cum_value_share": np.concatenate([[0.0], cum_val]),
+        }
+    )
+
+
+def _knn_weights(lat: np.ndarray, lon: np.ndarray, k: int):
+    """Row-standardised binary k-nearest-neighbour spatial weights (sparse)."""
+    from scipy.sparse import csr_matrix, diags
+
+    from gbfs_toolkit.geo import GeoKDTree
+
+    n = lat.size
+    k = min(k, n - 1)
+    _, idx = GeoKDTree(lat, lon).query(lat, lon, k=k + 1)  # includes self at col 0
+    neighbours = np.asarray(idx)[:, 1 : k + 1]
+    rows = np.repeat(np.arange(n), k)
+    cols = neighbours.ravel()
+    w = csr_matrix((np.ones(rows.size), (rows, cols)), shape=(n, n))
+    rowsum = np.asarray(w.sum(axis=1)).ravel()
+    rowsum[rowsum == 0] = 1.0
+    return diags(1.0 / rowsum) @ w
+
+
+def morans_i(info: pd.DataFrame, value_col: str, *, k: int = 8) -> pd.Series:
+    """Global **Moran's I** — spatial autocorrelation of ``value_col`` across stations.
+
+    Answers "are similar values geographically clustered?" (e.g. are empty/low-occupancy
+    stations grouped together — an equity / accessibility signal). Uses row-standardised
+    binary k-nearest-neighbour weights; significance is the analytic z-score / p-value under
+    the normality assumption. ``I > E[I]`` ⇒ clustering, ``< E[I]`` ⇒ dispersion/checkerboard.
+
+    Returns
+    -------
+    pandas.Series
+        ``morans_i``, ``expected_i`` (= ``-1/(n-1)``), ``z_score``, ``p_value``, ``n``.
+    """
+    sub = info[["lat", "lon", value_col]].copy()
+    for c in ("lat", "lon", value_col):
+        sub[c] = pd.to_numeric(sub[c], errors="coerce")
+    sub = sub.dropna()
+    lat, lon = sub["lat"].to_numpy(), sub["lon"].to_numpy()
+    x = sub[value_col].to_numpy(dtype="float64")
+    n = x.size
+    nan = float("nan")
+    if n < 3 or k < 1:
+        return pd.Series(
+            {"morans_i": nan, "expected_i": nan, "z_score": nan, "p_value": nan, "n": int(n)}
+        )
+
+    w = _knn_weights(lat, lon, k)
+    z = x - x.mean()
+    zz = float((z * z).sum())
+    s0 = float(w.sum())
+    if zz == 0 or s0 == 0:
+        return pd.Series(
+            {"morans_i": nan, "expected_i": nan, "z_score": nan, "p_value": nan, "n": int(n)}
+        )
+    morans = (n / s0) * float(z @ (w @ z)) / zz
+    expected = -1.0 / (n - 1)
+
+    wt = w + w.T
+    s1 = 0.5 * float(wt.multiply(wt).sum())
+    rs = np.asarray(w.sum(axis=1)).ravel()
+    cs = np.asarray(w.sum(axis=0)).ravel()
+    s2 = float(np.sum((rs + cs) ** 2))
+    var = (n * n * s1 - n * s2 + 3 * s0 * s0) / (s0 * s0 * (n * n - 1)) - expected * expected
+    if var > 0:
+        from scipy.stats import norm
+
+        z_score = (morans - expected) / np.sqrt(var)
+        p_value = float(2 * norm.sf(abs(z_score)))
+    else:
+        z_score = p_value = nan
+    return pd.Series(
+        {
+            "morans_i": round(morans, 4),
+            "expected_i": round(expected, 4),
+            "z_score": round(float(z_score), 4) if np.isfinite(z_score) else nan,
+            "p_value": round(p_value, 4) if np.isfinite(p_value) else nan,
+            "n": int(n),
+        }
+    )
+
+
+def ripley_k(info: pd.DataFrame, radii: object, *, area_km2: float | None = None) -> pd.DataFrame:
+    """**Ripley's K / L** — multi-scale clustering of station locations.
+
+    For each radius, ``K(r)`` is proportional to the mean number of other stations within
+    ``r``; ``L(r) = sqrt(K(r)/π) − r`` linearises it: ``L(r) > 0`` ⇒ clustering at scale ``r``,
+    ``< 0`` ⇒ dispersion. Density uses the convex hull by default, or ``area_km2`` (e.g. the
+    geofencing service area) if given. No edge correction — bias grows near the boundary.
+
+    Parameters
+    ----------
+    radii : array-like
+        Distances in metres at which to evaluate K/L.
+
+    Returns
+    -------
+    pandas.DataFrame
+        ``radius_m``, ``k``, ``l`` (one row per radius).
+    """
+    lat, lon = _num(info, "lat").to_numpy(), _num(info, "lon").to_numpy()
+    finite = np.isfinite(lat) & np.isfinite(lon)
+    lat, lon = lat[finite], lon[finite]
+    radii = np.asarray(radii, dtype="float64")
+    n = lat.size
+    if n < 2:
+        return pd.DataFrame({"radius_m": radii, "k": np.nan, "l": np.nan})
+
+    area_m2 = (area_km2 * 1e6) if area_km2 is not None else _hull_area_km2(lat, lon) * 1e6
+    from gbfs_toolkit.geo import GeoKDTree
+
+    tree = GeoKDTree(lat, lon)
+    ks = []
+    for r in radii:
+        hits = tree.query_radius(lat, lon, radius_m=float(r))
+        pairs = sum(len(h) - 1 for h in hits)  # exclude self
+        ks.append(area_m2 * pairs / (n * (n - 1)) if np.isfinite(area_m2) else np.nan)
+    k_arr = np.asarray(ks)
+    l_arr = np.sqrt(k_arr / np.pi) - radii
+    return pd.DataFrame({"radius_m": radii, "k": k_arr, "l": l_arr})
 
 
 _EARTH_RADIUS_M = 6_371_000.0

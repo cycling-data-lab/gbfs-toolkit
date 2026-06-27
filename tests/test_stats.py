@@ -9,6 +9,9 @@ from gbfs_toolkit import (
     compare_systems,
     concentration_metrics,
     coverage_stats,
+    lorenz_curve,
+    morans_i,
+    ripley_k,
     system_profile,
 )
 
@@ -67,6 +70,48 @@ def test_concentration_gini_equal_vs_skewed():
     assert g_skewed > 0.6
     # top decile (≥1 station) of the skewed system holds almost everything
     assert concentration_metrics(skewed)["top_decile_share"] > 0.9
+    # Theil agrees with Gini on ordering: 0 for equal, positive for skewed
+    assert concentration_metrics(equal)["theil"] == 0.0
+    assert concentration_metrics(skewed)["theil"] > 0.0
+
+
+def test_lorenz_curve_monotone_origin_to_unit():
+    info = pd.DataFrame({"capacity": [1, 2, 3, 4]})
+    lc = lorenz_curve(info)
+    assert lc.iloc[0]["cum_population_share"] == 0.0
+    assert lc.iloc[0]["cum_value_share"] == 0.0
+    assert lc.iloc[-1]["cum_population_share"] == pytest.approx(1.0)
+    assert lc.iloc[-1]["cum_value_share"] == pytest.approx(1.0)
+    # value share never exceeds population share (curve sits below the diagonal)
+    assert (lc["cum_value_share"] <= lc["cum_population_share"] + 1e-9).all()
+
+
+def test_morans_i_positive_for_spatial_gradient():
+    # value = row index → smooth spatial gradient → strong positive autocorrelation
+    rows = [
+        (f"s{i}{j}", 48.85 + i * 0.01, 2.35 + j * 0.01, float(i))
+        for i in range(5)
+        for j in range(5)
+    ]
+    info = pd.DataFrame(rows, columns=["station_id", "lat", "lon", "occ"])
+    res = morans_i(info, "occ", k=4)
+    assert res["morans_i"] > 0.3
+    assert res["morans_i"] > res["expected_i"]
+    assert res["p_value"] < 0.05
+    assert res["n"] == 25
+
+
+def test_ripley_l_positive_for_clustered_points():
+    # two tight 2-D blobs far apart → at a within-blob scale, points cluster → L(r) > 0
+    a = [(48.850 + 0.0002 * i, 2.350 + 0.0002 * j) for i in range(3) for j in range(3)]
+    b = [(48.900 + 0.0002 * i, 2.400 + 0.0002 * j) for i in range(3) for j in range(3)]
+    info = pd.DataFrame(a + b, columns=["lat", "lon"])
+    info["station_id"] = [f"s{i}" for i in range(len(info))]
+    out = ripley_k(info, radii=[50, 200, 1000])
+    assert list(out.columns) == ["radius_m", "k", "l"]
+    assert np.isfinite(out["k"]).all()
+    # at a small within-cluster scale, points are clustered → L > 0
+    assert out.iloc[0]["l"] > 0
 
 
 def test_coverage_stats_density_and_dispersion():

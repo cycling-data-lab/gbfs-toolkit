@@ -53,6 +53,11 @@ All notable changes are documented here ([Keep a Changelog](https://keepachangel
   nearest-neighbour spacing, and the **Clark–Evans** dispersion index — density measured
   against the convex hull, or the real geofencing **service area** when zones are passed).
   Pure, pandas-only, strictly descriptive.
+- **Standard spatial / inequality algorithms** (`stats`, numpy/scipy only, deterministic):
+  `morans_i` (global Moran's I spatial autocorrelation + analytic z-score/p-value via
+  k-NN weights), `ripley_k` (Ripley's K/L multi-scale clustering, density vs. hull or service
+  area), `lorenz_curve` (inequality-curve points), and a **Theil index** added to
+  `concentration_metrics`.
 - **Per-vehicle-type station counts** (`to_canonical_station_vehicle_counts`): melts GBFS
   2.2+/3.x `vehicle_types_available` into a long frame (`STATION_VEHICLE_COUNTS_COLUMNS`), so
   "where are the e-bikes?" is a join — the aggregate `num_bikes_available` can't answer it.
