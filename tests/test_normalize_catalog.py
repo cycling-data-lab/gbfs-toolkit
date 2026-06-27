@@ -3,7 +3,7 @@
 import pandas as pd
 
 from gbfs_toolkit import resolve, to_canonical_station_info
-from gbfs_toolkit.models import STATION_INFO_COLUMNS
+from gbfs_toolkit.core.models import STATION_INFO_COLUMNS
 
 
 def test_normalize_v2_string_name():

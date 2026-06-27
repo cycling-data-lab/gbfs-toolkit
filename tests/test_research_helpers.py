@@ -165,7 +165,7 @@ def test_ebikes_filter():
 
 
 def test_catalog_in_process_memo(monkeypatch):
-    import gbfs_toolkit.catalog as cat
+    import gbfs_toolkit.io.catalog as cat
 
     calls = {"n": 0}
 

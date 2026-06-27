@@ -13,9 +13,9 @@ from typing import Any
 import numpy as np
 import pandas as pd
 
-from gbfs_toolkit._internal import EARTH_RADIUS_M, gini, panel_frame
-from gbfs_toolkit.models import require_columns
-from gbfs_toolkit.timeseries import calculate_net_flow
+from gbfs_toolkit.core.models import require_columns
+from gbfs_toolkit.core.utils import EARTH_RADIUS_M, gini, panel_frame
+from gbfs_toolkit.io.timeseries import calculate_net_flow
 
 
 def service_reliability_index(
@@ -781,7 +781,7 @@ def local_morans_i(
     Anselin, L. (1995). Local Indicators of Spatial Association (LISA). *Geographical Analysis*,
     27(2), 93-115.
     """
-    from gbfs_toolkit.geo import GeoKDTree
+    from gbfs_toolkit.spatial.geometry import GeoKDTree
 
     require_columns(info, ["lat", "lon", value_col], what="local_morans_i")
     base = info.reset_index(drop=True)

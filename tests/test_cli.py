@@ -2,7 +2,7 @@
 
 import json
 
-from gbfs_toolkit.cli import main
+from gbfs_toolkit.interfaces.cli import main
 
 
 def _write(tmp_path, stations):
@@ -51,7 +51,7 @@ def test_cli_a7_scope_argument_accepted(tmp_path):
 def test_cli_rich_renderer_runs():
     # The rich path is gated on an interactive TTY at runtime; exercise the
     # renderer directly so the [cli] extra stays covered.
-    from gbfs_toolkit.cli import _render_rich
+    from gbfs_toolkit.interfaces.cli import _render_rich
 
     _render_rich(
         "velib", n=100, n_flagged=3, counts={f"A{i}": (3 if i == 4 else 0) for i in range(1, 8)}

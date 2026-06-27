@@ -1,7 +1,7 @@
 """Static semantic audit of a docked GBFS system: the A1–A7 taxonomy.
 
 Ported from the published ``gbfs-audit-catalogue`` pipeline (Fossé & Pallares),
-adapted to the toolkit's canonical :data:`~gbfs_toolkit.models.STATION_INFO_COLUMNS`
+adapted to the toolkit's canonical :data:`~gbfs_toolkit.core.models.STATION_INFO_COLUMNS`
 schema. Operates purely on an in-memory frame (no I/O), so it can audit feeds you
 fetched yourself or any third-party station inventory.
 
@@ -14,8 +14,7 @@ from __future__ import annotations
 import numpy as np
 import pandas as pd
 
-from gbfs_toolkit._internal import EARTH_RADIUS_M, project_meters
-from gbfs_toolkit.models import (
+from gbfs_toolkit.core.models import (
     A2_MIN_STATIONS,
     A4_MIN_STATIONS,
     A4_MIN_THRESHOLD_M,
@@ -29,6 +28,7 @@ from gbfs_toolkit.models import (
     RULES,
     require_columns,
 )
+from gbfs_toolkit.core.utils import EARTH_RADIUS_M, project_meters
 
 _REQUIRED = ["system_id", "station_id", "station_type", "capacity", "lat", "lon"]
 
@@ -79,7 +79,7 @@ def _flag_a2(df: pd.DataFrame) -> pd.Series:
 
 def _flag_a4(df: pd.DataFrame, projected: np.ndarray, a4_sigma: float = A4_SIGMA) -> np.ndarray:
     """A4: geospatial outliers via a robust ``a4_sigma``-sigma rule on nearest-neighbour
-    distance (default :data:`~gbfs_toolkit.models.A4_SIGMA`)."""
+    distance (default :data:`~gbfs_toolkit.core.models.A4_SIGMA`)."""
     from scipy.spatial import cKDTree
 
     n = len(df)
@@ -186,7 +186,7 @@ def audit_static(
         Scope of the A7 null-capacity rule. ``"docked"`` (default) counts only physical
         docked stations, so dockless systems are not flagged spuriously. ``"all"`` counts
         every station, reproducing the original ``gbfs-audit-catalogue`` verdicts.
-    a4_sigma : float, default :data:`~gbfs_toolkit.models.A4_SIGMA`
+    a4_sigma : float, default :data:`~gbfs_toolkit.core.models.A4_SIGMA`
         Multiplier of the robust (MAD-rescaled) scale in the A4 nearest-neighbour outlier
         rule. Exposed for sensitivity analysis; the published default is ``3.0``.
 

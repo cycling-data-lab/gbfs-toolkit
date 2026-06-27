@@ -15,11 +15,7 @@ Quick start
     >>> clean = stations[~verdict["flagged"].to_numpy()]
 """
 
-from gbfs_toolkit import (
-    accessor,  # noqa: F401 (registers the `.gbfs` DataFrame accessor)
-    models,
-)
-from gbfs_toolkit.analysis import (
+from gbfs_toolkit.analytics.analysis import (
     capacity_utilization,
     cyclical_time_features,
     ebikes,
@@ -32,51 +28,19 @@ from gbfs_toolkit.analysis import (
     station_state,
     temporal_context_features,
 )
-from gbfs_toolkit.audit import audit_dynamic, audit_frames, audit_static, drop_flagged
-from gbfs_toolkit.catalog import filter_catalog, normalize_operator, resolve, systems_catalog
-from gbfs_toolkit.cluster import (
+from gbfs_toolkit.analytics.clustering import (
     cluster_diurnal_profiles,
     cluster_spatial,
     cluster_spectral,
     diurnal_profiles,
     label_diurnal_typology,
 )
-from gbfs_toolkit.datasets import load_example
-from gbfs_toolkit.diagnostics import show_versions
-from gbfs_toolkit.errors import (
-    GBFSDiscoveryError,
-    GBFSError,
-    GBFSFetchError,
-    GBFSNotModified,
-    GBFSValidationError,
+from gbfs_toolkit.analytics.fleet import (
+    detect_ghost_vehicles,
+    reconcile_fleet_state,
+    vehicle_idle_time,
 )
-from gbfs_toolkit.fetch import (
-    FeedResponse,
-    GBFSFeed,
-    audit_feed,
-    availability,
-    build_session,
-    fetch_feed_json,
-    fetch_multiple,
-    parse_discovery,
-)
-from gbfs_toolkit.fleet import detect_ghost_vehicles, reconcile_fleet_state, vehicle_idle_time
-from gbfs_toolkit.geo import (
-    GeoKDTree,
-    features_within,
-    find_nearest_stations,
-    haversine_m,
-    stations_near,
-    to_gdf,
-    to_geojson,
-    two_step_fca,
-)
-from gbfs_toolkit.geofencing import (
-    to_canonical_geofencing,
-    zone_area_km2,
-    zones_for_points,
-)
-from gbfs_toolkit.metrics import (
+from gbfs_toolkit.analytics.metrics import (
     aliasing_vulnerability,
     availability_synchrony,
     cumulative_imbalance,
@@ -96,7 +60,26 @@ from gbfs_toolkit.metrics import (
     temporal_autocorrelation,
     temporal_concentration,
 )
-from gbfs_toolkit.models import (
+from gbfs_toolkit.analytics.stats import (
+    availability_stats,
+    compare_systems,
+    concentration_metrics,
+    coverage_stats,
+    lorenz_curve,
+    morans_i,
+    ripley_k,
+    system_profile,
+)
+from gbfs_toolkit.audit import audit_dynamic, audit_frames, audit_static, drop_flagged
+from gbfs_toolkit.core import models
+from gbfs_toolkit.core.errors import (
+    GBFSDiscoveryError,
+    GBFSError,
+    GBFSFetchError,
+    GBFSNotModified,
+    GBFSValidationError,
+)
+from gbfs_toolkit.core.models import (
     AUDIT_FLAGS,
     RULES,
     SCHEMAS,
@@ -104,8 +87,23 @@ from gbfs_toolkit.models import (
     coerce_schema,
     validate_schema,
 )
-from gbfs_toolkit.multimodal import link_transit_stops
-from gbfs_toolkit.normalize import (
+from gbfs_toolkit.interfaces import (
+    accessor,  # noqa: F401 (registers the `.gbfs` DataFrame accessor)
+)
+from gbfs_toolkit.interfaces.datasets import load_example
+from gbfs_toolkit.interfaces.diagnostics import show_versions
+from gbfs_toolkit.io.catalog import filter_catalog, normalize_operator, resolve, systems_catalog
+from gbfs_toolkit.io.fetch import (
+    FeedResponse,
+    GBFSFeed,
+    audit_feed,
+    availability,
+    build_session,
+    fetch_feed_json,
+    fetch_multiple,
+    parse_discovery,
+)
+from gbfs_toolkit.io.normalize import (
     to_canonical_alerts,
     to_canonical_pricing_plans,
     to_canonical_station_info,
@@ -116,18 +114,7 @@ from gbfs_toolkit.normalize import (
     to_canonical_vehicle_types,
     to_canonical_vehicles,
 )
-from gbfs_toolkit.osm import enrich_with_osm, station_surroundings
-from gbfs_toolkit.stats import (
-    availability_stats,
-    compare_systems,
-    concentration_metrics,
-    coverage_stats,
-    lorenz_curve,
-    morans_i,
-    ripley_k,
-    system_profile,
-)
-from gbfs_toolkit.timeseries import (
+from gbfs_toolkit.io.timeseries import (
     append_to_parquet,
     build_availability_panel,
     calculate_net_flow,
@@ -138,6 +125,23 @@ from gbfs_toolkit.timeseries import (
     stockout_episodes,
     turnover,
 )
+from gbfs_toolkit.spatial.geofencing import (
+    to_canonical_geofencing,
+    zone_area_km2,
+    zones_for_points,
+)
+from gbfs_toolkit.spatial.geometry import (
+    GeoKDTree,
+    features_within,
+    find_nearest_stations,
+    haversine_m,
+    stations_near,
+    to_gdf,
+    to_geojson,
+    two_step_fca,
+)
+from gbfs_toolkit.spatial.multimodal import link_transit_stops
+from gbfs_toolkit.spatial.osm import enrich_with_osm, station_surroundings
 
 __version__ = "1.4.0"
 

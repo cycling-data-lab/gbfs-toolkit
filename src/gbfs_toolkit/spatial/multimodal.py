@@ -12,8 +12,8 @@ from __future__ import annotations
 import numpy as np
 import pandas as pd
 
-from gbfs_toolkit.geo import GeoKDTree
-from gbfs_toolkit.models import require_columns
+from gbfs_toolkit.core.models import require_columns
+from gbfs_toolkit.spatial.geometry import GeoKDTree
 
 # GTFS stops.txt column aliases (lat/lon naming varies a little in the wild).
 _LAT_ALIASES = ("stop_lat", "lat", "latitude")

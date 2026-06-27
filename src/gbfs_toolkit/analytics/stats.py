@@ -11,8 +11,8 @@ from __future__ import annotations
 import numpy as np
 import pandas as pd
 
-from gbfs_toolkit._internal import EARTH_RADIUS_M, gini
-from gbfs_toolkit.analysis import STATION_STATES, station_state
+from gbfs_toolkit.analytics.analysis import STATION_STATES, station_state
+from gbfs_toolkit.core.utils import EARTH_RADIUS_M, gini
 
 
 def _num(df: pd.DataFrame, col: str) -> pd.Series:
@@ -38,7 +38,7 @@ def system_profile(availability: pd.DataFrame) -> pd.Series:
     pandas.Series
         Counts and rates: ``n_stations``, ``total_capacity``, ``total_bikes_available``,
         ``total_docks_available``, ``mean_occupancy``, ``pct_<state>`` for each
-        :data:`~gbfs_toolkit.analysis.STATION_STATES`, and ``staleness_min_median``.
+        :data:`~gbfs_toolkit.analytics.analysis.STATION_STATES`, and ``staleness_min_median``.
     """
     df = availability
     bikes, docks = _num(df, "num_bikes_available"), _num(df, "num_docks_available")
@@ -156,7 +156,7 @@ def _knn_weights(lat: np.ndarray, lon: np.ndarray, k: int):
     """Row-standardised binary k-nearest-neighbour spatial weights (sparse)."""
     from scipy.sparse import csr_matrix, diags
 
-    from gbfs_toolkit.geo import GeoKDTree
+    from gbfs_toolkit.spatial.geometry import GeoKDTree
 
     n = lat.size
     k = min(k, n - 1)
@@ -265,7 +265,7 @@ def ripley_k(info: pd.DataFrame, radii: object, *, area_km2: float | None = None
         return pd.DataFrame({"radius_m": radii, "k": np.nan, "l": np.nan})
 
     area_m2 = (area_km2 * 1e6) if area_km2 is not None else _hull_area_km2(lat, lon) * 1e6
-    from gbfs_toolkit.geo import GeoKDTree
+    from gbfs_toolkit.spatial.geometry import GeoKDTree
 
     tree = GeoKDTree(lat, lon)
     ks = []
@@ -316,7 +316,7 @@ def coverage_stats(info: pd.DataFrame, *, zones: object = None) -> pd.Series:
         return pd.Series(out)
 
     if lat.size >= 2:
-        from gbfs_toolkit.geo import GeoKDTree
+        from gbfs_toolkit.spatial.geometry import GeoKDTree
 
         dist, _ = GeoKDTree(lat, lon).query(lat, lon, k=2)
         nn = np.asarray(dist)[:, 1]
@@ -325,7 +325,7 @@ def coverage_stats(info: pd.DataFrame, *, zones: object = None) -> pd.Series:
 
     area_km2: float | None = None
     if zones is not None:
-        from gbfs_toolkit.geofencing import zone_area_km2
+        from gbfs_toolkit.spatial.geofencing import zone_area_km2
 
         area_km2 = float(zone_area_km2(zones).sum())
         out["service_area_km2"] = round(area_km2, 3)

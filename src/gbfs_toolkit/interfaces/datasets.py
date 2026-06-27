@@ -9,7 +9,7 @@ from __future__ import annotations
 
 import pandas as pd
 
-from gbfs_toolkit.normalize import to_canonical_station_info, to_canonical_station_status
+from gbfs_toolkit.io.normalize import to_canonical_station_info, to_canonical_station_status
 
 # (station_id, name, lat, lon, capacity, bikes, docks): central Paris, hand-written.
 _PARIS = [

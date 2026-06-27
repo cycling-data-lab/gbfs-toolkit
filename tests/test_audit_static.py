@@ -5,7 +5,7 @@ import pandas as pd
 import pytest
 
 from gbfs_toolkit import audit_static
-from gbfs_toolkit.models import SchemaError
+from gbfs_toolkit.core.models import SchemaError
 
 
 def _docked_grid(system_id="sys", n=30, capacity=20, lat0=48.85, lon0=2.35):

@@ -64,7 +64,7 @@ dev = [
 ]
 
 [project.scripts]
-gbfs = "gbfs_toolkit.cli:main"
+gbfs = "gbfs_toolkit.interfaces.cli:main"
 
 [project.urls]
 Homepage = "https://github.com/cycling-data-lab/gbfs-toolkit"

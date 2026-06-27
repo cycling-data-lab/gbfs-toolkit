@@ -19,7 +19,7 @@ from typing import Any
 import numpy as np
 import pandas as pd
 
-from gbfs_toolkit._internal import EARTH_RADIUS_M
+from gbfs_toolkit.core.utils import EARTH_RADIUS_M
 
 
 def _require_sklearn():

@@ -23,8 +23,8 @@ from typing import Any
 import pandas as pd
 
 from gbfs_toolkit.audit import audit_frames
-from gbfs_toolkit.errors import GBFSDiscoveryError, GBFSFetchError, GBFSNotModified
-from gbfs_toolkit.normalize import (
+from gbfs_toolkit.core.errors import GBFSDiscoveryError, GBFSFetchError, GBFSNotModified
+from gbfs_toolkit.io.normalize import (
     to_canonical_station_info,
     to_canonical_station_status,
     to_canonical_system_information,
@@ -126,7 +126,7 @@ def fetch_feed_json(
     """Conditionally fetch a feed, honouring HTTP caching: the polite way to poll.
 
     Pass the ``etag`` / ``last_modified`` returned by the previous call; if the server replies
-    **304 Not Modified**, this raises :class:`~gbfs_toolkit.errors.GBFSNotModified` so your
+    **304 Not Modified**, this raises :class:`~gbfs_toolkit.core.errors.GBFSNotModified` so your
     scraper can skip re-ingesting an unchanged snapshot (saving bandwidth and avoiding an
     IP ban). Otherwise returns a :data:`FeedResponse` ``(data, etag, last_modified)`` to store
     for next time. Requires the ``[fetch]`` extra.
@@ -241,7 +241,7 @@ class GBFSFeed:
         cls, system_id: str, *, catalog: pd.DataFrame | None = None, **kwargs: Any
     ) -> GBFSFeed:
         """Build a feed by resolving ``system_id`` through the MobilityData catalogue."""
-        from gbfs_toolkit.catalog import resolve, systems_catalog
+        from gbfs_toolkit.io.catalog import resolve, systems_catalog
 
         cat = catalog if catalog is not None else systems_catalog()
         info = resolve(system_id, cat)
@@ -345,7 +345,7 @@ class GBFSFeed:
         Raises ``KeyError`` if the system publishes no ``geofencing_zones`` feed; check
         :meth:`has` first. See :func:`~gbfs_toolkit.to_canonical_geofencing`.
         """
-        from gbfs_toolkit.geofencing import to_canonical_geofencing
+        from gbfs_toolkit.spatial.geofencing import to_canonical_geofencing
 
         return to_canonical_geofencing(
             self._raw(_GEOFENCING), system_id=self.system_id, gbfs_version=self.version
@@ -353,13 +353,13 @@ class GBFSFeed:
 
     def system_regions(self) -> pd.DataFrame:
         """Canonical ``region_id → name`` lookup (raises if the feed has no ``system_regions``)."""
-        from gbfs_toolkit.normalize import to_canonical_system_regions
+        from gbfs_toolkit.io.normalize import to_canonical_system_regions
 
         return to_canonical_system_regions(self._raw(_SYSTEM_REGIONS), system_id=self.system_id)
 
     def alerts(self) -> pd.DataFrame:
         """Canonical service alerts (raises if the feed has no ``system_alerts``)."""
-        from gbfs_toolkit.normalize import to_canonical_alerts
+        from gbfs_toolkit.io.normalize import to_canonical_alerts
 
         return to_canonical_alerts(self._raw(_ALERTS), system_id=self.system_id)
 
@@ -379,7 +379,7 @@ class GBFSFeed:
         ``presence`` indicator). For offline frames (e.g. from a Parquet lake), call
         ``join_availability(info, status)`` directly.
         """
-        from gbfs_toolkit.analysis import join_availability
+        from gbfs_toolkit.analytics.analysis import join_availability
 
         return join_availability(self.station_information(), self.station_status())
 
@@ -418,7 +418,7 @@ class GBFSFeed:
         them, excluding vehicles parked at stations from the deployed total so the two feeds
         don't double-count. See :func:`~gbfs_toolkit.reconcile_fleet_state`.
         """
-        from gbfs_toolkit.fleet import reconcile_fleet_state
+        from gbfs_toolkit.analytics.fleet import reconcile_fleet_state
 
         status = self.station_status() if self.has(*_STATION_STATUS) else None
         vehicles = self.vehicles() if self.has(*_VEHICLES) else None
@@ -513,7 +513,7 @@ def fetch_multiple(
     """
     from concurrent.futures import ThreadPoolExecutor, as_completed
 
-    from gbfs_toolkit.catalog import systems_catalog
+    from gbfs_toolkit.io.catalog import systems_catalog
 
     cat = catalog if catalog is not None else systems_catalog()
     if "get_json" not in kwargs:

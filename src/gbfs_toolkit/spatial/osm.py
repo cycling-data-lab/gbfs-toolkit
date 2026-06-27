@@ -13,8 +13,8 @@ from typing import TYPE_CHECKING, Any
 
 import pandas as pd
 
-from gbfs_toolkit.geo import features_within
-from gbfs_toolkit.multimodal import link_transit_stops
+from gbfs_toolkit.spatial.geometry import features_within
+from gbfs_toolkit.spatial.multimodal import link_transit_stops
 
 if TYPE_CHECKING:  # pragma: no cover
     import geopandas as gpd

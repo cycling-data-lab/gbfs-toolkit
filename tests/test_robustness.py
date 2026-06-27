@@ -105,7 +105,7 @@ def test_conditional_get_raises_not_modified():
 
 
 def test_catalog_offline_fallback(tmp_path, monkeypatch):
-    import gbfs_toolkit.catalog as cat
+    import gbfs_toolkit.io.catalog as cat
 
     cache = tmp_path / "systems.csv"
     cache.write_text("System ID,Name\nvelib,Velib\n", encoding="utf-8")

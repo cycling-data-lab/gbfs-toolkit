@@ -6,7 +6,7 @@ operates purely on those frames. Downstream code depends on these column names a
 on the raw GBFS JSON, so a study written against the model keeps working across GBFS 1.x, 2.x and
 3.x and across feed-provider quirks.
 
-The schema definitions live in `gbfs_toolkit.models.SCHEMAS`. The full, authoritative column
+The schema definitions live in `gbfs_toolkit.core.models.SCHEMAS`. The full, authoritative column
 lists are rendered in the [API reference](api.md#canonical-data-model). This page states the
 contract and the guarantees a researcher needs before performing joins or merges.
 
@@ -107,7 +107,7 @@ repaired against the contract before use:
 
 ```python
 import gbfs_toolkit as gb
-from gbfs_toolkit.models import SCHEMAS
+from gbfs_toolkit.core.models import SCHEMAS
 
 gb.validate_schema(df, SCHEMAS["station_status"])   # raises SchemaError on mismatch
 df = gb.coerce_schema(df, SCHEMAS["station_status"]) # cast to the canonical dtypes

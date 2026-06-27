@@ -13,8 +13,8 @@ from typing import TYPE_CHECKING, Any
 import numpy as np
 import pandas as pd
 
-from gbfs_toolkit._internal import EARTH_RADIUS_M
-from gbfs_toolkit.models import require_columns
+from gbfs_toolkit.core.models import require_columns
+from gbfs_toolkit.core.utils import EARTH_RADIUS_M
 
 if TYPE_CHECKING:  # pragma: no cover
     import geopandas as gpd

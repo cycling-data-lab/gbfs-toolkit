@@ -17,8 +17,8 @@ import urllib.request
 
 from gbfs_toolkit import __version__
 from gbfs_toolkit.audit import audit_static
-from gbfs_toolkit.models import AUDIT_FLAGS, RULES
-from gbfs_toolkit.normalize import to_canonical_station_info
+from gbfs_toolkit.core.models import AUDIT_FLAGS, RULES
+from gbfs_toolkit.io.normalize import to_canonical_station_info
 
 
 def _load(source: str) -> dict:

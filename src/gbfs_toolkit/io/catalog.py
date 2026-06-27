@@ -15,7 +15,7 @@ from pathlib import Path
 
 import pandas as pd
 
-from gbfs_toolkit.errors import GBFSFetchError
+from gbfs_toolkit.core.errors import GBFSFetchError
 
 #: MobilityData's canonical registry of GBFS systems.
 DEFAULT_CATALOG_URL = "https://raw.githubusercontent.com/MobilityData/gbfs/master/systems.csv"

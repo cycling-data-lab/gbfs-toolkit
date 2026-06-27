@@ -8,7 +8,7 @@ definitions and the polling caveats.
 ## 1. The canonical data model
 
 Ingestion is normalised once into version-independent pandas frames (see
-`gbfs_toolkit.models.SCHEMAS`). Two contracts matter for reproducibility:
+`gbfs_toolkit.core.models.SCHEMAS`). Two contracts matter for reproducibility:
 
 - **Timestamps are tz-aware UTC** (`datetime64[ns, UTC]`). GBFS 2.x unix seconds and GBFS 3.x
   RFC-3339 strings are both parsed to the same dtype. Convert to local time *explicitly*

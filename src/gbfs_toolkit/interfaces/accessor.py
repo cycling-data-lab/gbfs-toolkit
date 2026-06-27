@@ -12,7 +12,11 @@ from __future__ import annotations
 
 import pandas as pd
 
-from gbfs_toolkit import analysis, audit, fleet, geo, metrics, models, stats, timeseries
+from gbfs_toolkit import audit
+from gbfs_toolkit.analytics import analysis, fleet, metrics, stats
+from gbfs_toolkit.core import models
+from gbfs_toolkit.io import timeseries
+from gbfs_toolkit.spatial import geometry as geo
 
 
 @pd.api.extensions.register_dataframe_accessor("gbfs")

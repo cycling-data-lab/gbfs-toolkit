@@ -11,7 +11,7 @@ from __future__ import annotations
 
 import pandas as pd
 
-from gbfs_toolkit.errors import GBFSValidationError
+from gbfs_toolkit.core.errors import GBFSValidationError
 
 #: Canonical station-information columns (static inventory of a docked system).
 STATION_INFO_COLUMNS: list[str] = [
@@ -187,7 +187,7 @@ A7_MIN_STATIONS = 20
 class SchemaError(GBFSValidationError, ValueError):
     """Raised when a frame does not satisfy the canonical schema.
 
-    Subclasses both :class:`~gbfs_toolkit.errors.GBFSValidationError` (so
+    Subclasses both :class:`~gbfs_toolkit.core.errors.GBFSValidationError` (so
     ``except GBFSError`` catches it) and :class:`ValueError` (backward compatibility).
 
     For schema-mismatch cases the exception also carries structured fields, so an

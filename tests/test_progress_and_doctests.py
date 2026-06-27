@@ -2,8 +2,8 @@
 
 import doctest
 
-import gbfs_toolkit.analysis as analysis
-from gbfs_toolkit.fetch import _with_progress
+import gbfs_toolkit.analytics.analysis as analysis
+from gbfs_toolkit.io.fetch import _with_progress
 
 
 def test_with_progress_passes_through_all_items():

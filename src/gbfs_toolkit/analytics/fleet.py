@@ -12,9 +12,9 @@ from __future__ import annotations
 
 import pandas as pd
 
-from gbfs_toolkit._internal import panel_frame
-from gbfs_toolkit.geo import haversine_m
-from gbfs_toolkit.models import require_columns
+from gbfs_toolkit.core.models import require_columns
+from gbfs_toolkit.core.utils import panel_frame
+from gbfs_toolkit.spatial.geometry import haversine_m
 
 
 def _bool_col(df: pd.DataFrame, col: str) -> pd.Series:

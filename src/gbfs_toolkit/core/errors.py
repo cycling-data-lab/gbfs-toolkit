@@ -3,7 +3,7 @@
 A single base (:class:`GBFSError`) lets a scraper ``except GBFSError`` to catch anything
 this library raises, while the specific subclasses let it branch (retry a fetch, skip a
 not-modified feed, surface a schema problem). :class:`SchemaError` lives in
-:mod:`gbfs_toolkit.models` for backward compatibility but subclasses
+:mod:`gbfs_toolkit.core.models` for backward compatibility but subclasses
 :class:`GBFSValidationError`.
 """
 

@@ -4,7 +4,7 @@ Handles the cross-version differences that every consumer otherwise re-implement
 GBFS 2.x exposes ``name`` as a plain string, GBFS 3.x as a localized array of
 ``{text, language}`` objects; vehicle feeds are ``free_bike_status`` (2.x) vs
 ``vehicle_status`` (3.x). Output always conforms to
-:data:`~gbfs_toolkit.models.STATION_INFO_COLUMNS` etc.
+:data:`~gbfs_toolkit.core.models.STATION_INFO_COLUMNS` etc.
 """
 
 from __future__ import annotations
@@ -13,7 +13,7 @@ from typing import Any
 
 import pandas as pd
 
-from gbfs_toolkit.models import (
+from gbfs_toolkit.core.models import (
     ALERT_COLUMNS,
     PRICING_PLAN_COLUMNS,
     STATION_INFO_COLUMNS,
@@ -150,7 +150,7 @@ def to_canonical_station_status(
 ) -> pd.DataFrame:
     """Parse a ``station_status.json`` document into a canonical frame.
 
-    Returns :data:`~gbfs_toolkit.models.STATION_STATUS_COLUMNS`. ``fetched_at`` is a
+    Returns :data:`~gbfs_toolkit.core.models.STATION_STATUS_COLUMNS`. ``fetched_at`` is a
     tz-aware UTC timestamp stamped on every row (defaults to *now*) for provenance.
     """
     fetched_at = fetched_at if fetched_at is not None else _now_utc()
@@ -203,7 +203,7 @@ def to_canonical_station_vehicle_counts(
 
     GBFS 2.2+/3.x stations may report ``vehicle_types_available`` (a list of
     ``{vehicle_type_id, count}``). This explodes it to one row per station × vehicle type
-    (:data:`~gbfs_toolkit.models.STATION_VEHICLE_COUNTS_COLUMNS`), so "where are the e-bikes?"
+    (:data:`~gbfs_toolkit.core.models.STATION_VEHICLE_COUNTS_COLUMNS`), so "where are the e-bikes?"
     is a join to :func:`to_canonical_vehicle_types`; the aggregate ``num_bikes_available``
     cannot answer it. Stations without the field contribute no rows.
     """
@@ -238,7 +238,7 @@ def to_canonical_vehicles(
 ) -> pd.DataFrame:
     """Parse ``free_bike_status`` (2.x) or ``vehicle_status`` (3.x) into a canonical frame.
 
-    Returns :data:`~gbfs_toolkit.models.VEHICLE_STATUS_COLUMNS`.
+    Returns :data:`~gbfs_toolkit.core.models.VEHICLE_STATUS_COLUMNS`.
     """
     fetched_at = fetched_at if fetched_at is not None else _now_utc()
     data = raw.get("data", raw)
@@ -278,7 +278,7 @@ def to_canonical_vehicle_types(raw: dict, *, system_id: str) -> pd.DataFrame:
 
     Resolves ``VehicleStatus.vehicle_type_id`` to a form factor / propulsion, so
     "where are the e-bikes?" becomes a join. Returns
-    :data:`~gbfs_toolkit.models.VEHICLE_TYPE_COLUMNS`.
+    :data:`~gbfs_toolkit.core.models.VEHICLE_TYPE_COLUMNS`.
     """
     data = raw.get("data", raw)
     types = _records(data, "vehicle_types")
@@ -302,7 +302,7 @@ def to_canonical_pricing_plans(raw: dict, *, system_id: str) -> pd.DataFrame:
 
     Resolves the ``pricing_plan_id`` foreign key carried on vehicles, so cost / equity
     studies can join price to availability. Returns
-    :data:`~gbfs_toolkit.models.PRICING_PLAN_COLUMNS`; ``name``/``description`` are localised
+    :data:`~gbfs_toolkit.core.models.PRICING_PLAN_COLUMNS`; ``name``/``description`` are localised
     via the same v2/v3 heuristic as elsewhere.
     """
     data = raw.get("data", raw)
@@ -330,7 +330,7 @@ def to_canonical_system_regions(raw: dict, *, system_id: str) -> pd.DataFrame:
 
     Resolves the ``region_id`` foreign key carried on stations, so large multi-region
     networks can be subset or aggregated by region. Returns
-    :data:`~gbfs_toolkit.models.SYSTEM_REGION_COLUMNS`.
+    :data:`~gbfs_toolkit.core.models.SYSTEM_REGION_COLUMNS`.
     """
     data = raw.get("data", raw)
     regions = _records(data, "regions")
@@ -350,7 +350,7 @@ def to_canonical_alerts(raw: dict, *, system_id: str) -> pd.DataFrame:
 
     Service disruptions (strikes, closures, weather) that explain anomalies in the data.
     Each alert's first time window is used for ``start``/``end`` (tz-aware UTC, NaT if
-    open-ended). Returns :data:`~gbfs_toolkit.models.ALERT_COLUMNS`.
+    open-ended). Returns :data:`~gbfs_toolkit.core.models.ALERT_COLUMNS`.
     """
     data = raw.get("data", raw)
     alerts = _records(data, "alerts")

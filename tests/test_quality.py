@@ -26,7 +26,7 @@ def test_validation_guards_raise_schema_error():
 
 
 def test_schema_error_is_didactic_and_structured():
-    from gbfs_toolkit.models import require_columns
+    from gbfs_toolkit.core.models import require_columns
 
     with pytest.raises(SchemaError) as exc:
         require_columns(
@@ -106,7 +106,7 @@ def test_fetch_feed_json_200_returns_response():
 def test_get_json_wraps_network_error():
     import requests
 
-    from gbfs_toolkit.fetch import _get_json
+    from gbfs_toolkit.io.fetch import _get_json
 
     class _Boom:
         def get(self, *a, **k):
@@ -194,7 +194,7 @@ def test_catalog_local_resolve_and_filter(tmp_path):
 
 
 def test_catalog_url_success_writes_cache(tmp_path, monkeypatch):
-    import gbfs_toolkit.catalog as cat
+    import gbfs_toolkit.io.catalog as cat
 
     monkeypatch.setattr(cat, "CACHE_PATH", tmp_path / "c" / "systems.csv")
 

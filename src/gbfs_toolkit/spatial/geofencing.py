@@ -6,7 +6,7 @@ equity analysis: bikes per km² within the **actual** service area, no-ride/no-p
 coverage of a given set of neighbourhoods.
 
 Requires the optional ``[geo]`` extra (geopandas + shapely). True to the BYOG philosophy,
-nothing here touches the network; feed acquisition stays in :mod:`gbfs_toolkit.fetch`.
+nothing here touches the network; feed acquisition stays in :mod:`gbfs_toolkit.io.fetch`.
 """
 
 from __future__ import annotations
@@ -15,7 +15,7 @@ from typing import TYPE_CHECKING
 
 import pandas as pd
 
-from gbfs_toolkit.models import GEOFENCING_COLUMNS
+from gbfs_toolkit.core.models import GEOFENCING_COLUMNS
 
 if TYPE_CHECKING:  # pragma: no cover
     import geopandas as gpd
@@ -67,7 +67,7 @@ def to_canonical_geofencing(
     """Parse a ``geofencing_zones.json`` document into a canonical ``GeoDataFrame``.
 
     Returns one row per zone with a shapely geometry (EPSG:4326) and the columns of
-    :data:`~gbfs_toolkit.models.GEOFENCING_COLUMNS`. The boolean/speed fields summarise each
+    :data:`~gbfs_toolkit.core.models.GEOFENCING_COLUMNS`. The boolean/speed fields summarise each
     zone's *default* rule; the full per-vehicle-type ``rules`` list is preserved verbatim.
 
     Parameters
@@ -137,7 +137,7 @@ def zones_for_points(
         ride_through_allowed, maximum_speed_kph, station_parking``).
     """
     gpd, _ = _require_geo()
-    from gbfs_toolkit.geo import to_gdf
+    from gbfs_toolkit.spatial.geometry import to_gdf
 
     pts = points if hasattr(points, "geometry") else to_gdf(points)
     attrs = columns or [

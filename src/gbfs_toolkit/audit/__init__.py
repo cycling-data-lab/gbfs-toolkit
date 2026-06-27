@@ -27,7 +27,7 @@ def audit_frames(
     static = audit_static(info).assign(audit_type="static")
     parts = [static[AUDIT_RESULT_COLUMNS]]
     if status is not None and len(status):
-        from gbfs_toolkit.analysis import join_availability
+        from gbfs_toolkit.analytics.analysis import join_availability
 
         availability = join_availability(info, status)
         dynamic = audit_dynamic(availability, ttl_seconds=ttl_seconds).assign(

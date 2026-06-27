@@ -9,9 +9,9 @@ from __future__ import annotations
 import numpy as np
 import pandas as pd
 
-from gbfs_toolkit._internal import panel_frame
-from gbfs_toolkit.geo import haversine_m
-from gbfs_toolkit.models import require_columns
+from gbfs_toolkit.core.models import require_columns
+from gbfs_toolkit.core.utils import panel_frame
+from gbfs_toolkit.spatial.geometry import haversine_m
 
 #: Ordered categories returned by :func:`station_state`.
 STATION_STATES = ("disabled", "virtual", "empty", "full", "normal")
@@ -32,9 +32,9 @@ def join_availability(info: pd.DataFrame, status: pd.DataFrame) -> pd.DataFrame:
     Parameters
     ----------
     info : pandas.DataFrame
-        Canonical station information (:data:`~gbfs_toolkit.models.STATION_INFO_COLUMNS`).
+        Canonical station information (:data:`~gbfs_toolkit.core.models.STATION_INFO_COLUMNS`).
     status : pandas.DataFrame
-        Canonical station status (:data:`~gbfs_toolkit.models.STATION_STATUS_COLUMNS`).
+        Canonical station status (:data:`~gbfs_toolkit.core.models.STATION_STATUS_COLUMNS`).
     """
     require_columns(info, ["station_id"], what="join_availability(info)")
     require_columns(status, ["station_id"], what="join_availability(status)")

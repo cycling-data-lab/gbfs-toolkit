@@ -9,7 +9,7 @@ from __future__ import annotations
 
 import pandas as pd
 
-from gbfs_toolkit.models import require_columns
+from gbfs_toolkit.core.models import require_columns
 
 #: Dynamic check flags.
 DYNAMIC_FLAGS = ("D1_negative", "D2_over_capacity", "D3_stale")

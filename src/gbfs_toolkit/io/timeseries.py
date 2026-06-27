@@ -23,7 +23,7 @@ from typing import Any
 import numpy as np
 import pandas as pd
 
-from gbfs_toolkit.models import require_columns
+from gbfs_toolkit.core.models import require_columns
 
 
 def _require_pyarrow():
