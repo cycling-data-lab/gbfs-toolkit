@@ -62,6 +62,7 @@ from gbfs_toolkit.stats import (
     availability_stats,
     compare_systems,
     concentration_metrics,
+    coverage_stats,
     system_profile,
 )
 from gbfs_toolkit.timeseries import (
@@ -120,6 +121,7 @@ __all__ = [
     "system_profile",
     "compare_systems",
     "concentration_metrics",
+    "coverage_stats",
     "availability_stats",
     # analysis & geo
     "station_state",

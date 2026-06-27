@@ -8,6 +8,7 @@ from gbfs_toolkit import (
     availability_stats,
     compare_systems,
     concentration_metrics,
+    coverage_stats,
     system_profile,
 )
 
@@ -66,6 +67,54 @@ def test_concentration_gini_equal_vs_skewed():
     assert g_skewed > 0.6
     # top decile (≥1 station) of the skewed system holds almost everything
     assert concentration_metrics(skewed)["top_decile_share"] > 0.9
+
+
+def test_coverage_stats_density_and_dispersion():
+    # 9 stations on a ~grid near Paris → hull area > 0, density computed, CE index near 1
+    lat0, lon0 = 48.85, 2.35
+    rows = [(f"s{i}{j}", lat0 + i * 0.01, lon0 + j * 0.01) for i in range(3) for j in range(3)]
+    info = pd.DataFrame(rows, columns=["station_id", "lat", "lon"])
+    cov = coverage_stats(info)
+    assert cov["n_stations"] == 9
+    assert cov["hull_area_km2"] > 0
+    assert cov["stations_per_km2"] > 0
+    assert cov["mean_nearest_neighbor_m"] > 0
+    assert "clark_evans_index" in cov
+
+
+def test_coverage_stats_uses_service_area_when_zones_given():
+    pytest.importorskip("geopandas")
+    from gbfs_toolkit import to_canonical_geofencing
+
+    info = pd.DataFrame({"station_id": ["a", "b"], "lat": [48.855, 48.856], "lon": [2.351, 2.352]})
+    raw = {
+        "data": {
+            "geofencing_zones": {
+                "type": "FeatureCollection",
+                "features": [
+                    {
+                        "geometry": {
+                            "type": "Polygon",
+                            "coordinates": [
+                                [
+                                    [2.34, 48.85],
+                                    [2.36, 48.85],
+                                    [2.36, 48.86],
+                                    [2.34, 48.86],
+                                    [2.34, 48.85],
+                                ]
+                            ],
+                        },
+                        "properties": {"name": "z"},
+                    }
+                ],
+            }
+        }
+    }
+    zones = to_canonical_geofencing(raw, system_id="x")
+    cov = coverage_stats(info, zones=zones)
+    assert "service_area_km2" in cov and cov["service_area_km2"] > 0
+    assert "hull_area_km2" not in cov  # zones take precedence
 
 
 def test_availability_stats_per_station():

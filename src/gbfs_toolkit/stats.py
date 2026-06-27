@@ -125,6 +125,73 @@ def concentration_metrics(info: pd.DataFrame, *, value_col: str = "capacity") ->
     return pd.Series(out)
 
 
+_EARTH_RADIUS_M = 6_371_000.0
+
+
+def _hull_area_km2(lat: np.ndarray, lon: np.ndarray) -> float:
+    """Convex-hull area (km²) of points, via an equal-area-ish local projection."""
+    from scipy.spatial import ConvexHull, QhullError
+
+    lat_r, lon_r = np.radians(lat), np.radians(lon)
+    mean_lat = float(np.mean(lat_r))
+    x = _EARTH_RADIUS_M * lon_r * np.cos(mean_lat)
+    y = _EARTH_RADIUS_M * lat_r
+    try:
+        return float(ConvexHull(np.column_stack([x, y])).volume) / 1e6  # 2-D hull volume = area
+    except (QhullError, ValueError):  # collinear / degenerate
+        return float("nan")
+
+
+def coverage_stats(info: pd.DataFrame, *, zones: object = None) -> pd.Series:
+    """Spatial coverage of a station network — density and dispersion.
+
+    Reports nearest-neighbour spacing and station density. The density denominator is the
+    convex hull of the stations by default, or — far more accurate for free-floating / hybrid
+    systems — the **real service area** if you pass the operator's geofencing ``zones``
+    (a GeoDataFrame from :func:`~gbfs_toolkit.to_canonical_geofencing`; needs the ``[geo]``
+    extra). Also reports the **Clark–Evans index** (observed mean NN distance ÷ the value
+    expected under spatial randomness: ``<1`` clustered, ``≈1`` random, ``>1`` dispersed).
+
+    Returns
+    -------
+    pandas.Series
+        ``n_stations``, ``mean_nearest_neighbor_m``, ``median_nearest_neighbor_m``,
+        ``hull_area_km2`` *or* ``service_area_km2``, ``stations_per_km2``, ``clark_evans_index``.
+    """
+    lat, lon = _num(info, "lat").to_numpy(), _num(info, "lon").to_numpy()
+    finite = np.isfinite(lat) & np.isfinite(lon)
+    lat, lon = lat[finite], lon[finite]
+    out: dict[str, float] = {"n_stations": int(lat.size)}
+    if lat.size == 0:
+        return pd.Series(out)
+
+    if lat.size >= 2:
+        from gbfs_toolkit.geo import GeoKDTree
+
+        dist, _ = GeoKDTree(lat, lon).query(lat, lon, k=2)
+        nn = np.asarray(dist)[:, 1]
+        out["mean_nearest_neighbor_m"] = round(float(nn.mean()), 1)
+        out["median_nearest_neighbor_m"] = round(float(np.median(nn)), 1)
+
+    area_km2: float | None = None
+    if zones is not None:
+        from gbfs_toolkit.geofencing import zone_area_km2
+
+        area_km2 = float(zone_area_km2(zones).sum())
+        out["service_area_km2"] = round(area_km2, 3)
+    elif lat.size >= 3:
+        area_km2 = _hull_area_km2(lat, lon)
+        out["hull_area_km2"] = round(area_km2, 3)
+
+    if area_km2 and area_km2 > 0 and np.isfinite(area_km2):
+        out["stations_per_km2"] = round(lat.size / area_km2, 3)
+        if "mean_nearest_neighbor_m" in out:
+            density_m2 = lat.size / (area_km2 * 1e6)
+            expected_nn = 1.0 / (2.0 * np.sqrt(density_m2))
+            out["clark_evans_index"] = round(out["mean_nearest_neighbor_m"] / expected_nn, 3)
+    return pd.Series(out)
+
+
 def availability_stats(panel: pd.DataFrame, *, time_col: str = "fetched_at") -> pd.DataFrame:
     """Per-station longitudinal statistics from an availability panel.
 

@@ -167,6 +167,7 @@ on a live Overpass endpoint. Routing / isochrones stay out of scope (use OSMnx /
 gb.system_profile(av)                       # stations, capacity, occupancy, % empty/full/…
 gb.compare_systems({"velib": av1, "bixi": av2})   # one comparison row per city
 gb.concentration_metrics(info)              # capacity Gini + top-decile hub share (equity)
+gb.coverage_stats(info, zones=zones)        # density, nearest-neighbour, Clark–Evans dispersion
 gb.availability_stats(panel)                # per-station: occupancy, peak hour, volatility
 ```
 

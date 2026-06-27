@@ -49,7 +49,10 @@ All notable changes are documented here ([Keep a Changelog](https://keepachangel
   (stacks profiles across cities into one table), `concentration_metrics` (capacity Gini +
   top-decile hub share — an equity lens kept *outside* the A1–A7 audit), and
   `availability_stats` (per-station longitudinal scalars: occupancy, time empty/full,
-  volatility, diurnal amplitude, peak hour). Pure, pandas-only, strictly descriptive.
+  volatility, diurnal amplitude, peak hour), and `coverage_stats` (station density,
+  nearest-neighbour spacing, and the **Clark–Evans** dispersion index — density measured
+  against the convex hull, or the real geofencing **service area** when zones are passed).
+  Pure, pandas-only, strictly descriptive.
 - **Per-vehicle-type station counts** (`to_canonical_station_vehicle_counts`): melts GBFS
   2.2+/3.x `vehicle_types_available` into a long frame (`STATION_VEHICLE_COUNTS_COLUMNS`), so
   "where are the e-bikes?" is a join — the aggregate `num_bikes_available` can't answer it.
