@@ -358,58 +358,16 @@ def flow_balance(panel: pd.DataFrame) -> pd.DataFrame:
     return out
 
 
-def detect_frozen_stations(
-    panel: pd.DataFrame,
-    *,
-    value_col: str = "num_bikes_available",
-    min_run_hours: float = 6.0,
-    active_hours: tuple[int, int] | None = (6, 22),
-) -> pd.DataFrame:
-    """Flag "frozen" stations — a value stuck unchanged while the feed keeps updating.
+_FROZEN_COLUMNS = ["n_obs", "longest_const_run_hours", "frozen_value", "is_frozen"]
 
-    Distinct from staleness (D3, where ``last_reported`` itself goes stale) and from a genuine
-    stockout: here the feed is fresh but ``value_col`` never moves, the signature of a dead
-    sensor or a station the operator forgot. Restricting to ``active_hours`` (local hour of
-    ``fetched_at`` as stored) avoids flagging the legitimate overnight flatline.
 
-    Parameters
-    ----------
-    value_col : str, default "num_bikes_available"
-        The column expected to vary.
-    min_run_hours : float, default 6
-        Minimum span of an unchanged run to call a station frozen.
-    active_hours : (int, int) or None, default (6, 22)
-        Keep only observations in ``[lo, hi)`` local hours; ``None`` to use all.
-
-    Returns
-    -------
-    pandas.DataFrame
-        Indexed by ``(system_id, station_id)``: ``n_obs``, ``longest_const_run_hours``,
-        ``frozen_value``, ``is_frozen``.
-    """
-    df = panel.reset_index() if isinstance(panel.index, pd.MultiIndex) else panel.copy()
-    require_columns(
-        df, ["system_id", "station_id", "fetched_at", value_col], what="detect_frozen_stations"
-    )
-    df = df[["system_id", "station_id", "fetched_at", value_col]].copy()
-    df["fetched_at"] = pd.to_datetime(df["fetched_at"])
-    if active_hours is not None:
-        lo, hi = active_hours
-        hour = df["fetched_at"].dt.hour
-        df = df[(hour >= lo) & (hour < hi)]
-    keys = ["system_id", "station_id"]
-    if df.empty:
-        return pd.DataFrame(
-            columns=["n_obs", "longest_const_run_hours", "frozen_value", "is_frozen"]
-        ).rename_axis(keys)
-    df = df.sort_values([*keys, "fetched_at"])
-    val = pd.to_numeric(df[value_col], errors="coerce")
+def _run_stats(df: pd.DataFrame, keys: list[str], col: str) -> pd.DataFrame:
+    """Per-station run statistics for one column: longest constant run + whole-series constancy."""
     tmp = df[keys].copy()
-    tmp["_v"] = val.to_numpy()
+    tmp["_v"] = pd.to_numeric(df[col], errors="coerce").to_numpy()
     tmp["_t"] = df["fetched_at"].to_numpy()
     changed = tmp["_v"] != tmp.groupby(keys, sort=False)["_v"].shift()
     tmp["_run"] = changed.cumsum()
-
     runs = (
         tmp.groupby([*keys, "_run"], sort=False)
         .agg(start=("_t", "min"), end=("_t", "max"), value=("_v", "first"))
@@ -417,15 +375,96 @@ def detect_frozen_stations(
     )
     runs["hours"] = (runs["end"] - runs["start"]).dt.total_seconds() / 3600
     longest = runs.loc[runs.groupby(keys)["hours"].idxmax()].set_index(keys)
-    out = pd.DataFrame(
+    return pd.DataFrame(
         {
-            "n_obs": tmp.groupby(keys).size(),
-            "longest_const_run_hours": longest["hours"].round(2),
-            "frozen_value": longest["value"],
+            "longest_run_hours": longest["hours"],
+            "run_value": longest["value"],
+            "constant": tmp.groupby(keys)["_v"].nunique(dropna=False) <= 1,
         }
     )
-    out["is_frozen"] = out["longest_const_run_hours"] >= min_run_hours
-    return out
+
+
+def detect_frozen_stations(
+    panel: pd.DataFrame,
+    *,
+    value_col: str = "num_bikes_available",
+    columns: tuple[str, ...] | None = None,
+    min_run_hours: float = 6.0,
+    active_hours: tuple[int, int] | None = (6, 22),
+    strict: bool = False,
+) -> pd.DataFrame:
+    """Flag "frozen" stations — a value stuck unchanged while the feed keeps updating.
+
+    Distinct from staleness (D3, where ``last_reported`` itself goes stale) and from a genuine
+    stockout: here the feed is fresh but the value never moves — the signature of a dead sensor
+    or a station the operator forgot. Restricting to ``active_hours`` (local hour of
+    ``fetched_at`` as stored) avoids flagging the legitimate overnight flatline.
+
+    Parameters
+    ----------
+    value_col : str, default "num_bikes_available"
+        The column expected to vary (used when ``columns`` is not given).
+    columns : tuple of str, optional
+        Require *all* these columns to be frozen, e.g. ``("num_bikes_available",
+        "num_docks_available")`` — a stricter, both-counters-stuck signal. Defaults to
+        ``(value_col,)``.
+    min_run_hours : float, default 6
+        Minimum span (of an unchanged run, or of the whole series in ``strict`` mode) to call a
+        station frozen.
+    active_hours : (int, int) or None, default (6, 22)
+        Keep only observations in ``[lo, hi)`` local hours; ``None`` to use all.
+    strict : bool, default False
+        If ``True``, a column counts as frozen only when it **never changes** across the entire
+        observed window (span ≥ ``min_run_hours``) — not merely a long constant *run*. This
+        matches a "never-moved" zombie definition; the default (``False``) is the broader
+        "stuck for ≥ ``min_run_hours`` at some point".
+
+    Returns
+    -------
+    pandas.DataFrame
+        Indexed by ``(system_id, station_id)``: ``n_obs``, ``longest_const_run_hours``,
+        ``frozen_value`` (for the first column), ``is_frozen``.
+    """
+    cols = list(columns) if columns else [value_col]
+    df = panel.reset_index() if isinstance(panel.index, pd.MultiIndex) else panel.copy()
+    require_columns(
+        df, ["system_id", "station_id", "fetched_at", *cols], what="detect_frozen_stations"
+    )
+    df = df[["system_id", "station_id", "fetched_at", *cols]].copy()
+    df["fetched_at"] = pd.to_datetime(df["fetched_at"])
+    if active_hours is not None:
+        lo, hi = active_hours
+        hour = df["fetched_at"].dt.hour
+        df = df[(hour >= lo) & (hour < hi)]
+    keys = ["system_id", "station_id"]
+    if df.empty:
+        return pd.DataFrame(columns=_FROZEN_COLUMNS).rename_axis(keys)
+    df = df.sort_values([*keys, "fetched_at"])
+
+    span = df.groupby(keys)["fetched_at"].agg(first="min", last="max", n_obs="size")
+    span_hours = (span["last"] - span["first"]).dt.total_seconds() / 3600
+
+    frozen = None
+    primary = None
+    for i, col in enumerate(cols):
+        rs = _run_stats(df, keys, col)
+        if strict:
+            col_frozen = rs["constant"] & (span_hours >= min_run_hours)
+        else:
+            col_frozen = rs["longest_run_hours"] >= min_run_hours
+        frozen = col_frozen if frozen is None else (frozen & col_frozen)
+        if i == 0:
+            primary = rs
+
+    out = pd.DataFrame(
+        {
+            "n_obs": span["n_obs"].astype(int),
+            "longest_const_run_hours": primary["longest_run_hours"].round(2),
+            "frozen_value": primary["run_value"],
+            "is_frozen": frozen.reindex(span.index).fillna(False),
+        }
+    )
+    return out[_FROZEN_COLUMNS]
 
 
 def coverage_report(panel: pd.DataFrame, *, expected_freq: str = "5min") -> pd.DataFrame:

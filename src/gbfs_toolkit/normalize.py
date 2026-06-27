@@ -38,6 +38,28 @@ def _name(value: Any) -> str | None:
     return None
 
 
+def _records(data: Any, *keys: str) -> list:
+    """Extract a list of records from a feed's ``data``, tolerating language nesting.
+
+    Most feeds put the list at ``data.<key>`` (e.g. ``data.stations``), but some old GBFS
+    1.x/2.x feeds nest it under a language key (``data.<lang>.<key>``). Tries the flat form
+    first, then falls back to the first language sub-mapping that carries one of ``keys``.
+    """
+    if not isinstance(data, dict):
+        return []
+    for key in keys:
+        value = data.get(key)
+        if isinstance(value, list):
+            return value
+    for sub in data.values():
+        if isinstance(sub, dict):
+            for key in keys:
+                value = sub.get(key)
+                if isinstance(value, list):
+                    return value
+    return []
+
+
 def _infer_station_type(station: dict) -> str:
     """Best-effort station semantics from a station_information record.
 
@@ -78,7 +100,7 @@ def to_canonical_station_info(
         Canonical station-information frame (:data:`STATION_INFO_COLUMNS`).
     """
     data = raw.get("data", raw)
-    stations = data.get("stations", []) if isinstance(data, dict) else []
+    stations = _records(data, "stations")
     rows = []
     for s in stations:
         rows.append(
@@ -133,7 +155,7 @@ def to_canonical_station_status(
     """
     fetched_at = fetched_at if fetched_at is not None else _now_utc()
     data = raw.get("data", raw)
-    stations = data.get("stations", []) if isinstance(data, dict) else []
+    stations = _records(data, "stations")
     rows = [
         {
             "system_id": system_id,
@@ -144,7 +166,12 @@ def to_canonical_station_status(
                 if s.get("num_bikes_available") is not None
                 else s.get("num_vehicles_available")
             ),
-            "num_docks_available": s.get("num_docks_available"),
+            # GBFS 3.0 also offers vehicle_docks_available alongside num_docks_available.
+            "num_docks_available": (
+                s["num_docks_available"]
+                if s.get("num_docks_available") is not None
+                else s.get("vehicle_docks_available")
+            ),
             "is_renting": bool(s.get("is_renting", True)),
             "is_returning": bool(s.get("is_returning", True)),
             "is_installed": bool(s.get("is_installed", True)),
@@ -182,7 +209,7 @@ def to_canonical_station_vehicle_counts(
     """
     fetched_at = fetched_at if fetched_at is not None else _now_utc()
     data = raw.get("data", raw)
-    stations = data.get("stations", []) if isinstance(data, dict) else []
+    stations = _records(data, "stations")
     rows = [
         {
             "system_id": system_id,
@@ -215,8 +242,8 @@ def to_canonical_vehicles(
     """
     fetched_at = fetched_at if fetched_at is not None else _now_utc()
     data = raw.get("data", raw)
-    # v3 → "vehicles", v2 → "bikes"
-    items = (data.get("vehicles") or data.get("bikes") or []) if isinstance(data, dict) else []
+    # v3 → "vehicles", v2 → "bikes" (tolerate language nesting)
+    items = _records(data, "vehicles", "bikes")
     rows = [
         {
             "system_id": system_id,
@@ -228,6 +255,7 @@ def to_canonical_vehicles(
             "is_reserved": bool(v.get("is_reserved", False)),
             "is_disabled": bool(v.get("is_disabled", False)),
             "current_range_meters": v.get("current_range_meters"),
+            "current_fuel_percent": v.get("current_fuel_percent"),  # GBFS 3.0 battery %
             "pricing_plan_id": v.get("pricing_plan_id"),
             "fetched_at": fetched_at,
             "gbfs_version": gbfs_version,
@@ -235,7 +263,7 @@ def to_canonical_vehicles(
         for v in items
     ]
     df = pd.DataFrame(rows, columns=VEHICLE_STATUS_COLUMNS)
-    for col in ("lat", "lon", "current_range_meters"):
+    for col in ("lat", "lon", "current_range_meters", "current_fuel_percent"):
         df[col] = pd.to_numeric(df[col], errors="coerce")
     for col in ("is_reserved", "is_disabled"):
         df[col] = df[col].astype("boolean")
@@ -253,7 +281,7 @@ def to_canonical_vehicle_types(raw: dict, *, system_id: str) -> pd.DataFrame:
     :data:`~gbfs_toolkit.models.VEHICLE_TYPE_COLUMNS`.
     """
     data = raw.get("data", raw)
-    types = data.get("vehicle_types", []) if isinstance(data, dict) else []
+    types = _records(data, "vehicle_types")
     rows = [
         {
             "system_id": system_id,
@@ -278,7 +306,7 @@ def to_canonical_pricing_plans(raw: dict, *, system_id: str) -> pd.DataFrame:
     via the same v2/v3 heuristic as elsewhere.
     """
     data = raw.get("data", raw)
-    plans = data.get("plans", []) if isinstance(data, dict) else []
+    plans = _records(data, "plans")
     rows = [
         {
             "system_id": system_id,
@@ -305,7 +333,7 @@ def to_canonical_system_regions(raw: dict, *, system_id: str) -> pd.DataFrame:
     :data:`~gbfs_toolkit.models.SYSTEM_REGION_COLUMNS`.
     """
     data = raw.get("data", raw)
-    regions = data.get("regions", []) if isinstance(data, dict) else []
+    regions = _records(data, "regions")
     rows = [
         {
             "system_id": system_id,
@@ -325,7 +353,7 @@ def to_canonical_alerts(raw: dict, *, system_id: str) -> pd.DataFrame:
     open-ended). Returns :data:`~gbfs_toolkit.models.ALERT_COLUMNS`.
     """
     data = raw.get("data", raw)
-    alerts = data.get("alerts", []) if isinstance(data, dict) else []
+    alerts = _records(data, "alerts")
     rows = []
     for a in alerts:
         times = a.get("times") or []

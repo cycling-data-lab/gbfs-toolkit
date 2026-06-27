@@ -63,6 +63,7 @@ VEHICLE_STATUS_COLUMNS: list[str] = [
     "is_reserved",
     "is_disabled",
     "current_range_meters",  # remaining range — the core e-bike/battery research signal
+    "current_fuel_percent",  # remaining battery as a 0–1 fraction (GBFS 3.0)
     "pricing_plan_id",  # preserved (not parsed) for equity / pricing joins
     "fetched_at",  # UTC datetime
     "gbfs_version",

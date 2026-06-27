@@ -3,6 +3,24 @@
 All notable changes are documented here ([Keep a Changelog](https://keepachangelog.com),
 [SemVer](https://semver.org)).
 
+## [1.1.0] — conformance & robustness (from real-world migration)
+
+### Added
+- `detect_frozen_stations` gains **`strict=True`** (a column counts as frozen only if it never
+  changes across the whole observed window, not merely a long run) and **`columns=(...)`**
+  (require *all* listed columns frozen, e.g. bikes *and* docks). Motivated by cross-validating
+  the `gbfs-dynamic-audit` zombie detector against the toolkit.
+- Vehicle schema gains **`current_fuel_percent`** (GBFS 3.0 battery fraction).
+
+### Fixed / Changed
+- **Language-nested feeds** (old GBFS 1.x/2.x `data.<lang>.<key>`) are now tolerated by every
+  normalizer (`to_canonical_station_info` / `_status` / `_vehicles` / `_vehicle_types` /
+  `_pricing_plans` / `_system_regions` / `_alerts`), not just discovery. Surfaced by migrating
+  bikeshare-data-explorer, whose collectors kept hand-rolled flattening for this reason.
+- `to_canonical_station_status` also reads GBFS 3.0 **`vehicle_docks_available`** as a fallback
+  for `num_docks_available` (companion to the 1.0.1 `num_vehicles_available` fix).
+- CI now runs the `load_example` **doctest**.
+
 ## [1.0.1]
 
 ### Fixed
