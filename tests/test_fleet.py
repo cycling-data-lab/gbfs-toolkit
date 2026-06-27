@@ -2,7 +2,11 @@
 
 import pandas as pd
 
-from gbfs_toolkit import reconcile_fleet_state, to_canonical_vehicles
+from gbfs_toolkit import (
+    detect_ghost_vehicles,
+    reconcile_fleet_state,
+    to_canonical_vehicles,
+)
 
 
 def _status(bikes):
@@ -75,3 +79,43 @@ def test_reconcile_from_normalized_vehicles():
     out = reconcile_fleet_state(vehicles=veh)
     assert out["free_floating_available"] == 1
     assert out["docked_in_vehicle_feed"] == 1
+
+
+def _vehicle_panel(rows):
+    # rows: (vehicle_id, lat, lon, day_offset)
+    base = pd.Timestamp("2026-01-01T00:00:00Z")
+    return pd.DataFrame(
+        [
+            {
+                "system_id": "x",
+                "vehicle_id": vid,
+                "lat": lat,
+                "lon": lon,
+                "fetched_at": base + pd.Timedelta(days=d),
+            }
+            for vid, lat, lon, d in rows
+        ]
+    )
+
+
+def test_detect_ghost_vehicles():
+    panel = _vehicle_panel(
+        [
+            # "ghost": same spot for 20 days
+            ("ghost", 48.85, 2.35, 0),
+            ("ghost", 48.85000, 2.35000, 10),
+            ("ghost", 48.85001, 2.35001, 20),
+            # "mover": travels ~1.5 km over the window
+            ("mover", 48.85, 2.35, 0),
+            ("mover", 48.86, 2.36, 20),
+            # "fresh": immobile but only observed 1 day → not enough span
+            ("fresh", 48.90, 2.40, 0),
+            ("fresh", 48.90, 2.40, 1),
+        ]
+    )
+    out = detect_ghost_vehicles(panel, idle_days=14, move_threshold_m=50)
+    assert bool(out.loc[("x", "ghost"), "is_ghost"])
+    assert not bool(out.loc[("x", "mover"), "is_ghost"])
+    assert not bool(out.loc[("x", "fresh"), "is_ghost"])
+    assert out.loc[("x", "ghost"), "max_displacement_m"] < 50
+    assert out.loc[("x", "mover"), "max_displacement_m"] > 1000

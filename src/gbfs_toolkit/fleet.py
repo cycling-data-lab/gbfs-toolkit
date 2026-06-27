@@ -1,16 +1,18 @@
-"""Fleet reconciliation — one authoritative answer to "where are the bikes?".
+"""Fleet state — reconcile "where are the bikes?" and find immobile (ghost) vehicles.
 
 GBFS routinely reports the same fleet two ways: docked bikes as aggregate counts in
 ``station_status``, and individual units (some parked at stations) in
 ``vehicle_status`` / ``free_bike_status``. Naively adding ``sum(num_bikes_available)``
-to ``len(vehicles)`` double-counts every vehicle that is sitting at a station. This
-module reconciles the two feeds into a single, labelled tally and surfaces the overlap
-rather than hiding it.
+to ``len(vehicles)`` double-counts every vehicle that is sitting at a station.
+:func:`reconcile_fleet_state` resolves that; :func:`detect_ghost_vehicles` flags units that
+never move over a long window (lost / broken / abandoned but still advertised).
 """
 
 from __future__ import annotations
 
 import pandas as pd
+
+from gbfs_toolkit.geo import haversine_m
 
 
 def _bool_col(df: pd.DataFrame, col: str) -> pd.Series:
@@ -78,3 +80,72 @@ def reconcile_fleet_state(
     out["double_count_avoided"] = docked_in_vehicle_feed if both else 0
 
     return pd.Series(out, dtype="Int64")
+
+
+def detect_ghost_vehicles(
+    vehicle_panel: pd.DataFrame,
+    *,
+    idle_days: float = 14.0,
+    move_threshold_m: float = 50.0,
+) -> pd.DataFrame:
+    """Flag immobile ("ghost") vehicles from a longitudinal vehicle panel.
+
+    A unit advertised at (essentially) the same coordinates for a long stretch is almost
+    certainly lost, broken, or abandoned — yet it inflates availability. Given a panel of
+    free-floating vehicle snapshots over time, this measures each vehicle's displacement from
+    its first observed position and flags those that never moved beyond ``move_threshold_m``
+    across a span of at least ``idle_days``.
+
+    Parameters
+    ----------
+    vehicle_panel : pandas.DataFrame
+        Long frame of vehicle snapshots with ``system_id, vehicle_id, lat, lon, fetched_at``
+        (e.g. concatenated :func:`~gbfs_toolkit.to_canonical_vehicles` outputs). Note GBFS 2.1+
+        rotates ``vehicle_id`` for privacy — ghost detection is only meaningful where the feed
+        keeps stable ids.
+    idle_days : float, default 14
+        Minimum observed span (first→last sighting) for a vehicle to qualify.
+    move_threshold_m : float, default 50
+        Maximum great-circle displacement (metres) from the first position to count as immobile
+        (absorbs GPS jitter).
+
+    Returns
+    -------
+    pandas.DataFrame
+        Indexed by ``(system_id, vehicle_id)``: ``first_seen``, ``last_seen``, ``n_obs``,
+        ``observed_days``, ``max_displacement_m``, ``is_ghost``.
+    """
+    df = (
+        vehicle_panel.reset_index()
+        if isinstance(vehicle_panel.index, pd.MultiIndex)
+        else vehicle_panel.copy()
+    )
+    df = df[["system_id", "vehicle_id", "lat", "lon", "fetched_at"]].copy()
+    df["fetched_at"] = pd.to_datetime(df["fetched_at"], utc=True)
+    df = df.sort_values(["system_id", "vehicle_id", "fetched_at"])
+
+    keys = ["system_id", "vehicle_id"]
+    first = (
+        df.groupby(keys, sort=False)
+        .first()[["lat", "lon"]]
+        .rename(columns={"lat": "_lat0", "lon": "_lon0"})
+    )
+    m = df.merge(first, on=keys)
+    m["_disp"] = haversine_m(m["lat"], m["lon"], m["_lat0"], m["_lon0"])
+
+    g = m.groupby(keys, sort=False)
+    out = g.agg(
+        first_seen=("fetched_at", "min"),
+        last_seen=("fetched_at", "max"),
+        n_obs=("fetched_at", "size"),
+        max_displacement_m=("_disp", "max"),
+    )
+    out["observed_days"] = (out["last_seen"] - out["first_seen"]).dt.total_seconds() / 86400
+    out["max_displacement_m"] = out["max_displacement_m"].round(1)
+    out["observed_days"] = out["observed_days"].round(2)
+    out["is_ghost"] = (out["observed_days"] >= idle_days) & (
+        out["max_displacement_m"] <= move_threshold_m
+    )
+    return out[
+        ["first_seen", "last_seen", "n_obs", "observed_days", "max_displacement_m", "is_ghost"]
+    ]

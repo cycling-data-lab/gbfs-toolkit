@@ -43,7 +43,7 @@ from gbfs_toolkit.fetch import (
     fetch_multiple,
     parse_discovery,
 )
-from gbfs_toolkit.fleet import reconcile_fleet_state
+from gbfs_toolkit.fleet import detect_ghost_vehicles, reconcile_fleet_state
 from gbfs_toolkit.geo import (
     GeoKDTree,
     features_within,
@@ -141,6 +141,7 @@ __all__ = [
     "zone_area_km2",
     # fleet reconciliation
     "reconcile_fleet_state",
+    "detect_ghost_vehicles",
     # descriptive stats
     "system_profile",
     "compare_systems",

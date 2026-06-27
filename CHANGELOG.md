@@ -3,6 +3,15 @@
 All notable changes are documented here ([Keep a Changelog](https://keepachangelog.com),
 [SemVer](https://semver.org)).
 
+## [Unreleased]
+
+### Added
+- **Ghost-vehicle detection** (`fleet.detect_ghost_vehicles(vehicle_panel, idle_days=14,
+  move_threshold_m=50)`): flags free-floating units advertised at the same spot for a long
+  span (lost / broken / abandoned but still inflating availability), from a longitudinal
+  vehicle panel. Returns per-vehicle `first_seen, last_seen, n_obs, observed_days,
+  max_displacement_m, is_ghost`. Completes the dynamic fleet-health story alongside D1–D3.
+
 ## [0.8.0] — v1.0-readiness pass (provenance, robustness, methodology)
 
 ### Added
