@@ -28,6 +28,10 @@ All notable changes are documented here ([Keep a Changelog](https://keepachangel
   **`pricing_plan_id`** (preserved, not parsed, for equity/pricing joins).
 
 ### Added
+- **Parquet pushdown** in `build_availability_panel(columns=..., filters=...)` — project only
+  the columns you need (join/dedup keys always read) and AND an extra `pyarrow.dataset`
+  predicate with the built-in system/date filter, so multi-month / multi-city panels prune
+  row-groups *before* materialising instead of OOM-ing.
 - **Fleet reconciliation** (`fleet`): `reconcile_fleet_state(station_status, vehicles)` (and
   `GBFSFeed.reconcile_fleet()`) merge the docked aggregate counts and the per-vehicle feed
   into one labelled tally — `available_in_stations`, `free_floating_available/_reserved/

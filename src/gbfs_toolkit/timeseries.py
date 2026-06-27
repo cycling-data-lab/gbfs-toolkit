@@ -17,6 +17,7 @@ from __future__ import annotations
 
 import uuid
 from pathlib import Path
+from typing import Any
 
 import numpy as np
 import pandas as pd
@@ -79,12 +80,26 @@ def build_availability_panel(
     end_time: str | pd.Timestamp | None = None,
     resample_freq: str | None = None,
     dedup: bool = True,
+    columns: list[str] | None = None,
+    filters: Any = None,
 ) -> pd.DataFrame:
     """Read a partitioned dataset into a tidy availability panel.
 
     Filters by ``system_id`` and the ``date`` partition *before* loading (memory-bounded),
     then de-duplicates redundant polls (same ``station_id`` + ``last_reported``) and
     optionally resamples each station to a fixed frequency (forward-filled).
+
+    Scaling to large lakes
+    ----------------------
+    For multi-month / multi-city panels that would not fit in memory, push the work down
+    into PyArrow:
+
+    - ``columns`` — project only the columns you need (the keys ``system_id``,
+      ``station_id``, ``fetched_at`` and, when de-duplicating, ``last_reported`` are always
+      read). Fewer columns ⇒ less I/O and RAM.
+    - ``filters`` — an extra ``pyarrow.dataset`` predicate ANDed with the built-in
+      system/date filter, applied *before* materialising (row-group pruning). Build it with
+      ``import pyarrow.dataset as ds; ds.field("num_bikes_available") == 0``.
 
     Returns
     -------
@@ -106,8 +121,18 @@ def build_availability_panel(
     if end is not None and "date" in dataset.schema.names:
         cond = ds.field("date") <= end.strftime("%Y-%m-%d")
         filt = cond if filt is None else filt & cond
+    if filters is not None:
+        filt = filters if filt is None else filt & filters
 
-    df = dataset.to_table(filter=filt).to_pandas()
+    read_cols = None
+    if columns is not None:
+        keys = ["system_id", "station_id", "fetched_at"]
+        if dedup:
+            keys.append("last_reported")
+        wanted = list(dict.fromkeys([*keys, *columns]))
+        read_cols = [c for c in wanted if c in dataset.schema.names]
+
+    df = dataset.to_table(filter=filt, columns=read_cols).to_pandas()
     if df.empty:
         return df
 

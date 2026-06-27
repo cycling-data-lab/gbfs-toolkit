@@ -66,6 +66,31 @@ def test_net_flow_and_rebalancing(tmp_path):
     assert st2["net_flow"].abs().fillna(0).sum() == 0
 
 
+def test_column_projection_keeps_keys(tmp_path):
+    base = tmp_path / "lake"
+    t0 = 1_700_000_000
+    append_to_parquet(_snapshot("velib", [10, 5], t0, t0), base)
+    panel = build_availability_panel(base, system_id="velib", columns=["num_bikes_available"])
+    # requested column present; join/dedup keys auto-included; unrequested column pruned
+    assert "num_bikes_available" in panel.columns
+    assert set(panel.index.names) == {"system_id", "station_id", "fetched_at"}
+    assert "num_docks_available" not in panel.columns
+
+
+def test_predicate_pushdown_filter(tmp_path):
+    import pyarrow.dataset as pads
+
+    base = tmp_path / "lake"
+    t0, t1 = 1_700_000_000, 1_700_000_300
+    append_to_parquet(_snapshot("velib", [10, 0], t0, t0), base)  # station 2 empty
+    append_to_parquet(_snapshot("velib", [8, 7], t1, [t1, t1]), base)
+    empty = build_availability_panel(
+        base, system_id="velib", filters=pads.field("num_bikes_available") == 0
+    )
+    assert (empty["num_bikes_available"] == 0).all()
+    assert len(empty) == 1
+
+
 def test_time_window_filter(tmp_path):
     base = tmp_path / "lake"
     t0, t1 = 1_700_000_000, 1_700_086_400  # ~1 day apart (different date partitions)

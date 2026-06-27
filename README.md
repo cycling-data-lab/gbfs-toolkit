@@ -206,7 +206,8 @@ metric and latitude-comparable. The full per-vehicle-type `rules` list is preser
   `enrich_with_osm` (BYOG infrastructure enrichment within a radius).
 - **v0.7** — hardening (nullable dtypes, dockless-aware A7, antimeridian A5,
   mass-conservation net flow) + `geofencing` (service-area polygons, point-in-zone
-  joins, equal-area density) + `fleet` reconciliation (docked ↔ free-floating dedup).
+  joins, equal-area density), `fleet` reconciliation (docked ↔ free-floating dedup),
+  and parquet column/predicate pushdown for large panels.
 
 ## How to cite
 
