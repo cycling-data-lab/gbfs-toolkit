@@ -117,7 +117,9 @@ markdown_extensions:
   - pymdownx.inlinehilite
   - pymdownx.keys
   - pymdownx.mark
-  - pymdownx.snippets
+  - pymdownx.snippets:
+      base_path: ["."]
+      check_paths: true
   - pymdownx.superfences
   - pymdownx.tabbed:
       alternate_style: true
@@ -133,7 +135,12 @@ nav:
   - Getting started: getting-started.md
   - Guides:
       - Feature overview: guide.md
-      - Examples: examples.md
+      - Examples:
+          - examples.md
+          - Audit a feed: examples/01-audit-a-feed.md
+          - Collect a snapshot: examples/02-collect-a-snapshot.md
+          - Analyse history: examples/03-analyze-history.md
+          - Equity and coverage: examples/04-equity-and-coverage.md
   - Explanation:
       - Methodology: methodology.md
       - Glossary: glossary.md
