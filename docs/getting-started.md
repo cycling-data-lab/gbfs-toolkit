@@ -33,7 +33,7 @@ clear error naming the missing package, so an environment never fails silently.
 | `[parquet]` | pyarrow | Longitudinal data lake: `append_to_parquet`, `build_availability_panel`, `calculate_net_flow`, manifests |
 | `[cluster]` | scikit-learn | Spatial, spectral and diurnal-profile clustering |
 | `[dtw]` | tslearn | Shape-aware diurnal clustering (`method="dtw"`) |
-| `[cli]` | rich | Coloured tables for the `gbfs audit` command line (plain text without it) |
+| `[cli]` | rich, tqdm | Coloured `gbfs audit` tables and `fetch_multiple(progress=True)` bars (plain text and logging without it) |
 | `[geo]` | geopandas | Geofencing zones, point-in-zone joins, equal-area density, `to_gdf` |
 | `[osm]` | geopandas | Station surroundings, `features_within`, `station_surroundings` |
 

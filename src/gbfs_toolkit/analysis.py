@@ -97,6 +97,14 @@ def occupancy(availability: pd.DataFrame) -> pd.Series:
 
     The quantity everyone recomputes by hand. Returns ``NaN`` where there are no bikes *and*
     no docks (a virtual/dead station), so the divide-by-zero is handled once, consistently.
+
+    Examples
+    --------
+    >>> import pandas as pd
+    >>> from gbfs_toolkit import occupancy
+    >>> av = pd.DataFrame({"num_bikes_available": [3, 0], "num_docks_available": [1, 0]})
+    >>> occupancy(av).round(2).tolist()
+    [0.75, nan]
     """
     require_columns(availability, ["num_bikes_available", "num_docks_available"], what="occupancy")
     bikes = pd.to_numeric(availability["num_bikes_available"], errors="coerce")
@@ -151,6 +159,14 @@ def station_state(availability: pd.DataFrame) -> pd.Series:
     -------
     pandas.Series
         Categorical (categories = :data:`STATION_STATES`), aligned to the input index.
+
+    Examples
+    --------
+    >>> import pandas as pd
+    >>> from gbfs_toolkit import station_state
+    >>> av = pd.DataFrame({"num_bikes_available": [0, 5, 2], "num_docks_available": [4, 0, 3]})
+    >>> list(station_state(av))
+    ['empty', 'full', 'normal']
     """
     n = len(availability)
     bikes = (

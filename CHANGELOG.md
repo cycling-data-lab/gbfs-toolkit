@@ -20,6 +20,11 @@ All notable changes are documented here ([Keep a Changelog](https://keepachangel
   installed and the output is an interactive terminal, plain text otherwise. New flags:
   `--json` (machine-readable output for pipelines), `--a7-scope {docked,all}`, and `--no-color`.
   `rich` lives behind the new optional `[cli]` extra; the core install is unchanged.
+- **`fetch_multiple(progress=True)`** reports progress on a long multi-system pull: a tqdm bar
+  when tqdm is installed (also in `[cli]`), otherwise periodic log lines. Feeds are now consumed
+  as they complete, and a per-system failure is logged as well as recorded.
+- **Doctests** on `occupancy` and `station_state`, run in CI, so the reference examples cannot
+  drift from the code.
 
 ## [1.1.0] - conformance & robustness (from real-world migration)
 

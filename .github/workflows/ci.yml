@@ -26,7 +26,7 @@ jobs:
       - name: Tests
         run: pytest -q --cov=gbfs_toolkit --cov-report=term-missing --cov-fail-under=85
       - name: Doctests
-        run: pytest -q --doctest-modules src/gbfs_toolkit/datasets.py
+        run: pytest -q --doctest-modules src/gbfs_toolkit/datasets.py src/gbfs_toolkit/analysis.py
 
   build:
     name: Build sdist + wheel

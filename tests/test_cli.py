@@ -53,4 +53,6 @@ def test_cli_rich_renderer_runs():
     # renderer directly so the [cli] extra stays covered.
     from gbfs_toolkit.cli import _render_rich
 
-    _render_rich("velib", n=100, n_flagged=3, counts={f"A{i}": (3 if i == 4 else 0) for i in range(1, 8)})
+    _render_rich(
+        "velib", n=100, n_flagged=3, counts={f"A{i}": (3 if i == 4 else 0) for i in range(1, 8)}
+    )

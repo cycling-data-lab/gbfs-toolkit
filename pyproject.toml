@@ -45,7 +45,7 @@ osm = ["geopandas>=0.14"]  # enrich_with_osm (BYOG); fetch_osm_around also needs
 parquet = ["pyarrow>=15.0"]
 cluster = ["scikit-learn>=1.4"]
 dtw = ["tslearn>=0.6"]  # shape-aware time-series clustering (method="dtw")
-cli = ["rich>=13.0"]  # coloured terminal tables for `gbfs audit` (optional; plain text otherwise)
+cli = ["rich>=13.0", "tqdm>=4.0"]  # richer terminal output: coloured audit tables + progress bars
 docs = [
     "mkdocs-material>=9.5",
     "mkdocstrings[python]>=0.25",
@@ -60,6 +60,7 @@ dev = [
     "scikit-learn>=1.4",
     "geopandas>=0.14",  # exercises geo / osm / geofencing paths in CI
     "rich>=13.0",  # exercises the CLI rich-rendering path in CI
+    "tqdm>=4.0",  # exercises the fetch_multiple progress path in CI
 ]
 
 [project.scripts]

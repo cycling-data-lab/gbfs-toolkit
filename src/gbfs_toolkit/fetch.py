@@ -465,12 +465,36 @@ def audit_feed(gbfs_url: str, **kwargs: Any) -> pd.DataFrame:
     return GBFSFeed.from_url(gbfs_url, **kwargs).audit()
 
 
+def _with_progress(iterable: Any, total: int, desc: str) -> Any:
+    """Wrap ``iterable`` with a tqdm bar when tqdm is installed, else log every ~10%.
+
+    Graceful degradation: an interactive pull shows a live bar with ``[cli]`` installed;
+    a headless run (cron, pipeline) still reports progress through the ``gbfs_toolkit``
+    logger without pulling in a UI dependency.
+    """
+    try:
+        from tqdm import tqdm
+
+        return tqdm(iterable, total=total, desc=desc, unit="feed")
+    except ImportError:
+
+        def _logged() -> Any:
+            step = max(1, total // 10)
+            for i, item in enumerate(iterable, 1):
+                if i == total or i % step == 0:
+                    _log.info("%s: %d/%d", desc, i, total)
+                yield item
+
+        return _logged()
+
+
 def fetch_multiple(
     system_ids: list[str],
     *,
     catalog: pd.DataFrame | None = None,
     max_workers: int = 5,
     session: Any = None,
+    progress: bool = False,
     **kwargs: Any,
 ) -> dict[str, GBFSFeed | Exception]:
     """Resolve and open many systems concurrently (threaded) for comparative studies.
@@ -482,8 +506,12 @@ def fetch_multiple(
     Pass a shared ``requests.Session`` to pool connections across all systems (strongly
     recommended for repeated polling, avoids TCP/port exhaustion). Ignored if you also
     pass your own ``get_json``.
+
+    Set ``progress=True`` for feedback on a long pull: a tqdm bar when tqdm is installed
+    (``pip install gbfs-toolkit[cli]``), otherwise periodic log lines. Feeds complete out
+    of order; a failure is logged and recorded, never raised, so the bar always finishes.
     """
-    from concurrent.futures import ThreadPoolExecutor
+    from concurrent.futures import ThreadPoolExecutor, as_completed
 
     from gbfs_toolkit.catalog import systems_catalog
 
@@ -501,10 +529,14 @@ def fetch_multiple(
     results: dict[str, GBFSFeed | Exception] = {}
     with ThreadPoolExecutor(max_workers=max_workers) as pool:
         futures = {pool.submit(_open, sid): sid for sid in system_ids}
-        for fut in futures:
+        done = as_completed(futures)
+        if progress:
+            done = _with_progress(done, total=len(futures), desc="fetching feeds")
+        for fut in done:
             sid = futures[fut]
             try:
                 results[sid] = fut.result()
             except Exception as exc:  # noqa: BLE001 (we deliberately capture per-system)
                 results[sid] = exc
+                _log.warning("fetch_multiple: %s failed (%s)", sid, exc)
     return results
