@@ -48,19 +48,18 @@ def test_panel_dedup_on_unchanged_last_reported(tmp_path):
     assert len(panel) == 2
 
 
-def test_net_flow_and_rebalancing(tmp_path):
+def test_net_flow(tmp_path):
     base = tmp_path / "lake"
     t0, t1, t2 = 1_700_000_000, 1_700_000_300, 1_700_000_600
     append_to_parquet(_snapshot("velib", [10, 5], t0, [t0, t0]), base)
     append_to_parquet(_snapshot("velib", [8, 5], t1, [t1, t0]), base)  # st1 −2, st2 unchanged
-    append_to_parquet(_snapshot("velib", [20, 5], t2, [t2, t0]), base)  # st1 +12 → rebalancing
+    append_to_parquet(_snapshot("velib", [20, 5], t2, [t2, t0]), base)  # st1 +12
 
     panel = build_availability_panel(base, system_id="velib")
-    flow = calculate_net_flow(panel, rebalancing_threshold=3)
+    flow = calculate_net_flow(panel)
     st1 = flow[flow.station_id == "1"].sort_values("fetched_at")
     assert st1["net_flow"].tolist()[1] == -2.0
     assert st1["net_flow"].tolist()[2] == 12.0
-    assert bool(st1["is_rebalancing_suspected"].tolist()[2])
     # station 2 never changed its last_reported after t0 → deduped to 1 row, no spurious flow
     st2 = flow[flow.station_id == "2"]
     assert st2["net_flow"].abs().fillna(0).sum() == 0
@@ -89,6 +88,16 @@ def test_predicate_pushdown_filter(tmp_path):
     )
     assert (empty["num_bikes_available"] == 0).all()
     assert len(empty) == 1
+
+
+def test_target_tz_converts_before_aggregation(tmp_path):
+    base = tmp_path / "lake"
+    t0 = 1_700_000_000  # 2023-11-14 22:13:20 UTC → 14:13 in America/Los_Angeles
+    append_to_parquet(_snapshot("velib", [10, 5], t0, t0), base)
+    panel = build_availability_panel(base, system_id="velib", target_tz="America/Los_Angeles")
+    ts = panel.index.get_level_values("fetched_at")[0]
+    assert str(ts.tz) == "America/Los_Angeles"
+    assert ts.hour == 14  # local, not the UTC hour (22)
 
 
 def test_time_window_filter(tmp_path):

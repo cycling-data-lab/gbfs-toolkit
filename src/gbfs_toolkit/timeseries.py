@@ -82,6 +82,7 @@ def build_availability_panel(
     dedup: bool = True,
     columns: list[str] | None = None,
     filters: Any = None,
+    target_tz: str | None = None,
 ) -> pd.DataFrame:
     """Read a partitioned dataset into a tidy availability panel.
 
@@ -100,6 +101,13 @@ def build_availability_panel(
     - ``filters`` — an extra ``pyarrow.dataset`` predicate ANDed with the built-in
       system/date filter, applied *before* materialising (row-group pruning). Build it with
       ``import pyarrow.dataset as ds; ds.field("num_bikes_available") == 0``.
+
+    Local time
+    ----------
+    Pass ``target_tz`` (e.g. ``"America/Los_Angeles"``) to convert ``fetched_at`` /
+    ``last_reported`` to that zone **before** any dedup or resample. Resampling tz-aware UTC
+    data would otherwise cut "days" at UTC midnight — i.e. mid-afternoon local time —
+    silently corrupting diurnal/daily aggregations.
 
     Returns
     -------
@@ -139,6 +147,11 @@ def build_availability_panel(
     df["fetched_at"] = pd.to_datetime(df["fetched_at"], utc=True)
     if "last_reported" in df:
         df["last_reported"] = pd.to_datetime(df["last_reported"], utc=True)
+    if target_tz is not None:
+        # Convert to local time *before* dedup/resample so daily boundaries are local midnight.
+        df["fetched_at"] = df["fetched_at"].dt.tz_convert(target_tz)
+        if "last_reported" in df:
+            df["last_reported"] = df["last_reported"].dt.tz_convert(target_tz)
     df = df.sort_values(["system_id", "station_id", "fetched_at"])
 
     if dedup and "last_reported" in df:
@@ -160,31 +173,18 @@ def build_availability_panel(
     return df.set_index(["system_id", "station_id", "fetched_at"]).sort_index()
 
 
-def calculate_net_flow(
-    panel: pd.DataFrame,
-    *,
-    rebalancing_threshold: int = 3,
-    account_for_system: bool = False,
-) -> pd.DataFrame:
+def calculate_net_flow(panel: pd.DataFrame) -> pd.DataFrame:
     """Period-over-period change in available bikes per station.
 
-    Adds ``net_flow`` (Δ ``num_bikes_available`` vs the previous poll of the same station).
-    ``net_flow`` is ``NaN`` across polls where ``last_reported`` did not change (the feed
-    re-served an identical observation), so you don't read spurious zero-flows.
+    Adds ``net_flow`` — the Δ in ``num_bikes_available`` vs the previous poll of the same
+    station. ``net_flow`` is ``NaN`` across polls where ``last_reported`` did not change (the
+    feed re-served an identical observation), so you don't read spurious zero-flows.
 
-    Rebalancing heuristic
-    ---------------------
-    By default ``is_rebalancing_suspected`` is the *naive* test ``|net_flow| >
-    rebalancing_threshold``. This conflates a rebalancing van with a burst of organic
-    demand (e.g. a train disgorging riders), so treat it as a coarse screen.
-
-    With ``account_for_system=True`` the function also computes the **system-wide**
-    available-bike total per timestamp and its change (``system_net_flow``), and a station
-    spike is flagged only when it is *corroborated* by a same-sign system-level change of
-    comparable size — i.e. the system's mass actually changed (a van injected or removed
-    bikes). This reliably catches fleet injection/removal; it cannot, at panel resolution,
-    distinguish an *internal* van move (A→B, system flat) from organic demand — those stay
-    unflagged. Use it when you have full-system coverage in the panel.
+    This intentionally reports the **observed flow only**, not its cause. Attributing a flow to
+    rebalancing vs. organic demand is not identifiable from availability counts alone — a
+    station spike can be a van drop *or* a burst of returns, and system-wide mass conservation
+    cannot separate an internal van move from coincident organic trips. Apply your own,
+    explicitly-stated heuristic downstream rather than trusting a built-in label.
 
     Accepts a panel from :func:`build_availability_panel` (MultiIndexed) or a flat frame;
     returns a flat frame with ``system_id, station_id, fetched_at`` columns.
@@ -197,26 +197,4 @@ def calculate_net_flow(
     if "last_reported" in df:
         unchanged = grp["last_reported"].diff().eq(pd.Timedelta(0))
         df.loc[unchanged, "net_flow"] = np.nan
-
-    big = df["net_flow"].abs() > rebalancing_threshold
-    if account_for_system:
-        totals = (
-            df.groupby(["system_id", "fetched_at"])["num_bikes_available"]
-            .sum()
-            .rename("system_total")
-            .reset_index()
-            .sort_values(["system_id", "fetched_at"])
-        )
-        totals["system_net_flow"] = totals.groupby("system_id")["system_total"].diff()
-        df = df.merge(
-            totals[["system_id", "fetched_at", "system_net_flow"]],
-            on=["system_id", "fetched_at"],
-            how="left",
-        )
-        corroborated = (np.sign(df["net_flow"]) == np.sign(df["system_net_flow"])) & (
-            df["system_net_flow"].abs() >= rebalancing_threshold
-        )
-        df["is_rebalancing_suspected"] = big & corroborated.fillna(False)
-    else:
-        df["is_rebalancing_suspected"] = big
     return df.reset_index(drop=True)

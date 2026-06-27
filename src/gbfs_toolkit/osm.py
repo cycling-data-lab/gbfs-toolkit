@@ -2,10 +2,9 @@
 "station surroundings" context combining transit + OSM.
 
 Design: the **summarisation within a radius** is the durable, testable value and lives here;
-the **data acquisition** is *Bring Your Own GeoDataFrame* (you fetch OSM with ``osmnx`` and
-pass it in), so the library never depends on a live Overpass endpoint. A thin optional
-``fetch_osm_around`` convenience is provided for interactive use but is network-bound.
-Routing / isochrones stay out of scope (use OSMnx / pandana).
+the **data acquisition** is *Bring Your Own GeoDataFrame* — fetch OSM in your own script
+(e.g. ``osmnx.features_from_point``) and pass the result in, so the library never depends on
+a live, rate-limited Overpass endpoint. Routing / isochrones stay out of scope (OSMnx / pandana).
 """
 
 from __future__ import annotations
@@ -110,26 +109,3 @@ def station_surroundings(
         new = [c for c in enr.columns if c not in out.columns]
         out = pd.concat([out, enr[new]], axis=1)
     return out
-
-
-def fetch_osm_around(
-    lat: float,
-    lon: float,
-    *,
-    radius_m: float = 500.0,
-    tags: dict | None = None,
-) -> gpd.GeoDataFrame:
-    """Optional convenience: fetch OSM features around a point via ``osmnx`` (network).
-
-    Best-effort interactive helper — for reproducible pipelines, fetch once and pass the
-    result to :func:`enrich_with_osm` (BYOG). Requires ``osmnx`` (``pip install osmnx``).
-    """
-    try:
-        import osmnx as ox
-    except ImportError as e:  # pragma: no cover
-        raise ImportError(
-            "fetch_osm_around requires osmnx (`pip install osmnx`). For reproducible runs, "
-            "fetch your features once and pass them to enrich_with_osm (Bring Your Own GeoDataFrame)."
-        ) from e
-    tags = tags or {"amenity": True, "public_transport": True, "shop": True}
-    return ox.features_from_point((lat, lon), tags=tags, dist=radius_m)

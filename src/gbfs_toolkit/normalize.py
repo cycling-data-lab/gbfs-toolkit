@@ -14,8 +14,10 @@ from typing import Any
 import pandas as pd
 
 from gbfs_toolkit.models import (
+    PRICING_PLAN_COLUMNS,
     STATION_INFO_COLUMNS,
     STATION_STATUS_COLUMNS,
+    STATION_VEHICLE_COUNTS_COLUMNS,
     VEHICLE_STATUS_COLUMNS,
     VEHICLE_TYPE_COLUMNS,
 )
@@ -157,6 +159,42 @@ def to_canonical_station_status(
     return df
 
 
+def to_canonical_station_vehicle_counts(
+    raw: dict,
+    *,
+    system_id: str,
+    fetched_at: pd.Timestamp | None = None,
+) -> pd.DataFrame:
+    """Melt per-vehicle-type availability from ``station_status`` into a long frame.
+
+    GBFS 2.2+/3.x stations may report ``vehicle_types_available`` (a list of
+    ``{vehicle_type_id, count}``). This explodes it to one row per station × vehicle type
+    (:data:`~gbfs_toolkit.models.STATION_VEHICLE_COUNTS_COLUMNS`), so "where are the e-bikes?"
+    is a join to :func:`to_canonical_vehicle_types` — the aggregate ``num_bikes_available``
+    cannot answer it. Stations without the field contribute no rows.
+    """
+    fetched_at = fetched_at if fetched_at is not None else _now_utc()
+    data = raw.get("data", raw)
+    stations = data.get("stations", []) if isinstance(data, dict) else []
+    rows = [
+        {
+            "system_id": system_id,
+            "station_id": str(s.get("station_id")),
+            "vehicle_type_id": str(vt.get("vehicle_type_id")),
+            "num_vehicles_available": vt.get("count"),
+            "fetched_at": fetched_at,
+        }
+        for s in stations
+        for vt in (s.get("vehicle_types_available") or [])
+    ]
+    df = pd.DataFrame(rows, columns=STATION_VEHICLE_COUNTS_COLUMNS)
+    df["num_vehicles_available"] = pd.to_numeric(
+        df["num_vehicles_available"], errors="coerce"
+    ).astype("Int64")
+    df["fetched_at"] = pd.to_datetime(df["fetched_at"], utc=True)
+    return df
+
+
 def to_canonical_vehicles(
     raw: dict,
     *,
@@ -221,6 +259,34 @@ def to_canonical_vehicle_types(raw: dict, *, system_id: str) -> pd.DataFrame:
     ]
     df = pd.DataFrame(rows, columns=VEHICLE_TYPE_COLUMNS)
     df["max_range_meters"] = pd.to_numeric(df["max_range_meters"], errors="coerce")
+    return df
+
+
+def to_canonical_pricing_plans(raw: dict, *, system_id: str) -> pd.DataFrame:
+    """Parse ``system_pricing_plans.json`` into a canonical lookup table.
+
+    Resolves the ``pricing_plan_id`` foreign key carried on vehicles, so cost / equity
+    studies can join price to availability. Returns
+    :data:`~gbfs_toolkit.models.PRICING_PLAN_COLUMNS`; ``name``/``description`` are localised
+    via the same v2/v3 heuristic as elsewhere.
+    """
+    data = raw.get("data", raw)
+    plans = data.get("plans", []) if isinstance(data, dict) else []
+    rows = [
+        {
+            "system_id": system_id,
+            "plan_id": str(p.get("plan_id")),
+            "name": _name(p.get("name")),
+            "currency": p.get("currency"),
+            "price": p.get("price"),
+            "is_taxable": p.get("is_taxable"),
+            "description": _name(p.get("description")),
+        }
+        for p in plans
+    ]
+    df = pd.DataFrame(rows, columns=PRICING_PLAN_COLUMNS)
+    df["price"] = pd.to_numeric(df["price"], errors="coerce")
+    df["is_taxable"] = df["is_taxable"].astype("boolean")
     return df
 
 

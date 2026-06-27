@@ -16,8 +16,8 @@ Quick start
 """
 
 from gbfs_toolkit import models
-from gbfs_toolkit.analysis import station_state
-from gbfs_toolkit.audit import audit_dynamic, audit_static
+from gbfs_toolkit.analysis import join_availability, station_state
+from gbfs_toolkit.audit import audit_dynamic, audit_frames, audit_static
 from gbfs_toolkit.catalog import filter_catalog, resolve, systems_catalog
 from gbfs_toolkit.cluster import (
     cluster_diurnal_profiles,
@@ -49,13 +49,15 @@ from gbfs_toolkit.geofencing import (
 from gbfs_toolkit.models import AUDIT_FLAGS, RULES, SchemaError
 from gbfs_toolkit.multimodal import link_transit_stops
 from gbfs_toolkit.normalize import (
+    to_canonical_pricing_plans,
     to_canonical_station_info,
     to_canonical_station_status,
+    to_canonical_station_vehicle_counts,
     to_canonical_system_information,
     to_canonical_vehicle_types,
     to_canonical_vehicles,
 )
-from gbfs_toolkit.osm import enrich_with_osm, fetch_osm_around, station_surroundings
+from gbfs_toolkit.osm import enrich_with_osm, station_surroundings
 from gbfs_toolkit.timeseries import (
     append_to_parquet,
     build_availability_panel,
@@ -68,17 +70,21 @@ __all__ = [
     # audit (the flagship)
     "audit_static",
     "audit_dynamic",
+    "audit_frames",
     "audit_feed",
     # fetch / scrape (daily drivers)
     "GBFSFeed",
     "availability",
+    "join_availability",
     "fetch_multiple",
     "parse_discovery",
     # normalise
     "to_canonical_station_info",
     "to_canonical_station_status",
+    "to_canonical_station_vehicle_counts",
     "to_canonical_vehicles",
     "to_canonical_vehicle_types",
+    "to_canonical_pricing_plans",
     "to_canonical_system_information",
     # catalogue
     "systems_catalog",
@@ -98,7 +104,6 @@ __all__ = [
     "link_transit_stops",
     "station_surroundings",
     "enrich_with_osm",
-    "fetch_osm_around",
     # geofencing / service areas ([geo])
     "to_canonical_geofencing",
     "zones_for_points",

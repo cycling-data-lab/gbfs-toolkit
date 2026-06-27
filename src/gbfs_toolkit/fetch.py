@@ -20,7 +20,7 @@ from typing import Any
 
 import pandas as pd
 
-from gbfs_toolkit.audit import audit_dynamic, audit_static
+from gbfs_toolkit.audit import audit_frames
 from gbfs_toolkit.normalize import (
     to_canonical_station_info,
     to_canonical_station_status,
@@ -40,7 +40,6 @@ _VEHICLES = ("vehicle_status", "free_bike_status")  # v3, v2
 _VEHICLE_TYPES = ("vehicle_types",)
 _SYSTEM_INFO = ("system_information",)
 _GEOFENCING = ("geofencing_zones",)
-_AUDIT_COLS = ["system_id", "station_id", "audit_type", "flagged", "reason"]
 
 
 def _get_json(url: str, *, timeout: int = 30) -> dict:
@@ -268,29 +267,14 @@ class GBFSFeed:
     def availability(self) -> pd.DataFrame:
         """**The daily one-liner**: live status joined with station info.
 
-        Returns bikes/docks *and* name, coordinates, capacity and station type in a
-        single tidy frame. Uses an **outer** join (operators routinely add/drop a
-        station from one endpoint mid-sync), with a ``presence`` indicator
-        (``both`` / ``status_only`` / ``info_only``) so orphaned rows are visible,
-        not silently dropped.
+        Thin convenience over :func:`~gbfs_toolkit.join_availability` — returns bikes/docks
+        *and* name, coordinates, capacity and station type in one tidy frame (outer join with a
+        ``presence`` indicator). For offline frames (e.g. from a Parquet lake), call
+        ``join_availability(info, status)`` directly.
         """
-        info = self.station_information()
-        status = self.station_status()
-        merged = status.merge(
-            info.drop(columns=["system_id"]),
-            on="station_id",
-            how="outer",
-            suffixes=("", "_info"),
-            indicator="presence",
-        )
-        merged["presence"] = (
-            merged["presence"]
-            .cat.rename_categories(
-                {"both": "both", "left_only": "status_only", "right_only": "info_only"}
-            )
-            .astype("string")
-        )
-        return merged
+        from gbfs_toolkit.analysis import join_availability
+
+        return join_availability(self.station_information(), self.station_status())
 
     def to_local_time(
         self, df: pd.DataFrame, columns: tuple[str, ...] = ("fetched_at",)
@@ -309,18 +293,16 @@ class GBFSFeed:
         """Unified semantic audit: **static** (A1–A7) on the inventory **and** **dynamic**
         (D1–D3) on live availability, stacked with an ``audit_type`` column.
 
-        Dynamic staleness uses the feed's advertised ``ttl``. Use
-        :func:`~gbfs_toolkit.audit.audit_static` / :func:`~gbfs_toolkit.audit.audit_dynamic`
-        directly if you need the per-rule boolean columns.
+        Thin convenience over :func:`~gbfs_toolkit.audit_frames` (dynamic staleness uses the
+        feed's advertised ``ttl``). For offline frames, call ``audit_frames(info, status)``.
         """
-        static = audit_static(self.station_information()).assign(audit_type="static")
-        parts = [static[_AUDIT_COLS]]
-        if self.has(*_STATION_STATUS):
-            dyn = audit_dynamic(self.availability(), ttl_seconds=self.ttl).assign(
-                audit_type="dynamic", system_id=self.system_id
-            )
-            parts.append(dyn[_AUDIT_COLS])
-        return pd.concat(parts, ignore_index=True)
+        status = self.station_status() if self.has(*_STATION_STATUS) else None
+        return audit_frames(
+            self.station_information(),
+            status,
+            ttl_seconds=self.ttl if status is not None else None,
+            system_id=self.system_id,
+        )
 
     def reconcile_fleet(self) -> pd.Series:
         """One authoritative fleet tally across the docked and free-floating feeds.

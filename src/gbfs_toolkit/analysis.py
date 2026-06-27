@@ -12,6 +12,36 @@ import pandas as pd
 #: Ordered categories returned by :func:`station_state`.
 STATION_STATES = ("disabled", "virtual", "empty", "full", "normal")
 
+#: Ordered categories of the ``presence`` indicator from :func:`join_availability`.
+PRESENCE_STATES = ("both", "info_only", "status_only")
+
+
+def join_availability(info: pd.DataFrame, status: pd.DataFrame) -> pd.DataFrame:
+    """Join a status snapshot onto the station inventory — the analysis-ready availability frame.
+
+    A pure function on canonical frames (no feed object needed), so it works equally on live
+    data and on frames read back from a Parquet lake. Uses an **outer** join — operators
+    routinely add/drop a station from one endpoint mid-sync — with a ``presence`` indicator
+    (Categorical ``both`` / ``info_only`` / ``status_only``) so orphaned rows stay visible
+    instead of being silently dropped.
+
+    Parameters
+    ----------
+    info : pandas.DataFrame
+        Canonical station information (:data:`~gbfs_toolkit.models.STATION_INFO_COLUMNS`).
+    status : pandas.DataFrame
+        Canonical station status (:data:`~gbfs_toolkit.models.STATION_STATUS_COLUMNS`).
+    """
+    info_cols = info.drop(columns=["system_id"]) if "system_id" in info.columns else info
+    merged = status.merge(
+        info_cols, on="station_id", how="outer", suffixes=("", "_info"), indicator="presence"
+    )
+    mapped = merged["presence"].map(
+        {"both": "both", "left_only": "status_only", "right_only": "info_only"}
+    )
+    merged["presence"] = pd.Categorical(mapped, categories=list(PRESENCE_STATES))
+    return merged
+
 
 def station_state(availability: pd.DataFrame) -> pd.Series:
     """Classify each station as ``disabled`` / ``virtual`` / ``empty`` / ``full`` / ``normal``.

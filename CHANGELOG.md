@@ -5,6 +5,22 @@ All notable changes are documented here ([Keep a Changelog](https://keepachangel
 
 ## [Unreleased]
 
+### Changed / Removed (pre-1.0 consolidation — second peer-review pass)
+- **Decoupled analysis from fetching.** The join and audit logic are now pure functions on
+  canonical frames — `join_availability(info, status)` and `audit_frames(info, status=...,
+  ttl_seconds=..., system_id=...)` — so they work on frames read back from a Parquet lake, not
+  only on a live `GBFSFeed`. `GBFSFeed.availability()` / `.audit()` are kept as thin
+  delegators (no behaviour change for online use).
+- The `availability()` `presence` column is now a **fixed-category `Categorical`**
+  (`both` / `info_only` / `status_only`) instead of a free string.
+- **Removed `osm.fetch_osm_around`** — fetching from OSM's rate-limited Overpass endpoint
+  violated the no-HTTP / Bring-Your-Own-GeoDataFrame contract and was a CI/issue liability.
+  Fetch with `osmnx` in your own script and pass the result to `enrich_with_osm`.
+- **`calculate_net_flow` now reports the observed Δ only.** Removed `account_for_system`,
+  `system_net_flow` and `is_rebalancing_suspected`: attributing a flow to rebalancing vs.
+  organic demand is not identifiable from availability counts (even with system-wide mass
+  conservation), so the library no longer ships a misleading cause label.
+
 ### Changed / Fixed (hardening — peer-review pass)
 - **Nullable dtypes** in `to_canonical_station_status` (`Int64` counts, `boolean` flags) and
   `to_canonical_vehicles` — so the `availability()` **outer join** inserts `pd.NA` instead of
@@ -28,6 +44,14 @@ All notable changes are documented here ([Keep a Changelog](https://keepachangel
   **`pricing_plan_id`** (preserved, not parsed, for equity/pricing joins).
 
 ### Added
+- **Per-vehicle-type station counts** (`to_canonical_station_vehicle_counts`): melts GBFS
+  2.2+/3.x `vehicle_types_available` into a long frame (`STATION_VEHICLE_COUNTS_COLUMNS`), so
+  "where are the e-bikes?" is a join — the aggregate `num_bikes_available` can't answer it.
+- **Pricing-plan lookup** (`to_canonical_pricing_plans`): parses `system_pricing_plans.json`
+  into `PRICING_PLAN_COLUMNS`, resolving the `pricing_plan_id` foreign key for cost/equity work.
+- **`target_tz`** on `build_availability_panel` — converts `fetched_at`/`last_reported` to a
+  local zone *before* dedup/resample, so daily aggregations cut at local midnight (UTC-midnight
+  cuts silently corrupted diurnal analysis).
 - **Parquet pushdown** in `build_availability_panel(columns=..., filters=...)` — project only
   the columns you need (join/dedup keys always read) and AND an extra `pyarrow.dataset`
   predicate with the built-in system/date filter, so multi-month / multi-city panels prune

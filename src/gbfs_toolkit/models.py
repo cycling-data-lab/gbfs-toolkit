@@ -82,6 +82,30 @@ GEOFENCING_COLUMNS: list[str] = [
     "geometry",
 ]
 
+#: Canonical per-vehicle-type availability at docked stations (GBFS 2.2+/3.x
+#: ``vehicle_types_available``) — *melted* (long), one row per station × vehicle type.
+#: ``num_bikes_available`` aggregates these; this schema preserves the breakdown so
+#: "where are the e-bikes?" is answerable. Joins to :data:`VEHICLE_TYPE_COLUMNS`.
+STATION_VEHICLE_COUNTS_COLUMNS: list[str] = [
+    "system_id",
+    "station_id",
+    "vehicle_type_id",
+    "num_vehicles_available",
+    "fetched_at",  # UTC datetime
+]
+
+#: Canonical pricing-plan lookup (``system_pricing_plans.json``) — resolves the
+#: ``pricing_plan_id`` foreign key carried on vehicles, for equity / cost research.
+PRICING_PLAN_COLUMNS: list[str] = [
+    "system_id",
+    "plan_id",
+    "name",
+    "currency",
+    "price",  # base price (the plan's headline amount)
+    "is_taxable",
+    "description",
+]
+
 #: Station semantics recognised by the audit (drives A1/A3).
 STATION_TYPES: tuple[str, ...] = ("docked_bike", "free_floating", "carsharing")
 

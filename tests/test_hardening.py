@@ -4,7 +4,7 @@
 - new canonical fields (is_installed / current_range_meters / pricing_plan_id)
 - A7 is virtual/free-float aware (no false positive on dockless systems)
 - A5 bounding box is antimeridian-safe
-- calculate_net_flow(account_for_system=True) mass-conservation corroboration
+- calculate_net_flow reports observed Δ only (no cause classification)
 """
 
 import pandas as pd
@@ -140,50 +140,18 @@ def test_a5_not_fired_across_antimeridian():
     assert not out["A5"].any()
 
 
-# --- net flow mass conservation --------------------------------------------
+# --- net flow reports observed Δ only (no cause classification) -------------
 
 
-def _panel(rows):
-    return pd.DataFrame(
-        rows, columns=["system_id", "station_id", "fetched_at", "num_bikes_available"]
+def test_net_flow_reports_delta_only():
+    t0 = pd.Timestamp("2026-01-01T00:00:00Z")
+    t1 = pd.Timestamp("2026-01-01T00:05:00Z")
+    panel = pd.DataFrame(
+        [("s", "a", t0, 5), ("s", "a", t1, 15)],
+        columns=["system_id", "station_id", "fetched_at", "num_bikes_available"],
     )
-
-
-_T0 = pd.Timestamp("2026-01-01T00:00:00Z")
-_T1 = pd.Timestamp("2026-01-01T00:05:00Z")
-
-
-def test_net_flow_system_corroboration_flags_injection():
-    # station a +10 AND system total +10 → van injection → flagged
-    panel = _panel(
-        [
-            ("s", "a", _T0, 5),
-            ("s", "a", _T1, 15),
-            ("s", "b", _T0, 5),
-            ("s", "b", _T1, 5),
-        ]
-    )
-    out = calculate_net_flow(panel, account_for_system=True)
-    a1 = out[(out.station_id == "a") & (out.fetched_at == _T1)].iloc[0]
-    assert a1["system_net_flow"] == 10
-    assert bool(a1["is_rebalancing_suspected"])
-
-
-def test_net_flow_internal_move_not_flagged_with_system_context():
-    # a +10, b -10 → system flat → organic/internal, NOT a fleet change → unflagged
-    panel = _panel(
-        [
-            ("s", "a", _T0, 5),
-            ("s", "a", _T1, 15),
-            ("s", "b", _T0, 15),
-            ("s", "b", _T1, 5),
-        ]
-    )
-    out = calculate_net_flow(panel, account_for_system=True)
-    a1 = out[(out.station_id == "a") & (out.fetched_at == _T1)].iloc[0]
-    assert a1["system_net_flow"] == 0
-    assert not bool(a1["is_rebalancing_suspected"])
-    # but the naive default still flags the |Δ|>3 spike
-    naive = calculate_net_flow(panel)
-    a1n = naive[(naive.station_id == "a") & (naive.fetched_at == _T1)].iloc[0]
-    assert bool(a1n["is_rebalancing_suspected"])
+    out = calculate_net_flow(panel)
+    a1 = out[(out.station_id == "a") & (out.fetched_at == t1)].iloc[0]
+    assert a1["net_flow"] == 10
+    # the cause-classifying column was deliberately removed (not identifiable from counts)
+    assert "is_rebalancing_suspected" not in out.columns
