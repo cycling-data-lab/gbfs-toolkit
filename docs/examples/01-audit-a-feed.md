@@ -8,6 +8,10 @@ bike-share. The goal is to see that damage before it leaks into a model.
 !!! info "Requirements"
     Extras: `[fetch]`. Input: a `gbfs.json` discovery URL.
 
+!!! tip "Try it offline"
+    No feed at hand? The same static audit runs on the bundled sample with no network access:
+    `info, _ = gb.load_example(); gb.audit_static(info)`.
+
 ## Walkthrough
 
 ### 1. Discover the feed and read its summary
@@ -81,6 +85,18 @@ A6 zero-capacity dock        9
 389 stations kept for analysis
 2 stations with live-data problems (D3 stale)
 ```
+
+## Interpreting the output
+
+- A high flagged fraction is itself a finding. Read the [Methodology](../methodology.md) before modelling such a feed.
+- **A4 (geospatial outlier)** usually means transposed coordinates or a distant depot listed as a station. Inspect those positions before trusting any spatial analysis.
+- **A6 (zero-capacity dock)** suggests the operator left capacity unset, so any capacity-weighted metric will be biased low.
+- The `reason` column explains every verdict in words, so a flagged station can be triaged rather than dropped blindly.
+
+## Related
+
+- API: `audit_static`, `audit_dynamic`, `drop_flagged` ([Static audit](../api.md#static-semantic-audit-a1a7), [Dynamic audit](../api.md#dynamic-audit-d1d3)).
+- Concepts: the [A1–A7 thresholds](../methodology.md) and the [AuditVerdict contract](../data-model.md#auditverdict).
 
 ## Full script
 

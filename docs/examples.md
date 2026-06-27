@@ -5,6 +5,20 @@ feed, collect snapshots into a data lake, analyse the resulting history, then me
 equity. Each has its own page with a step-by-step walkthrough, the command to run it, and the full
 source.
 
+## Workflow
+
+```mermaid
+flowchart LR
+    A["1. Audit a feed"] -->|trustworthy stations| B["2. Collect a snapshot"]
+    B -->|repeat every few minutes| B
+    B --> C["3. Analyse history"]
+    A --> D["4. Equity and coverage"]
+```
+
+Auditing comes first, because every later step should run on the trustworthy subset of stations.
+Collection is repeated on a schedule to build a panel; analysis and the equity report then read
+from what was collected.
+
 | Example | Goal | Extras |
 |---|---|---|
 | [Audit a feed](examples/01-audit-a-feed.md) | Inspect an unknown feed and keep the trustworthy stations | `[fetch]` |

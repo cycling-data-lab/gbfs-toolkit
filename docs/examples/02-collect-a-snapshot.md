@@ -80,6 +80,20 @@ velib: appended 1473 rows
 
 A run that hits HTTP 304 prints nothing and exits, leaving the lake unchanged.
 
+## Interpreting the output
+
+- Each successful run appends one snapshot. The lake is partitioned by `system_id` and `date`, so later reads prune to the slice they need.
+- A run that prints nothing hit HTTP 304: the feed was unchanged and nothing was written. That is the intended behaviour, not an error.
+- Row counts vary slightly between runs as stations appear or drop out. That variation is real and is preserved, not smoothed.
+
+!!! note "For a citable dataset"
+    Before depositing collected data, record provenance with `generate_manifest(lake_dir)` and quantify gaps with `coverage_report(panel)`. See [Citing this work](../citing.md).
+
+## Related
+
+- API: `append_to_parquet`, `build_session`, `fetch_feed_json`, `GBFSNotModified` ([Fetching](../api.md#fetching-and-polite-networking), [Data lake](../api.md#longitudinal-data-lake)).
+- Concepts: the [StationStatus contract](../data-model.md#stationstatus).
+
 ## Full script
 
 ```python title="examples/02_collect_snapshot.py"

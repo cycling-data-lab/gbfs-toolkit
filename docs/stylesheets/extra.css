@@ -1,30 +1,96 @@
-/* gbfs-toolkit documentation theme refinements.
-   Goal: a sober, research-software reading experience. */
+/* gbfs-toolkit documentation theme.
+   A sober, scholarly reading experience: serif headings, a calm measure,
+   data-first tables, and restrained accents. */
+
+@import url("https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400&display=swap");
 
 :root {
   --md-text-font: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   --md-code-font: "JetBrains Mono", "SFMono-Regular", Consolas, monospace;
+  --gbfs-serif: "Source Serif 4", Georgia, "Times New Roman", serif;
 }
 
-/* Slightly wider measure for tables and signatures, still readable. */
-.md-grid {
-  max-width: 56rem;
-}
+/* ---- Typography -------------------------------------------------------- */
 
-/* Tighten heading rhythm and give section headers a clear hierarchy. */
+/* Scholarly serif headings over a sans body, the editorial/journal idiom. */
+.md-typeset h1,
+.md-typeset h2,
+.md-typeset h3 {
+  font-family: var(--gbfs-serif);
+  font-feature-settings: "kern", "liga", "onum";
+}
 .md-typeset h1 {
   font-weight: 700;
   letter-spacing: -0.01em;
 }
 .md-typeset h2 {
-  font-weight: 650;
-  letter-spacing: -0.005em;
-  margin-top: 2.2em;
+  font-weight: 600;
+  margin-top: 2.4em;
+  padding-bottom: 0.25em;
   border-bottom: 1px solid var(--md-default-fg-color--lightest);
-  padding-bottom: 0.2em;
+}
+.md-typeset h3 {
+  font-weight: 600;
 }
 
-/* Tables read as data, not decoration: crisp header, zebra body. */
+/* Comfortable measure for body prose. */
+.md-grid {
+  max-width: 58rem;
+}
+
+/* ---- Landing hero ------------------------------------------------------ */
+
+.hero {
+  margin: 0 0 2.5rem;
+}
+.hero .subtitle {
+  font-family: var(--gbfs-serif);
+  font-size: 1.25rem;
+  font-style: italic;
+  color: var(--md-default-fg-color--light);
+  margin: 0.2rem 0 1rem;
+}
+.hero .authors {
+  font-size: 0.92rem;
+  font-weight: 600;
+  margin: 0.2rem 0;
+}
+.hero .affiliation {
+  font-size: 0.78rem;
+  color: var(--md-default-fg-color--light);
+  margin: 0.1rem 0 1rem;
+}
+.hero .affiliation sup,
+.hero .authors sup {
+  color: var(--md-primary-fg-color);
+}
+.hero .badges {
+  margin: 1rem 0 0.5rem;
+  line-height: 2;
+}
+.hero .badges img {
+  margin-right: 0.3rem;
+  vertical-align: middle;
+}
+
+/* Keyword pills, the academic "Index Terms" line. */
+.keywords {
+  margin: 1rem 0 0;
+}
+.keywords .kw {
+  display: inline-block;
+  font-size: 0.68rem;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  padding: 0.12rem 0.55rem;
+  margin: 0.15rem 0.25rem 0.15rem 0;
+  border: 1px solid var(--md-primary-fg-color);
+  border-radius: 1rem;
+  color: var(--md-primary-fg-color);
+}
+
+/* ---- Tables read as data ---------------------------------------------- */
+
 .md-typeset table:not([class]) {
   font-size: 0.74rem;
   border: 1px solid var(--md-default-fg-color--lightest);
@@ -37,7 +103,8 @@
   background-color: var(--md-default-fg-color--lightest);
 }
 
-/* API reference: make generated signatures stand out as code. */
+/* ---- API reference ----------------------------------------------------- */
+
 .md-typeset .doc-signature,
 .md-typeset .doc-heading code {
   font-size: 0.78rem;
@@ -50,13 +117,35 @@
   font-weight: 600;
 }
 
-/* Display math gets breathing room. */
+/* ---- Definition lists (glossary) read like an entry index ------------- */
+
+.md-typeset dl dt {
+  font-weight: 600;
+}
+.md-typeset dl dd {
+  border-left: 2px solid var(--md-default-fg-color--lightest);
+  padding-left: 0.9rem;
+  margin-left: 0.1rem;
+}
+
+/* ---- Math and code polish --------------------------------------------- */
+
 .md-typeset .arithmatex {
   overflow-x: auto;
   overflow-y: hidden;
 }
-
-/* Inline code keeps its weight without shouting. */
 .md-typeset code {
   font-feature-settings: "kern", "liga" 0;
+}
+
+/* Mermaid diagrams sit centred with breathing room. */
+.md-typeset .mermaid {
+  margin: 1.4rem auto;
+  text-align: center;
+}
+
+/* Footnotes (references) in a slightly quieter tone. */
+.md-typeset .footnote {
+  font-size: 0.76rem;
+  color: var(--md-default-fg-color--light);
 }

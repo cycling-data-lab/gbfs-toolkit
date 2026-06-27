@@ -1,11 +1,39 @@
+<div class="hero" markdown>
+
 # gbfs-toolkit
 
-Research-grade ingestion and semantic quality audit for GBFS bike-share feeds.
+<p class="subtitle">Research-grade ingestion and semantic quality audit for GBFS bike-share feeds.</p>
 
-MobilityData's [`gbfs-validator`](https://github.com/MobilityData/gbfs-validator) checks that a
-feed is *syntactically* valid. `gbfs-toolkit` checks whether it is *semantically* trustworthy and
-analysis-ready, using the published A1–A7 quality taxonomy of Fossé and Pallares, and normalises
-feeds into a stable, version-independent data model that can be reused across studies.
+<p class="authors">Rohan Fossé<sup>1</sup> and Gaël Pallares<sup>2</sup></p>
+<p class="affiliation"><sup>1</sup> CESI Engineering School, Montpellier &nbsp;·&nbsp; <sup>2</sup> CESI LINEACT (EA 7527), Montpellier, France</p>
+
+<p class="badges">
+<a href="https://pypi.org/project/gbfs-toolkit/"><img alt="PyPI" src="https://img.shields.io/pypi/v/gbfs-toolkit?color=0d7d77&label=PyPI"></a>
+<a href="https://pypi.org/project/gbfs-toolkit/"><img alt="Python" src="https://img.shields.io/pypi/pyversions/gbfs-toolkit?color=0d7d77"></a>
+<a href="https://github.com/cycling-data-lab/gbfs-toolkit/actions/workflows/ci.yml"><img alt="CI" src="https://github.com/cycling-data-lab/gbfs-toolkit/actions/workflows/ci.yml/badge.svg"></a>
+<a href="https://github.com/cycling-data-lab/gbfs-toolkit/blob/main/LICENSE"><img alt="License" src="https://img.shields.io/badge/License-MIT-0d7d77"></a>
+</p>
+
+<p class="keywords">
+<span class="kw">GBFS</span>
+<span class="kw">bike-sharing</span>
+<span class="kw">shared mobility</span>
+<span class="kw">data quality</span>
+<span class="kw">semantic validation</span>
+<span class="kw">reproducibility</span>
+<span class="kw">open data</span>
+</p>
+
+</div>
+
+!!! abstract
+    `gbfs-toolkit` ingests GBFS bike-share feeds into a stable, version-independent data model and
+    audits their semantic quality with the A1–A7 taxonomy of Fossé and Pallares. MobilityData's
+    [`gbfs-validator`](https://github.com/MobilityData/gbfs-validator) checks that a feed is
+    *syntactically* valid. This toolkit checks whether it is *semantically* trustworthy and
+    analysis-ready, which is the part a study actually depends on. It consolidates ingestion,
+    cross-version normalisation, and the published quality-audit pipeline into one tested,
+    installable interface for reuse across shared-mobility research.
 
 <div class="grid cards" markdown>
 

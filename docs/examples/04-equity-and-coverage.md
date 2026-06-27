@@ -76,6 +76,17 @@ capacity Gini 0.34, top 10% of stations hold 21% of capacity
 occupancy Moran's I 0.27 (clustered, p=0.001)
 ```
 
+## Interpreting the output
+
+- **Capacity Gini** runs from 0 (every station equal) to 1 (capacity concentrated in a few hubs). The top-decile share tells the same story in plainer terms.
+- **Clark–Evans** below 1 indicates spatial clustering, near 1 a random pattern, and above 1 dispersion.
+- **Moran's I** above its expected value with a small p-value means low availability is geographically clustered right now, an equity signal worth acting on.
+
+## Related
+
+- API: `concentration_metrics`, `coverage_stats`, `morans_i`, `lorenz_curve` ([Statistics](../api.md#descriptive-and-spatial-statistics)).
+- Concepts: the [spatial-statistics limits](../methodology.md) and the [equity metrics](../glossary.md#computed-metrics).
+
 ## Full script
 
 ```python title="examples/04_equity_and_coverage.py"

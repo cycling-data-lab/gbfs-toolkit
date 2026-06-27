@@ -84,6 +84,17 @@ station_id
 ...
 ```
 
+## Interpreting the output
+
+- **Median uptime** sets how much of the panel you can trust. Here, stations below 80% uptime are dropped before any rhythm analysis.
+- **Typologies** name each station by the shape of its day, for example morning origin versus recreational. This is the qualitative payoff of a longitudinal panel.
+- **Turnover** ranks activity, but it is a lower bound (see the aliasing warning above), so report it as such rather than as a trip count.
+
+## Related
+
+- API: `build_availability_panel`, `coverage_report`, `cluster_diurnal_profiles`, `label_diurnal_typology`, `calculate_net_flow` ([Data lake](../api.md#longitudinal-data-lake), [Clustering](../api.md#station-clustering)).
+- Concepts: [aliasing](../glossary.md#methodological-concepts) and the local-time caveat in the [Methodology](../methodology.md).
+
 ## Full script
 
 ```python title="examples/03_analyze_history.py"
