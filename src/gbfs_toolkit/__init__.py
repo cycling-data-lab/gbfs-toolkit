@@ -17,6 +17,7 @@ Quick start
 
 from gbfs_toolkit import models
 from gbfs_toolkit.analysis import (
+    cyclical_time_features,
     ebikes,
     filter_vehicles,
     join_availability,
@@ -27,7 +28,7 @@ from gbfs_toolkit.analysis import (
     station_state,
 )
 from gbfs_toolkit.audit import audit_dynamic, audit_frames, audit_static, drop_flagged
-from gbfs_toolkit.catalog import filter_catalog, resolve, systems_catalog
+from gbfs_toolkit.catalog import filter_catalog, normalize_operator, resolve, systems_catalog
 from gbfs_toolkit.cluster import (
     cluster_diurnal_profiles,
     cluster_spatial,
@@ -96,6 +97,8 @@ from gbfs_toolkit.timeseries import (
     build_availability_panel,
     calculate_net_flow,
     coverage_report,
+    detect_frozen_stations,
+    flow_balance,
     generate_manifest,
     stockout_episodes,
     turnover,
@@ -133,6 +136,7 @@ __all__ = [
     "systems_catalog",
     "filter_catalog",
     "resolve",
+    "normalize_operator",
     # longitudinal (data lake)
     "append_to_parquet",
     "build_availability_panel",
@@ -141,6 +145,8 @@ __all__ = [
     "generate_manifest",
     "stockout_episodes",
     "turnover",
+    "flow_balance",
+    "detect_frozen_stations",
     # clustering ([cluster])
     "cluster_spatial",
     "cluster_spectral",
@@ -176,6 +182,7 @@ __all__ = [
     # analysis & geo
     "station_state",
     "occupancy",
+    "cyclical_time_features",
     "find_nearest_stations",
     "features_within",
     "stations_near",

@@ -5,6 +5,19 @@ All notable changes are documented here ([Keep a Changelog](https://keepachangel
 
 ## [Unreleased]
 
+### Added (distilled from the lab's research code)
+- **`detect_frozen_stations(panel)`** — flags a value stuck unchanged over an active window
+  while the feed stays fresh (dead sensor), distinct from staleness (D3) and stockouts. Seen
+  reimplemented across three dynamic-audit repos.
+- **`flow_balance(panel)`** — per-station inflow/outflow split + source↔sink balance ratio
+  (the "Keq" several notebooks computed by hand).
+- **`turnover(..., normalize="capacity")`** — capacity-normalised activity, comparable across
+  station sizes.
+- **`normalize_operator(name)`** — canonical operator brand from a system id/name
+  (`smovengo` → `Vélib' Métropole`); non-lossy. Lifted from the audit-catalogue's `detect_operator`.
+- **`cyclical_time_features(timestamps)`** — sin/cos calendar encoding (the single most
+  duplicated helper across the lab's repos).
+
 ### Added (ergonomic one-liners)
 - **`drop_flagged(stations)`** — audit and keep the clean subset in one call.
 - **`occupancy(availability)`** — the bikes/(bikes+docks) ratio, vectorised, NaN-safe on the

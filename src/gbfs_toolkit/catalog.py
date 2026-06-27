@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import io
 import logging
+import re
 import warnings
 from pathlib import Path
 
@@ -18,6 +19,50 @@ from gbfs_toolkit.errors import GBFSFetchError
 
 #: MobilityData's canonical registry of GBFS systems.
 DEFAULT_CATALOG_URL = "https://raw.githubusercontent.com/MobilityData/gbfs/master/systems.csv"
+
+#: Regex → canonical operator brand, applied to a lowercased system id / name.
+#: Order matters (first match wins). Non-lossy: an unmatched value is returned unchanged.
+OPERATOR_PATTERNS: list[tuple[str, str]] = [
+    (r"v[eé]lib|smovengo", "Vélib' Métropole"),
+    (r"jcdecaux|cyclocity", "JCDecaux"),
+    (r"\blime\b", "Lime"),
+    (r"\bdott\b", "Dott"),
+    (r"\btier\b", "TIER"),
+    (r"\bvoi\b", "Voi"),
+    (r"\bbird\b", "Bird"),
+    (r"\bpony\b", "Pony"),
+    (r"nextbike", "Nextbike"),
+    (r"donkey", "Donkey Republic"),
+    (r"citi\s?bike|\blyft\b|motivate", "Lyft / Motivate"),
+    (r"\bbixi\b", "BIXI"),
+    (r"divvy", "Divvy"),
+    (r"capital bikeshare|\bcabi\b", "Capital Bikeshare"),
+    (r"\bmobi\b", "Mobi"),
+    (r"ecobici", "Ecobici"),
+    (r"call a bike|callabike", "Call a Bike"),
+    (r"\bbcycle\b", "BCycle"),
+    (r"veturilo", "Veturilo"),
+    (r"\bspin\b", "Spin"),
+]
+
+
+def normalize_operator(value: str | None, *, default: str | None = None) -> str | None:
+    """Canonicalise an operator brand from a system id / name (``"smovengo"`` → ``"Vélib'
+    Métropole"``).
+
+    Pattern-matches against :data:`OPERATOR_PATTERNS` (case-insensitive). On no match returns
+    ``default`` if given, else the original value unchanged (non-lossy) — safe to apply across a
+    whole catalogue so only recognised brands get collapsed.
+    """
+    if value is None:
+        return default
+    s = str(value).lower()
+    for pattern, brand in OPERATOR_PATTERNS:
+        if re.search(pattern, s):
+            return brand
+    return default if default is not None else str(value)
+
+
 #: Local cache of the last successfully-downloaded catalogue (offline fallback).
 CACHE_PATH = Path.home() / ".cache" / "gbfs-toolkit" / "systems.csv"
 _log = logging.getLogger("gbfs_toolkit")

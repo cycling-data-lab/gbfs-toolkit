@@ -289,13 +289,23 @@ def stockout_episodes(
     return out.sort_values(["system_id", "station_id", "start"]).reset_index(drop=True)
 
 
-def turnover(panel: pd.DataFrame, *, freq: str = "1D") -> pd.DataFrame:
+def turnover(
+    panel: pd.DataFrame, *, freq: str = "1D", normalize: str | None = None
+) -> pd.DataFrame:
     """Per-station activity proxy — summed absolute net flow per period.
 
     A cheap, model-free measure of how busy a station is. It is a **lower bound**: by the
     aliasing argument in :func:`calculate_net_flow`, trips that cancel within a polling interval
     are invisible. Use it for relative comparison (which stations / days are busier), not as a
     trip count.
+
+    Parameters
+    ----------
+    freq : str, default "1D"
+        Aggregation bin (a pandas offset alias).
+    normalize : {None, "capacity"}
+        If ``"capacity"``, divide each station's turnover by its capacity (requires a
+        ``capacity`` column in ``panel``) — comparable across stations of different sizes.
 
     Returns
     -------
@@ -314,6 +324,107 @@ def turnover(panel: pd.DataFrame, *, freq: str = "1D") -> pd.DataFrame:
         .rename("turnover")
         .reset_index()
     )
+    if normalize == "capacity":
+        require_columns(flow, ["capacity"], what='turnover(normalize="capacity")')
+        caps = flow.groupby(["system_id", "station_id"])["capacity"].first()
+        out = out.merge(caps.rename("capacity"), on=["system_id", "station_id"])
+        out["turnover"] = out["turnover"] / out["capacity"].where(out["capacity"] > 0)
+        out = out.drop(columns="capacity")
+    return out
+
+
+def flow_balance(panel: pd.DataFrame) -> pd.DataFrame:
+    """Per-station inflow / outflow split and source↔sink balance.
+
+    Splits :func:`calculate_net_flow` into bikes gained (``inflow`` = Σ positive Δ) and lost
+    (``outflow`` = Σ |negative Δ|), with ``balance = outflow / inflow``: ``>1`` ⇒ a net
+    *source* (more departures than arrivals — a morning residential origin), ``<1`` ⇒ a net
+    *sink* (destination). Like turnover, these are lower bounds (intra-interval trips cancel).
+
+    Returns
+    -------
+    pandas.DataFrame
+        Indexed by ``(system_id, station_id)``: ``inflow``, ``outflow``, ``net``, ``balance``.
+    """
+    flow = calculate_net_flow(panel).dropna(subset=["net_flow"])
+    keys = ["system_id", "station_id"]
+    if flow.empty:
+        return pd.DataFrame(columns=["inflow", "outflow", "net", "balance"]).rename_axis(keys)
+    f = flow["net_flow"]
+    work = flow[keys].assign(_in=f.clip(lower=0), _out=(-f).clip(lower=0))
+    out = work.groupby(keys).agg(inflow=("_in", "sum"), outflow=("_out", "sum"))
+    out["net"] = out["inflow"] - out["outflow"]
+    out["balance"] = (out["outflow"] / out["inflow"].where(out["inflow"] > 0)).round(3)
+    return out
+
+
+def detect_frozen_stations(
+    panel: pd.DataFrame,
+    *,
+    value_col: str = "num_bikes_available",
+    min_run_hours: float = 6.0,
+    active_hours: tuple[int, int] | None = (6, 22),
+) -> pd.DataFrame:
+    """Flag "frozen" stations — a value stuck unchanged while the feed keeps updating.
+
+    Distinct from staleness (D3, where ``last_reported`` itself goes stale) and from a genuine
+    stockout: here the feed is fresh but ``value_col`` never moves, the signature of a dead
+    sensor or a station the operator forgot. Restricting to ``active_hours`` (local hour of
+    ``fetched_at`` as stored) avoids flagging the legitimate overnight flatline.
+
+    Parameters
+    ----------
+    value_col : str, default "num_bikes_available"
+        The column expected to vary.
+    min_run_hours : float, default 6
+        Minimum span of an unchanged run to call a station frozen.
+    active_hours : (int, int) or None, default (6, 22)
+        Keep only observations in ``[lo, hi)`` local hours; ``None`` to use all.
+
+    Returns
+    -------
+    pandas.DataFrame
+        Indexed by ``(system_id, station_id)``: ``n_obs``, ``longest_const_run_hours``,
+        ``frozen_value``, ``is_frozen``.
+    """
+    df = panel.reset_index() if isinstance(panel.index, pd.MultiIndex) else panel.copy()
+    require_columns(
+        df, ["system_id", "station_id", "fetched_at", value_col], what="detect_frozen_stations"
+    )
+    df = df[["system_id", "station_id", "fetched_at", value_col]].copy()
+    df["fetched_at"] = pd.to_datetime(df["fetched_at"])
+    if active_hours is not None:
+        lo, hi = active_hours
+        hour = df["fetched_at"].dt.hour
+        df = df[(hour >= lo) & (hour < hi)]
+    keys = ["system_id", "station_id"]
+    if df.empty:
+        return pd.DataFrame(
+            columns=["n_obs", "longest_const_run_hours", "frozen_value", "is_frozen"]
+        ).rename_axis(keys)
+    df = df.sort_values([*keys, "fetched_at"])
+    val = pd.to_numeric(df[value_col], errors="coerce")
+    tmp = df[keys].copy()
+    tmp["_v"] = val.to_numpy()
+    tmp["_t"] = df["fetched_at"].to_numpy()
+    changed = tmp["_v"] != tmp.groupby(keys, sort=False)["_v"].shift()
+    tmp["_run"] = changed.cumsum()
+
+    runs = (
+        tmp.groupby([*keys, "_run"], sort=False)
+        .agg(start=("_t", "min"), end=("_t", "max"), value=("_v", "first"))
+        .reset_index()
+    )
+    runs["hours"] = (runs["end"] - runs["start"]).dt.total_seconds() / 3600
+    longest = runs.loc[runs.groupby(keys)["hours"].idxmax()].set_index(keys)
+    out = pd.DataFrame(
+        {
+            "n_obs": tmp.groupby(keys).size(),
+            "longest_const_run_hours": longest["hours"].round(2),
+            "frozen_value": longest["value"],
+        }
+    )
+    out["is_frozen"] = out["longest_const_run_hours"] >= min_run_hours
     return out
 
 

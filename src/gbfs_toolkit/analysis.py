@@ -48,6 +48,50 @@ def join_availability(info: pd.DataFrame, status: pd.DataFrame) -> pd.DataFrame:
     return merged
 
 
+#: Period of each cyclic calendar field, for sin/cos encoding.
+_CYCLE_PERIODS = {
+    "minute": 60,
+    "hour": 24,
+    "dayofweek": 7,
+    "day": 31,
+    "month": 12,
+    "dayofyear": 366,
+}
+
+
+def cyclical_time_features(
+    timestamps: object, *, fields: tuple[str, ...] = ("hour", "dayofweek", "month")
+) -> pd.DataFrame:
+    """Encode calendar fields as (sin, cos) pairs — the one everyone re-implements.
+
+    Periodic time variables (hour-of-day, day-of-week, month) are discontinuous as raw integers
+    (23:00 is adjacent to 00:00 but ``23`` is far from ``0``); sin/cos on the circle fixes that.
+    Pass any datetime-like (Series / Index / array); returns two columns per field.
+
+    Parameters
+    ----------
+    fields : tuple of str
+        Any of ``minute, hour, dayofweek, day, month, dayofyear``.
+
+    Returns
+    -------
+    pandas.DataFrame
+        ``{field}_sin`` / ``{field}_cos`` per requested field, aligned to the input order.
+    """
+    ts = pd.to_datetime(
+        pd.Series(list(timestamps) if not hasattr(timestamps, "dt") else timestamps)
+    )
+    ts = ts.reset_index(drop=True)
+    out: dict[str, np.ndarray] = {}
+    for f in fields:
+        if f not in _CYCLE_PERIODS:
+            raise ValueError(f"unknown field {f!r}; choose from {sorted(_CYCLE_PERIODS)}")
+        angle = 2 * np.pi * getattr(ts.dt, f).to_numpy() / _CYCLE_PERIODS[f]
+        out[f"{f}_sin"] = np.sin(angle)
+        out[f"{f}_cos"] = np.cos(angle)
+    return pd.DataFrame(out)
+
+
 def occupancy(availability: pd.DataFrame) -> pd.Series:
     """Occupancy ratio — bikes / (bikes + docks) per station.
 
