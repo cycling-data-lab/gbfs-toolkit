@@ -14,10 +14,12 @@ from typing import Any
 import pandas as pd
 
 from gbfs_toolkit.models import (
+    ALERT_COLUMNS,
     PRICING_PLAN_COLUMNS,
     STATION_INFO_COLUMNS,
     STATION_STATUS_COLUMNS,
     STATION_VEHICLE_COUNTS_COLUMNS,
+    SYSTEM_REGION_COLUMNS,
     VEHICLE_STATUS_COLUMNS,
     VEHICLE_TYPE_COLUMNS,
 )
@@ -287,6 +289,57 @@ def to_canonical_pricing_plans(raw: dict, *, system_id: str) -> pd.DataFrame:
     df = pd.DataFrame(rows, columns=PRICING_PLAN_COLUMNS)
     df["price"] = pd.to_numeric(df["price"], errors="coerce")
     df["is_taxable"] = df["is_taxable"].astype("boolean")
+    return df
+
+
+def to_canonical_system_regions(raw: dict, *, system_id: str) -> pd.DataFrame:
+    """Parse ``system_regions.json`` into a canonical ``region_id → name`` lookup.
+
+    Resolves the ``region_id`` foreign key carried on stations, so large multi-region
+    networks can be subset or aggregated by region. Returns
+    :data:`~gbfs_toolkit.models.SYSTEM_REGION_COLUMNS`.
+    """
+    data = raw.get("data", raw)
+    regions = data.get("regions", []) if isinstance(data, dict) else []
+    rows = [
+        {
+            "system_id": system_id,
+            "region_id": str(r.get("region_id")),
+            "name": _name(r.get("name")),
+        }
+        for r in regions
+    ]
+    return pd.DataFrame(rows, columns=SYSTEM_REGION_COLUMNS)
+
+
+def to_canonical_alerts(raw: dict, *, system_id: str) -> pd.DataFrame:
+    """Parse ``system_alerts.json`` into a canonical alerts frame.
+
+    Service disruptions (strikes, closures, weather) that explain anomalies in the data.
+    Each alert's first time window is used for ``start``/``end`` (tz-aware UTC, NaT if
+    open-ended). Returns :data:`~gbfs_toolkit.models.ALERT_COLUMNS`.
+    """
+    data = raw.get("data", raw)
+    alerts = data.get("alerts", []) if isinstance(data, dict) else []
+    rows = []
+    for a in alerts:
+        times = a.get("times") or []
+        first = times[0] if times and isinstance(times[0], dict) else {}
+        rows.append(
+            {
+                "system_id": system_id,
+                "alert_id": str(a.get("alert_id")),
+                "type": a.get("type"),
+                "summary": _name(a.get("summary")),
+                "description": _name(a.get("description")),
+                "start": _utc(first.get("start")),
+                "end": _utc(first.get("end")),
+                "last_updated": _utc(a.get("last_updated")),
+            }
+        )
+    df = pd.DataFrame(rows, columns=ALERT_COLUMNS)
+    for col in ("start", "end", "last_updated"):
+        df[col] = pd.to_datetime(df[col], utc=True)
     return df
 
 

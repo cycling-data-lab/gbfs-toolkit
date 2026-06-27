@@ -3,6 +3,32 @@
 All notable changes are documented here ([Keep a Changelog](https://keepachangelog.com),
 [SemVer](https://semver.org)).
 
+## [0.8.0] — v1.0-readiness pass (provenance, robustness, methodology)
+
+### Added
+- **Provenance / citability** (`timeseries`): `coverage_report(panel, expected_freq)` quantifies
+  per-station uptime and longest gap (missingness without imputation); `generate_manifest(lake_dir)`
+  emits a SHA-256-per-partition manifest + dataset summary for Zenodo/Dataverse deposits.
+- **Polite networking** (`fetch`): `build_session()` (pooled `requests.Session` with
+  retry/backoff on 429/5xx — now the default in `fetch_multiple`); `fetch_feed_json(url, etag=...,
+  last_modified=...)` does conditional GETs and raises `GBFSNotModified` on HTTP 304; structured
+  logging under the `gbfs_toolkit` logger.
+- **Exception hierarchy** (`errors`): `GBFSError` base with `GBFSFetchError`, `GBFSDiscoveryError`
+  (also a `KeyError` for back-compat), `GBFSValidationError`, `GBFSNotModified`. `SchemaError` now
+  subclasses `GBFSValidationError` (and still `ValueError`).
+- **New canonical endpoints**: `to_canonical_system_regions` (region lookup) and
+  `to_canonical_alerts` (`system_alerts` — disruptions that explain data anomalies), plus
+  `GBFSFeed.system_regions()` / `.alerts()`.
+- **Catalogue offline fallback**: `systems_catalog` caches successful downloads and falls back to
+  the cached copy (with a warning) when the registry is unreachable.
+- Documented methodology limits: the **aliasing / polling-Nyquist** caveat on `calculate_net_flow`
+  (net flow is a lower bound on activity) and a prominent **edge-effect** warning on `ripley_k`.
+- e2e round-trip test (raw → canonical → parquet → panel → net_flow + audit_frames + coverage) and
+  CLI tests; coverage 83% → 87%.
+
+### Changed
+- Version `0.1.0` → `0.8.0`; development status Alpha → Beta.
+
 ## [Unreleased]
 
 ### Changed / Removed (pre-1.0 consolidation — second peer-review pass)

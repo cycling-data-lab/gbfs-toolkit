@@ -247,7 +247,14 @@ def ripley_k(info: pd.DataFrame, radii: object, *, area_km2: float | None = None
     For each radius, ``K(r)`` is proportional to the mean number of other stations within
     ``r``; ``L(r) = sqrt(K(r)/π) − r`` linearises it: ``L(r) > 0`` ⇒ clustering at scale ``r``,
     ``< 0`` ⇒ dispersion. Density uses the convex hull by default, or ``area_km2`` (e.g. the
-    geofencing service area) if given. No edge correction — bias grows near the boundary.
+    geofencing service area) if given.
+
+    .. warning::
+       **No edge correction.** This estimator has no isotropic/translation boundary correction,
+       so it is biased downward at radii approaching the study-area size and is unreliable for
+       irregular real-world boundaries (coastlines, rivers, city limits). Use it for *relative*
+       comparison at small radii, and prefer the boundary-robust Clark–Evans index in
+       :func:`coverage_stats` for an overall dispersion verdict.
 
     Parameters
     ----------

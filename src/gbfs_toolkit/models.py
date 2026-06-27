@@ -11,6 +11,8 @@ from __future__ import annotations
 
 import pandas as pd
 
+from gbfs_toolkit.errors import GBFSValidationError
+
 #: Canonical station-information columns (static inventory of a docked system).
 STATION_INFO_COLUMNS: list[str] = [
     "system_id",
@@ -106,6 +108,27 @@ PRICING_PLAN_COLUMNS: list[str] = [
     "description",
 ]
 
+#: Canonical region lookup (``system_regions.json``) — resolves the ``region_id`` foreign key
+#: carried on stations, so large multi-region networks can be subset/aggregated by region name.
+SYSTEM_REGION_COLUMNS: list[str] = [
+    "system_id",
+    "region_id",
+    "name",
+]
+
+#: Canonical service alerts (``system_alerts.json``) — disruptions that explain anomalies in
+#: the data (a strike, a closure, a weather event). ``start``/``end`` are tz-aware UTC.
+ALERT_COLUMNS: list[str] = [
+    "system_id",
+    "alert_id",
+    "type",  # SYSTEM_CLOSURE / STATION_CLOSURE / STATION_MOVE / OTHER …
+    "summary",
+    "description",
+    "start",  # UTC datetime (NaT if open-ended)
+    "end",  # UTC datetime (NaT if open-ended)
+    "last_updated",  # UTC datetime
+]
+
 #: Station semantics recognised by the audit (drives A1/A3).
 STATION_TYPES: tuple[str, ...] = ("docked_bike", "free_floating", "carsharing")
 
@@ -160,8 +183,12 @@ A7_RATE_THRESHOLD = 0.50
 A7_MIN_STATIONS = 20
 
 
-class SchemaError(ValueError):
-    """Raised when a frame does not satisfy the canonical schema."""
+class SchemaError(GBFSValidationError, ValueError):
+    """Raised when a frame does not satisfy the canonical schema.
+
+    Subclasses both :class:`~gbfs_toolkit.errors.GBFSValidationError` (so
+    ``except GBFSError`` catches it) and :class:`ValueError` (backward compatibility).
+    """
 
 
 def require_columns(df: pd.DataFrame, columns: list[str], *, what: str) -> None:

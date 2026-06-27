@@ -15,6 +15,7 @@ Workflow
 
 from __future__ import annotations
 
+import hashlib
 import uuid
 from pathlib import Path
 from typing import Any
@@ -186,6 +187,13 @@ def calculate_net_flow(panel: pd.DataFrame) -> pd.DataFrame:
     cannot separate an internal van move from coincident organic trips. Apply your own,
     explicitly-stated heuristic downstream rather than trusting a built-in label.
 
+    .. warning::
+       **Aliasing (the polling Nyquist limit).** ``net_flow`` is the *net* change between two
+       polls, so any activity that cancels within a polling interval is invisible: a bike
+       rented and returned to the same station between snapshots yields Δ=0. Treat the summed
+       absolute flow as a **lower bound** on true activity, and poll well below the timescale
+       of the dynamics you want to measure.
+
     Accepts a panel from :func:`build_availability_panel` (MultiIndexed) or a flat frame;
     returns a flat frame with ``system_id, station_id, fetched_at`` columns.
     """
@@ -198,3 +206,103 @@ def calculate_net_flow(panel: pd.DataFrame) -> pd.DataFrame:
         unchanged = grp["last_reported"].diff().eq(pd.Timedelta(0))
         df.loc[unchanged, "net_flow"] = np.nan
     return df.reset_index(drop=True)
+
+
+def coverage_report(panel: pd.DataFrame, *, expected_freq: str = "5min") -> pd.DataFrame:
+    """Per-station longitudinal coverage — quantify missingness *before* you model.
+
+    Operators go offline and scrapers crash; ``calculate_net_flow`` / clustering silently
+    assume continuity. This reports how complete each station's series is, against the
+    system-wide observation window (so a station that dropped out shows low uptime).
+
+    Parameters
+    ----------
+    panel : pandas.DataFrame
+        A panel from :func:`build_availability_panel` (MultiIndexed) or a flat frame with
+        ``system_id, station_id, fetched_at``.
+    expected_freq : str, default "5min"
+        Your intended polling cadence (a pandas offset alias).
+
+    Returns
+    -------
+    pandas.DataFrame
+        Indexed by ``(system_id, station_id)``: ``expected_snapshots``, ``actual_snapshots``,
+        ``uptime_pct``, ``longest_gap_minutes``.
+    """
+    df = panel.reset_index() if isinstance(panel.index, pd.MultiIndex) else panel.copy()
+    df = df[["system_id", "station_id", "fetched_at"]].copy()
+    df["fetched_at"] = pd.to_datetime(df["fetched_at"])
+    step = pd.Timedelta(expected_freq)
+
+    rows = []
+    for sid, sysdf in df.groupby("system_id", sort=False):
+        t0, t1 = sysdf["fetched_at"].min(), sysdf["fetched_at"].max()
+        expected = int((t1 - t0) / step) + 1 if t1 > t0 else 1
+        for stid, g in sysdf.groupby("station_id", sort=False):
+            ts = g["fetched_at"].drop_duplicates().sort_values()
+            actual = int(len(ts))
+            gaps = ts.diff().dropna()
+            longest = gaps.max().total_seconds() / 60 if len(gaps) else 0.0
+            rows.append(
+                {
+                    "system_id": sid,
+                    "station_id": stid,
+                    "expected_snapshots": expected,
+                    "actual_snapshots": actual,
+                    "uptime_pct": round(min(1.0, actual / expected) * 100, 1),
+                    "longest_gap_minutes": round(float(longest), 1),
+                }
+            )
+    return pd.DataFrame(rows).set_index(["system_id", "station_id"])
+
+
+def generate_manifest(lake_dir: str | Path, *, chunk_size: int = 1 << 20) -> dict:
+    """A cryptographic manifest of a Parquet lake — for citable, reproducible datasets.
+
+    Walks every ``*.parquet`` partition file, records its SHA-256 and size, and summarises
+    the dataset (systems, date span, row count). Drop the returned dict next to a Zenodo /
+    Dataverse deposit so a reviewer can verify byte-for-byte what was analysed.
+
+    Returns
+    -------
+    dict
+        ``gbfs_toolkit_version``, ``generated_at`` (UTC ISO), ``n_files``, ``total_bytes``,
+        ``total_rows``, ``system_ids``, ``min_date``, ``max_date``, and ``files`` (a sorted
+        list of ``{path, sha256, bytes}`` with paths relative to ``lake_dir``).
+    """
+    from gbfs_toolkit import __version__
+
+    base = Path(lake_dir)
+    files = []
+    for p in sorted(base.rglob("*.parquet")):
+        h = hashlib.sha256()
+        with p.open("rb") as fh:
+            for block in iter(lambda fh=fh: fh.read(chunk_size), b""):
+                h.update(block)
+        files.append(
+            {"path": str(p.relative_to(base)), "sha256": h.hexdigest(), "bytes": p.stat().st_size}
+        )
+
+    manifest: dict[str, Any] = {
+        "gbfs_toolkit_version": __version__,
+        "generated_at": pd.Timestamp.now(tz="UTC").isoformat(),
+        "n_files": len(files),
+        "total_bytes": sum(f["bytes"] for f in files),
+        "files": files,
+    }
+    try:  # dataset-level summary (best-effort; needs a readable dataset)
+        ds = _require_pyarrow()
+        dataset = ds.dataset(str(base), format="parquet", partitioning="hive")
+        names = dataset.schema.names
+        manifest["total_rows"] = int(dataset.count_rows())
+        cols = [c for c in ("system_id", "date") if c in names]
+        if cols:
+            meta = dataset.to_table(columns=cols).to_pandas()
+            if "system_id" in meta:
+                manifest["system_ids"] = sorted(meta["system_id"].dropna().unique().tolist())
+            if "date" in meta and len(meta):
+                manifest["min_date"] = str(meta["date"].min())
+                manifest["max_date"] = str(meta["date"].max())
+    except Exception:  # noqa: BLE001 — summary is best-effort; the hashes are the point
+        pass
+    return manifest

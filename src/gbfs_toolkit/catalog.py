@@ -8,23 +8,44 @@ system's ``auto_discovery_url`` (the ``gbfs.json`` entry point).
 from __future__ import annotations
 
 import io
+import logging
+import warnings
+from pathlib import Path
 
 import pandas as pd
 
+from gbfs_toolkit.errors import GBFSFetchError
+
 #: MobilityData's canonical registry of GBFS systems.
 DEFAULT_CATALOG_URL = "https://raw.githubusercontent.com/MobilityData/gbfs/master/systems.csv"
+#: Local cache of the last successfully-downloaded catalogue (offline fallback).
+CACHE_PATH = Path.home() / ".cache" / "gbfs-toolkit" / "systems.csv"
+_log = logging.getLogger("gbfs_toolkit")
 
 
-def systems_catalog(source: str | None = None, *, timeout: int = 30) -> pd.DataFrame:
-    """Load the MobilityData systems catalogue.
+def _normalize_columns(df: pd.DataFrame) -> pd.DataFrame:
+    df.columns = [c.strip().lower().replace(" ", "_") for c in df.columns]
+    return df
+
+
+def systems_catalog(
+    source: str | None = None, *, timeout: int = 30, use_cache: bool = True
+) -> pd.DataFrame:
+    """Load the MobilityData systems catalogue, with an offline cache fallback.
+
+    On a successful download the catalogue is cached to :data:`CACHE_PATH`; if a later
+    download fails (network down, registry outage) the cached copy is used with a warning, so
+    a long-running study never breaks on a transient outage.
 
     Parameters
     ----------
     source : str, optional
-        URL or local path to a ``systems.csv``. Defaults to
-        :data:`DEFAULT_CATALOG_URL` (requires the optional ``[fetch]`` extra).
+        URL or local path to a ``systems.csv``. Defaults to :data:`DEFAULT_CATALOG_URL`
+        (requires the optional ``[fetch]`` extra).
     timeout : int, default 30
         HTTP timeout in seconds (only when fetching a URL).
+    use_cache : bool, default True
+        Cache successful downloads and fall back to the cache on failure.
 
     Returns
     -------
@@ -32,16 +53,30 @@ def systems_catalog(source: str | None = None, *, timeout: int = 30) -> pd.DataF
         The catalogue with normalised lowercase column names.
     """
     source = source or DEFAULT_CATALOG_URL
-    if source.startswith(("http://", "https://")):
-        import requests
+    if not source.startswith(("http://", "https://")):
+        return _normalize_columns(pd.read_csv(source))
 
-        resp = requests.get(source, timeout=timeout)
+    import requests
+
+    try:
+        resp = requests.get(source, timeout=timeout, headers={"User-Agent": "gbfs-toolkit"})
         resp.raise_for_status()
-        df = pd.read_csv(io.StringIO(resp.text))
-    else:
-        df = pd.read_csv(source)
-    df.columns = [c.strip().lower().replace(" ", "_") for c in df.columns]
-    return df
+        df = _normalize_columns(pd.read_csv(io.StringIO(resp.text)))
+        if use_cache:
+            try:
+                CACHE_PATH.parent.mkdir(parents=True, exist_ok=True)
+                CACHE_PATH.write_text(resp.text, encoding="utf-8")
+            except OSError:  # pragma: no cover - caching is best-effort
+                _log.debug("could not write catalogue cache to %s", CACHE_PATH)
+        return df
+    except (requests.RequestException, pd.errors.ParserError) as e:
+        if use_cache and CACHE_PATH.exists():
+            warnings.warn(
+                f"systems catalogue download failed ({e}); using cached copy at {CACHE_PATH}.",
+                stacklevel=2,
+            )
+            return _normalize_columns(pd.read_csv(CACHE_PATH))
+        raise GBFSFetchError(f"failed to load systems catalogue from {source}: {e}") from e
 
 
 def filter_catalog(

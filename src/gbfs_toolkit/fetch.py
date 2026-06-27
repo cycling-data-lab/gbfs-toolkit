@@ -15,12 +15,15 @@ use, pass a ``get_json`` callable that maps a URL to an already-parsed dict.
 
 from __future__ import annotations
 
+import logging
+from collections import namedtuple
 from collections.abc import Callable
 from typing import Any
 
 import pandas as pd
 
 from gbfs_toolkit.audit import audit_frames
+from gbfs_toolkit.errors import GBFSDiscoveryError, GBFSFetchError, GBFSNotModified
 from gbfs_toolkit.normalize import (
     to_canonical_station_info,
     to_canonical_station_status,
@@ -30,8 +33,12 @@ from gbfs_toolkit.normalize import (
 )
 
 _USER_AGENT = "gbfs-toolkit (+https://github.com/cycling-data-lab/gbfs-toolkit)"
+_log = logging.getLogger("gbfs_toolkit")
 
 JsonGetter = Callable[[str], dict]
+
+#: Result of a conditional fetch: parsed ``data`` plus the caching headers to replay next time.
+FeedResponse = namedtuple("FeedResponse", ["data", "etag", "last_modified"])
 
 # Canonical feed names, with cross-version fallbacks.
 _STATION_INFO = ("station_information",)
@@ -40,35 +47,105 @@ _VEHICLES = ("vehicle_status", "free_bike_status")  # v3, v2
 _VEHICLE_TYPES = ("vehicle_types",)
 _SYSTEM_INFO = ("system_information",)
 _GEOFENCING = ("geofencing_zones",)
+_SYSTEM_REGIONS = ("system_regions",)
+_ALERTS = ("system_alerts",)
 
 
-def _get_json(url: str, *, timeout: int = 30) -> dict:
-    """Fetch and parse a JSON document over HTTP (requires the ``[fetch]`` extra)."""
+def _require_requests():
     try:
         import requests
+
+        return requests
     except ImportError as e:  # pragma: no cover
         raise ImportError(
             "Fetching requires `requests`. Install with `pip install gbfs-toolkit[fetch]`, "
             "or pass a `get_json` callable for offline use."
         ) from e
-    resp = requests.get(url, timeout=timeout, headers={"User-Agent": _USER_AGENT})
-    resp.raise_for_status()
-    return resp.json()
+
+
+def build_session(
+    *,
+    total: int = 3,
+    backoff_factor: float = 0.5,
+    status_forcelist: tuple[int, ...] = (429, 500, 502, 503, 504),
+) -> Any:
+    """A pooled ``requests.Session`` with polite retry/backoff — the right default for scraping.
+
+    Transient 429/5xx responses from operator API gateways are routine; this retries them with
+    exponential backoff instead of failing the whole poll. Reusing one session across systems
+    also pools TCP connections (avoids port exhaustion). Requires the ``[fetch]`` extra.
+    """
+    requests = _require_requests()
+    from requests.adapters import HTTPAdapter
+    from urllib3.util import Retry
+
+    session = requests.Session()
+    retry = Retry(
+        total=total,
+        backoff_factor=backoff_factor,
+        status_forcelist=list(status_forcelist),
+        allowed_methods=frozenset({"GET", "HEAD"}),
+        raise_on_status=False,
+    )
+    adapter = HTTPAdapter(max_retries=retry)
+    session.mount("http://", adapter)
+    session.mount("https://", adapter)
+    session.headers.update({"User-Agent": _USER_AGENT})
+    return session
+
+
+def _get_json(url: str, *, timeout: int = 30, session: Any = None) -> dict:
+    """Fetch and parse a JSON document over HTTP (requires the ``[fetch]`` extra)."""
+    requests = _require_requests()
+    getter = session if session is not None else requests
+    try:
+        resp = getter.get(url, timeout=timeout, headers={"User-Agent": _USER_AGENT})
+        resp.raise_for_status()
+        return resp.json()
+    except requests.RequestException as e:
+        raise GBFSFetchError(f"failed to fetch {url}: {e}") from e
 
 
 def _session_getter(session: Any, *, timeout: int = 30) -> JsonGetter:
-    """A ``url -> dict`` getter bound to a ``requests.Session`` (connection reuse).
-
-    Sharing one pooled session across many systems avoids opening/closing a TCP
-    connection per request — essential when polling dozens of feeds on a schedule.
-    """
+    """A ``url -> dict`` getter bound to a ``requests.Session`` (connection reuse)."""
 
     def _get(url: str) -> dict:
-        resp = session.get(url, timeout=timeout, headers={"User-Agent": _USER_AGENT})
-        resp.raise_for_status()
-        return resp.json()
+        return _get_json(url, timeout=timeout, session=session)
 
     return _get
+
+
+def fetch_feed_json(
+    url: str,
+    *,
+    session: Any = None,
+    etag: str | None = None,
+    last_modified: str | None = None,
+    timeout: int = 30,
+) -> FeedResponse:
+    """Conditionally fetch a feed, honouring HTTP caching — the polite way to poll.
+
+    Pass the ``etag`` / ``last_modified`` returned by the previous call; if the server replies
+    **304 Not Modified**, this raises :class:`~gbfs_toolkit.errors.GBFSNotModified` so your
+    scraper can skip re-ingesting an unchanged snapshot (saving bandwidth and avoiding an
+    IP ban). Otherwise returns a :data:`FeedResponse` ``(data, etag, last_modified)`` to store
+    for next time. Requires the ``[fetch]`` extra.
+    """
+    requests = _require_requests()
+    headers = {"User-Agent": _USER_AGENT}
+    if etag:
+        headers["If-None-Match"] = etag
+    if last_modified:
+        headers["If-Modified-Since"] = last_modified
+    getter = session if session is not None else requests
+    try:
+        resp = getter.get(url, timeout=timeout, headers=headers)
+    except requests.RequestException as e:
+        raise GBFSFetchError(f"failed to fetch {url}: {e}") from e
+    if resp.status_code == 304:
+        raise GBFSNotModified(url)
+    resp.raise_for_status()
+    return FeedResponse(resp.json(), resp.headers.get("ETag"), resp.headers.get("Last-Modified"))
 
 
 def _utc_ts(value: Any) -> pd.Timestamp:
@@ -208,7 +285,9 @@ class GBFSFeed:
     # -- internals ----------------------------------------------------------
     def _discover(self) -> None:
         if self.gbfs_url is None:
-            raise ValueError("no gbfs_url set; use GBFSFeed.from_url(...) or from_system_id(...)")
+            raise GBFSDiscoveryError(
+                "no gbfs_url set; use GBFSFeed.from_url(...) or from_system_id(...)"
+            )
         self._doc = self._get_json(self.gbfs_url)
         self._feeds, self._version = parse_discovery(self._doc, self._language)
 
@@ -216,7 +295,7 @@ class GBFSFeed:
         feeds = self.feeds
         name = next((n for n in names if n in feeds), None)
         if name is None:
-            raise KeyError(f"none of {names} present; available: {sorted(feeds)}")
+            raise GBFSDiscoveryError(f"none of {names} present; available: {sorted(feeds)}")
         if name not in self._raw_cache:
             self._raw_cache[name] = self._get_json(feeds[name])
         return self._raw_cache[name]
@@ -255,6 +334,18 @@ class GBFSFeed:
         return to_canonical_geofencing(
             self._raw(_GEOFENCING), system_id=self.system_id, gbfs_version=self.version
         )
+
+    def system_regions(self) -> pd.DataFrame:
+        """Canonical ``region_id → name`` lookup (raises if the feed has no ``system_regions``)."""
+        from gbfs_toolkit.normalize import to_canonical_system_regions
+
+        return to_canonical_system_regions(self._raw(_SYSTEM_REGIONS), system_id=self.system_id)
+
+    def alerts(self) -> pd.DataFrame:
+        """Canonical service alerts (raises if the feed has no ``system_alerts``)."""
+        from gbfs_toolkit.normalize import to_canonical_alerts
+
+        return to_canonical_alerts(self._raw(_ALERTS), system_id=self.system_id)
 
     def system_information(self) -> dict:
         """System metadata (name, **timezone**, language, operator), cached."""
@@ -381,7 +472,9 @@ def fetch_multiple(
     from gbfs_toolkit.catalog import systems_catalog
 
     cat = catalog if catalog is not None else systems_catalog()
-    if session is not None and "get_json" not in kwargs:
+    if "get_json" not in kwargs:
+        # Default to a pooled, retry/backoff session so one flaky feed never sinks the batch.
+        session = session if session is not None else build_session()
         kwargs = {**kwargs, "get_json": _session_getter(session, timeout=kwargs.get("timeout", 30))}
 
     def _open(sid: str) -> GBFSFeed:

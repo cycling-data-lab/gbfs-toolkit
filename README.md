@@ -214,6 +214,21 @@ convex hull of stations. `to_canonical_geofencing` parses `geofencing_zones.json
 point-in-zone spatial join, and `zone_area_km2` reprojects to an equal-area CRS so density is
 metric and latitude-comparable. The full per-vehicle-type `rules` list is preserved.
 
+## Polite scraping & provenance (research-grade)
+
+```python
+session = gb.build_session()                 # pooled, retry/backoff on 429/5xx (default in fetch_multiple)
+resp = gb.fetch_feed_json(url, etag=prev_etag)   # conditional GET; raises GBFSNotModified on HTTP 304
+...
+gb.coverage_report(panel, expected_freq="5min")  # per-station uptime / longest gap (no imputation)
+gb.generate_manifest("lake/")                # SHA-256 per partition + summary → cite on Zenodo
+```
+
+Built for scrapers that run for months: retries/backoff, conditional GETs (skip unchanged
+snapshots), an offline catalogue cache, a `GBFSError` exception hierarchy, and provenance tools
+so a dataset is **citable and verifiable**. Missing data stays missing — `coverage_report`
+quantifies it rather than imputing.
+
 ## Roadmap
 
 - **v0.1** — canonical model, catalogue discovery, cross-version normalisation,

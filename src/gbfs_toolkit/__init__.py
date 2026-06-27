@@ -26,10 +26,20 @@ from gbfs_toolkit.cluster import (
     diurnal_profiles,
     label_diurnal_typology,
 )
+from gbfs_toolkit.errors import (
+    GBFSDiscoveryError,
+    GBFSError,
+    GBFSFetchError,
+    GBFSNotModified,
+    GBFSValidationError,
+)
 from gbfs_toolkit.fetch import (
+    FeedResponse,
     GBFSFeed,
     audit_feed,
     availability,
+    build_session,
+    fetch_feed_json,
     fetch_multiple,
     parse_discovery,
 )
@@ -49,11 +59,13 @@ from gbfs_toolkit.geofencing import (
 from gbfs_toolkit.models import AUDIT_FLAGS, RULES, SchemaError
 from gbfs_toolkit.multimodal import link_transit_stops
 from gbfs_toolkit.normalize import (
+    to_canonical_alerts,
     to_canonical_pricing_plans,
     to_canonical_station_info,
     to_canonical_station_status,
     to_canonical_station_vehicle_counts,
     to_canonical_system_information,
+    to_canonical_system_regions,
     to_canonical_vehicle_types,
     to_canonical_vehicles,
 )
@@ -72,9 +84,11 @@ from gbfs_toolkit.timeseries import (
     append_to_parquet,
     build_availability_panel,
     calculate_net_flow,
+    coverage_report,
+    generate_manifest,
 )
 
-__version__ = "0.1.0"
+__version__ = "0.8.0"
 
 __all__ = [
     # audit (the flagship)
@@ -87,6 +101,9 @@ __all__ = [
     "availability",
     "join_availability",
     "fetch_multiple",
+    "fetch_feed_json",
+    "build_session",
+    "FeedResponse",
     "parse_discovery",
     # normalise
     "to_canonical_station_info",
@@ -96,6 +113,8 @@ __all__ = [
     "to_canonical_vehicle_types",
     "to_canonical_pricing_plans",
     "to_canonical_system_information",
+    "to_canonical_system_regions",
+    "to_canonical_alerts",
     # catalogue
     "systems_catalog",
     "filter_catalog",
@@ -104,6 +123,8 @@ __all__ = [
     "append_to_parquet",
     "build_availability_panel",
     "calculate_net_flow",
+    "coverage_report",
+    "generate_manifest",
     # clustering ([cluster])
     "cluster_spatial",
     "cluster_spectral",
@@ -136,6 +157,12 @@ __all__ = [
     "haversine_m",
     "GeoKDTree",
     "to_gdf",
+    # errors
+    "GBFSError",
+    "GBFSFetchError",
+    "GBFSDiscoveryError",
+    "GBFSValidationError",
+    "GBFSNotModified",
     # meta
     "models",
     "RULES",
