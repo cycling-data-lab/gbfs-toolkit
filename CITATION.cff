@@ -1,0 +1,45 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it (and the accompanying dataset paper)."
+title: "gbfs-toolkit: research-grade ingestion and semantic quality audit for GBFS feeds"
+type: software
+version: "0.1.0"
+date-released: "2026-06-27"
+authors:
+  - family-names: "Fossé"
+    given-names: "Rohan"
+    orcid: "https://orcid.org/0009-0002-2195-0198"
+    affiliation: "CESI Engineering School, Montpellier, France"
+    email: "rfosse@cesi.fr"
+  - family-names: "Pallares"
+    given-names: "Gaël"
+    orcid: "https://orcid.org/0009-0002-8680-604X"
+    affiliation: "CESI LINEACT (EA 7527), Montpellier, France"
+repository-code: "https://github.com/cycling-data-lab/gbfs-toolkit"
+url: "https://github.com/cycling-data-lab/gbfs-toolkit"
+license: MIT
+keywords:
+  - "GBFS"
+  - "bike-sharing"
+  - "shared mobility"
+  - "data quality"
+  - "semantic validation"
+  - "open data"
+abstract: >-
+  A Python toolkit that ingests GBFS bike-share feeds into a stable,
+  version-independent data model and audits their semantic quality with the
+  A1–A7 taxonomy of Fossé & Pallares — the semantic counterpart to MobilityData's
+  syntactic gbfs-validator. It consolidates ingestion, cross-version
+  normalisation, and the published quality-audit pipeline into one tested,
+  installable interface for reuse across shared-mobility research.
+preferred-citation:
+  type: article
+  title: "A certified, anomaly-flagged reference catalogue for GBFS bike-sharing feeds"
+  authors:
+    - family-names: "Fossé"
+      given-names: "Rohan"
+      orcid: "https://orcid.org/0009-0002-2195-0198"
+    - family-names: "Pallares"
+      given-names: "Gaël"
+      orcid: "https://orcid.org/0009-0002-8680-604X"
+  year: 2026
+  notes: "gbfs-audit-catalogue dataset paper; in preparation."

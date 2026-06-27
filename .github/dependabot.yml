@@ -1,0 +1,13 @@
+version: 2
+# Gentle: GitHub Actions only, monthly, grouped into one PR.
+updates:
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "monthly"
+    groups:
+      github-actions:
+        patterns: ["*"]
+    commit-message:
+      prefix: "ci"
+    labels: ["dependencies"]

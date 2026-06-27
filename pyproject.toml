@@ -1,0 +1,70 @@
+[build-system]
+requires = ["setuptools>=64"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "gbfs-toolkit"
+version = "0.1.0"
+description = "Research-grade ingestion and semantic quality audit (A1–A7) for GBFS bike-share feeds"
+readme = "README.md"
+requires-python = ">=3.10"
+license = {text = "MIT"}
+authors = [
+    {name = "Rohan Fossé", email = "rfosse@cesi.fr"},
+    {name = "Gaël Pallares"},
+]
+keywords = [
+    "GBFS",
+    "bike-sharing",
+    "shared mobility",
+    "data quality",
+    "semantic validation",
+    "open data",
+]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Scientific/Engineering :: GIS",
+]
+dependencies = [
+    "numpy>=1.26",
+    "scipy>=1.13",
+    "pandas>=2.2",
+]
+
+[project.optional-dependencies]
+fetch = ["requests>=2.31"]
+dev = ["pytest>=8.0", "pytest-cov>=4.0", "ruff>=0.5", "requests>=2.31"]
+
+[project.scripts]
+gbfs = "gbfs_toolkit.cli:main"
+
+[project.urls]
+Homepage = "https://github.com/cycling-data-lab/gbfs-toolkit"
+Repository = "https://github.com/cycling-data-lab/gbfs-toolkit"
+
+[tool.setuptools.package-data]
+gbfs_toolkit = ["py.typed"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "N", "UP", "B", "C4", "SIM"]
+ignore = [
+    "E501",
+    # Mathematical / GBFS-spec notation is intentional (A1–A7 flags, MAD sigma).
+    "N802",
+    "N803",
+    "N806",
+]

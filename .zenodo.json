@@ -1,0 +1,23 @@
+{
+  "title": "gbfs-toolkit: research-grade ingestion and semantic quality audit for GBFS feeds",
+  "description": "A Python toolkit that ingests GBFS bike-share feeds into a stable, version-independent data model (StationInfo / StationStatus / VehicleStatus) and audits their semantic quality with the A1–A7 taxonomy of Fossé & Pallares — the semantic counterpart to MobilityData's syntactic gbfs-validator. It consolidates feed discovery (the MobilityData systems catalogue), cross-version normalisation (GBFS 2.x/3.x), and the published quality-audit pipeline into one tested, installable interface for reuse across shared-mobility research. v0.1 ships the canonical model, catalogue discovery, normalisation, the static A1–A7 audit, and a CLI (gbfs audit).",
+  "upload_type": "software",
+  "access_right": "open",
+  "license": "MIT",
+  "keywords": [
+    "GBFS",
+    "bike-sharing",
+    "shared mobility",
+    "data quality",
+    "semantic validation",
+    "open data"
+  ],
+  "creators": [
+    {"name": "Fossé, Rohan", "affiliation": "CESI Engineering School, Montpellier, France", "orcid": "0009-0002-2195-0198"},
+    {"name": "Pallares, Gaël", "affiliation": "CESI LINEACT (EA 7527), Montpellier, France", "orcid": "0009-0002-8680-604X"}
+  ],
+  "related_identifiers": [
+    {"identifier": "https://github.com/cycling-data-lab/gbfs-audit-catalogue", "relation": "isDerivedFrom", "scheme": "url", "resource_type": "dataset"}
+  ],
+  "language": "eng"
+}
