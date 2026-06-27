@@ -125,6 +125,72 @@ def test_join_vehicle_types_and_pricing():
     assert vp.iloc[0]["plan_name"] == "PAYG" and vp.iloc[0]["currency"] == "EUR"
 
 
+def test_drop_flagged_keeps_clean_subset():
+    info = pd.DataFrame(
+        {
+            "system_id": "x",
+            "station_id": ["good", "carshare"],
+            "station_type": ["docked_bike", "carsharing"],  # carsharing trips A1
+            "capacity": [10, 4],
+            "lat": [48.85, 48.86],
+            "lon": [2.35, 2.36],
+        }
+    )
+    clean = gb.drop_flagged(info)
+    assert clean["station_id"].tolist() == ["good"]
+
+
+def test_occupancy_handles_zero_denominator():
+    av = pd.DataFrame({"num_bikes_available": [5, 0], "num_docks_available": [5, 0]})
+    occ = gb.occupancy(av)
+    assert occ.iloc[0] == 0.5
+    assert pd.isna(occ.iloc[1])  # 0 bikes + 0 docks → undefined, not 0
+
+
+def test_ebikes_filter():
+    vehicles = pd.DataFrame({"vehicle_id": ["v1", "v2"], "vehicle_type_id": ["e", "p"]})
+    types = pd.DataFrame(
+        {
+            "system_id": ["x", "x"],
+            "vehicle_type_id": ["e", "p"],
+            "form_factor": ["bicycle", "bicycle"],
+            "propulsion_type": ["electric_assist", "human"],
+            "max_range_meters": [50000, None],
+        }
+    )
+    out = gb.ebikes(vehicles, types)
+    assert out["vehicle_id"].tolist() == ["v1"]
+    scooters = gb.filter_vehicles(vehicles, types, form_factor="scooter")
+    assert scooters.empty
+
+
+def test_catalog_in_process_memo(monkeypatch):
+    import gbfs_toolkit.catalog as cat
+
+    calls = {"n": 0}
+
+    class _OK:
+        text = "System ID,Name\nvelib,Velib\n"
+
+        def raise_for_status(self):
+            pass
+
+    class _Req:
+        class RequestException(Exception):  # noqa: N818
+            pass
+
+        def get(self, *a, **k):
+            calls["n"] += 1
+            return _OK()
+
+    monkeypatch.setitem(__import__("sys").modules, "requests", _Req())
+    monkeypatch.setattr(cat, "CACHE_PATH", __import__("pathlib").Path("/nonexistent/x.csv"))
+    url = "https://example.invalid/memo.csv"
+    cat.systems_catalog(url, refresh=True)  # first hit downloads
+    cat.systems_catalog(url)  # second served from in-process memo
+    assert calls["n"] == 1
+
+
 def test_to_geojson_roundtrips():
     gpd = pytest.importorskip("geopandas")
     import json

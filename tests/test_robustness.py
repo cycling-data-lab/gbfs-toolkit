@@ -124,7 +124,7 @@ def test_catalog_offline_fallback(tmp_path, monkeypatch):
     boom = _Boom()
     monkeypatch.setitem(sys.modules, "requests", boom)
     with pytest.warns(UserWarning, match="cached copy"):
-        df = cat.systems_catalog("https://example.invalid/systems.csv")
+        df = cat.systems_catalog("https://example.invalid/offline.csv")
     assert "velib" in df["system_id"].tolist()
 
 

@@ -21,6 +21,7 @@ DEFAULT_CATALOG_URL = "https://raw.githubusercontent.com/MobilityData/gbfs/maste
 #: Local cache of the last successfully-downloaded catalogue (offline fallback).
 CACHE_PATH = Path.home() / ".cache" / "gbfs-toolkit" / "systems.csv"
 _log = logging.getLogger("gbfs_toolkit")
+_MEMO: dict[str, pd.DataFrame] = {}  # in-process parsed-catalogue cache (speed)
 
 
 def _normalize_columns(df: pd.DataFrame) -> pd.DataFrame:
@@ -29,13 +30,19 @@ def _normalize_columns(df: pd.DataFrame) -> pd.DataFrame:
 
 
 def systems_catalog(
-    source: str | None = None, *, timeout: int = 30, use_cache: bool = True
+    source: str | None = None,
+    *,
+    timeout: int = 30,
+    use_cache: bool = True,
+    refresh: bool = False,
 ) -> pd.DataFrame:
-    """Load the MobilityData systems catalogue, with an offline cache fallback.
+    """Load the MobilityData systems catalogue, cached in-process and on disk.
 
-    On a successful download the catalogue is cached to :data:`CACHE_PATH`; if a later
-    download fails (network down, registry outage) the cached copy is used with a warning, so
-    a long-running study never breaks on a transient outage.
+    The parsed catalogue is memoised for the life of the process, so resolving many systems in
+    a loop hits the network once. On a successful download it is also cached to
+    :data:`CACHE_PATH`; if a later download fails (network down, registry outage) the disk copy
+    is used with a warning, so a long-running study never breaks on a transient outage. A fresh
+    copy is returned each call (safe to mutate).
 
     Parameters
     ----------
@@ -45,14 +52,25 @@ def systems_catalog(
     timeout : int, default 30
         HTTP timeout in seconds (only when fetching a URL).
     use_cache : bool, default True
-        Cache successful downloads and fall back to the cache on failure.
+        Use the in-process / disk caches.
+    refresh : bool, default False
+        Force a re-download, ignoring (and replacing) the in-process cache.
 
     Returns
     -------
     pandas.DataFrame
         The catalogue with normalised lowercase column names.
     """
-    source = source or DEFAULT_CATALOG_URL
+    key = source or DEFAULT_CATALOG_URL
+    if use_cache and not refresh and key in _MEMO:
+        return _MEMO[key].copy()
+    df = _load_catalog(key, timeout=timeout, disk_cache=use_cache)
+    if use_cache:
+        _MEMO[key] = df
+    return df.copy()
+
+
+def _load_catalog(source: str, *, timeout: int, disk_cache: bool) -> pd.DataFrame:
     if not source.startswith(("http://", "https://")):
         return _normalize_columns(pd.read_csv(source))
 
@@ -62,7 +80,7 @@ def systems_catalog(
         resp = requests.get(source, timeout=timeout, headers={"User-Agent": "gbfs-toolkit"})
         resp.raise_for_status()
         df = _normalize_columns(pd.read_csv(io.StringIO(resp.text)))
-        if use_cache:
+        if disk_cache:
             try:
                 CACHE_PATH.parent.mkdir(parents=True, exist_ok=True)
                 CACHE_PATH.write_text(resp.text, encoding="utf-8")
@@ -70,7 +88,7 @@ def systems_catalog(
                 _log.debug("could not write catalogue cache to %s", CACHE_PATH)
         return df
     except (requests.RequestException, pd.errors.ParserError) as e:
-        if use_cache and CACHE_PATH.exists():
+        if disk_cache and CACHE_PATH.exists():
             warnings.warn(
                 f"systems catalogue download failed ({e}); using cached copy at {CACHE_PATH}.",
                 stacklevel=2,

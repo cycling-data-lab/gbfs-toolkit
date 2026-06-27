@@ -48,6 +48,47 @@ def join_availability(info: pd.DataFrame, status: pd.DataFrame) -> pd.DataFrame:
     return merged
 
 
+def occupancy(availability: pd.DataFrame) -> pd.Series:
+    """Occupancy ratio — bikes / (bikes + docks) per station.
+
+    The quantity everyone recomputes by hand. Returns ``NaN`` where there are no bikes *and*
+    no docks (a virtual/dead station), so the divide-by-zero is handled once, consistently.
+    """
+    require_columns(availability, ["num_bikes_available", "num_docks_available"], what="occupancy")
+    bikes = pd.to_numeric(availability["num_bikes_available"], errors="coerce")
+    docks = pd.to_numeric(availability["num_docks_available"], errors="coerce")
+    denom = bikes + docks
+    return (bikes / denom).where(denom > 0).rename("occupancy")
+
+
+def filter_vehicles(
+    vehicles: pd.DataFrame,
+    vehicle_types: pd.DataFrame,
+    *,
+    form_factor: str | None = None,
+    propulsion: str | None = None,
+) -> pd.DataFrame:
+    """Resolve vehicle types then keep only matching vehicles — "where are the X?" in one call.
+
+    ``form_factor`` matches exactly (e.g. ``"bicycle"``, ``"scooter"``); ``propulsion`` matches
+    as a substring (so ``"electric"`` catches both ``electric`` and ``electric_assist``).
+    """
+    out = join_vehicle_types(vehicles, vehicle_types)
+    mask = pd.Series(True, index=out.index)
+    if form_factor is not None:
+        mask &= out["form_factor"].astype("string").str.lower() == form_factor.lower()
+    if propulsion is not None:
+        mask &= (
+            out["propulsion_type"].astype("string").str.contains(propulsion, case=False, na=False)
+        )
+    return out[mask].reset_index(drop=True)
+
+
+def ebikes(vehicles: pd.DataFrame, vehicle_types: pd.DataFrame) -> pd.DataFrame:
+    """Electric vehicles only (any ``electric*`` propulsion), with their type attributes joined."""
+    return filter_vehicles(vehicles, vehicle_types, propulsion="electric")
+
+
 def station_state(availability: pd.DataFrame) -> pd.Series:
     """Classify each station as ``disabled`` / ``virtual`` / ``empty`` / ``full`` / ``normal``.
 

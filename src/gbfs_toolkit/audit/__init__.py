@@ -37,4 +37,14 @@ def audit_frames(
     return pd.concat(parts, ignore_index=True)
 
 
-__all__ = ["audit_static", "audit_dynamic", "audit_frames", "AUDIT_RESULT_COLUMNS"]
+def drop_flagged(stations: pd.DataFrame) -> pd.DataFrame:
+    """The analysis-ready subset: stations that pass the static A1–A7 audit, in one call.
+
+    Shorthand for running :func:`audit_static` and keeping the unflagged rows — the first thing
+    most studies do before anything else.
+    """
+    verdict = audit_static(stations)
+    return stations[~verdict["flagged"].to_numpy()].reset_index(drop=True)
+
+
+__all__ = ["audit_static", "audit_dynamic", "audit_frames", "drop_flagged", "AUDIT_RESULT_COLUMNS"]

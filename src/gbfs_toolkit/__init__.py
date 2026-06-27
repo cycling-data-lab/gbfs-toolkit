@@ -17,13 +17,16 @@ Quick start
 
 from gbfs_toolkit import models
 from gbfs_toolkit.analysis import (
+    ebikes,
+    filter_vehicles,
     join_availability,
     join_pricing,
     join_vehicle_types,
     network_changes,
+    occupancy,
     station_state,
 )
-from gbfs_toolkit.audit import audit_dynamic, audit_frames, audit_static
+from gbfs_toolkit.audit import audit_dynamic, audit_frames, audit_static, drop_flagged
 from gbfs_toolkit.catalog import filter_catalog, resolve, systems_catalog
 from gbfs_toolkit.cluster import (
     cluster_diurnal_profiles,
@@ -106,6 +109,7 @@ __all__ = [
     "audit_dynamic",
     "audit_frames",
     "audit_feed",
+    "drop_flagged",
     # fetch / scrape (daily drivers)
     "GBFSFeed",
     "availability",
@@ -158,6 +162,8 @@ __all__ = [
     "network_changes",
     "join_vehicle_types",
     "join_pricing",
+    "filter_vehicles",
+    "ebikes",
     # descriptive stats
     "system_profile",
     "compare_systems",
@@ -169,6 +175,7 @@ __all__ = [
     "ripley_k",
     # analysis & geo
     "station_state",
+    "occupancy",
     "find_nearest_stations",
     "features_within",
     "stations_near",

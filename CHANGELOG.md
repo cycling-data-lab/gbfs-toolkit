@@ -5,6 +5,15 @@ All notable changes are documented here ([Keep a Changelog](https://keepachangel
 
 ## [Unreleased]
 
+### Added (ergonomic one-liners)
+- **`drop_flagged(stations)`** — audit and keep the clean subset in one call.
+- **`occupancy(availability)`** — the bikes/(bikes+docks) ratio, vectorised, NaN-safe on the
+  empty-and-no-docks case (everyone was recomputing it inconsistently).
+- **`filter_vehicles(vehicles, types, form_factor=…, propulsion=…)`** and **`ebikes(...)`** —
+  resolve vehicle types and filter in one call ("where are the e-bikes?").
+- **In-process catalogue cache**: `systems_catalog` now memoises the parsed registry for the
+  process (with `refresh=True` to force), so resolving many systems in a loop downloads once.
+
 ### Added (research convenience helpers)
 - **`stockout_episodes(panel)`** — contiguous empty/full outage *events* per station (start, end,
   duration, n_obs); the service-quality complement to `coverage_report` / `availability_stats`.

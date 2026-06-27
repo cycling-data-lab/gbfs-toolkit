@@ -192,7 +192,7 @@ def test_catalog_url_success_writes_cache(tmp_path, monkeypatch):
             return _OK()
 
     monkeypatch.setitem(sys.modules, "requests", _Req())
-    df = cat.systems_catalog("https://example.invalid/systems.csv")
+    df = cat.systems_catalog("https://example.invalid/success.csv", refresh=True)
     assert "velib" in df["system_id"].tolist()
     assert (tmp_path / "c" / "systems.csv").exists()  # cached for next time
 
