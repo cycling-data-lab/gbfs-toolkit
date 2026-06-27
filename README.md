@@ -96,12 +96,38 @@ near  = gb.find_nearest_stations(48.85, 2.35, feed.station_information(), k=3)
 feeds = gb.fetch_multiple(["velib", "bixi", "lyon"], max_workers=5)
 ```
 
+## Longitudinal data lake
+
+Turn a stream of snapshots into an analysis-ready panel. The library owns the
+formatting / dedup / I/O; your orchestrator (cron, Airflow…) owns the polling loop.
+Requires the optional `[parquet]` extra (`pyarrow`).
+
+```python
+import gbfs_toolkit as gb
+
+# in your poller (every N minutes):
+gb.append_to_parquet(feed.station_status(), "lake/")   # Hive-partitioned by system_id/date
+
+# in your analysis:
+panel = gb.build_availability_panel("lake/", system_id="velib",
+                                    start_time="2026-06-01", resample_freq="5min")
+flow  = gb.calculate_net_flow(panel)   # Δ bikes/station + is_rebalancing_suspected
+```
+
+`build_availability_panel` filters partitions *before* loading (memory-bounded),
+de-duplicates redundant polls (same `station_id` + `last_reported`), and optionally
+resamples each station to a fixed cadence.
+
 ## Roadmap
 
-- **v0.1 (this)** — canonical model, catalogue discovery, cross-version normalisation,
+- **v0.1** — canonical model, catalogue discovery, cross-version normalisation,
   static audit (A1–A7), CLI.
-- **v0.2** — spatial anomaly (spectral) + dynamic zombie/staleness detector; fetch + archive.
-- **v0.3** — analysis-ready panels (availability, pseudo-flows, OD) and catalogue reproduction.
+- **v0.2** — fetch/scrape (`GBFSFeed`, one-liners, `fetch_multiple`), dynamic audit
+  (D1–D3), `station_state`, geo (`GeoKDTree`, `find_nearest_stations`), schema hardening.
+- **v0.3 (this)** — longitudinal data lake: `append_to_parquet`,
+  `build_availability_panel`, `calculate_net_flow`.
+- **next** — advanced extras: `multimodal` (transit links), `cluster`
+  (spatial / spectral / diurnal profiles), `osm` (BYOG infrastructure enrichment).
 
 ## How to cite
 

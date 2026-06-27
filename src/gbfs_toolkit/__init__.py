@@ -35,6 +35,11 @@ from gbfs_toolkit.normalize import (
     to_canonical_vehicle_types,
     to_canonical_vehicles,
 )
+from gbfs_toolkit.timeseries import (
+    append_to_parquet,
+    build_availability_panel,
+    calculate_net_flow,
+)
 
 __version__ = "0.1.0"
 
@@ -58,6 +63,10 @@ __all__ = [
     "systems_catalog",
     "filter_catalog",
     "resolve",
+    # longitudinal (data lake)
+    "append_to_parquet",
+    "build_availability_panel",
+    "calculate_net_flow",
     # analysis & geo
     "station_state",
     "find_nearest_stations",

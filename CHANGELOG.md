@@ -6,6 +6,13 @@ All notable changes are documented here ([Keep a Changelog](https://keepachangel
 ## [Unreleased]
 
 ### Added
+- **Longitudinal data lake** (`timeseries`, extra `[parquet]`): `append_to_parquet`
+  (Hive-partitioned by `system_id`/`date`, append-only, concurrent-safe),
+  `build_availability_panel` (PyArrow partition-pruned read + dedup on
+  `station_id`+`last_reported` + optional resample), `calculate_net_flow`
+  (Δ bikes/station + `is_rebalancing_suspected`, NaN across unchanged `last_reported`).
+- **`GeoKDTree`** (core `geo`): shared great-circle k-NN / radius index (scipy cKDTree
+  over a 3-D unit sphere; EPSG:4326 contract). `find_nearest_stations` now uses it.
 - **Fetch / scrape layer**: `GBFSFeed` (discover once, then `.station_information()`,
   `.station_status()`, `.vehicles()`, `.availability()`, `.audit()`, `.snapshot()`,
   `.summary()`); `parse_discovery`; one-liners `availability(url)` / `audit_feed(url)`;

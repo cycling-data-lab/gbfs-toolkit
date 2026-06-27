@@ -41,7 +41,8 @@ dependencies = [
 [project.optional-dependencies]
 fetch = ["requests>=2.31"]
 geo = ["geopandas>=0.14"]
-dev = ["pytest>=8.0", "pytest-cov>=4.0", "ruff>=0.5", "requests>=2.31"]
+parquet = ["pyarrow>=15.0"]
+dev = ["pytest>=8.0", "pytest-cov>=4.0", "ruff>=0.5", "requests>=2.31", "pyarrow>=15.0"]
 
 [project.scripts]
 gbfs = "gbfs_toolkit.cli:main"
