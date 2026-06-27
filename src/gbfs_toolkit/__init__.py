@@ -33,6 +33,7 @@ from gbfs_toolkit.fetch import (
     fetch_multiple,
     parse_discovery,
 )
+from gbfs_toolkit.fleet import reconcile_fleet_state
 from gbfs_toolkit.geo import (
     GeoKDTree,
     features_within,
@@ -102,6 +103,8 @@ __all__ = [
     "to_canonical_geofencing",
     "zones_for_points",
     "zone_area_km2",
+    # fleet reconciliation
+    "reconcile_fleet_state",
     # analysis & geo
     "station_state",
     "find_nearest_stations",

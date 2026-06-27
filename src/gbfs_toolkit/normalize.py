@@ -176,6 +176,7 @@ def to_canonical_vehicles(
         {
             "system_id": system_id,
             "vehicle_id": str(v.get("vehicle_id") or v.get("bike_id")),
+            "station_id": (str(v["station_id"]) if v.get("station_id") is not None else None),
             "vehicle_type_id": v.get("vehicle_type_id"),
             "lat": v.get("lat"),
             "lon": v.get("lon"),
@@ -193,7 +194,8 @@ def to_canonical_vehicles(
         df[col] = pd.to_numeric(df[col], errors="coerce")
     for col in ("is_reserved", "is_disabled"):
         df[col] = df[col].astype("boolean")
-    df["pricing_plan_id"] = df["pricing_plan_id"].astype("string")
+    for col in ("station_id", "pricing_plan_id"):
+        df[col] = df[col].astype("string")
     df["fetched_at"] = pd.to_datetime(df["fetched_at"], utc=True)
     return df
 

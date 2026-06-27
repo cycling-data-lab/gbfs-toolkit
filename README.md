@@ -163,6 +163,20 @@ The radius summarisation (counts + per-category breakdown + nearest distance) is
 tested core; data acquisition is **Bring Your Own GeoDataFrame** so the library never depends
 on a live Overpass endpoint. Routing / isochrones stay out of scope (use OSMnx / pandana).
 
+## Fleet reconciliation — where are the bikes, really?
+
+```python
+tally = gb.reconcile_fleet_state(status, vehicles)   # or feed.reconcile_fleet()
+tally["total_deployed"]        # on the street: stations + free-floating, overlap excluded
+tally["total_rentable"]        # available in stations + available free-floating
+tally["double_count_avoided"]  # vehicles a naive sum would have counted twice
+```
+
+GBFS reports the same fleet twice — aggregate docked counts in `station_status` and
+individual units (some parked at stations) in `vehicle_status`. Naively adding them
+double-counts every vehicle sitting at a dock. The reconciler excludes station-parked
+vehicles from the deployed total and surfaces the overlap instead of hiding it.
+
 ## Geofencing / service areas (`[geo]`)
 
 ```python
@@ -192,7 +206,7 @@ metric and latitude-comparable. The full per-vehicle-type `rules` list is preser
   `enrich_with_osm` (BYOG infrastructure enrichment within a radius).
 - **v0.7** — hardening (nullable dtypes, dockless-aware A7, antimeridian A5,
   mass-conservation net flow) + `geofencing` (service-area polygons, point-in-zone
-  joins, equal-area density).
+  joins, equal-area density) + `fleet` reconciliation (docked ↔ free-floating dedup).
 
 ## How to cite
 

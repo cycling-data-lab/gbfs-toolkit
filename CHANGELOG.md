@@ -28,6 +28,13 @@ All notable changes are documented here ([Keep a Changelog](https://keepachangel
   **`pricing_plan_id`** (preserved, not parsed, for equity/pricing joins).
 
 ### Added
+- **Fleet reconciliation** (`fleet`): `reconcile_fleet_state(station_status, vehicles)` (and
+  `GBFSFeed.reconcile_fleet()`) merge the docked aggregate counts and the per-vehicle feed
+  into one labelled tally — `available_in_stations`, `free_floating_available/_reserved/
+  _disabled`, `total_deployed`, `total_rentable`. Vehicles carrying a `station_id` are
+  excluded from the deployed total (so the two feeds don't double-count) and the overlap is
+  reported as `docked_in_vehicle_feed` / `double_count_avoided`. `VEHICLE_STATUS_COLUMNS`
+  gains **`station_id`** (set when a vehicle is parked at a station, else NA → free-floating).
 - **Geofencing / service areas** (`geofencing`, extra `[geo]`):
   `to_canonical_geofencing(raw, system_id=...)` parses `geofencing_zones.json` into a
   canonical `GeoDataFrame` (one row per zone, shapely geometry in EPSG:4326; v2.x

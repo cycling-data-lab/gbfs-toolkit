@@ -54,6 +54,7 @@ STATION_STATUS_COLUMNS: list[str] = [
 VEHICLE_STATUS_COLUMNS: list[str] = [
     "system_id",
     "vehicle_id",
+    "station_id",  # set when the vehicle is parked at a station (else NA → free-floating)
     "vehicle_type_id",  # pedal / e-bike / scooter (the key modern axis)
     "lat",
     "lon",

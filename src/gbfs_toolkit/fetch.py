@@ -322,6 +322,19 @@ class GBFSFeed:
             parts.append(dyn[_AUDIT_COLS])
         return pd.concat(parts, ignore_index=True)
 
+    def reconcile_fleet(self) -> pd.Series:
+        """One authoritative fleet tally across the docked and free-floating feeds.
+
+        Pulls ``station_status`` and/or ``vehicle_status`` (whichever exist) and reconciles
+        them, excluding vehicles parked at stations from the deployed total so the two feeds
+        don't double-count. See :func:`~gbfs_toolkit.reconcile_fleet_state`.
+        """
+        from gbfs_toolkit.fleet import reconcile_fleet_state
+
+        status = self.station_status() if self.has(*_STATION_STATUS) else None
+        vehicles = self.vehicles() if self.has(*_VEHICLES) else None
+        return reconcile_fleet_state(status, vehicles)
+
     def snapshot(self) -> dict[str, pd.DataFrame]:
         """All available tidy frames at once: ``information``, ``status`` (+ ``vehicles``)."""
         out = {"information": self.station_information(), "status": self.station_status()}
