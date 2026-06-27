@@ -5,6 +5,19 @@ All notable changes are documented here ([Keep a Changelog](https://keepachangel
 
 ## [Unreleased]
 
+### Added (research convenience helpers)
+- **`stockout_episodes(panel)`** — contiguous empty/full outage *events* per station (start, end,
+  duration, n_obs); the service-quality complement to `coverage_report` / `availability_stats`.
+- **`turnover(panel, freq="1D")`** — per-station Σ|net_flow| activity proxy (a documented lower
+  bound, by the aliasing argument).
+- **`network_changes(old, new)`** — diff two station inventories: stations added / removed /
+  recapacitated / moved (with distance), for longitudinal studies that span network growth.
+- **`stations_near(points, info, radius_m)`** — accessibility primitive: per external POI, count
+  of stations within a radius + nearest distance/id (the inverse of `features_within`, for equity).
+- **`to_geojson(frame_or_gdf, path=...)`** — export stations/zones to GeoJSON for QGIS / kepler.gl.
+- **`join_vehicle_types` / `join_pricing`** — resolve `vehicle_type_id` / `pricing_plan_id` onto a
+  vehicles frame so "where are the e-bikes?" / cost joins are one call.
+
 ### Quality
 - **Input-validation guards**: `join_availability`, `calculate_net_flow`, `coverage_report`,
   `detect_ghost_vehicles` and `link_transit_stops` now raise a clear `SchemaError` naming the

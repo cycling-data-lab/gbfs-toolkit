@@ -9,6 +9,7 @@ from __future__ import annotations
 import numpy as np
 import pandas as pd
 
+from gbfs_toolkit.geo import haversine_m
 from gbfs_toolkit.models import require_columns
 
 #: Ordered categories returned by :func:`station_state`.
@@ -100,3 +101,89 @@ def station_state(availability: pd.DataFrame) -> pd.Series:
         index=availability.index,
         name="station_state",
     )
+
+
+_CHANGE_COLUMNS = ["system_id", "station_id", "change", "old_value", "new_value", "distance_m"]
+
+
+def network_changes(
+    old: pd.DataFrame, new: pd.DataFrame, *, move_threshold_m: float = 50.0
+) -> pd.DataFrame:
+    """Diff two station inventories — how the network itself changed between two dates.
+
+    A multi-month study spans network growth, not a fixed graph. This compares two canonical
+    ``station_information`` frames and reports stations **added**, **removed**,
+    **recapacitated** (capacity changed) and **moved** (relocated beyond ``move_threshold_m``).
+    A station can appear twice (e.g. recapacitated *and* moved).
+
+    Returns
+    -------
+    pandas.DataFrame
+        ``system_id, station_id, change, old_value, new_value, distance_m`` — ``old/new_value``
+        carry the capacity for recapacitations; ``distance_m`` the move distance for moves.
+    """
+    require_columns(old, ["station_id"], what="network_changes(old)")
+    require_columns(new, ["station_id"], what="network_changes(new)")
+    o = old.drop_duplicates("station_id").set_index("station_id")
+    n = new.drop_duplicates("station_id").set_index("station_id")
+    sys_new = new["system_id"].iloc[0] if "system_id" in new.columns and len(new) else None
+
+    rows = []
+
+    def _row(sid, change, **kw):
+        src = n if sid in n.index else o
+        system = src.loc[sid, "system_id"] if "system_id" in src.columns else sys_new
+        rows.append({"system_id": system, "station_id": sid, "change": change, **kw})
+
+    for sid in n.index.difference(o.index):
+        _row(sid, "added")
+    for sid in o.index.difference(n.index):
+        _row(sid, "removed")
+
+    common = o.index.intersection(n.index)
+    if len(common):
+        oc, nc = o.loc[common], n.loc[common]
+        if "capacity" in oc.columns and "capacity" in nc.columns:
+            changed = oc["capacity"].ne(nc["capacity"]) & ~(
+                oc["capacity"].isna() & nc["capacity"].isna()
+            )
+            for sid in common[changed.to_numpy()]:
+                _row(
+                    sid,
+                    "recapacitated",
+                    old_value=oc.at[sid, "capacity"],
+                    new_value=nc.at[sid, "capacity"],
+                )
+        if {"lat", "lon"} <= set(oc.columns) & set(nc.columns):
+            dist = pd.Series(haversine_m(oc["lat"], oc["lon"], nc["lat"], nc["lon"]), index=common)
+            for sid in common[(dist > move_threshold_m).to_numpy()]:
+                _row(sid, "moved", distance_m=round(float(dist[sid]), 1))
+
+    return pd.DataFrame(rows, columns=_CHANGE_COLUMNS).reset_index(drop=True)
+
+
+def join_vehicle_types(vehicles: pd.DataFrame, vehicle_types: pd.DataFrame) -> pd.DataFrame:
+    """Resolve ``vehicle_type_id`` → form factor / propulsion / range onto a vehicles frame.
+
+    Turns "where are the e-bikes?" into a filter: ``out[out.form_factor == "bicycle"]`` etc.
+    Left join on ``vehicle_type_id``; the catalogue's ``system_id`` is dropped to avoid a clash.
+    """
+    cat = vehicle_types.drop(columns=["system_id"], errors="ignore")
+    return vehicles.merge(cat, on="vehicle_type_id", how="left")
+
+
+def join_pricing(vehicles: pd.DataFrame, plans: pd.DataFrame) -> pd.DataFrame:
+    """Resolve ``pricing_plan_id`` → plan name / price / currency onto a vehicles frame.
+
+    Left join of :func:`~gbfs_toolkit.to_canonical_pricing_plans` (its ``plan_id`` matches the
+    vehicle's ``pricing_plan_id``); plan ``name``/``description`` are prefixed ``plan_`` to
+    avoid clashes.
+    """
+    p = plans.drop(columns=["system_id"], errors="ignore").rename(
+        columns={
+            "plan_id": "pricing_plan_id",
+            "name": "plan_name",
+            "description": "plan_description",
+        }
+    )
+    return vehicles.merge(p, on="pricing_plan_id", how="left")

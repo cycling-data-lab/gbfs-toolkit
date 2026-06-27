@@ -16,7 +16,13 @@ Quick start
 """
 
 from gbfs_toolkit import models
-from gbfs_toolkit.analysis import join_availability, station_state
+from gbfs_toolkit.analysis import (
+    join_availability,
+    join_pricing,
+    join_vehicle_types,
+    network_changes,
+    station_state,
+)
 from gbfs_toolkit.audit import audit_dynamic, audit_frames, audit_static
 from gbfs_toolkit.catalog import filter_catalog, resolve, systems_catalog
 from gbfs_toolkit.cluster import (
@@ -49,7 +55,9 @@ from gbfs_toolkit.geo import (
     features_within,
     find_nearest_stations,
     haversine_m,
+    stations_near,
     to_gdf,
+    to_geojson,
 )
 from gbfs_toolkit.geofencing import (
     to_canonical_geofencing,
@@ -86,6 +94,8 @@ from gbfs_toolkit.timeseries import (
     calculate_net_flow,
     coverage_report,
     generate_manifest,
+    stockout_episodes,
+    turnover,
 )
 
 __version__ = "0.8.0"
@@ -125,6 +135,8 @@ __all__ = [
     "calculate_net_flow",
     "coverage_report",
     "generate_manifest",
+    "stockout_episodes",
+    "turnover",
     # clustering ([cluster])
     "cluster_spatial",
     "cluster_spectral",
@@ -142,6 +154,10 @@ __all__ = [
     # fleet reconciliation
     "reconcile_fleet_state",
     "detect_ghost_vehicles",
+    # network evolution & joins
+    "network_changes",
+    "join_vehicle_types",
+    "join_pricing",
     # descriptive stats
     "system_profile",
     "compare_systems",
@@ -155,9 +171,11 @@ __all__ = [
     "station_state",
     "find_nearest_stations",
     "features_within",
+    "stations_near",
     "haversine_m",
     "GeoKDTree",
     "to_gdf",
+    "to_geojson",
     # errors
     "GBFSError",
     "GBFSFetchError",

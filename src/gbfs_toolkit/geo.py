@@ -179,6 +179,56 @@ def features_within(
     return out
 
 
+def stations_near(
+    points: pd.DataFrame,
+    info: pd.DataFrame,
+    *,
+    radius_m: float = 300.0,
+    point_lat: str = "lat",
+    point_lon: str = "lon",
+) -> pd.DataFrame:
+    """For each external point, how many stations are nearby — the accessibility primitive.
+
+    The inverse of :func:`features_within`: there you summarise things *around stations*; here
+    you ask, for arbitrary places (clinics, schools, neighbourhood centroids), *how well each is
+    served by stations*. Straight-line (great-circle) proximity only — no routing.
+
+    Parameters
+    ----------
+    points : pandas.DataFrame
+        Places of interest with ``point_lat``/``point_lon`` columns.
+    info : pandas.DataFrame
+        Canonical station inventory (``lat``/``lon``, optionally ``station_id``).
+    radius_m : float, default 300
+
+    Returns
+    -------
+    pandas.DataFrame
+        ``points`` + ``n_stations_within``, ``nearest_station_dist_m`` and (if ``info`` has
+        ``station_id``) ``nearest_station_id``.
+    """
+    out = points.reset_index(drop=True).copy()
+    if out.empty:
+        out["n_stations_within"] = pd.Series(dtype="int64")
+        out["nearest_station_dist_m"] = pd.Series(dtype="float64")
+        return out
+    if info.empty:
+        out["n_stations_within"] = 0
+        out["nearest_station_dist_m"] = np.inf
+        if "station_id" in info.columns:
+            out["nearest_station_id"] = None
+        return out
+    tree = GeoKDTree(info["lat"], info["lon"])
+    lat, lon = out[point_lat].to_numpy(), out[point_lon].to_numpy()
+    within = tree.query_radius(lat, lon, radius_m=radius_m)
+    dist, idx = tree.query(lat, lon, k=1)
+    out["n_stations_within"] = [len(h) for h in within]
+    out["nearest_station_dist_m"] = np.asarray(dist).ravel()
+    if "station_id" in info.columns:
+        out["nearest_station_id"] = info["station_id"].to_numpy()[np.asarray(idx).ravel()]
+    return out
+
+
 def to_gdf(
     df: pd.DataFrame, *, lat: str = "lat", lon: str = "lon", crs: str = "EPSG:4326"
 ) -> gpd.GeoDataFrame:
@@ -194,3 +244,26 @@ def to_gdf(
         ) from e
     geometry = gpd.points_from_xy(df[lon], df[lat])
     return gpd.GeoDataFrame(df.copy(), geometry=geometry, crs=crs)
+
+
+def to_geojson(
+    df: pd.DataFrame,
+    *,
+    path: str | None = None,
+    lat: str = "lat",
+    lon: str = "lon",
+) -> str | None:
+    """Export stations / zones to GeoJSON for QGIS, kepler.gl, etc. (data, not a map).
+
+    Accepts a plain lat/lon frame (promoted to points) or a ``GeoDataFrame`` (any geometry,
+    e.g. geofencing polygons). Returns the GeoJSON string, or writes it to ``path`` and returns
+    the path. Requires the optional ``[geo]`` extra.
+    """
+    gdf = df if hasattr(df, "geometry") else to_gdf(df, lat=lat, lon=lon)
+    text = gdf.to_json()
+    if path is None:
+        return text
+    from pathlib import Path
+
+    Path(path).write_text(text, encoding="utf-8")
+    return path

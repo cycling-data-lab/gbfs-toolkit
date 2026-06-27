@@ -215,6 +215,108 @@ def calculate_net_flow(panel: pd.DataFrame) -> pd.DataFrame:
     return df.reset_index(drop=True)
 
 
+_EPISODE_COLUMNS = [
+    "system_id",
+    "station_id",
+    "kind",
+    "start",
+    "end",
+    "duration_minutes",
+    "n_obs",
+]
+
+
+def stockout_episodes(
+    panel: pd.DataFrame, *, kinds: tuple[str, ...] = ("empty", "full")
+) -> pd.DataFrame:
+    """Discrete empty/full episodes per station — the service-quality view of a panel.
+
+    Where :func:`coverage_report` and ``availability_stats`` give *fractions* of time, this
+    returns the individual outage **events**: each contiguous run of empty (no bikes) or full
+    (no docks) snapshots becomes one row, so you can study how *often* stockouts happen and how
+    *long* they last. Durations span the observed snapshots in the run (a single-observation
+    episode has duration 0) — read them together with :func:`coverage_report`.
+
+    Parameters
+    ----------
+    panel : pandas.DataFrame
+        From :func:`build_availability_panel` (MultiIndexed) or a flat frame with
+        ``system_id, station_id, fetched_at, num_bikes_available, num_docks_available``.
+    kinds : tuple of {"empty", "full"}
+        Which outage types to extract.
+
+    Returns
+    -------
+    pandas.DataFrame
+        One row per episode: ``system_id, station_id, kind, start, end, duration_minutes,
+        n_obs`` (sorted by station then start).
+    """
+    df = panel.reset_index() if isinstance(panel.index, pd.MultiIndex) else panel.copy()
+    require_columns(
+        df,
+        ["system_id", "station_id", "fetched_at", "num_bikes_available", "num_docks_available"],
+        what="stockout_episodes",
+    )
+    df = df.sort_values(["system_id", "station_id", "fetched_at"])
+    bikes = pd.to_numeric(df["num_bikes_available"], errors="coerce")
+    docks = pd.to_numeric(df["num_docks_available"], errors="coerce")
+    state = {"empty": bikes <= 0, "full": docks <= 0}
+
+    rows = []
+    keys = ["system_id", "station_id"]
+    for kind in kinds:
+        tmp = df[keys].copy()
+        tmp["_flag"] = state[kind].to_numpy()
+        # a new run starts whenever the flag changes (groupby shift resets at station bounds)
+        shifted = tmp.groupby(keys, sort=False)["_flag"].shift()
+        run = (tmp["_flag"] != shifted).cumsum()
+        mask = tmp["_flag"].to_numpy()
+        active = df[mask].assign(_run=run[mask].to_numpy())
+        for (sid, stid, _r), g in active.groupby([*keys, "_run"], sort=False):
+            start, end = g["fetched_at"].min(), g["fetched_at"].max()
+            rows.append(
+                {
+                    "system_id": sid,
+                    "station_id": stid,
+                    "kind": kind,
+                    "start": start,
+                    "end": end,
+                    "duration_minutes": round((end - start).total_seconds() / 60, 1),
+                    "n_obs": int(len(g)),
+                }
+            )
+    out = pd.DataFrame(rows, columns=_EPISODE_COLUMNS)
+    return out.sort_values(["system_id", "station_id", "start"]).reset_index(drop=True)
+
+
+def turnover(panel: pd.DataFrame, *, freq: str = "1D") -> pd.DataFrame:
+    """Per-station activity proxy — summed absolute net flow per period.
+
+    A cheap, model-free measure of how busy a station is. It is a **lower bound**: by the
+    aliasing argument in :func:`calculate_net_flow`, trips that cancel within a polling interval
+    are invisible. Use it for relative comparison (which stations / days are busier), not as a
+    trip count.
+
+    Returns
+    -------
+    pandas.DataFrame
+        ``system_id, station_id, period, turnover`` (Σ ``|net_flow|`` over each ``freq`` bin).
+    """
+    flow = calculate_net_flow(panel).dropna(subset=["net_flow"])
+    if flow.empty:
+        return pd.DataFrame(columns=["system_id", "station_id", "period", "turnover"])
+    flow = flow.assign(
+        period=pd.to_datetime(flow["fetched_at"]).dt.floor(freq), activity=flow["net_flow"].abs()
+    )
+    out = (
+        flow.groupby(["system_id", "station_id", "period"])["activity"]
+        .sum()
+        .rename("turnover")
+        .reset_index()
+    )
+    return out
+
+
 def coverage_report(panel: pd.DataFrame, *, expected_freq: str = "5min") -> pd.DataFrame:
     """Per-station longitudinal coverage — quantify missingness *before* you model.
 
