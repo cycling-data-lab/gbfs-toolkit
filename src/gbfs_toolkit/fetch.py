@@ -214,6 +214,22 @@ class GBFSFeed:
         self._sysinfo: dict | None = None
         self._raw_cache: dict[str, Any] = {}
 
+    # -- display (cached state only; never triggers a network call) ---------
+    def __repr__(self) -> str:
+        ver = self._version or "?"
+        n = len(self._feeds) if self._feeds is not None else "?"
+        return f"GBFSFeed(system_id={self.system_id!r}, version={ver!r}, feeds={n})"
+
+    def _repr_html_(self) -> str:
+        if self._feeds is None:
+            feeds = "<em>not discovered yet</em>"
+        else:
+            feeds = ", ".join(f"<code>{f}</code>" for f in sorted(self._feeds)) or "—"
+        return (
+            f"<b>GBFSFeed</b> <code>{self.system_id}</code>"
+            f"<br>version: {self._version or '?'}<br>feeds: {feeds}"
+        )
+
     # -- constructors -------------------------------------------------------
     @classmethod
     def from_url(cls, gbfs_url: str, **kwargs: Any) -> GBFSFeed:

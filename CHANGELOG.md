@@ -5,6 +5,18 @@ All notable changes are documented here ([Keep a Changelog](https://keepachangel
 
 ## [Unreleased]
 
+### Added (library-API conventions)
+- **`.gbfs` pandas accessor** — fluent chaining over the pure functions: `df.gbfs.audit()`,
+  `av.gbfs.occupancy()`, `panel.gbfs.net_flow()`, `info.gbfs.join_status(status)`. Single-frame
+  ops map directly; two-frame ops take the second frame as the argument.
+- **`load_example()`** — a small, deterministic bundled GBFS snapshot (central Paris) for docs,
+  doctests and offline tests; returns canonical `(station_info, station_status)`.
+- **`show_versions()`** — environment/dependency diagnostic for bug reports.
+- **`validate_schema(df, schema)` / `coerce_schema(df, schema)`** — public schema check/cast over
+  the canonical contracts (`SCHEMAS` registry); assert or repair a mutated frame before writing it.
+- **`GBFSFeed.__repr__` / `_repr_html_`** — readable repr in shells/Jupyter (cached state only —
+  never triggers a network call).
+
 ### Added (distilled from the lab's research code)
 - **`detect_frozen_stations(panel)`** — flags a value stuck unchanged over an active window
   while the feed stays fresh (dead sensor), distinct from staleness (D3) and stockouts. Seen

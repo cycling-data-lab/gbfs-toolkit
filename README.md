@@ -34,13 +34,27 @@ Core depends only on numpy / scipy / pandas. Network discovery/fetch uses the op
 ## Quick start
 
 ```python
-import json, gbfs_toolkit as gb
+import gbfs_toolkit as gb
+
+info, status = gb.load_example()          # bundled sample — no network needed
+av = info.gbfs.join_status(status)        # fluent .gbfs accessor (or gb.join_availability)
+clean = info.gbfs.drop_flagged()          # audit A1–A7 and keep the trustworthy stations
+av.gbfs.occupancy()                       # bikes / (bikes + docks), NaN-safe
+```
+
+From your own feed:
+
+```python
+import json
 
 raw = json.load(open("station_information.json"))
 stations = gb.to_canonical_station_info(raw, system_id="velib")   # version-independent frame
 verdict  = gb.audit_static(stations)                              # A1–A7 per station
 clean    = stations[~verdict["flagged"].to_numpy()]              # quality filter in one line
 ```
+
+Every function is also a `.gbfs` accessor method, and pure (so `df.pipe(gb.occupancy)` works).
+`gb.show_versions()` prints an environment report for bug reports.
 
 Command line (the semantic counterpart to `gbfs-validator`):
 

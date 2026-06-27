@@ -196,3 +196,76 @@ def require_columns(df: pd.DataFrame, columns: list[str], *, what: str) -> None:
     missing = [c for c in columns if c not in df.columns]
     if missing:
         raise SchemaError(f"{what}: missing required columns {missing}; got {list(df.columns)}")
+
+
+#: Named canonical schemas (column contracts) addressable by :func:`validate_schema`.
+SCHEMAS: dict[str, list[str]] = {
+    "station_info": STATION_INFO_COLUMNS,
+    "station_status": STATION_STATUS_COLUMNS,
+    "station_vehicle_counts": STATION_VEHICLE_COUNTS_COLUMNS,
+    "vehicle_status": VEHICLE_STATUS_COLUMNS,
+    "vehicle_types": VEHICLE_TYPE_COLUMNS,
+    "pricing_plans": PRICING_PLAN_COLUMNS,
+    "geofencing": GEOFENCING_COLUMNS,
+    "system_regions": SYSTEM_REGION_COLUMNS,
+    "alerts": ALERT_COLUMNS,
+}
+
+# Canonical dtype of each column, used by coerce_schema (datetimes handled separately).
+_CANONICAL_DTYPES: dict[str, str] = {
+    "lat": "float64",
+    "lon": "float64",
+    "capacity": "Int64",
+    "num_bikes_available": "Int64",
+    "num_docks_available": "Int64",
+    "num_vehicles_available": "Int64",
+    "current_range_meters": "float64",
+    "max_range_meters": "float64",
+    "price": "float64",
+    "is_renting": "boolean",
+    "is_returning": "boolean",
+    "is_installed": "boolean",
+    "is_virtual_station": "boolean",
+    "is_reserved": "boolean",
+    "is_disabled": "boolean",
+    "is_taxable": "boolean",
+}
+_DATETIME_COLUMNS = frozenset({"last_reported", "fetched_at", "start", "end", "last_updated"})
+
+
+def _schema_columns(schema: str) -> list[str]:
+    if schema not in SCHEMAS:
+        raise SchemaError(f"unknown schema {schema!r}; choose from {sorted(SCHEMAS)}")
+    return SCHEMAS[schema]
+
+
+def validate_schema(df: pd.DataFrame, schema: str) -> pd.DataFrame:
+    """Assert a frame still obeys a canonical schema, then return it (for chaining).
+
+    Use after slicing/grouping/mutating a canonical frame — e.g. before appending to the
+    Parquet lake — to fail fast with a clear :class:`SchemaError` instead of corrupting the
+    dataset. ``schema`` is one of :data:`SCHEMAS` (``"station_status"``, ``"vehicle_status"``…).
+    """
+    require_columns(df, _schema_columns(schema), what=f"validate_schema({schema!r})")
+    return df
+
+
+def coerce_schema(df: pd.DataFrame, schema: str) -> pd.DataFrame:
+    """Cast a frame's columns to the canonical dtypes for ``schema`` (nullable ints/bools, UTC).
+
+    Best-effort: only columns present are touched; unparseable values become ``pd.NA``/``NaT``.
+    Handy after reading frames from CSV or a third-party source before feeding the toolkit.
+    """
+    out = df.copy()
+    for col in _schema_columns(schema):
+        if col not in out.columns:
+            continue
+        if col in _DATETIME_COLUMNS:
+            out[col] = pd.to_datetime(out[col], utc=True, errors="coerce")
+        elif col in _CANONICAL_DTYPES:
+            dtype = _CANONICAL_DTYPES[col]
+            if dtype in ("Int64", "float64"):
+                out[col] = pd.to_numeric(out[col], errors="coerce").astype(dtype)
+            else:
+                out[col] = out[col].astype(dtype)
+    return out

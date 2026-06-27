@@ -15,7 +15,10 @@ Quick start
     >>> clean = stations[~verdict["flagged"].to_numpy()]
 """
 
-from gbfs_toolkit import models
+from gbfs_toolkit import (
+    accessor,  # noqa: F401 — registers the `.gbfs` DataFrame accessor
+    models,
+)
 from gbfs_toolkit.analysis import (
     cyclical_time_features,
     ebikes,
@@ -36,6 +39,8 @@ from gbfs_toolkit.cluster import (
     diurnal_profiles,
     label_diurnal_typology,
 )
+from gbfs_toolkit.datasets import load_example
+from gbfs_toolkit.diagnostics import show_versions
 from gbfs_toolkit.errors import (
     GBFSDiscoveryError,
     GBFSError,
@@ -68,7 +73,14 @@ from gbfs_toolkit.geofencing import (
     zone_area_km2,
     zones_for_points,
 )
-from gbfs_toolkit.models import AUDIT_FLAGS, RULES, SchemaError
+from gbfs_toolkit.models import (
+    AUDIT_FLAGS,
+    RULES,
+    SCHEMAS,
+    SchemaError,
+    coerce_schema,
+    validate_schema,
+)
 from gbfs_toolkit.multimodal import link_transit_stops
 from gbfs_toolkit.normalize import (
     to_canonical_alerts,
@@ -196,6 +208,12 @@ __all__ = [
     "GBFSDiscoveryError",
     "GBFSValidationError",
     "GBFSNotModified",
+    # schema / library ergonomics
+    "validate_schema",
+    "coerce_schema",
+    "SCHEMAS",
+    "load_example",
+    "show_versions",
     # meta
     "models",
     "RULES",
