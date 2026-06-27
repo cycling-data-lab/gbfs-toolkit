@@ -123,6 +123,12 @@ On a live availability snapshot:
 - **D3 stale**: `fetched_at − last_reported` exceeds the feed's advertised `ttl` (plus a 60 s
   clock-skew buffer), or `stale_after_minutes` (default 60) when no `ttl` is given.
 
+A7 is **dockless-aware by default** in the library: the rate is taken over physical docked
+stations, so a mostly free-floating system is not flagged merely for leaving capacity null. The
+original `gbfs-audit-catalogue` evaluated A7 over every station, under which a fully free-floating
+system with null capacities is flagged. Pass `audit_static(..., a7_scope="all")` (or `gbfs audit
+--a7-scope all`) to reproduce the published catalogue verdicts exactly.
+
 `detect_frozen_stations` (longitudinal) is **distinct from D3**: a frozen station has a *fresh*
 `last_reported` but a value that never changes over an active window, which is the signature of a
 dead sensor rather than a stale fetch. It is also distinct from a legitimate stockout (handled by

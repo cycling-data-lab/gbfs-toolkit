@@ -31,3 +31,26 @@ def test_cli_audit_flags_carshare_and_writes_csv(tmp_path, capsys):
 def test_cli_empty_feed_returns_two(tmp_path):
     src = _write(tmp_path, [])
     assert main(["audit", src]) == 2
+
+
+def test_cli_json_output_is_machine_readable(tmp_path, capsys):
+    src = _write(tmp_path, [{"station_id": "1", "lat": 48.85, "lon": 2.35, "capacity": 10}])
+    main(["audit", src, "--system-id", "velib", "--json"])
+    payload = json.loads(capsys.readouterr().out)
+    assert payload["tool"] == "gbfs-toolkit"
+    assert payload["system_id"] == "velib"
+    assert payload["n_stations"] == 1
+    assert set(payload["rules"]) == {f"A{i}" for i in range(1, 8)}
+
+
+def test_cli_a7_scope_argument_accepted(tmp_path):
+    src = _write(tmp_path, [{"station_id": "1", "lat": 48.85, "lon": 2.35, "capacity": 10}])
+    assert main(["audit", src, "--a7-scope", "all"]) in (0, 1)
+
+
+def test_cli_rich_renderer_runs():
+    # The rich path is gated on an interactive TTY at runtime; exercise the
+    # renderer directly so the [cli] extra stays covered.
+    from gbfs_toolkit.cli import _render_rich
+
+    _render_rich("velib", n=100, n_flagged=3, counts={f"A{i}": (3 if i == 4 else 0) for i in range(1, 8)})

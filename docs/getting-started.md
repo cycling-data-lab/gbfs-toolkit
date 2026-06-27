@@ -33,6 +33,7 @@ clear error naming the missing package, so an environment never fails silently.
 | `[parquet]` | pyarrow | Longitudinal data lake: `append_to_parquet`, `build_availability_panel`, `calculate_net_flow`, manifests |
 | `[cluster]` | scikit-learn | Spatial, spectral and diurnal-profile clustering |
 | `[dtw]` | tslearn | Shape-aware diurnal clustering (`method="dtw"`) |
+| `[cli]` | rich | Coloured tables for the `gbfs audit` command line (plain text without it) |
 | `[geo]` | geopandas | Geofencing zones, point-in-zone joins, equal-area density, `to_gdf` |
 | `[osm]` | geopandas | Station surroundings, `features_within`, `station_surroundings` |
 
@@ -85,6 +86,14 @@ The CLI is the semantic counterpart to the syntactic `gbfs-validator`:
 
 ```bash
 gbfs audit station_information.json --system-id velib --out verdict.csv
+```
+
+It prints a coloured table when `rich` is installed (`pip install gbfs-toolkit[cli]`) and the
+output is an interactive terminal, and plain text otherwise. For pipelines, `--json` emits a
+machine-readable summary, and `--a7-scope all` reproduces the `gbfs-audit-catalogue` verdicts:
+
+```bash
+gbfs audit station_information.json --system-id velib --a7-scope all --json
 ```
 
 ## Reproducibility

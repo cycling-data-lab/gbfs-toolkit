@@ -16,6 +16,10 @@ All notable changes are documented here ([Keep a Changelog](https://keepachangel
     sensitivity analysis, so a threshold sweep no longer needs to monkey-patch a module constant.
 - Verified byte-identical against the 46 307-station catalogue: with `a7_scope="all"`, all of
   A1 to A7 match the published flags, and `a4_sigma` reproduces the published 2.0 to 4.0 sweep.
+- **CLI rendering adapts to context.** `gbfs audit` prints a coloured table when `rich` is
+  installed and the output is an interactive terminal, plain text otherwise. New flags:
+  `--json` (machine-readable output for pipelines), `--a7-scope {docked,all}`, and `--no-color`.
+  `rich` lives behind the new optional `[cli]` extra; the core install is unchanged.
 
 ## [1.1.0] - conformance & robustness (from real-world migration)
 
