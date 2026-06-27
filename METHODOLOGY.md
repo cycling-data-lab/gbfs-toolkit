@@ -77,6 +77,43 @@ objection.
   service area, so exceeding it indicates merged feeds, out-of-jurisdiction stations, or
   mis-georeferenced coordinates rather than a genuine footprint.
 
+### Empirical validation
+
+The taxonomy is validated empirically in the companion study
+([`gbfs-audit-catalogue`](https://github.com/cycling-data-lab/gbfs-audit-catalogue), in
+preparation), not only argued from first principles. Four results bear on whether the default
+thresholds are defensible.
+
+- **Scale.** The catalogue audits 46 307 stations across more than one hundred French operators, so
+  the rules are exercised on real free-floating, docked and hybrid systems rather than a toy sample.
+- **Threshold sensitivity (A4).** Sweeping the A4 cutoff from $\sigma = 2$ to $\sigma = 4$ moves the
+  flagged share only from 1.29 % to 0.90 % of stations, and the systems most affected are essentially
+  unchanged: the Kendall rank correlation of the ten most-flagged cities and operators stays at or
+  above 0.956, and the Jaccard overlap of the top ten is 1.0 across the whole range. The published
+  default $\sigma = 3$ therefore sits in a flat, stable interior rather than on a knife-edge.
+
+  | $\sigma$ | A4 stations | Flagged share | Top-10 Jaccard |
+  |------|------|------|------|
+  | 2.0 | 597 | 1.29 % | 1.0 |
+  | 2.5 | 543 | 1.17 % | 1.0 |
+  | 3.0 | 500 | 1.08 % | 1.0 |
+  | 3.5 | 459 | 0.99 % | 1.0 |
+  | 4.0 | 415 | 0.90 % | 1.0 |
+
+- **Generalisation.** A leave-one-operator-out cross-validation on seven operators (Bird, Citiz,
+  Dott, Pony, Voi, Vélib' Métropole, Vélo&Co) shows each rule firing on a held-out operator where
+  its type predicts: the A3 free-floating rule fires on the dockless operators and not on the docked
+  ones. This is evidence that the rules encode the intended structure rather than memorising the
+  training systems.
+- **Robust A4 geometry.** The topology-aware A4 detector removes the large blocks of false positives
+  that a naive station-centroid method produces on dockless feeds (on the order of 2 700 spurious
+  flags on a single Paris dockless operator alone), which is why A4 operates on nearest-neighbour
+  distance rather than distance to a centroid.
+
+A pre-registered, blind author annotation of a stratified sample (n = 422 stations) provides a
+construct-validity check of the automated verdicts. Full protocols and per-operator results are in
+the companion repository under `experiments/`.
+
 ## 3. The dynamic audit (D1–D3) and frozen stations
 
 On a live availability snapshot:
