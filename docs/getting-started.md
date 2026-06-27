@@ -87,9 +87,30 @@ The CLI is the semantic counterpart to the syntactic `gbfs-validator`:
 gbfs audit station_information.json --system-id velib --out verdict.csv
 ```
 
+## Reproducibility
+
+For a study that must be reproducible, pin the whole environment, not just `gbfs-toolkit`. The
+audit thresholds and the canonical schema are frozen under semantic versioning, so a pinned version
+reproduces the same verdicts.
+
+```bash
+pip install "gbfs-toolkit==1.1.0"
+pip freeze > requirements.lock          # or use a Poetry / uv / conda lock file
+```
+
+Record the lock file alongside your analysis. When you deposit a collected dataset, also record its
+provenance with `generate_manifest(lake_dir)` and quantify gaps with `coverage_report(panel)`, so a
+reviewer can verify the data were frozen as described.
+
+!!! note "Geospatial extras"
+    The `[geo]` and `[osm]` extras install `geopandas`, which pulls in compiled geospatial
+    libraries (GEOS, PROJ, GDAL). On most platforms the wheels install without a compiler, but on
+    constrained or ARM environments a conda-based install of `geopandas` is the most reliable path.
+    The core audit needs none of this.
+
 ## Next steps
 
 - [Feature overview](guide.md): the full walkthrough of ingestion, the data lake, clustering, statistics, geofencing and fleet reconciliation.
-- [Examples](examples.md): runnable end-to-end scripts.
+- [Examples](examples.md): runnable end-to-end scripts, plus a fully offline [quickstart notebook](notebooks/quickstart.ipynb).
 - [Methodology](methodology.md): the audit thresholds and the limits of what the toolkit can claim.
 - [Data model](data-model.md): the canonical schema contract and its dtype guarantees.

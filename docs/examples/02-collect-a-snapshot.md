@@ -87,7 +87,12 @@ A run that hits HTTP 304 prints nothing and exits, leaving the lake unchanged.
 - Row counts vary slightly between runs as stations appear or drop out. That variation is real and is preserved, not smoothed.
 
 !!! note "For a citable dataset"
-    Before depositing collected data, record provenance with `generate_manifest(lake_dir)` and quantify gaps with `coverage_report(panel)`. See [Citing this work](../citing.md).
+    Before depositing collected data, record provenance and quantify gaps, so a reviewer can verify the data were frozen as described. See [Citing this work](../citing.md).
+
+    ```python
+    manifest = gb.generate_manifest(lake_dir)   # SHA-256 per Parquet partition + a system/date summary
+    manifest.to_csv(lake_dir / "MANIFEST.csv", index=False)
+    ```
 
 ## Related
 

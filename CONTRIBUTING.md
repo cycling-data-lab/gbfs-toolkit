@@ -28,6 +28,19 @@ returns tidy `DataFrame`/`GeoDataFrame`; you bring the model and the map.
 - New behaviour needs a test; keep coverage ≥ 85% (CI enforces it). Run `ruff` before pushing.
 - Document any methodological assumption or threshold in `METHODOLOGY.md`.
 
+## Reporting issues
+
+Please separate two distinct kinds of report:
+
+- **Software defects** (a crash, a wrong result, a packaging problem) belong in the
+  [issue tracker](https://github.com/cycling-data-lab/gbfs-toolkit/issues). Include `show_versions()`
+  output and a minimal reproducer.
+- **Methodological disputes** (a station you believe the A1–A7 audit flags or misses incorrectly)
+  concern the taxonomy itself, which is defined by the companion dataset
+  [`gbfs-audit-catalogue`](https://github.com/cycling-data-lab/gbfs-audit-catalogue). Raise those
+  there, with the feed and station, so the operational definition and the implementation stay in
+  step.
+
 ## Pull requests
 
 Keep PRs focused, describe the *why*, and update `CHANGELOG.md`. If a change is breaking, say so

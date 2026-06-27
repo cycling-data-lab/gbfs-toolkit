@@ -53,6 +53,30 @@ Design choices worth knowing:
 - **A5 is antimeridian-safe**: the longitudinal extent uses the smallest covering arc, so a
   system straddling ±180° is not reported as Earth-spanning.
 
+### Why these thresholds
+
+The constants are operational definitions inherited from the published catalogue, not free
+parameters. Their rationale is worth stating, since unjustified defaults are a common review
+objection.
+
+- **MAD rather than standard deviation (A4).** The median absolute deviation has a 50 % breakdown
+  point, so the outlier envelope is not itself dragged outward by the very transposed coordinates
+  it is meant to catch. A mean-and-standard-deviation rule has a 0 % breakdown point and would mask
+  exactly the gross errors of interest. The factor 3 is the conventional three-sigma equivalent
+  after the MAD is rescaled to the standard deviation of a Gaussian.
+- **The 1 km floor (A4).** In a dense urban core the MAD of nearest-neighbour distance can be a few
+  tens of metres, which would flag ordinary spacing as anomalous. The floor sets a physically
+  meaningful minimum below which a station is never called an outlier.
+- **A 20-station minimum (A2, A6, A7).** System-level rate rules are unreliable on tiny systems, so
+  the audit abstains rather than emit a high-variance verdict on fewer than 20 docked stations.
+- **The 1 % and 50 % rates (A6, A7).** A6 fires on even a small contamination of zero-capacity
+  docks, because a single block of placeholder capacities is enough to bias a capacity-weighted
+  metric. A7 requires a majority of null capacities, the signature of a feed that does not populate
+  the field at all rather than one with a few gaps.
+- **50 000 km² (A5).** This bounding-box area is larger than any single metropolitan bike-share
+  service area, so exceeding it indicates merged feeds, out-of-jurisdiction stations, or
+  mis-georeferenced coordinates rather than a genuine footprint.
+
 ## 3. The dynamic audit (D1–D3) and frozen stations
 
 On a live availability snapshot:
@@ -78,6 +102,12 @@ limit:
 > and returned to the same station between two snapshots yields Δ = 0. These quantities are
 > therefore a **lower bound** on true activity. Poll well below the timescale of the dynamics
 > you want to measure, and report your polling cadence.
+
+Formally, let $T$ be the true number of vehicle movements at a station over a window and
+$\hat{T}$ the turnover observed at polling interval $\Delta t$. Then $\hat{T} \le T$, with equality
+only if no station's count ever returns to a previous value within a single interval. Decreasing
+$\Delta t$ can only raise $\hat{T}$ toward $T$, never overshoot it, so the estimator is
+conservative by construction.
 
 The toolkit deliberately ships **no rebalancing/OD attribution**. Whether a Δ is a rebalancing
 van or organic demand is *not identifiable* from station-aggregate counts: even under system-wide
@@ -135,3 +165,15 @@ GBFS 2.1+ rotates them for privacy, so on such feeds ghost detection is not mean
 For a citable dataset, record `generate_manifest(lake_dir)` (a SHA-256 per Parquet partition plus
 a system/date summary) alongside the deposit, and `coverage_report(panel)` to quantify
 missingness. The toolkit never imputes: gaps stay `NaN` and are reported, not smoothed.
+
+## 9. References
+
+The audit taxonomy and the statistical estimators rest on the following sources.
+
+- MobilityData. *General Bikeshare Feed Specification (GBFS)*. [github.com/MobilityData/gbfs](https://github.com/MobilityData/gbfs)
+- Fossé, R. and Pallares, G. (2026). *A certified, anomaly-flagged reference catalogue for GBFS bike-sharing feeds* (`gbfs-audit-catalogue`). In preparation. The A1–A7 taxonomy and thresholds originate here.
+- Clark, P. J. and Evans, F. C. (1954). Distance to nearest neighbor as a measure of spatial relationships in populations. *Ecology*, 35(4), 445–453.
+- Moran, P. A. P. (1950). Notes on continuous stochastic phenomena. *Biometrika*, 37(1/2), 17–23.
+- Ripley, B. D. (1977). Modelling spatial patterns. *Journal of the Royal Statistical Society: Series B*, 39(2), 172–212.
+- Gini, C. (1912). *Variabilità e mutabilità*. Bologna.
+- Theil, H. (1967). *Economics and Information Theory*. North-Holland, Amsterdam.

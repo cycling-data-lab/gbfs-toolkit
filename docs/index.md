@@ -90,6 +90,16 @@ A feed can pass the syntactic validator and still carry placeholder capacities, 
 transposed coordinates, or out-of-perimeter stations. Those are the defects the semantic audit is
 designed to surface.
 
+## Scope and limitations
+
+!!! warning "What the toolkit does not do"
+    `gbfs-toolkit` ingests, normalises, audits and summarises GBFS feeds. It deliberately does
+    **not** perform origin-destination or trip inference, routing or isochrones, demand
+    prediction, or imputation of missing data, and it ships no scheduler or daemon. Flow
+    quantities are observed lower bounds, not trip counts (see the [Methodology](methodology.md)).
+    These boundaries are by design: the toolkit returns tidy frames, and you bring the model and
+    the map.
+
 ## Install
 
 ```bash
@@ -110,6 +120,27 @@ clean = info.gbfs.drop_flagged()      # audit A1–A7 and keep the trustworthy s
 av = info.gbfs.join_status(status)    # availability frame
 av.gbfs.occupancy()                   # bikes / (bikes + docks), NaN-safe
 ```
+
+## The same audit on a live network
+
+Run against a live Vélib' Métropole feed (Paris), `audit_static` flags a small, explainable
+fraction of a real 1500-station network:
+
+```text
+system_id                velib
+gbfs_version             2.x
+total_stations           1517
+total_bikes_available    17063
+feed_staleness_min       25.1
+
+31 of 1517 stations flagged
+Geospatial error            26
+Structural over-capacity     5
+```
+
+The 26 geospatial outliers (A4) and 5 free-floating anchors (A3) are exactly the cases a study
+should inspect before trusting station coordinates or capacities. The exact figures vary with each
+live snapshot.
 
 ## Citation and licence
 

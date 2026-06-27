@@ -31,6 +31,18 @@ This survives the outer join in `join_availability`: a station present in only o
 `pd.NA` rather than being upcast to `float64`, which would corrupt equality tests and boolean
 logic on orphaned stations.
 
+### Why extension dtypes rather than the classic ones
+
+The canonical schema uses pandas extension dtypes deliberately. The classic dtypes silently corrupt
+data in exactly the situations a multi-city, multi-version study runs into.
+
+| Field kind | Classic dtype and its failure | Canonical dtype | Guarantee |
+|---|---|---|---|
+| Counts | `float64` after a join inserts `NaN`, so `== 0` checks and integer arithmetic break | `Int64` | Missing stays `pd.NA`; counts remain integers |
+| Flags | `object` or `float64` makes `if flag` ambiguous when the value is missing | `boolean` | Three-valued logic; `pd.NA` is distinct from `False` |
+| Identifiers and names | `object` mixes strings and floats after a merge | `string` | A single, consistent text dtype |
+| Timestamps | naive `datetime64[ns]` aligns cities at the wrong instant | `datetime64[ns, UTC]` | Unambiguous cross-city and cross-version merges |
+
 ## The four canonical frames
 
 ### StationInfo

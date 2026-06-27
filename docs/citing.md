@@ -40,6 +40,10 @@ The A1–A7 semantic taxonomy implemented here comes from the `gbfs-audit-catalo
 }
 ```
 
+The validation data behind the taxonomy live in the companion repository
+[`gbfs-audit-catalogue`](https://github.com/cycling-data-lab/gbfs-audit-catalogue), so the audit
+rules rest on a verifiable corpus rather than on assertion.
+
 ## Authors
 
 | Author | ORCID | Affiliation |
@@ -52,7 +56,9 @@ The A1–A7 semantic taxonomy implemented here comes from the `gbfs-audit-catalo
 A versioned DOI through Zenodo, minted automatically from each tagged GitHub release, is planned.
 Once available it will be listed here so that a study can cite the precise archived snapshot of the
 code. Until then, cite the released version and, where exact reproducibility is required, the Git
-commit hash.
+commit hash. A [`.zenodo.json`](https://github.com/cycling-data-lab/gbfs-toolkit/blob/main/.zenodo.json)
+metadata file is included in the repository, so that once the GitHub and Zenodo integration is
+enabled each release is archived with the correct authorship, ORCID identifiers, and licence.
 
 ## Provenance for derived datasets
 

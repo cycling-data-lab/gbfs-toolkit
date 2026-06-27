@@ -34,7 +34,9 @@ pip install "gbfs-toolkit[fetch,parquet,cluster,geo]"
 
 The runnable `.py` files live in the
 [`examples/`](https://github.com/cycling-data-lab/gbfs-toolkit/tree/main/examples) directory of the
-repository.
+repository. For instant, network-free reproduction, a
+[quickstart notebook](notebooks/quickstart.ipynb) runs the audit, occupancy and a descriptive
+profile on the bundled sample.
 
 ## Finding a system id
 
