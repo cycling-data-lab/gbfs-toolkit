@@ -111,7 +111,7 @@ gb.append_to_parquet(feed.station_status(), "lake/")   # Hive-partitioned by sys
 # in your analysis:
 panel = gb.build_availability_panel("lake/", system_id="velib",
                                     start_time="2026-06-01", resample_freq="5min")
-flow  = gb.calculate_net_flow(panel)   # Δ bikes/station + is_rebalancing_suspected
+flow  = gb.calculate_net_flow(panel)   # Δ bikes/station per poll (observed flow only)
 ```
 
 `build_availability_panel` filters partitions *before* loading (memory-bounded),
@@ -152,11 +152,9 @@ Pure spatial proximity on `GeoKDTree` (no transit API, no schedules) — `is_tra
 # generic "what's nearby" — works for any point dataset (POIs, shops, …)
 gb.features_within(info, pois, radius_m=300, category_col="amenity")  # n_within, n_cafe, …
 
+# bring your own OSM frame (fetch it yourself, e.g. osmnx.features_from_point)
 # one-shot context: transit feeders + OSM features, in one frame
 ctx = gb.station_surroundings(info, transit=stops, osm=osm_gdf, radius_m=300)
-
-# optional interactive fetch (network; otherwise Bring Your Own GeoDataFrame)
-osm_gdf = gb.fetch_osm_around(48.85, 2.35, radius_m=500)              # needs osmnx
 ```
 
 The radius summarisation (counts + per-category breakdown + nearest distance) is the durable,
