@@ -304,7 +304,9 @@ def diurnal_bimodality(
                 "peak_hour": peak_hour,
             }
         )
-    out = pd.DataFrame(rows)
+    out = pd.DataFrame(
+        rows, columns=["station_id", "bimodality_coefficient", "is_bimodal", "peak_hour"]
+    )
     out["is_bimodal"] = out["is_bimodal"].astype("boolean")
     return out
 

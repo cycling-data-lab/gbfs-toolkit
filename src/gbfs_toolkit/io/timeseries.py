@@ -349,7 +349,10 @@ def flow_balance(panel: pd.DataFrame) -> pd.DataFrame:
     flow = calculate_net_flow(panel).dropna(subset=["net_flow"])
     keys = ["system_id", "station_id"]
     if flow.empty:
-        return pd.DataFrame(columns=["inflow", "outflow", "net", "balance"]).rename_axis(keys)
+        return pd.DataFrame(
+            columns=["inflow", "outflow", "net", "balance"],
+            index=pd.MultiIndex.from_arrays([[], []], names=keys),
+        )
     f = flow["net_flow"]
     work = flow[keys].assign(_in=f.clip(lower=0), _out=(-f).clip(lower=0))
     out = work.groupby(keys).agg(inflow=("_in", "sum"), outflow=("_out", "sum"))
@@ -513,6 +516,11 @@ def coverage_report(panel: pd.DataFrame, *, expected_freq: str = "5min") -> pd.D
                     "longest_gap_minutes": round(float(longest), 1),
                 }
             )
+    if not rows:
+        return pd.DataFrame(
+            columns=["expected_snapshots", "actual_snapshots", "uptime_pct", "longest_gap_minutes"],
+            index=pd.MultiIndex.from_arrays([[], []], names=["system_id", "station_id"]),
+        )
     return pd.DataFrame(rows).set_index(["system_id", "station_id"])
 
 
