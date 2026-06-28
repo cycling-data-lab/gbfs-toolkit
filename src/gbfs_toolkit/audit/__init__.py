@@ -9,6 +9,7 @@ from gbfs_toolkit.audit.dynamic import audit_dynamic
 from gbfs_toolkit.audit.static import (
     audit_sensitivity,
     audit_static,
+    capacity_convention,
     classify_from_vehicle_types,
     classify_from_virtual_station,
     flag_rate_ci,
@@ -66,6 +67,7 @@ __all__ = [
     "reclassify_overcapacity",
     "classify_from_vehicle_types",
     "classify_from_virtual_station",
+    "capacity_convention",
     "flag_sentinel_coordinates",
     "audit_dynamic",
     "audit_frames",

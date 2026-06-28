@@ -132,6 +132,27 @@ def test_flag_sentinel_coordinates():
     assert list(mask) == [False, True, True]
 
 
+def test_capacity_convention_labels():
+    def mk(sid, caps):
+        return pd.DataFrame({"system_id": sid, "station_id": [f"{sid}{i}" for i in range(len(caps))], "capacity": caps})
+    df = pd.concat(
+        [
+            mk("null", [float("nan")] * 20),                 # >= 50% NaN
+            mk("placeholder", [100.0] * 20),                 # constant non-zero
+            mk("profile", [12.0] + [0.0] * 19),              # ratio 20 -> conditional_profile
+            mk("pv", [1.0, 2.0] * 10),                       # small varying mean -> per_vehicle
+            mk("physical", [20.0] * 19 + [22.0]),            # genuine docks
+        ],
+        ignore_index=True,
+    )
+    conv = gb.capacity_convention(df)
+    assert conv["null"] == "null"
+    assert conv["placeholder"] == "placeholder"
+    assert conv["profile"] == "conditional_profile"
+    assert conv["pv"] == "per_vehicle"
+    assert conv["physical"] == "physical"
+
+
 def test_flag_rate_ci_is_reproducible_and_bracketing():
     df = pd.concat(
         [_system(f"s{i}", 20, 12 if i % 2 else 0, lat0=48 + 0.1 * i) for i in range(8)],

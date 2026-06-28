@@ -99,6 +99,65 @@ def reclassify_overcapacity(
     return out
 
 
+def capacity_convention(
+    info: pd.DataFrame,
+    *,
+    nan_tau: float = 0.5,
+    a3_ratio: float = A3_RATIO_THRESHOLD,
+    per_vehicle_max: float = 2.0,
+    n_min: int = 20,
+) -> pd.Series:
+    """Label each system's ``capacity``-field publication convention.
+
+    The GBFS ``capacity`` field carries mutually-incompatible semantics across
+    operators (Fossé & Pallares). This assigns each system one label, in priority
+    order:
+
+    - ``"null"`` : at least ``nan_tau`` of stations declare ``NaN`` (A7 regime).
+    - ``"placeholder"`` : a single constant non-zero capacity (A2).
+    - ``"conditional_profile"`` : over-capacity ratio ``> a3_ratio`` (A3).
+    - ``"per_vehicle"`` : a small positive mean (``<= per_vehicle_max``), a
+      per-vehicle estimate rather than a dock count.
+    - ``"physical"`` : a genuine physical dock count.
+
+    Parameters
+    ----------
+    info : pandas.DataFrame
+        Requires ``system_id`` and ``capacity``.
+    nan_tau, a3_ratio, per_vehicle_max : float
+        Thresholds for the null, over-capacity and per-vehicle regimes.
+    n_min : int, default 20
+        Minimum stations for the over-capacity ratio to apply.
+
+    Returns
+    -------
+    pandas.Series
+        The convention label indexed by ``system_id``.
+    """
+    require_columns(info, ["system_id", "capacity"], what="capacity_convention")
+    ratio = overcapacity_ratio(info, n_min=n_min)
+    labels: dict = {}
+    for sid, group in info.groupby("system_id"):
+        c = group["capacity"].to_numpy(dtype="float64")
+        if np.isnan(c).mean() >= nan_tau:
+            labels[sid] = "null"
+            continue
+        finite = c[np.isfinite(c)]
+        if finite.size and np.all(finite > 0) and np.unique(np.round(finite, 6)).size == 1:
+            labels[sid] = "placeholder"
+            continue
+        r = ratio.get(sid, float("nan"))
+        if np.isfinite(r) and r > a3_ratio:
+            labels[sid] = "conditional_profile"
+            continue
+        positive = finite[finite > 0]
+        if positive.size and positive.mean() <= per_vehicle_max:
+            labels[sid] = "per_vehicle"
+            continue
+        labels[sid] = "physical"
+    return pd.Series(labels, name="capacity_convention")
+
+
 def classify_from_vehicle_types(
     info: pd.DataFrame,
     vehicle_types: pd.DataFrame | None,
