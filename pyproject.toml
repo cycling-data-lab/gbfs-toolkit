@@ -68,6 +68,7 @@ dev = [
     "hypothesis>=6.0",  # property-based invariant tests
     "nbmake>=1.5",  # execute the example notebook in CI
     "ipykernel>=6.0",  # kernel for nbmake
+    "interrogate>=1.7",  # docstring-coverage gate (pre-commit + CI)
 ]
 
 [project.scripts]
@@ -104,3 +105,13 @@ ignore = [
     "N803",
     "N806",
 ]
+
+[tool.interrogate]
+# Enforce docstring coverage on the public surface; fail CI/pre-commit below this.
+fail-under = 90
+ignore-init-method = true
+ignore-magic = true
+ignore-private = true
+ignore-nested-functions = true
+ignore-semiprivate = true
+exclude = ["tests", "docs", "build", "src/gbfs_toolkit/interfaces/accessor.py"]

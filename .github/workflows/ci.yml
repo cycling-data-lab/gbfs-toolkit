@@ -50,6 +50,9 @@ jobs:
       - name: Type check (mypy)
         if: runner.os == 'Linux' && matrix.python-version == '3.12'
         run: mypy
+      - name: Docstring coverage (interrogate)
+        if: runner.os == 'Linux' && matrix.python-version == '3.12'
+        run: interrogate -c pyproject.toml src
       - name: Notebook execution (nbmake)
         if: runner.os == 'Linux' && matrix.python-version == '3.12'
         run: pytest --nbmake docs/notebooks/quickstart.ipynb
