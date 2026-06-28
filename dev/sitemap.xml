@@ -105,6 +105,10 @@
          <lastmod>2026-06-28</lastmod>
     </url>
     <url>
+         <loc>https://cycling-data-lab.github.io/gbfs-toolkit/dev/reference/analytics/boundary_stress/</loc>
+         <lastmod>2026-06-28</lastmod>
+    </url>
+    <url>
          <loc>https://cycling-data-lab.github.io/gbfs-toolkit/dev/reference/analytics/capacity_utilization/</loc>
          <lastmod>2026-06-28</lastmod>
     </url>
@@ -186,6 +190,10 @@
     </url>
     <url>
          <loc>https://cycling-data-lab.github.io/gbfs-toolkit/dev/reference/analytics/flow_asymmetry_ratio/</loc>
+         <lastmod>2026-06-28</lastmod>
+    </url>
+    <url>
+         <loc>https://cycling-data-lab.github.io/gbfs-toolkit/dev/reference/analytics/format_paper_summary/</loc>
          <lastmod>2026-06-28</lastmod>
     </url>
     <url>
@@ -333,6 +341,10 @@
          <lastmod>2026-06-28</lastmod>
     </url>
     <url>
+         <loc>https://cycling-data-lab.github.io/gbfs-toolkit/dev/reference/audit/vehicle_id_persistence/</loc>
+         <lastmod>2026-06-28</lastmod>
+    </url>
+    <url>
          <loc>https://cycling-data-lab.github.io/gbfs-toolkit/dev/reference/core/AUDIT_FLAGS/</loc>
          <lastmod>2026-06-28</lastmod>
     </url>
@@ -401,6 +413,10 @@
          <lastmod>2026-06-28</lastmod>
     </url>
     <url>
+         <loc>https://cycling-data-lab.github.io/gbfs-toolkit/dev/reference/io/add_local_time/</loc>
+         <lastmod>2026-06-28</lastmod>
+    </url>
+    <url>
          <loc>https://cycling-data-lab.github.io/gbfs-toolkit/dev/reference/io/append_to_parquet/</loc>
          <lastmod>2026-06-28</lastmod>
     </url>
@@ -433,6 +449,10 @@
          <lastmod>2026-06-28</lastmod>
     </url>
     <url>
+         <loc>https://cycling-data-lab.github.io/gbfs-toolkit/dev/reference/io/extract_snapshot_asof/</loc>
+         <lastmod>2026-06-28</lastmod>
+    </url>
+    <url>
          <loc>https://cycling-data-lab.github.io/gbfs-toolkit/dev/reference/io/fetch_feed_json/</loc>
          <lastmod>2026-06-28</lastmod>
     </url>
@@ -453,11 +473,19 @@
          <lastmod>2026-06-28</lastmod>
     </url>
     <url>
+         <loc>https://cycling-data-lab.github.io/gbfs-toolkit/dev/reference/io/insert_explicit_gaps/</loc>
+         <lastmod>2026-06-28</lastmod>
+    </url>
+    <url>
          <loc>https://cycling-data-lab.github.io/gbfs-toolkit/dev/reference/io/normalize_operator/</loc>
          <lastmod>2026-06-28</lastmod>
     </url>
     <url>
          <loc>https://cycling-data-lab.github.io/gbfs-toolkit/dev/reference/io/parse_discovery/</loc>
+         <lastmod>2026-06-28</lastmod>
+    </url>
+    <url>
+         <loc>https://cycling-data-lab.github.io/gbfs-toolkit/dev/reference/io/resample_panel/</loc>
          <lastmod>2026-06-28</lastmod>
     </url>
     <url>
@@ -509,6 +537,10 @@
          <lastmod>2026-06-28</lastmod>
     </url>
     <url>
+         <loc>https://cycling-data-lab.github.io/gbfs-toolkit/dev/reference/io/to_wide_matrix/</loc>
+         <lastmod>2026-06-28</lastmod>
+    </url>
+    <url>
          <loc>https://cycling-data-lab.github.io/gbfs-toolkit/dev/reference/io/turnover/</loc>
          <lastmod>2026-06-28</lastmod>
     </url>
@@ -530,6 +562,10 @@
     </url>
     <url>
          <loc>https://cycling-data-lab.github.io/gbfs-toolkit/dev/reference/spatial/features_within/</loc>
+         <lastmod>2026-06-28</lastmod>
+    </url>
+    <url>
+         <loc>https://cycling-data-lab.github.io/gbfs-toolkit/dev/reference/spatial/filter_by_bbox/</loc>
          <lastmod>2026-06-28</lastmod>
     </url>
     <url>
@@ -562,6 +598,10 @@
     </url>
     <url>
          <loc>https://cycling-data-lab.github.io/gbfs-toolkit/dev/reference/spatial/spatial_entropy/</loc>
+         <lastmod>2026-06-28</lastmod>
+    </url>
+    <url>
+         <loc>https://cycling-data-lab.github.io/gbfs-toolkit/dev/reference/spatial/spatial_outage_redundancy/</loc>
          <lastmod>2026-06-28</lastmod>
     </url>
     <url>
