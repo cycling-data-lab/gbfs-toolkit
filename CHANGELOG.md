@@ -3,6 +3,48 @@
 All notable changes are documented here ([Keep a Changelog](https://keepachangelog.com),
 [SemVer](https://semver.org)).
 
+## [1.5.0] - feed-first audit, research algorithms, generated reference
+
+### Added
+Audit goes feed-first and batch, and the descriptive analysis surface gains the
+algorithms a quantitative study reports. All within the descriptive scope (no
+origin-destination, routing, prediction or imputation).
+
+- **Audit pipeline.** `audit_static` now exposes every policy threshold
+  (`a5_area_km2`, `a6_tau`, `a7_tau`, `n_min`; `a4_sigma` already public), defaults
+  unchanged. `audit_sensitivity` (threshold-robustness sweep with the Jaccard
+  overlap of the flagged set) and `flag_rate_ci` (seeded cluster-bootstrap intervals
+  on flag rates) make robustness and uncertainty reproducible from one call.
+- **Feed-intrinsic classification.** `classify_from_vehicle_types` (A1 car-sharing
+  from the GBFS v3 `form_factor`), `classify_from_virtual_station` (free-floating
+  from `is_virtual_station`), `overcapacity_ratio` + `reclassify_overcapacity` (the
+  A3 conditional-averaging signature), `capacity_convention` (the six capacity
+  semantics) and `flag_sentinel_coordinates` (the (0,0) null-island filter).
+- **Batch audit.** `audit_catalogue` fetches and audits many systems in one call,
+  returning the per-station verdict and a per-system status.
+- **Research algorithms.** `fdr_adjust` and `local_morans_i(fdr=True)`
+  (Benjamini-Hochberg control for LISA), `theil_index` (between/within decomposable)
+  and `palma_ratio` (equity), `two_step_fca` exponential (gravity) decay (E2SFCA),
+  `rebalancing_tension` (minimum-work spatial fragmentation via the Wasserstein
+  earth-mover distance), `block_bootstrap_ci` + `effective_sample_size` (honest
+  uncertainty for autocorrelated series), and `censored_time_ratio` (observability
+  loss at saturation).
+- **Human-validation helpers.** `krippendorff_alpha`, `cohen_kappa`,
+  `wilson_interval` for construct-validity studies.
+
+### Fixed
+- `resolve` preferred the operator website `url` over the GBFS auto-discovery
+  endpoint (fetched the homepage instead of `gbfs.json`).
+- `gini` could return a tiny negative on all-equal inputs (float roundoff).
+
+### Documentation
+- The API reference is now a generated per-function catalogue (one page per object
+  from `__all__`, a thematic landing) with clickable pandas/numpy/scipy types and a
+  source button; versioned with `mike`. Doctested `Examples` on the analytical
+  surface (run in CI), a docstring-coverage gate (`interrogate`), and a ten-page
+  How-To scenario set (audit, collection, history, equity, rigour, free-floating &
+  ghost fleets, reliability, context, macro-scale).
+
 ## [1.4.0] - advanced descriptive analytics
 
 ### Added
