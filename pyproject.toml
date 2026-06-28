@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "gbfs-toolkit"
-version = "1.7.0"
+version = "1.7.1"
 description = "Research-grade ingestion and semantic quality audit (A1–A7) for GBFS bike-share feeds"
 readme = "README.md"
 requires-python = ">=3.10"
@@ -87,6 +87,12 @@ gbfs_toolkit = ["py.typed"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+filterwarnings = [
+    # Upstream pandas 2.3 / numpy 2.5 interaction: pd.Timedelta(<string or kwargs>) emits a
+    # generic-unit DeprecationWarning from pandas internals, independent of our usage. It will
+    # be resolved by a pandas release; ignore it here so the real warnings stay visible.
+    "ignore:The 'generic' unit for NumPy timedelta is deprecated:DeprecationWarning",
+]
 
 [tool.mypy]
 files = ["src/gbfs_toolkit"]

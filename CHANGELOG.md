@@ -3,6 +3,23 @@
 All notable changes are documented here ([Keep a Changelog](https://keepachangelog.com),
 [SemVer](https://semver.org)).
 
+## [1.7.1] - supply-chain and hygiene
+
+### Changed
+- **Supply chain.** All GitHub Actions are now pinned by full commit SHA (not a moving
+  tag), and the CI workflow runs with least-privilege `contents: read`.
+- **Dependency policy.** Documented (README): lower bounds only, following SPEC 0;
+  speculative upper caps are avoided because they cause resolution conflicts without
+  guarding against real breakage. Support tracks SPEC 0 / NEP 29.
+- Internal: the GBFS timestamp parser is a single `parse_gbfs_timestamp` helper in
+  `core` (the byte-identical `_utc` / `_utc_ts` copies in the io layer were merged).
+
+### Added
+- A `feature_request` issue template (the governance set is now complete).
+- A pytest `filterwarnings` rule that silences the upstream pandas 2.3 / numpy 2.5
+  `pd.Timedelta` generic-unit `DeprecationWarning` (an internal-pandas issue, not our
+  usage), so genuine warnings stay visible in the test output.
+
 ## [1.7.0] - correctness, consistency and hardening (professionalism audit)
 
 ### Deprecated

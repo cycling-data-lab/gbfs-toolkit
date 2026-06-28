@@ -23,6 +23,7 @@ from gbfs_toolkit.core.models import (
     VEHICLE_STATUS_COLUMNS,
     VEHICLE_TYPE_COLUMNS,
 )
+from gbfs_toolkit.core.utils import parse_gbfs_timestamp as _utc
 
 
 def _name(value: Any) -> str | None:
@@ -126,21 +127,6 @@ def to_canonical_station_info(
         df[col] = pd.to_numeric(df[col], errors="coerce")
     df["region_id"] = df["region_id"].astype("string")  # join key, see to_canonical_system_regions
     return df
-
-
-def _utc(value: Any) -> pd.Timestamp:
-    """Parse a GBFS timestamp to a tz-aware UTC ``Timestamp`` (NaT if unparseable).
-
-    GBFS 2.x ``last_reported`` is unix seconds; GBFS 3.x is an RFC3339 string.
-    """
-    if value is None:
-        return pd.NaT
-    if isinstance(value, (int, float)):
-        return pd.to_datetime(value, unit="s", utc=True)
-    try:  # numeric strings still mean unix seconds
-        return pd.to_datetime(float(value), unit="s", utc=True)
-    except (TypeError, ValueError):
-        return pd.to_datetime(value, errors="coerce", utc=True)
 
 
 def _now_utc() -> pd.Timestamp:

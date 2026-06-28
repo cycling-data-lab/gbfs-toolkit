@@ -9,12 +9,28 @@ exactly one place instead of being re-derived in every analysis module.
 from __future__ import annotations
 
 import warnings
-from typing import TypeVar
+from typing import Any, TypeVar
 
 import numpy as np
 import pandas as pd
 
 _T = TypeVar("_T")
+
+
+def parse_gbfs_timestamp(value: Any) -> pd.Timestamp:
+    """Parse a GBFS timestamp to a tz-aware UTC ``Timestamp`` (``NaT`` if unparseable).
+
+    GBFS 2.x carries unix seconds; GBFS 3.x carries an RFC3339 string. The single
+    parser both the I/O and normalisation layers use, so the two never drift.
+    """
+    if value is None:
+        return pd.NaT
+    if isinstance(value, (int, float)):
+        return pd.to_datetime(value, unit="s", utc=True)
+    try:  # numeric strings still mean unix seconds
+        return pd.to_datetime(float(value), unit="s", utc=True)
+    except (TypeError, ValueError):
+        return pd.to_datetime(value, errors="coerce", utc=True)
 
 
 def deprecated_kwarg(value: _T, *, old: str, new: str) -> _T:

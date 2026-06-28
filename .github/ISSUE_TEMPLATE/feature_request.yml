@@ -1,0 +1,36 @@
+name: Feature request
+description: Suggest a new descriptive metric, parser, or helper
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        gbfs-toolkit is strictly descriptive. Requests for origin-destination / trip
+        inference, routing, demand prediction, imputation, rebalancing optimisation or
+        simulation are out of scope and will be declined.
+  - type: textarea
+    id: problem
+    attributes:
+      label: What do you want to compute or do?
+      description: The research question or workflow this would support.
+    validations:
+      required: true
+  - type: textarea
+    id: inputs
+    attributes:
+      label: Inputs and outputs
+      description: Which GBFS frames (station_information, station_status panel, vehicles) does it take, and what should it return?
+    validations:
+      required: true
+  - type: textarea
+    id: definition
+    attributes:
+      label: Definition or reference
+      description: The exact formula / algorithm, and a paper or spec reference if there is one.
+  - type: checkboxes
+    id: scope
+    attributes:
+      label: Scope
+      options:
+        - label: This is computable directly from observed GBFS data (no OD/prediction/imputation/optimisation).
+          required: true

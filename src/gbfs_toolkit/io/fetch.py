@@ -24,6 +24,7 @@ import pandas as pd
 
 from gbfs_toolkit.audit import audit_frames
 from gbfs_toolkit.core.errors import GBFSDiscoveryError, GBFSFetchError, GBFSNotModified
+from gbfs_toolkit.core.utils import parse_gbfs_timestamp as _utc_ts
 from gbfs_toolkit.io.normalize import (
     to_canonical_station_info,
     to_canonical_station_status,
@@ -160,18 +161,6 @@ def fetch_feed_json(
     except (requests.HTTPError, ValueError) as e:
         raise GBFSFetchError(f"failed to fetch {url}: {e}") from e
     return FeedResponse(payload, resp.headers.get("ETag"), resp.headers.get("Last-Modified"))
-
-
-def _utc_ts(value: Any) -> pd.Timestamp:
-    """Parse a GBFS top-level ``last_updated`` (unix or RFC3339) to a UTC Timestamp."""
-    if value is None:
-        return pd.NaT
-    if isinstance(value, (int, float)):
-        return pd.to_datetime(value, unit="s", utc=True)
-    try:
-        return pd.to_datetime(float(value), unit="s", utc=True)
-    except (TypeError, ValueError):
-        return pd.to_datetime(value, errors="coerce", utc=True)
 
 
 def parse_discovery(doc: dict, language: str | None = None) -> tuple[dict[str, str], str]:

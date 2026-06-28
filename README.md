@@ -262,6 +262,12 @@ API are frozen within a major version, so studies built on the data model and fu
 signatures remain reproducible across releases. See the [Changelog](CHANGELOG.md) for the
 current version and full release history.
 
+**Dependency policy.** Dependencies carry lower bounds only, following
+[SPEC 0](https://scientific-python.org/specs/spec-0000/): speculative upper caps are
+avoided because they cause resolution conflicts without protecting against real breakage.
+Python and core-dependency support tracks SPEC 0 / NEP 29 (roughly the last three minor
+Python releases and the last two years of numpy/scipy/pandas). CI tests Python 3.10 to 3.13.
+
 ## Methodology & limitations
 
 [`METHODOLOGY.md`](https://github.com/cycling-data-lab/gbfs-toolkit/blob/main/METHODOLOGY.md) documents the A1–A7 thresholds, the dynamic checks, the
