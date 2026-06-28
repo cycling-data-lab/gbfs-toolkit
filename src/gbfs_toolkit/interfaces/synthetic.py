@@ -287,6 +287,7 @@ def simulate_city(
     # ---- experimental knob: a spatial field with a controlled low/high frequency mix
     controlled = spatial_lowfreq is not None
     if controlled:
+        assert spatial_lowfreq is not None
         from gbfs_toolkit.spatial.graph import (
             band_limited_signal,
             knn_adjacency,

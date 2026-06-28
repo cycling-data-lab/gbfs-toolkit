@@ -86,13 +86,12 @@ def degree_preserving_rewire(
     rng = np.random.default_rng(seed)
     A = (np.asarray(W) > 0).astype(int)
     np.fill_diagonal(A, 0)
-    edges = [(i, j) for i, j in zip(*np.triu(A, 1).nonzero(), strict=False)]
+    edges = [[int(i), int(j)] for i, j in zip(*np.triu(A, 1).nonzero(), strict=False)]
     m = len(edges)
     if m < 2:
         return A
     n_swaps = int(n_swaps if n_swaps is not None else 10 * m)
     eset = {frozenset(e) for e in edges}
-    edges = [list(e) for e in edges]
     for _ in range(n_swaps):
         x, y = rng.integers(0, m, 2)
         if x == y:
