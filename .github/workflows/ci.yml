@@ -84,6 +84,25 @@ jobs:
         if: runner.os == 'Linux' && matrix.python-version == '3.12'
         run: pytest --nbmake docs/notebooks/quickstart.ipynb
 
+  benchmarks:
+    name: Benchmarks (informational)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
+        with:
+          python-version: "3.12"
+      - run: pip install -e ".[dev]"
+      # Run the suite and publish the results. Timings on shared runners are too noisy to
+      # gate on, so this fails only if a benchmark errors or hangs (an O(n^2) regression);
+      # download the artifact to inspect the numbers.
+      - name: Run benchmarks
+        run: pytest benchmarks/ --benchmark-only --benchmark-json=benchmark.json
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: benchmark-results
+          path: benchmark.json
+
   build:
     name: Build sdist + wheel
     runs-on: ubuntu-latest

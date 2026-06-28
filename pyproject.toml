@@ -70,6 +70,7 @@ dev = [
     "lifelines>=0.27",  # numerical cross-validation of outage survival vs Kaplan-Meier
     "mypy>=1.8",  # static type checking in CI
     "hypothesis>=6.0",  # property-based invariant tests
+    "pytest-benchmark>=4.0",  # performance benchmarks (benchmarks/)
     "nbmake>=1.5",  # execute the example notebook in CI
     "ipykernel>=6.0",  # kernel for nbmake
     "interrogate>=1.7",  # docstring-coverage gate (pre-commit + CI)

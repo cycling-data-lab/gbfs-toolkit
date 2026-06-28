@@ -27,6 +27,11 @@ returns tidy `DataFrame`/`GeoDataFrame`; you bring the model and the map.
 - Optional dependencies stay behind extras and lazy imports, so the core is numpy/scipy/pandas only.
 - New behaviour needs a test; keep coverage ≥ 85% (CI enforces it). Run `ruff` before pushing.
 - Document any methodological assumption or threshold in `METHODOLOGY.md`.
+- Performance benchmarks live in `benchmarks/` (outside the test suite). Run them with
+  `pytest benchmarks/ --benchmark-only`. CI runs them informationally and uploads the
+  results; if you touch a hot path (spatial neighbour queries, panel groupbys, the
+  per-snapshot loops in `vehicle_id_persistence` / `spatial_outage_redundancy`), check the
+  numbers before and after.
 
 ## Docstring standard
 
