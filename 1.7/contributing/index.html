@@ -6103,6 +6103,11 @@ returns tidy <code>DataFrame</code>/<code>GeoDataFrame</code>; you bring the mod
 <li>Optional dependencies stay behind extras and lazy imports, so the core is numpy/scipy/pandas only.</li>
 <li>New behaviour needs a test; keep coverage ≥ 85% (CI enforces it). Run <code>ruff</code> before pushing.</li>
 <li>Document any methodological assumption or threshold in <code>METHODOLOGY.md</code>.</li>
+<li>Performance benchmarks live in <code>benchmarks/</code> (outside the test suite). Run them with
+  <code>pytest benchmarks/ --benchmark-only</code>. CI runs them informationally and uploads the
+  results; if you touch a hot path (spatial neighbour queries, panel groupbys, the
+  per-snapshot loops in <code>vehicle_id_persistence</code> / <code>spatial_outage_redundancy</code>), check the
+  numbers before and after.</li>
 </ul>
 <h2 id="docstring-standard">Docstring standard<a class="headerlink" href="#docstring-standard" title="Permanent link">&para;</a></h2>
 <p>Docstrings are the API reference: <code>mkdocstrings</code> renders them on the site, <code>pytest
