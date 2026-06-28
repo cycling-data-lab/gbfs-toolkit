@@ -178,6 +178,22 @@ Trip and OD reconstruction belong in dedicated research code, not here.
 - **`ripley_k`** has **no edge correction**. It is biased downward at radii approaching the
   study-area size and is unreliable on irregular real boundaries (coastlines, rivers). Use it for
   *relative* comparison at small radii; prefer Clark–Evans for an overall dispersion verdict.
+- **`local_morans_i`** (LISA) gives the per-station hot-spot / cold-spot map behind the global
+  index, with conditional-permutation pseudo p-values. Its statistic is validated against
+  `esda`/PySAL (identical to machine precision under identical weights), and its variance follows
+  the same `ddof=1` convention so the reported `local_i` is directly comparable.
+
+### Great-circle weights, not Euclidean degrees
+
+All k-nearest-neighbour weights here are built on **great-circle (haversine) distance** via the
+shared `GeoKDTree`, not on Euclidean distance in raw WGS-84 degrees. This is a correctness choice,
+not a detail: one degree of longitude is about 111 km at the equator but only about 80 km at
+Montpellier's latitude, so Euclidean-on-degrees (the default in several spatial libraries) distorts
+the neighbour graph by latitude and biases every k-NN-based statistic (Moran's I, LISA, the
+nearest-neighbour metrics). Computing exact great-circle distances keeps the weights valid
+independent of the network's latitude. This is why a naive comparison against a library's default
+Euclidean weights differs from `gbfs-toolkit`, while a comparison with matched weights agrees to
+machine precision.
 
 ## 6. Inequality / equity metrics
 
