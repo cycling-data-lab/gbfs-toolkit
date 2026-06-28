@@ -14,6 +14,12 @@ on:
 permissions:
   contents: write
 
+# Serialise gh-pages deploys: a main push and a tag push must not race to push the
+# same branch (the loser is rejected with "fetch first").
+concurrency:
+  group: docs-deploy
+  cancel-in-progress: false
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
