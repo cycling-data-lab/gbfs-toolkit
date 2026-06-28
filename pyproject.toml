@@ -39,8 +39,8 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-fetch = ["requests>=2.31"]
-geo = ["geopandas>=0.14"]
+fetch = ["requests>=2.31", "urllib3>=2.0"]  # build_session imports urllib3.util.Retry directly
+geo = ["geopandas>=0.14", "shapely>=2.0"]  # geofencing imports shapely.geometry directly
 osm = ["geopandas>=0.14"]  # enrich_with_osm (BYOG); fetch_osm_around also needs `osmnx`
 parquet = ["pyarrow>=15.0"]
 cluster = ["scikit-learn>=1.4"]
@@ -71,6 +71,7 @@ dev = [
     "mypy>=1.8",  # static type checking in CI
     "hypothesis>=6.0",  # property-based invariant tests
     "pytest-benchmark>=4.0",  # performance benchmarks (benchmarks/)
+    "deptry>=0.20",  # flag undeclared / transitive imports (no borrowed deps)
     "nbmake>=1.5",  # execute the example notebook in CI
     "ipykernel>=6.0",  # kernel for nbmake
     "interrogate>=1.7",  # docstring-coverage gate (pre-commit + CI)
@@ -94,6 +95,12 @@ filterwarnings = [
     # be resolved by a pandas release; ignore it here so the real warnings stay visible.
     "ignore:The 'generic' unit for NumPy timedelta is deprecated:DeprecationWarning",
 ]
+
+[tool.deptry]
+# DEP002 (declared-but-unused) only fires on the dev/docs tooling extras (pytest, ruff,
+# mkdocs, esda, ...), which are run by CI, not imported in src. The rules that matter for
+# us are DEP001 (missing) and DEP003 (transitive/borrowed import, the jinja2-class bug).
+ignore = ["DEP002"]
 
 [tool.mypy]
 files = ["src/gbfs_toolkit"]
