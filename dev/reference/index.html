@@ -1072,6 +1072,18 @@
       
         
       
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
     
     
     
@@ -1183,6 +1195,34 @@
   
   
     <li class="md-nav__item">
+      <a href="core/calibrate_city/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    calibrate_city
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="core/coerce_schema/" class="md-nav__link">
         
   
@@ -1191,6 +1231,62 @@
     
   
     coerce_schema
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="core/compute_footprint/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    compute_footprint
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="core/export_ml_dataset/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    export_ml_dataset
   
 
     
@@ -1351,6 +1447,34 @@
   
   
     <li class="md-nav__item">
+      <a href="core/generate_gbfs_parquet/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    generate_gbfs_parquet
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="core/models/" class="md-nav__link">
         
   
@@ -1471,6 +1595,62 @@
     
   
     SCHEMAS
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="core/SimConfig/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SimConfig
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="core/simulate_city_flows/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    simulate_city_flows
   
 
     
@@ -6830,8 +7010,20 @@
 <td>Built-in immutable sequence.</td>
 </tr>
 <tr>
+<td><a href="core/calibrate_city/"><code>calibrate_city</code></a></td>
+<td>Grid-search <code>SimConfig</code> hyperparameters so the simulated footprint matches the real one.</td>
+</tr>
+<tr>
 <td><a href="core/coerce_schema/"><code>coerce_schema</code></a></td>
 <td>Cast a frame's columns to the canonical dtypes for <code>schema</code> (nullable ints/bools, UTC).</td>
+</tr>
+<tr>
+<td><a href="core/compute_footprint/"><code>compute_footprint</code></a></td>
+<td><code>[turnover/day, median ACF1(lag 1h), stockout_rate]</code> from a GBFS station_status history.</td>
+</tr>
+<tr>
+<td><a href="core/export_ml_dataset/"><code>export_ml_dataset</code></a></td>
+<td>Write the analysis-ready ML folder for one simulated city.</td>
 </tr>
 <tr>
 <td><a href="core/GBFSDiscoveryError/"><code>GBFSDiscoveryError</code></a></td>
@@ -6854,6 +7046,10 @@
 <td>Data does not satisfy the canonical schema or a documented invariant.</td>
 </tr>
 <tr>
+<td><a href="core/generate_gbfs_parquet/"><code>generate_gbfs_parquet</code></a></td>
+<td>Run the simulation and export a compressed, canonical GBFS <code>station_status</code> Parquet.</td>
+</tr>
+<tr>
 <td><a href="core/models/"><code>models</code></a></td>
 <td>Canonical data model for GBFS feeds: the stable contract every other module</td>
 </tr>
@@ -6872,6 +7068,14 @@
 <tr>
 <td><a href="core/SCHEMAS/"><code>SCHEMAS</code></a></td>
 <td>dict() -&gt; new empty dictionary</td>
+</tr>
+<tr>
+<td><a href="core/SimConfig/"><code>SimConfig</code></a></td>
+<td>SimConfig(n_stations: 'int' = 200, days: 'int' = 14, freq: 'str' = '1h', internal_minutes: 'int' = 15, seed: 'int' = 42, center: 'tuple[float, float]' = (48.86, 2.35), spread_km: 'float' = 4.0, n_clusters: 'int' = 8, role_mix: 'tuple[float, float, float, float]' = (0.55, 0.27, 0.1, 0.08), trip_rate: 'float' = 12.0, base_demand: 'float' = 0.6, mass_tail: 'float' = 1.6, beta_km: 'float' = 1.5, max_trip_km: 'float</td>
+</tr>
+<tr>
+<td><a href="core/simulate_city_flows/"><code>simulate_city_flows</code></a></td>
+<td></td>
 </tr>
 <tr>
 <td><a href="core/validate_schema/"><code>validate_schema</code></a></td>

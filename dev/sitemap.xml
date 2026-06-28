@@ -381,11 +381,31 @@
          <lastmod>2026-06-28</lastmod>
     </url>
     <url>
+         <loc>https://cycling-data-lab.github.io/gbfs-toolkit/dev/reference/core/SimConfig/</loc>
+         <lastmod>2026-06-28</lastmod>
+    </url>
+    <url>
          <loc>https://cycling-data-lab.github.io/gbfs-toolkit/dev/reference/core/__version__/</loc>
          <lastmod>2026-06-28</lastmod>
     </url>
     <url>
+         <loc>https://cycling-data-lab.github.io/gbfs-toolkit/dev/reference/core/calibrate_city/</loc>
+         <lastmod>2026-06-28</lastmod>
+    </url>
+    <url>
          <loc>https://cycling-data-lab.github.io/gbfs-toolkit/dev/reference/core/coerce_schema/</loc>
+         <lastmod>2026-06-28</lastmod>
+    </url>
+    <url>
+         <loc>https://cycling-data-lab.github.io/gbfs-toolkit/dev/reference/core/compute_footprint/</loc>
+         <lastmod>2026-06-28</lastmod>
+    </url>
+    <url>
+         <loc>https://cycling-data-lab.github.io/gbfs-toolkit/dev/reference/core/export_ml_dataset/</loc>
+         <lastmod>2026-06-28</lastmod>
+    </url>
+    <url>
+         <loc>https://cycling-data-lab.github.io/gbfs-toolkit/dev/reference/core/generate_gbfs_parquet/</loc>
          <lastmod>2026-06-28</lastmod>
     </url>
     <url>
@@ -394,6 +414,10 @@
     </url>
     <url>
          <loc>https://cycling-data-lab.github.io/gbfs-toolkit/dev/reference/core/require_columns/</loc>
+         <lastmod>2026-06-28</lastmod>
+    </url>
+    <url>
+         <loc>https://cycling-data-lab.github.io/gbfs-toolkit/dev/reference/core/simulate_city_flows/</loc>
          <lastmod>2026-06-28</lastmod>
     </url>
     <url>
