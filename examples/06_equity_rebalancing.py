@@ -40,10 +40,18 @@ def main() -> None:
     times = pd.date_range("2026-06-01T08:00Z", periods=3, freq="5min")
     panel = pd.DataFrame(
         [
-            {"station_id": s, "lat": la, "lon": lo, "fetched_at": t,
-             "num_bikes_available": b, "num_docks_available": 20 - b}
+            {
+                "station_id": s,
+                "lat": la,
+                "lon": lo,
+                "fetched_at": t,
+                "num_bikes_available": b,
+                "num_docks_available": 20 - b,
+            }
             for s, la, lo in [("a", 48.85, 2.35), ("b", 48.95, 2.35), ("c", 48.85, 2.55)]
-            for t, b in zip(times, {"a": [20, 10, 0], "b": [0, 5, 12], "c": [4, 6, 8]}[s], strict=True)
+            for t, b in zip(
+                times, {"a": [20, 10, 0], "b": [0, 5, 12], "c": [4, 6, 8]}[s], strict=True
+            )
         ]
     )
     tension = gb.rebalancing_tension(panel)

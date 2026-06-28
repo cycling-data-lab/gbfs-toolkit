@@ -28,8 +28,15 @@ def main() -> None:
     }
     vehicles = pd.DataFrame(
         [
-            {"system_id": "ff", "vehicle_id": vid, "lat": la, "lon": lo, "fetched_at": t,
-             "is_disabled": False, "is_reserved": False}
+            {
+                "system_id": "ff",
+                "vehicle_id": vid,
+                "lat": la,
+                "lon": lo,
+                "fetched_at": t,
+                "is_disabled": False,
+                "is_reserved": False,
+            }
             for vid, pts in tracks.items()
             for t, (la, lo) in zip(days, pts, strict=True)
         ]
@@ -37,13 +44,19 @@ def main() -> None:
 
     # A docked snapshot for the hybrid side.
     station_status = pd.DataFrame(
-        {"system_id": "ff", "station_id": ["s1", "s2"],
-         "num_bikes_available": [4, 7], "num_docks_available": [6, 3]}
+        {
+            "system_id": "ff",
+            "station_id": ["s1", "s2"],
+            "num_bikes_available": [4, 7],
+            "num_docks_available": [6, 3],
+        }
     )
 
     # 1. One labelled tally across docked + free-floating (latest snapshot).
     latest = vehicles[vehicles["fetched_at"] == days[-1]]
-    print("Reconciled fleet tally:", gb.reconcile_fleet_state(station_status, latest).to_dict(), "\n")
+    print(
+        "Reconciled fleet tally:", gb.reconcile_fleet_state(station_status, latest).to_dict(), "\n"
+    )
 
     # 2. Ghost vehicles: present in the feed but immobile over the panel.
     ghosts = gb.detect_ghost_vehicles(vehicles, idle_days=1.0, move_threshold_m=50.0).reset_index()
@@ -53,7 +66,11 @@ def main() -> None:
     # 3. Spatial entropy of the free-floating distribution over time (higher = spread).
     ent = gb.spatial_entropy(vehicles, grid_size_m=2000)
     print("Spatial entropy per snapshot:")
-    print(ent[["fetched_at", "n_vehicles", "shannon_entropy", "evenness"]].round(3).to_string(index=False))
+    print(
+        ent[["fetched_at", "n_vehicles", "shannon_entropy", "evenness"]]
+        .round(3)
+        .to_string(index=False)
+    )
 
 
 if __name__ == "__main__":

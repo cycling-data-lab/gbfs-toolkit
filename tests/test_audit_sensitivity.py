@@ -45,7 +45,13 @@ def test_audit_sensitivity_shape_and_baseline_overlap():
     df = pd.concat([_system("a", 20, 12), _system("b", 20, 18, lat0=43.6)], ignore_index=True)
     grid = {"a7_tau": [0.50, 0.70, 0.90]}
     sens = gb.audit_sensitivity(df, grid, a7_tau=0.50)
-    assert set(sens.columns) == {"param", "value", "class", "systems_flagged", "jaccard_vs_baseline"}
+    assert set(sens.columns) == {
+        "param",
+        "value",
+        "class",
+        "systems_flagged",
+        "jaccard_vs_baseline",
+    }
     a7 = sens[sens["class"] == "A7"].set_index("value")
     # At the baseline value the flagged set is identical -> Jaccard 1.0.
     assert a7.loc[0.50, "jaccard_vs_baseline"] == 1.0
@@ -58,9 +64,16 @@ def test_overcapacity_ratio_matches_definition():
     # Y: 1 cap=12, 19 caps=0  -> profile 12, actual 0.6, ratio 20 (over-capacity).
     def mk(sid, caps):
         return pd.DataFrame(
-            {"system_id": sid, "station_id": [f"{sid}{i}" for i in range(len(caps))], "capacity": caps}
+            {
+                "system_id": sid,
+                "station_id": [f"{sid}{i}" for i in range(len(caps))],
+                "capacity": caps,
+            }
         )
-    df = pd.concat([mk("X", [20.0] * 10 + [0.0] * 10), mk("Y", [12.0] + [0.0] * 19)], ignore_index=True)
+
+    df = pd.concat(
+        [mk("X", [20.0] * 10 + [0.0] * 10), mk("Y", [12.0] + [0.0] * 19)], ignore_index=True
+    )
     r = gb.overcapacity_ratio(df)
     assert abs(r["X"] - 2.0) < 1e-9
     assert abs(r["Y"] - 20.0) < 1e-9
@@ -126,7 +139,11 @@ def test_classify_from_virtual_station():
 
 def test_flag_sentinel_coordinates():
     info = pd.DataFrame(
-        {"station_id": ["ok", "null_island", "near0"], "lat": [48.85, 0.0, 1e-9], "lon": [2.35, 0.0, 0.0]}
+        {
+            "station_id": ["ok", "null_island", "near0"],
+            "lat": [48.85, 0.0, 1e-9],
+            "lon": [2.35, 0.0, 0.0],
+        }
     )
     mask = gb.flag_sentinel_coordinates(info)
     assert list(mask) == [False, True, True]
@@ -134,14 +151,21 @@ def test_flag_sentinel_coordinates():
 
 def test_capacity_convention_labels():
     def mk(sid, caps):
-        return pd.DataFrame({"system_id": sid, "station_id": [f"{sid}{i}" for i in range(len(caps))], "capacity": caps})
+        return pd.DataFrame(
+            {
+                "system_id": sid,
+                "station_id": [f"{sid}{i}" for i in range(len(caps))],
+                "capacity": caps,
+            }
+        )
+
     df = pd.concat(
         [
-            mk("null", [float("nan")] * 20),                 # >= 50% NaN
-            mk("placeholder", [100.0] * 20),                 # constant non-zero
-            mk("profile", [12.0] + [0.0] * 19),              # ratio 20 -> conditional_profile
-            mk("pv", [1.0, 2.0] * 10),                       # small varying mean -> per_vehicle
-            mk("physical", [20.0] * 19 + [22.0]),            # genuine docks
+            mk("null", [float("nan")] * 20),  # >= 50% NaN
+            mk("placeholder", [100.0] * 20),  # constant non-zero
+            mk("profile", [12.0] + [0.0] * 19),  # ratio 20 -> conditional_profile
+            mk("pv", [1.0, 2.0] * 10),  # small varying mean -> per_vehicle
+            mk("physical", [20.0] * 19 + [22.0]),  # genuine docks
         ],
         ignore_index=True,
     )

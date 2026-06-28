@@ -44,12 +44,18 @@ def main() -> None:
 
     # 3. Uncertainty: a cluster-bootstrap CI on the system-level flag rates (seeded).
     many = pd.concat(
-        [synth.assign(system_id=f"s{k}", capacity=[np.nan] * (12 + k) + [10.0] * (13 - k)) for k in range(8)],
+        [
+            synth.assign(system_id=f"s{k}", capacity=[np.nan] * (12 + k) + [10.0] * (13 - k))
+            for k in range(8)
+        ],
         ignore_index=True,
     )
     ci = gb.flag_rate_ci(gb.audit_static(many, a7_scope="all"), seed=42)
     print("Flag-rate 95% bootstrap CIs:")
-    print(ci[ci["systems_flagged"] > 0][["class", "rate", "ci_lo", "ci_hi"]].to_string(index=False), "\n")
+    print(
+        ci[ci["systems_flagged"] > 0][["class", "rate", "ci_lo", "ci_hi"]].to_string(index=False),
+        "\n",
+    )
 
     # 4. Spatial hotspots with FDR control (no naive per-station alpha).
     lisa = gb.local_morans_i(info, "capacity", permutations=499, seed=0, fdr=True)

@@ -33,7 +33,15 @@ def _panel(ts_list, bikes_by_station):
     rows = []
     for ts in ts_list:
         for sid, (lat, lon, bikes) in bikes_by_station.items():
-            rows.append({"station_id": sid, "lat": lat, "lon": lon, "fetched_at": ts, "num_bikes_available": bikes})
+            rows.append(
+                {
+                    "station_id": sid,
+                    "lat": lat,
+                    "lon": lon,
+                    "fetched_at": ts,
+                    "num_bikes_available": bikes,
+                }
+            )
     return pd.DataFrame(rows)
 
 

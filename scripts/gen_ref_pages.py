@@ -56,7 +56,7 @@ with mkdocs_gen_files.open("reference/index.md", "w") as fd:
         "by theme below.\n\n"
     )
     fd.write(
-        "!!! abstract \"Start with the data model\"\n"
+        '!!! abstract "Start with the data model"\n'
         "    Every function in this library consumes or returns the canonical, tz-aware "
         "UTC pandas frames described in **[Data model & schemas](../data-model.md)**. Read "
         "it first: the column names and dtypes are the contract these functions rely on.\n\n"
