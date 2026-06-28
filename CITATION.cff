@@ -10,8 +10,8 @@ identifiers:
     value: "10.5281/zenodo.20992153"
     description: "Concept DOI (always resolves to the latest version)"
   - type: doi
-    value: "10.5281/zenodo.20992154"
-    description: "Version DOI for v1.4.0"
+    value: "10.5281/zenodo.20998334"
+    description: "Version DOI for v1.5.0"
 authors:
   - family-names: "Fossé"
     given-names: "Rohan"
