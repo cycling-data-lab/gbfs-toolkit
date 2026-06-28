@@ -18,6 +18,11 @@ def wilson_interval(successes: int, n: int, *, z: float = 1.959963984540054) -> 
 
     More reliable than the normal approximation for small ``n`` or extreme rates,
     and it never leaves ``[0, 1]``.
+
+    Examples
+    --------
+    >>> tuple(round(x, 3) for x in wilson_interval(8, 10))
+    (0.49, 0.943)
     """
     if n == 0:
         return (float("nan"), float("nan"))
@@ -33,6 +38,11 @@ def cohen_kappa(a, b) -> float:
     """Cohen's kappa between two raters over paired nominal labels.
 
     Pairs with a missing label in either rater are dropped.
+
+    Examples
+    --------
+    >>> cohen_kappa([1, 2, 3, 1], [1, 2, 3, 1])  # perfect agreement
+    1.0
     """
     sa = pd.Series(list(a)).reset_index(drop=True)
     sb = pd.Series(list(b)).reset_index(drop=True)
@@ -67,6 +77,13 @@ def krippendorff_alpha(reliability_data, *, missing=np.nan) -> float:
     float
         ``1`` = perfect agreement, ``0`` = chance, ``< 0`` = systematic
         disagreement. ``nan`` if fewer than one pairable unit.
+
+    Examples
+    --------
+    Two raters, three units, identical labels (rows are raters, columns units):
+
+    >>> krippendorff_alpha([[1, 2, 1], [1, 2, 1]])
+    1.0
     """
     data = np.asarray(reliability_data, dtype=object)
 

@@ -19,6 +19,13 @@ def effective_sample_size(series) -> float:
     autocorrelations. A strongly autocorrelated series of length ``n`` carries far
     fewer than ``n`` independent observations; ESS is the count to use in an analytic
     standard error.
+
+    Examples
+    --------
+    >>> import numpy as np
+    >>> smooth = np.sin(np.linspace(0, 20, 200))  # autocorrelated -> ESS < n
+    >>> bool(effective_sample_size(smooth) < 200)
+    True
     """
     x = np.asarray(series, dtype="float64")
     x = x[np.isfinite(x)]
@@ -63,6 +70,13 @@ def block_bootstrap_ci(
     References
     ----------
     Lahiri (2003). *Resampling Methods for Dependent Data*. Springer.
+
+    Examples
+    --------
+    >>> import pandas as pd
+    >>> s = pd.Series([1.0, 2.0, 3.0, 4.0, 5.0] * 20)
+    >>> round(float(block_bootstrap_ci(s, seed=1)["estimate"]), 1)
+    3.0
     """
     x = np.asarray(series, dtype="float64")
     x = x[np.isfinite(x)]

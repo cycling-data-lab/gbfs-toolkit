@@ -34,6 +34,16 @@ def censored_time_ratio(
     pandas.Series
         ``{empty_ratio, full_ratio, censored_ratio}`` where ``censored_ratio`` is the
         union (empty or full).
+
+    Examples
+    --------
+    >>> import pandas as pd
+    >>> panel = pd.DataFrame({
+    ...     "num_bikes_available": [0, 5, 5, 10],
+    ...     "num_docks_available": [10, 0, 5, 5],
+    ... })
+    >>> float(censored_time_ratio(panel)["censored_ratio"])
+    0.5
     """
     require_columns(panel, [bikes_col, docks_col], what="censored_time_ratio")
     bikes = num(panel, bikes_col)

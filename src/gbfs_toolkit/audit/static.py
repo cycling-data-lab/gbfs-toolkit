@@ -62,6 +62,19 @@ def overcapacity_ratio(info: pd.DataFrame, *, n_min: int = 20) -> pd.Series:
     -------
     pandas.Series
         The ratio indexed by ``system_id`` (``NaN`` where undefined).
+
+    Examples
+    --------
+    A free-floating fleet of 20 anchors, one currently occupied (capacity 12),
+    nineteen empty (capacity 0), trips a high ratio:
+
+    >>> import pandas as pd
+    >>> info = pd.DataFrame({
+    ...     "system_id": "ff", "station_id": [str(i) for i in range(20)],
+    ...     "capacity": [12.0] + [0.0] * 19,
+    ... })
+    >>> round(float(overcapacity_ratio(info)["ff"]), 1)
+    20.0
     """
     require_columns(info, ["system_id", "capacity"], what="overcapacity_ratio")
 
@@ -133,6 +146,16 @@ def capacity_convention(
     -------
     pandas.Series
         The convention label indexed by ``system_id``.
+
+    Examples
+    --------
+    >>> import pandas as pd
+    >>> info = pd.DataFrame({
+    ...     "system_id": "p", "station_id": [str(i) for i in range(20)],
+    ...     "capacity": [12.0] + [0.0] * 19,
+    ... })
+    >>> capacity_convention(info)["p"]
+    'conditional_profile'
     """
     require_columns(info, ["system_id", "capacity"], what="capacity_convention")
     ratio = overcapacity_ratio(info, n_min=n_min)
@@ -190,6 +213,14 @@ def classify_from_vehicle_types(
     pandas.DataFrame
         A copy of ``info`` with ``station_type = "carsharing"`` on the car-sharing
         systems; the input is unchanged.
+
+    Examples
+    --------
+    >>> import pandas as pd
+    >>> info = pd.DataFrame({"system_id": ["x"], "station_type": ["docked_bike"]})
+    >>> vt = pd.DataFrame({"system_id": ["x", "x"], "form_factor": ["car", "cargo_bicycle"]})
+    >>> classify_from_vehicle_types(info, vt)["station_type"].tolist()
+    ['carsharing']
     """
     require_columns(info, ["system_id", "station_type"], what="classify_from_vehicle_types")
     out = info.copy()
@@ -243,6 +274,13 @@ def flag_sentinel_coordinates(info: pd.DataFrame, *, tol: float = 1e-6) -> pd.Se
     -------
     pandas.Series
         Boolean mask aligned to ``info`` (``True`` where a station is on the sentinel).
+
+    Examples
+    --------
+    >>> import pandas as pd
+    >>> info = pd.DataFrame({"lat": [48.85, 0.0], "lon": [2.35, 0.0]})
+    >>> flag_sentinel_coordinates(info).tolist()
+    [False, True]
     """
     require_columns(info, ["lat", "lon"], what="flag_sentinel_coordinates")
     lat = info["lat"].astype("float64")
@@ -442,6 +480,19 @@ def audit_static(
         One row per input station with boolean columns ``A1 … A7``, a
         ``flagged`` column (any rule fired) and a human-readable ``reason``
         (comma-separated rule names).
+
+    Examples
+    --------
+    >>> import pandas as pd
+    >>> stations = pd.DataFrame({
+    ...     "system_id": "s", "station_id": ["a", "b"],
+    ...     "station_type": ["docked_bike", "carsharing"],
+    ...     "capacity": [20, 5], "lat": [48.85, 48.86], "lon": [2.35, 2.36],
+    ... })
+    >>> audit_static(stations)[["station_id", "A1", "flagged"]]  # doctest: +NORMALIZE_WHITESPACE
+      station_id     A1  flagged
+    0          a  False    False
+    1          b   True     True
     """
     require_columns(stations, _REQUIRED, what="audit_static")
     df = stations.reset_index(drop=True)
@@ -511,6 +562,19 @@ def audit_sensitivity(
         ``jaccard_vs_baseline == 1.0`` means the flagged-system set is unchanged;
         a value near 1 across a wide grid is evidence the conclusion sits on a
         stability plateau.
+
+    Examples
+    --------
+    >>> import pandas as pd
+    >>> stations = pd.DataFrame({
+    ...     "system_id": "s", "station_id": [str(i) for i in range(20)],
+    ...     "station_type": "docked_bike",
+    ...     "capacity": [float("nan")] * 12 + [10.0] * 8,
+    ...     "lat": 48.85, "lon": 2.35,
+    ... })
+    >>> sens = audit_sensitivity(stations, {"a7_tau": [0.5, 0.7]}, a7_scope="all")
+    >>> sens[sens["class"] == "A7"]["systems_flagged"].tolist()
+    [1, 0]
     """
     base = audit_static(stations, a7_scope=a7_scope, **baseline)
     base_sets = {k: set(base.loc[base[k], "system_id"]) for k in AUDIT_FLAGS}
@@ -561,6 +625,17 @@ def flag_rate_ci(
     -------
     pandas.DataFrame
         Columns ``class, systems_flagged, rate, ci_lo, ci_hi`` (rates as fractions).
+
+    Examples
+    --------
+    >>> import pandas as pd
+    >>> verdict = pd.DataFrame({
+    ...     "system_id": ["a", "b", "c", "d"],
+    ...     "A1": 0, "A2": 0, "A3": 0, "A4": 0, "A5": 0, "A6": 0,
+    ...     "A7": [1, 1, 0, 0],
+    ... })
+    >>> float(flag_rate_ci(verdict, n_boot=500).set_index("class").loc["A7", "rate"])
+    0.5
     """
     sysf = verdict.groupby("system_id")[list(AUDIT_FLAGS)].max().astype(int)
     n = len(sysf)

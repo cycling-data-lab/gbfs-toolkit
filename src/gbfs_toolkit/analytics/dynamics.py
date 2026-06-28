@@ -52,6 +52,18 @@ def rebalancing_tension(
     References
     ----------
     Rubner, Tomasi & Guibas (2000). The Earth Mover's Distance. *IJCV*, 40(2).
+
+    Examples
+    --------
+    >>> import pandas as pd
+    >>> panel = pd.DataFrame({
+    ...     "station_id": ["a", "b"], "lat": [48.85, 48.95], "lon": [2.35, 2.35],
+    ...     "fetched_at": pd.Timestamp("2026-01-01T08:00Z"),
+    ...     "num_bikes_available": [10, 0],
+    ... })
+    >>> tension = rebalancing_tension(panel, target=pd.Series({"a": 5, "b": 5}))
+    >>> float(tension.iloc[0]) > 0
+    True
     """
     from scipy.stats import wasserstein_distance_nd
 

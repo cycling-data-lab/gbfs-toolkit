@@ -112,6 +112,13 @@ def theil_index(values, *, groups=None):
     float or pandas.Series
         The scalar Theil T, or a Series ``{total, between, within}`` (``total ==
         between + within``).
+
+    Examples
+    --------
+    >>> round(float(theil_index([1, 1, 10, 10])), 3)
+    0.389
+    >>> theil_index([5, 5, 5, 5])  # perfect equality
+    0.0
     """
     x = np.asarray(values, dtype="float64")
     if groups is None:
@@ -141,6 +148,11 @@ def palma_ratio(values) -> float:
     The modern measure of *extreme* inequality, more sensitive than the Gini to the
     tails: the total quantity held by the best-served 10% of stations divided by
     that of the least-served 40%.
+
+    Examples
+    --------
+    >>> round(palma_ratio(list(range(1, 11))), 1)
+    1.0
     """
     x = np.sort(np.asarray(values, dtype="float64"))
     x = x[np.isfinite(x)]

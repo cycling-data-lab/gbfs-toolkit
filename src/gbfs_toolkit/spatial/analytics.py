@@ -343,6 +343,11 @@ def fdr_adjust(pvalues, *, method: str = "bh") -> np.ndarray:
     ----------
     Benjamini, Y. & Hochberg, Y. (1995). Controlling the false discovery rate.
     *JRSS B*, 57(1), 289-300.
+
+    Examples
+    --------
+    >>> [round(float(p), 2) for p in fdr_adjust([0.01, 0.04, 0.5])]
+    [0.03, 0.06, 0.5]
     """
     from scipy.stats import false_discovery_control
 
