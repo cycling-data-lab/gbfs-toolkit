@@ -157,6 +157,14 @@ from gbfs_toolkit.io.timeseries import (
     to_wide_matrix,
     turnover,
 )
+from gbfs_toolkit.sim import (
+    SimConfig,
+    calibrate_city,
+    compute_footprint,
+    export_ml_dataset,
+    generate_gbfs_parquet,
+    simulate_city_flows,
+)
 from gbfs_toolkit.spatial.analytics import (
     coverage_stats,
     fdr_adjust,
@@ -307,6 +315,13 @@ __all__ = [
     "load_example",
     "simulate_city",
     "show_versions",
+    # flow simulator + empirical compiler (gbfs_toolkit.sim)
+    "SimConfig",
+    "simulate_city_flows",
+    "generate_gbfs_parquet",
+    "export_ml_dataset",
+    "calibrate_city",
+    "compute_footprint",
     # graph-signal primitives: Laplacian, null models, band-limited signals
     "knn_adjacency",
     "normalized_laplacian",
