@@ -114,8 +114,9 @@ jobs:
       - run: pip install uv
       # Resolve the LOWEST version of each declared dependency, so a use of a numpy/pandas
       # API newer than our floor (numpy>=1.26, pandas>=2.2) fails here instead of for a user
-      # on an older but allowed stack.
-      - run: uv pip install --system --resolution=lowest-direct -e . pytest pytest-benchmark
+      # on an older but allowed stack. pytest is bounded so lowest-direct does not drag it to
+      # an ancient (unbuildable) version; it is the test runner, not a dependency under test.
+      - run: uv pip install --system --resolution=lowest-direct -e . "pytest>=8"
       - run: >
           pytest -q
           tests/test_v160.py tests/test_v162_fixes.py tests/test_v170_consistency.py
