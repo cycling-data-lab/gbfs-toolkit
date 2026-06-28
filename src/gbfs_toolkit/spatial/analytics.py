@@ -4,7 +4,7 @@ Standard descriptive spatial algorithms (Moran's I global and local, Ripley's K/
 Shannon entropy, fleet centre of mass, 2SFCA accessibility) over canonical station and panel
 frames. Deterministic, numpy/scipy only. Exposed on the ``.gbfs`` accessor.
 
-This is a sibling of :mod:`gbfs_toolkit.analytics.*`; it imports only ``core`` and
+This is a sibling of the ``gbfs_toolkit.analytics`` modules; it imports only ``core`` and
 ``spatial.geometry`` and must not import any ``analytics`` module (to keep the layering acyclic).
 """
 
@@ -14,7 +14,7 @@ import numpy as np
 import pandas as pd
 
 from gbfs_toolkit.core.models import require_columns
-from gbfs_toolkit.core.utils import EARTH_RADIUS_M, num
+from gbfs_toolkit.core.utils import EARTH_RADIUS_M, num, panel_frame, project_meters
 from gbfs_toolkit.spatial.geometry import GeoKDTree, haversine_m
 
 
@@ -68,6 +68,7 @@ def morans_i(info: pd.DataFrame, value_col: str, *, k: int = 8) -> pd.Series:
     >>> round(float(morans_i(info, "capacity", k=3)["morans_i"]), 2)
     1.0
     """
+    require_columns(info, ["lat", "lon", value_col], what="morans_i")
     sub = info[["lat", "lon", value_col]].copy()
     for c in ("lat", "lon", value_col):
         sub[c] = pd.to_numeric(sub[c], errors="coerce")
@@ -129,7 +130,7 @@ def ripley_k(info: pd.DataFrame, radii: object, *, area_km2: float | None = None
        so it is biased downward at radii approaching the study-area size and is unreliable for
        irregular real-world boundaries (coastlines, rivers, city limits). Use it for *relative*
        comparison at small radii, and prefer the boundary-robust Clark–Evans index in
-       :func:`coverage_stats` for an overall dispersion verdict.
+       [`coverage_stats`][gbfs_toolkit.coverage_stats] for an overall dispersion verdict.
 
     Parameters
     ----------
@@ -146,6 +147,7 @@ def ripley_k(info: pd.DataFrame, radii: object, *, area_km2: float | None = None
     [`morans_i`][gbfs_toolkit.morans_i] : Single-scale spatial autocorrelation.
     [`spatial_entropy`][gbfs_toolkit.spatial_entropy] : Concentration of the point pattern.
     """
+    require_columns(info, ["lat", "lon"], what="ripley_k")
     lat, lon = num(info, "lat").to_numpy(), num(info, "lon").to_numpy()
     finite = np.isfinite(lat) & np.isfinite(lon)
     lat, lon = lat[finite], lon[finite]
@@ -168,15 +170,11 @@ def ripley_k(info: pd.DataFrame, radii: object, *, area_km2: float | None = None
 
 
 def _hull_area_km2(lat: np.ndarray, lon: np.ndarray) -> float:
-    """Convex-hull area (km²) of points, via an equal-area-ish local projection."""
+    """Convex-hull area (km²) of points, via the shared equirectangular projection."""
     from scipy.spatial import ConvexHull, QhullError
 
-    lat_r, lon_r = np.radians(lat), np.radians(lon)
-    mean_lat = float(np.mean(lat_r))
-    x = EARTH_RADIUS_M * lon_r * np.cos(mean_lat)
-    y = EARTH_RADIUS_M * lat_r
     try:
-        return float(ConvexHull(np.column_stack([x, y])).volume) / 1e6  # 2-D hull volume = area
+        return float(ConvexHull(project_meters(lat, lon)).volume) / 1e6  # 2-D hull volume = area
     except (QhullError, ValueError):  # collinear / degenerate
         return float("nan")
 
@@ -187,7 +185,7 @@ def coverage_stats(info: pd.DataFrame, *, zones: object = None) -> pd.Series:
     Reports nearest-neighbour spacing and station density. The density denominator is the
     convex hull of the stations by default, or (far more accurate for free-floating / hybrid
     systems) the **real service area** if you pass the operator's geofencing ``zones``
-    (a GeoDataFrame from :func:`~gbfs_toolkit.to_canonical_geofencing`; needs the ``[geo]``
+    (a GeoDataFrame from [`to_canonical_geofencing`][gbfs_toolkit.to_canonical_geofencing]; needs the ``[geo]``
     extra). Also reports the **Clark–Evans index** (observed mean NN distance ÷ the value
     expected under spatial randomness: ``<1`` clustered, ``≈1`` random, ``>1`` dispersed).
 
@@ -203,6 +201,7 @@ def coverage_stats(info: pd.DataFrame, *, zones: object = None) -> pd.Series:
     [`zone_area_km2`][gbfs_toolkit.zone_area_km2] : Area of a service polygon.
     [`spatial_center_of_mass`][gbfs_toolkit.spatial_center_of_mass] : Centre of the served area.
     """
+    require_columns(info, ["lat", "lon"], what="coverage_stats")
     lat, lon = num(info, "lat").to_numpy(), num(info, "lon").to_numpy()
     finite = np.isfinite(lat) & np.isfinite(lon)
     lat, lon = lat[finite], lon[finite]
@@ -345,7 +344,7 @@ def spatial_center_of_mass(
     [`spatial_entropy`][gbfs_toolkit.spatial_entropy] : Spread around this centre.
     [`coverage_stats`][gbfs_toolkit.coverage_stats] : Areal coverage of the network.
     """
-    df = panel.reset_index() if isinstance(panel.index, pd.MultiIndex) else panel.copy()
+    df = panel_frame(panel)
     require_columns(df, ["lat", "lon", time_col, weight_col], what="spatial_center_of_mass")
     w = pd.to_numeric(df[weight_col], errors="coerce").fillna(0.0).to_numpy()
     lat = pd.to_numeric(df["lat"], errors="coerce").to_numpy()
@@ -416,7 +415,7 @@ def local_morans_i(
 ) -> pd.DataFrame:
     """Local Moran's I (LISA): per-station spatial-autocorrelation hotspots and cold spots.
 
-    Where :func:`morans_i` returns one global number ("is there a pattern?"), LISA localises it:
+    Where [`morans_i`][gbfs_toolkit.morans_i] returns one global number ("is there a pattern?"), LISA localises it:
     each station gets a local statistic, a permutation pseudo p-value, and a cluster label, so a
     study can map *where* the low-availability cold spots or high-turnover hot spots are.
 
@@ -650,10 +649,13 @@ def spatial_outage_redundancy(
     A station at zero bikes is not a service failure if a station 100 m away is full:
     the user simply walks. The real rupture is *spatial*. For each station this reports
     the share of time it is empty (``local_outage_ratio``) and the share of time it is
-    empty **and** every station within ``radius_m`` is also empty
+    empty **and** every *observed* neighbour within ``radius_m`` is also empty
     (``systemic_outage_ratio``), the fraction of outages that no nearby station can
-    absorb. Purely descriptive: it reads observed stock, it neither predicts demand
-    nor reroutes anyone.
+    absorb. A neighbour with no reading at that timestamp is treated as unknown (it
+    neither creates nor masks a systemic flag), and a timestamp needs at least one
+    observed neighbour to count. Repeated polls for the same station and timestamp are
+    de-duplicated (last kept), not summed. Purely descriptive: it reads observed stock,
+    it neither predicts demand nor reroutes anyone.
 
     Parameters
     ----------
@@ -707,8 +709,12 @@ def spatial_outage_redundancy(
     tree = GeoKDTree(coords["lat"].to_numpy(), coords["lon"].to_numpy())
     neigh = tree.query_radius(coords["lat"].to_numpy(), coords["lon"].to_numpy(), radius_m=radius_m)
 
+    # One cell per (station, timestamp). Deduplicate repeated polls deterministically
+    # (independent of input row order): sort by value with NaN first, then keep the
+    # highest reported count, rather than summing them (which would corrupt the
+    # empty/occupied test) or keeping an order-dependent row.
     vals = num(panel, value_col)
-    grid = (
+    long = (
         pd.DataFrame(
             {
                 "_s": panel["station_id"].map(pos).to_numpy(),
@@ -716,19 +722,29 @@ def spatial_outage_redundancy(
                 "_v": vals.to_numpy(),
             }
         )
-        .pivot_table(index="_t", columns="_s", values="_v", aggfunc="sum")
-        .reindex(columns=range(n_st))
+        .sort_values(["_s", "_t", "_v"], na_position="first")
+        .drop_duplicates(["_s", "_t"], keep="last")
     )
-    matrix = grid.to_numpy(dtype="float64")  # times x stations
-    empty = matrix == 0  # NaN (unobserved) compares False, so it is excluded below
+    grid = long.pivot(index="_t", columns="_s", values="_v").reindex(columns=range(n_st))
+    matrix = grid.to_numpy(dtype="float64")  # times x stations; NaN where unobserved
+    empty = matrix == 0  # NaN (unobserved) compares False
+    has_bike = matrix > 0  # NaN compares False, so unobserved is neither empty nor occupied
 
     rows = []
     for i, station in enumerate(stations):
         nb = neigh[i][neigh[i] < n_st]
-        nbsum = np.nansum(matrix[:, nb], axis=1)
-        systemic = empty[:, i] & (nbsum == 0)
+        others = nb[nb != i]
         observed = ~np.isnan(matrix[:, i])
         n_obs = int(observed.sum())
+        # Systemic outage: the station is empty AND no *observed* neighbour has a bike,
+        # with at least one neighbour observed (an unobserved neighbour is unknown, not
+        # empty, so it neither creates nor masks a systemic flag).
+        if others.size:
+            neighbour_observed = (~np.isnan(matrix[:, others])).any(axis=1)
+            neighbour_has_bike = has_bike[:, others].any(axis=1)
+            systemic = empty[:, i] & neighbour_observed & ~neighbour_has_bike
+        else:
+            systemic = np.zeros(matrix.shape[0], dtype=bool)
         rows.append(
             {
                 "station_id": station,

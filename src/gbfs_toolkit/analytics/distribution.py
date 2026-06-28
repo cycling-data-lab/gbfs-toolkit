@@ -11,7 +11,7 @@ import pandas as pd
 
 from gbfs_toolkit.analytics.frames import STATION_STATES, station_state
 from gbfs_toolkit.core.models import require_columns
-from gbfs_toolkit.core.utils import gini, num
+from gbfs_toolkit.core.utils import deprecated_kwarg, gini, num, panel_frame
 
 
 def system_profile(availability: pd.DataFrame) -> pd.Series:
@@ -20,7 +20,7 @@ def system_profile(availability: pd.DataFrame) -> pd.Series:
     Parameters
     ----------
     availability : pandas.DataFrame
-        An availability frame (e.g. from :func:`~gbfs_toolkit.join_availability`): needs
+        An availability frame (e.g. from [`join_availability`][gbfs_toolkit.join_availability]): needs
         ``num_bikes_available`` / ``num_docks_available``; uses ``capacity``, ``station_type``,
         ``is_virtual_station``, ``is_renting`` / ``is_returning``, ``fetched_at`` /
         ``last_reported`` when present.
@@ -30,7 +30,7 @@ def system_profile(availability: pd.DataFrame) -> pd.Series:
     pandas.Series
         Counts and rates: ``n_stations``, ``total_capacity``, ``total_bikes_available``,
         ``total_docks_available``, ``mean_occupancy``, ``pct_<state>`` for each
-        :data:`~gbfs_toolkit.analytics.frames.STATION_STATES`, and ``staleness_min_median``.
+        `STATION_STATES`, and ``staleness_min_median``.
 
     See Also
     --------
@@ -47,6 +47,8 @@ def system_profile(availability: pd.DataFrame) -> pd.Series:
     >>> int(system_profile(av)["n_stations"])
     2
     """
+    # Intentionally lenient: a profile/describe should work on any frame, so missing
+    # count columns are read as empty (via num()) rather than rejected.
     df = availability
     bikes, docks = num(df, "num_bikes_available"), num(df, "num_docks_available")
     out: dict[str, float] = {"n_stations": int(len(df))}
@@ -75,13 +77,13 @@ def system_profile(availability: pd.DataFrame) -> pd.Series:
 
 
 def compare_systems(frames: dict[str, pd.DataFrame]) -> pd.DataFrame:
-    """Stack :func:`system_profile` across many systems into a comparison table.
+    """Stack [`system_profile`][gbfs_toolkit.system_profile] across many systems into a comparison table.
 
     Parameters
     ----------
     frames : dict of str -> pandas.DataFrame
         ``{system_id: availability_frame}`` (e.g. built from
-        :func:`~gbfs_toolkit.fetch_multiple`).
+        [`fetch_multiple`][gbfs_toolkit.fetch_multiple]).
 
     Returns
     -------
@@ -211,7 +213,7 @@ def concentration_metrics(info: pd.DataFrame, *, value_col: str = "capacity") ->
     Reports the **Gini coefficient** and **Theil T index** of ``value_col`` and the share held
     by the top decile of stations (a system can claim wide coverage yet stash most bikes in a
     few central hubs). Deliberately *outside* the published A1–A7 audit taxonomy; these are
-    descriptive metrics, not a feed-quality verdict. See :func:`lorenz_curve` for the curve.
+    descriptive metrics, not a feed-quality verdict. See [`lorenz_curve`][gbfs_toolkit.lorenz_curve] for the curve.
 
     Returns
     -------
@@ -232,6 +234,7 @@ def concentration_metrics(info: pd.DataFrame, *, value_col: str = "capacity") ->
     >>> round(float(concentration_metrics(info)["gini"]), 2)
     0.45
     """
+    require_columns(info, [value_col], what="concentration_metrics")
     x = num(info, value_col).dropna().to_numpy()
     x = np.sort(x[x > 0])
     out: dict[str, float] = {"n_stations": int(x.size)}
@@ -254,7 +257,7 @@ def lorenz_curve(info: pd.DataFrame, *, value_col: str = "capacity") -> pd.DataF
 
     Returns the cumulative share of stations vs. cumulative share of ``value_col``, starting
     at the origin ``(0, 0)``. The diagonal is perfect equality; the area between it and the
-    curve is half the Gini. Pairs with :func:`concentration_metrics`.
+    curve is half the Gini. Pairs with [`concentration_metrics`][gbfs_toolkit.concentration_metrics].
 
     Returns
     -------
@@ -273,6 +276,7 @@ def lorenz_curve(info: pd.DataFrame, *, value_col: str = "capacity") -> pd.DataF
     >>> lorenz_curve(info)["cum_value_share"].tolist()
     [0.0, 0.1, 0.2, 0.3, 1.0]
     """
+    require_columns(info, [value_col], what="lorenz_curve")
     x = num(info, value_col).dropna().to_numpy()
     x = np.sort(x[x > 0])
     if x.size == 0:
@@ -288,11 +292,15 @@ def lorenz_curve(info: pd.DataFrame, *, value_col: str = "capacity") -> pd.DataF
 
 
 def dynamic_gini_index(
-    panel: pd.DataFrame, *, target_col: str = "num_bikes_available", time_col: str = "fetched_at"
+    panel: pd.DataFrame,
+    *,
+    value_col: str = "num_bikes_available",
+    time_col: str = "fetched_at",
+    target_col: str | None = None,
 ) -> pd.DataFrame:
     """Gini coefficient of available bikes across stations, as a time series.
 
-    Capacity-based concentration (see :func:`concentration_metrics`) measures a network's static
+    Capacity-based concentration (see [`concentration_metrics`][gbfs_toolkit.concentration_metrics]) measures a network's static
     design. This measures the *dynamic* inequality of where the bikes actually are: a system with
     evenly distributed capacity can still become deeply unequal at 18:00, when the fleet piles into
     one district. A rising curve over the day objectifies that loss of equity.
@@ -300,12 +308,14 @@ def dynamic_gini_index(
     Parameters
     ----------
     panel : pandas.DataFrame
-        From :func:`build_availability_panel` or a flat frame with ``station_id``, ``time_col`` and
-        ``target_col``.
-    target_col : str, default "num_bikes_available"
+        From [`build_availability_panel`][gbfs_toolkit.build_availability_panel] or a flat frame with ``station_id``, ``time_col`` and
+        ``value_col``.
+    value_col : str, default "num_bikes_available"
         The per-station quantity whose distribution is measured.
     time_col : str, default "fetched_at"
         Snapshot timestamp.
+    target_col : str, optional
+        Deprecated alias for ``value_col`` (emits a ``FutureWarning``).
 
     Returns
     -------
@@ -331,9 +341,11 @@ def dynamic_gini_index(
     >>> bool(out["gini"].iloc[0] < out["gini"].iloc[1])
     True
     """
-    df = panel.reset_index() if isinstance(panel.index, pd.MultiIndex) else panel.copy()
-    require_columns(df, [time_col, target_col], what="dynamic_gini_index")
-    vals = pd.to_numeric(df[target_col], errors="coerce")
+    if target_col is not None:
+        value_col = deprecated_kwarg(target_col, old="target_col", new="value_col")
+    df = panel_frame(panel)
+    require_columns(df, [time_col, value_col], what="dynamic_gini_index")
+    vals = pd.to_numeric(df[value_col], errors="coerce")
     rows = []
     for t, idx in df.groupby(time_col, sort=True).groups.items():
         v = vals.loc[idx].dropna().to_numpy()
@@ -347,17 +359,17 @@ def format_paper_summary(
     """Render a profile as a publication-ready Markdown or LaTeX table.
 
     Every paper carries a "Table 1: dataset description". Turning the raw output of
-    :func:`system_profile` or :func:`compare_systems` into a clean table (rounded floats,
+    [`system_profile`][gbfs_toolkit.system_profile] or [`compare_systems`][gbfs_toolkit.compare_systems] into a clean table (rounded floats,
     thousands separators, aligned columns) is a recurring twenty-minute chore. This does
     it in one call. It only formats your own profiling output; it computes nothing new.
 
     Parameters
     ----------
     profile : pandas.Series or pandas.DataFrame
-        A profile, e.g. from :func:`system_profile` (Series) or :func:`compare_systems`
+        A profile, e.g. from [`system_profile`][gbfs_toolkit.system_profile] (Series) or [`compare_systems`][gbfs_toolkit.compare_systems]
         (DataFrame).
     fmt : {"markdown", "latex"}, default "markdown"
-        Output dialect. ``"latex"`` delegates to :meth:`pandas.DataFrame.to_latex`.
+        Output dialect. ``"latex"`` delegates to `to_latex`.
     decimals : int, default 2
         Rounding for floating-point cells (thousands separators are added in Markdown).
 

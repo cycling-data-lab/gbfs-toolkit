@@ -213,7 +213,7 @@ def stations_near(
 ) -> pd.DataFrame:
     """For each external point, how many stations are nearby: the accessibility primitive.
 
-    The inverse of :func:`features_within`: there you summarise things *around stations*; here
+    The inverse of [`features_within`][gbfs_toolkit.features_within]: there you summarise things *around stations*; here
     you ask, for arbitrary places (clinics, schools, neighbourhood centroids), *how well each is
     served by stations*. Straight-line (great-circle) proximity only; no routing.
 
@@ -318,7 +318,7 @@ def filter_by_bbox(
     """Keep only the rows inside a lon/lat bounding box.
 
     The basic spatial filter the package was missing: it has polygon membership
-    (:func:`zones_for_points`) and k-NN, but cropping a frame to a rectangular extent
+    ([`zones_for_points`][gbfs_toolkit.zones_for_points]) and k-NN, but cropping a frame to a rectangular extent
     still meant hand-writing four boolean comparisons (and risking a lat/lon swap). The
     ``bounds`` order follows the GeoJSON / Shapely convention
     ``(min_lon, min_lat, max_lon, max_lat)``.

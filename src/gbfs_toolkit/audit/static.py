@@ -1,7 +1,7 @@
 """Static semantic audit of a docked GBFS system: the A1–A7 taxonomy.
 
 Ported from the published ``gbfs-audit-catalogue`` pipeline (Fossé & Pallares),
-adapted to the toolkit's canonical :data:`~gbfs_toolkit.core.models.STATION_INFO_COLUMNS`
+adapted to the toolkit's canonical `STATION_INFO_COLUMNS`
 schema. Operates purely on an in-memory frame (no I/O), so it can audit feeds you
 fetched yourself or any third-party station inventory.
 
@@ -18,6 +18,7 @@ import pandas as pd
 
 from gbfs_toolkit.core.models import (
     A2_MIN_STATIONS,
+    A3_RATIO_THRESHOLD,
     A4_MIN_STATIONS,
     A4_MIN_THRESHOLD_M,
     A4_SIGMA,
@@ -33,7 +34,6 @@ from gbfs_toolkit.core.models import (
 from gbfs_toolkit.core.utils import EARTH_RADIUS_M, project_meters
 
 _REQUIRED = ["system_id", "station_id", "station_type", "capacity", "lat", "lon"]
-A3_RATIO_THRESHOLD = 5.0
 
 
 def overcapacity_ratio(info: pd.DataFrame, *, n_min: int = 20) -> pd.Series:
@@ -107,8 +107,8 @@ def reclassify_overcapacity(
     """Relabel over-capacity systems as ``free_floating`` (the audit protocol's S3 step).
 
     Sets ``station_type = "free_floating"`` on every station of a system whose
-    :func:`overcapacity_ratio` exceeds ``a3_ratio``, so a subsequent
-    :func:`audit_static` flags A3 by the over-capacity mechanism rather than by
+    [`overcapacity_ratio`][gbfs_toolkit.overcapacity_ratio] exceeds ``a3_ratio``, so a subsequent
+    [`audit_static`][gbfs_toolkit.audit_static] flags A3 by the over-capacity mechanism rather than by
     the type a feed happens to declare. Returns a copy; the input is unchanged.
 
     See Also
@@ -386,7 +386,7 @@ def _flag_a2(df: pd.DataFrame, *, min_stations: int = A2_MIN_STATIONS) -> pd.Ser
 
 def _flag_a4(df: pd.DataFrame, projected: np.ndarray, a4_sigma: float = A4_SIGMA) -> np.ndarray:
     """A4: geospatial outliers via a robust ``a4_sigma``-sigma rule on nearest-neighbour
-    distance (default :data:`~gbfs_toolkit.core.models.A4_SIGMA`)."""
+    distance (default `A4_SIGMA`)."""
     from scipy.spatial import cKDTree
 
     n = len(df)
@@ -420,7 +420,7 @@ def _flag_a4(df: pd.DataFrame, projected: np.ndarray, a4_sigma: float = A4_SIGMA
 def _flag_a5(df: pd.DataFrame, *, area_km2: float = A5_BBOX_MAX_KM2) -> np.ndarray:
     """A5, out-of-perimeter: system bounding box larger than the threshold area.
 
-    The longitudinal extent uses the smallest covering arc (:func:`_lon_span_deg`), so a
+    The longitudinal extent uses the smallest covering arc (`_lon_span_deg`), so a
     system straddling the ±180° antimeridian is not falsely reported as Earth-spanning.
     """
     n = len(df)
@@ -500,7 +500,7 @@ def audit_static(
     """Run the A1–A7 semantic audit on a canonical station-information frame.
 
     All policy thresholds are exposed so the audit can be swept for sensitivity
-    analysis (see :func:`~gbfs_toolkit.audit_sensitivity`); every default equals
+    analysis (see [`audit_sensitivity`][gbfs_toolkit.audit_sensitivity]); every default equals
     the published ``gbfs-audit-catalogue`` value, so calling with no keywords
     reproduces the released verdicts exactly.
 
@@ -596,7 +596,7 @@ def audit_sensitivity(
 ) -> pd.DataFrame:
     """One-at-a-time threshold sensitivity of the A1–A7 audit.
 
-    For each ``(parameter, value)`` in ``grids``, re-run :func:`audit_static` with
+    For each ``(parameter, value)`` in ``grids``, re-run [`audit_static`][gbfs_toolkit.audit_static] with
     that single threshold changed (the others held at their baseline) and report,
     per class, the number of flagged systems and the Jaccard overlap of the
     flagged-system set against the baseline audit. Deterministic (no sampling), so
@@ -605,9 +605,9 @@ def audit_sensitivity(
     Parameters
     ----------
     stations : pandas.DataFrame
-        Canonical station inventory (see :func:`audit_static`).
+        Canonical station inventory (see [`audit_static`][gbfs_toolkit.audit_static]).
     grids : dict[str, list]
-        Maps an :func:`audit_static` threshold keyword (``a4_sigma``,
+        Maps an [`audit_static`][gbfs_toolkit.audit_static] threshold keyword (``a4_sigma``,
         ``a5_area_km2``, ``a6_tau``, ``a7_tau``, ``n_min``) to the values to sweep.
     a7_scope : {"docked", "all"}, default "docked"
         Held fixed across the sweep.
@@ -670,7 +670,7 @@ def flag_rate_ci(
 ) -> pd.DataFrame:
     """System-level flag rate per class with a cluster-bootstrap confidence interval.
 
-    Collapses the per-station verdict of :func:`audit_static` to per-system
+    Collapses the per-station verdict of [`audit_static`][gbfs_toolkit.audit_static] to per-system
     (flagged iff any station of the system is flagged), then resamples *systems*
     with replacement to bound the rate, accounting for within-system correlation.
     Seeded, so the interval is reproducible.
@@ -678,7 +678,7 @@ def flag_rate_ci(
     Parameters
     ----------
     verdict : pandas.DataFrame
-        Output of :func:`audit_static` (must carry ``system_id`` and ``A1 … A7``).
+        Output of [`audit_static`][gbfs_toolkit.audit_static] (must carry ``system_id`` and ``A1 … A7``).
     seed : int, default 42
         Seed for the bootstrap resampling.
     n_boot : int, default 10000

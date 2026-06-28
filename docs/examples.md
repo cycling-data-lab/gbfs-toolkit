@@ -1,11 +1,13 @@
 # Examples
 
-Four worked, end-to-end scripts, in the order you would actually meet them: audit an unknown
-feed, collect snapshots into a data lake, analyse the resulting history, then measure network
-equity. Each has its own page with a step-by-step walkthrough, the command to run it, and the full
-source.
+A set of worked, end-to-end scripts. The four core stages below are the path you would actually
+meet them in: audit an unknown feed, collect snapshots into a data lake, analyse the resulting
+history, then measure network equity. Further pages build on that base (robustness and equity,
+free-floating and ghost fleets, service reliability, transit and weather context, macro-scale
+comparison). Each has its own page with a step-by-step walkthrough, the command to run it, and the
+full source.
 
-## Workflow
+## Core workflow
 
 ```mermaid
 flowchart LR
@@ -17,7 +19,7 @@ flowchart LR
 
 Auditing comes first, because every later step should run on the trustworthy subset of stations.
 Collection is repeated on a schedule to build a panel; analysis and the equity report then read
-from what was collected.
+from what was collected. The remaining how-to pages extend this core path.
 
 | Example | Goal | Extras |
 |---|---|---|

@@ -2,11 +2,11 @@
 
 Three lenses on "which stations belong together":
 
-* :func:`cluster_spatial`: physical proximity (HDBSCAN/DBSCAN on projected metres).
-* :func:`cluster_spectral`: network/topological groups (geographic affinity → graph
+* [`cluster_spatial`][gbfs_toolkit.cluster_spatial]: physical proximity (HDBSCAN/DBSCAN on projected metres).
+* [`cluster_spectral`][gbfs_toolkit.cluster_spectral]: network/topological groups (geographic affinity → graph
   Laplacian eigenvectors → k-means, via scikit-learn). For the research-grade spectral
   *profile* of a network (R²_spec bound, localization), use the sibling ``spectral-mobility``.
-* :func:`cluster_diurnal_profiles`: **behavioural typologies** from a longitudinal panel
+* [`cluster_diurnal_profiles`][gbfs_toolkit.cluster_diurnal_profiles]: **behavioural typologies** from a longitudinal panel
   (e.g. "morning commuter origin", "nightlife hub"), the payoff of the longitudinal layer.
 
 Requires the optional ``[cluster]`` extra (``scikit-learn``).
@@ -19,7 +19,7 @@ from typing import Any
 import numpy as np
 import pandas as pd
 
-from gbfs_toolkit.core.utils import EARTH_RADIUS_M
+from gbfs_toolkit.core.utils import panel_frame, project_meters
 
 
 def _require_sklearn():
@@ -32,11 +32,8 @@ def _require_sklearn():
 
 
 def _project_xy(lat: Any, lon: Any) -> np.ndarray:
-    """Equirectangular projection to local metres around the dataset mean (clustering-grade)."""
-    lat_r = np.radians(np.asarray(lat, dtype="float64"))
-    lon_r = np.radians(np.asarray(lon, dtype="float64"))
-    mean_lat = float(np.nanmean(lat_r)) if lat_r.size else 0.0
-    return np.column_stack([EARTH_RADIUS_M * lon_r * np.cos(mean_lat), EARTH_RADIUS_M * lat_r])
+    """Equirectangular projection to local metres (the shared ``project_meters`` helper)."""
+    return project_meters(lat, lon)
 
 
 def cluster_spatial(
@@ -139,7 +136,7 @@ def cluster_spectral(info: pd.DataFrame, *, k: int, n_neighbors: int = 10) -> pd
     return out
 
 
-def _occupancy(df: pd.DataFrame) -> pd.Series:
+def _capacity_fill(df: pd.DataFrame) -> pd.Series:
     """Fraction of capacity filled (0–1), falling back to bikes/(bikes+docks)."""
     bikes = pd.to_numeric(df["num_bikes_available"], errors="coerce")
     occ = pd.Series(np.nan, index=df.index, dtype="float64")
@@ -188,9 +185,9 @@ def diurnal_profiles(
     >>> int(n_obs.loc[("s", "a")])
     4
     """
-    df = panel.reset_index() if isinstance(panel.index, pd.MultiIndex) else panel.copy()
+    df = panel_frame(panel)
     df = df.copy()
-    df["_occ"] = _occupancy(df)
+    df["_occ"] = _capacity_fill(df)
     ts = pd.to_datetime(df[time_col], utc=True)
     df["_hour"] = ts.dt.hour
     n_obs = df.groupby(["system_id", "station_id"])["_occ"].count()
@@ -251,7 +248,7 @@ def cluster_diurnal_profiles(
     Parameters
     ----------
     panel : pandas.DataFrame
-        A panel from :func:`~gbfs_toolkit.build_availability_panel` (or a flat frame with
+        A panel from [`build_availability_panel`][gbfs_toolkit.build_availability_panel] (or a flat frame with
         ``system_id, station_id, num_bikes_available`` + a timestamp). Pass a *local-time*
         panel (``GBFSFeed.to_local_time``) for local diurnal phase; else hours are UTC.
     n_clusters : int or "auto", default "auto"
@@ -349,7 +346,7 @@ def cluster_diurnal_profiles(
     return out[front + [c for c in out.columns if c not in front]]
 
 
-#: Behavioural typology names returned by :func:`label_diurnal_typology`.
+#: Behavioural typology names returned by [`label_diurnal_typology`][gbfs_toolkit.label_diurnal_typology].
 DIURNAL_TYPOLOGIES = (
     "mostly_empty",
     "mostly_full",
@@ -377,7 +374,7 @@ def label_diurnal_typology(profiles: pd.DataFrame, *, amplitude: float = 0.15) -
     Parameters
     ----------
     profiles : pandas.DataFrame
-        Output of :func:`cluster_diurnal_profiles` / :func:`diurnal_profiles` with ``h00..h23``.
+        Output of [`cluster_diurnal_profiles`][gbfs_toolkit.cluster_diurnal_profiles] / [`diurnal_profiles`][gbfs_toolkit.diurnal_profiles] with ``h00..h23``.
     amplitude : float, default 0.15
         Minimum morning/evening swing (fraction of capacity) to call a directional type.
 

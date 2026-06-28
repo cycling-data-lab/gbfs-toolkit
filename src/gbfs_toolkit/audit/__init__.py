@@ -34,7 +34,7 @@ def audit_frames(
 
     A pure function (no feed object), so it audits feeds you fetched yourself *or* frames read
     back from a Parquet lake. Results are stacked with an ``audit_type`` column. Use
-    :func:`audit_static` / :func:`audit_dynamic` directly for the per-rule boolean columns.
+    [`audit_static`][gbfs_toolkit.audit_static] / [`audit_dynamic`][gbfs_toolkit.audit_dynamic] directly for the per-rule boolean columns.
 
     See Also
     --------
@@ -71,7 +71,7 @@ def audit_frames(
 def drop_flagged(stations: pd.DataFrame) -> pd.DataFrame:
     """The analysis-ready subset: stations that pass the static A1–A7 audit, in one call.
 
-    Shorthand for running :func:`audit_static` and keeping the unflagged rows: the first thing
+    Shorthand for running [`audit_static`][gbfs_toolkit.audit_static] and keeping the unflagged rows: the first thing
     most studies do before anything else.
 
     See Also

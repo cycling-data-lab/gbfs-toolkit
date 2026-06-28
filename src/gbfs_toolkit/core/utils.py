@@ -8,8 +8,29 @@ exactly one place instead of being re-derived in every analysis module.
 
 from __future__ import annotations
 
+import warnings
+from typing import TypeVar
+
 import numpy as np
 import pandas as pd
+
+_T = TypeVar("_T")
+
+
+def deprecated_kwarg(value: _T, *, old: str, new: str) -> _T:
+    """Emit a ``FutureWarning`` for a renamed keyword and return its value unchanged.
+
+    Helper for a one-cycle deprecation: a function keeps the old keyword as an
+    opt-in alias (default ``None``) and forwards it through this so every renamed
+    parameter warns identically and points at the caller.
+    """
+    warnings.warn(
+        f"`{old}` is deprecated and will be removed in a future release; use `{new}`.",
+        FutureWarning,
+        stacklevel=3,
+    )
+    return value
+
 
 #: Mean Earth radius in metres (spherical approximation), used by every distance/projection helper.
 EARTH_RADIUS_M = 6_371_000.0
@@ -61,8 +82,19 @@ def gini(values) -> float:
 
 
 def offset_minutes(freq: str) -> float:
-    """Minutes per fixed pandas offset alias (e.g. ``"1h"`` -> 60.0, ``"30min"`` -> 30.0)."""
-    return pd.tseries.frequencies.to_offset(freq).nanos / 6e10
+    """Minutes per fixed pandas offset alias (e.g. ``"1h"`` -> 60.0, ``"30min"`` -> 30.0).
+
+    Raises a clear ``ValueError`` for non-fixed offsets (``"ME"``, ``"MS"``, ``"W"``,
+    ``"Q"``, ``"Y"`` ...), which have no constant length and cannot index a time-of-day.
+    """
+    offset = pd.tseries.frequencies.to_offset(freq)
+    try:
+        return pd.Timedelta(offset).total_seconds() / 60.0
+    except (ValueError, TypeError) as exc:
+        raise ValueError(
+            f"{freq!r} is not a fixed-width frequency; use a constant alias such as "
+            "'1h', '30min', '15min' or '1D'."
+        ) from exc
 
 
 def time_of_day_minutes(timestamps, freq: str) -> np.ndarray:

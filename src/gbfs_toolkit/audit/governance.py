@@ -94,7 +94,7 @@ def vehicle_id_persistence(
     require_columns(df, [id_col, time_col], what="vehicle_id_persistence")
     cols = [c for c in ["system_id", id_col, time_col] if c in df.columns]
     df = df[cols].copy()
-    df[time_col] = pd.to_datetime(df[time_col], utc=True)
+    df[time_col] = pd.to_datetime(df[time_col], utc=True, errors="coerce")
     if "system_id" not in df.columns:
         df["system_id"] = "system"
 

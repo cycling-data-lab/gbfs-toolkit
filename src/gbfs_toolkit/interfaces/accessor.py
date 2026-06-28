@@ -5,7 +5,7 @@ same operations also read as ``df.gbfs.audit()``. Single-frame operations map di
 operations that need a *second* frame (join info+status, reconcile against vehicles, …) take
 it as an argument, so ``info.gbfs.join_status(status)`` reads left-to-right.
 
-Importing :mod:`gbfs_toolkit` registers the accessor as a side effect.
+Importing `gbfs_toolkit` registers the accessor as a side effect.
 """
 
 from __future__ import annotations

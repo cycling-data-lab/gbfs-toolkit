@@ -6,7 +6,7 @@ equity analysis: bikes per km² within the **actual** service area, no-ride/no-p
 coverage of a given set of neighbourhoods.
 
 Requires the optional ``[geo]`` extra (geopandas + shapely). True to the BYOG philosophy,
-nothing here touches the network; feed acquisition stays in :mod:`gbfs_toolkit.io.fetch`.
+nothing here touches the network; feed acquisition stays in `fetch`.
 """
 
 from __future__ import annotations
@@ -67,7 +67,7 @@ def to_canonical_geofencing(
     """Parse a ``geofencing_zones.json`` document into a canonical ``GeoDataFrame``.
 
     Returns one row per zone with a shapely geometry (EPSG:4326) and the columns of
-    :data:`~gbfs_toolkit.core.models.GEOFENCING_COLUMNS`. The boolean/speed fields summarise each
+    `GEOFENCING_COLUMNS`. The boolean/speed fields summarise each
     zone's *default* rule; the full per-vehicle-type ``rules`` list is preserved verbatim.
 
     Parameters
@@ -134,7 +134,7 @@ def zones_for_points(
     points : pandas.DataFrame or geopandas.GeoDataFrame
         Points with ``lat``/``lon`` (a plain frame is promoted to a GeoDataFrame).
     zones : geopandas.GeoDataFrame
-        Output of :func:`to_canonical_geofencing`.
+        Output of [`to_canonical_geofencing`][gbfs_toolkit.to_canonical_geofencing].
     predicate : str, default "within"
         Spatial predicate (``within`` / ``intersects``).
     columns : list of str, optional

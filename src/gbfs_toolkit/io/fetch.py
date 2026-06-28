@@ -130,9 +130,9 @@ def fetch_feed_json(
     """Conditionally fetch a feed, honouring HTTP caching: the polite way to poll.
 
     Pass the ``etag`` / ``last_modified`` returned by the previous call; if the server replies
-    **304 Not Modified**, this raises :class:`~gbfs_toolkit.core.errors.GBFSNotModified` so your
+    **304 Not Modified**, this raises [`GBFSNotModified`][gbfs_toolkit.GBFSNotModified] so your
     scraper can skip re-ingesting an unchanged snapshot (saving bandwidth and avoiding an
-    IP ban). Otherwise returns a :data:`FeedResponse` ``(data, etag, last_modified)`` to store
+    IP ban). Otherwise returns a [`FeedResponse`][gbfs_toolkit.FeedResponse] ``(data, etag, last_modified)`` to store
     for next time. Requires the ``[fetch]`` extra.
 
     See Also
@@ -154,8 +154,12 @@ def fetch_feed_json(
         raise GBFSFetchError(f"failed to fetch {url}: {e}") from e
     if resp.status_code == 304:
         raise GBFSNotModified(url)
-    resp.raise_for_status()
-    return FeedResponse(resp.json(), resp.headers.get("ETag"), resp.headers.get("Last-Modified"))
+    try:
+        resp.raise_for_status()  # 4xx/5xx
+        payload = resp.json()  # malformed body
+    except (requests.HTTPError, ValueError) as e:
+        raise GBFSFetchError(f"failed to fetch {url}: {e}") from e
+    return FeedResponse(payload, resp.headers.get("ETag"), resp.headers.get("Last-Modified"))
 
 
 def _utc_ts(value: Any) -> pd.Timestamp:
@@ -364,7 +368,7 @@ class GBFSFeed:
         """Operator-defined service-area polygons as a ``GeoDataFrame`` (``[geo]`` extra).
 
         Raises ``KeyError`` if the system publishes no ``geofencing_zones`` feed; check
-        :meth:`has` first. See :func:`~gbfs_toolkit.to_canonical_geofencing`.
+        `has` first. See [`to_canonical_geofencing`][gbfs_toolkit.to_canonical_geofencing].
         """
         from gbfs_toolkit.spatial.geofencing import to_canonical_geofencing
 
@@ -395,7 +399,7 @@ class GBFSFeed:
     def availability(self) -> pd.DataFrame:
         """**The daily one-liner**: live status joined with station info.
 
-        Thin convenience over :func:`~gbfs_toolkit.join_availability`; returns bikes/docks
+        Thin convenience over [`join_availability`][gbfs_toolkit.join_availability]; returns bikes/docks
         *and* name, coordinates, capacity and station type in one tidy frame (outer join with a
         ``presence`` indicator). For offline frames (e.g. from a Parquet lake), call
         ``join_availability(info, status)`` directly.
@@ -421,7 +425,7 @@ class GBFSFeed:
         """Unified semantic audit: **static** (A1–A7) on the inventory **and** **dynamic**
         (D1–D3) on live availability, stacked with an ``audit_type`` column.
 
-        Thin convenience over :func:`~gbfs_toolkit.audit_frames` (dynamic staleness uses the
+        Thin convenience over [`audit_frames`][gbfs_toolkit.audit_frames] (dynamic staleness uses the
         feed's advertised ``ttl``). For offline frames, call ``audit_frames(info, status)``.
         """
         status = self.station_status() if self.has(*_STATION_STATUS) else None
@@ -437,7 +441,7 @@ class GBFSFeed:
 
         Pulls ``station_status`` and/or ``vehicle_status`` (whichever exist) and reconciles
         them, excluding vehicles parked at stations from the deployed total so the two feeds
-        don't double-count. See :func:`~gbfs_toolkit.reconcile_fleet_state`.
+        don't double-count. See [`reconcile_fleet_state`][gbfs_toolkit.reconcile_fleet_state].
         """
         from gbfs_toolkit.analytics.fleet import reconcile_fleet_state
 

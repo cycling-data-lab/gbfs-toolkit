@@ -63,7 +63,7 @@ def load_example(
     Parameters
     ----------
     name : str, default "paris"
-        Dataset id (see :data:`DATASETS`).
+        Dataset id (see `DATASETS`).
     fetched_at : optional
         Fetch timestamp stamped on the status frame (default: a fixed 2026-01-05 08:00 UTC, so
         results are deterministic for doctests).

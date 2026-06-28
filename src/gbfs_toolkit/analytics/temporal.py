@@ -12,7 +12,7 @@ import numpy as np
 import pandas as pd
 
 from gbfs_toolkit.core.models import require_columns
-from gbfs_toolkit.core.utils import gini, num, panel_frame
+from gbfs_toolkit.core.utils import deprecated_kwarg, gini, num, panel_frame, time_of_day_minutes
 from gbfs_toolkit.io.timeseries import calculate_net_flow
 
 #: Period of each cyclic calendar field, for sin/cos encoding.
@@ -25,7 +25,7 @@ _CYCLE_PERIODS = {
     "dayofyear": 366,
 }
 
-#: Ordered time-of-day blocks added by :func:`temporal_context_features`.
+#: Ordered time-of-day blocks added by [`temporal_context_features`][gbfs_toolkit.temporal_context_features].
 TIME_BLOCKS = ["night", "am_peak", "midday", "pm_peak", "evening"]
 
 
@@ -81,7 +81,8 @@ def temporal_autocorrelation(
     *,
     lags: tuple[int, ...] = (1, 24, 168),
     freq: str = "1h",
-    column: str = "num_bikes_available",
+    value_col: str = "num_bikes_available",
+    column: str | None = None,
 ) -> pd.DataFrame:
     """Per-station autocorrelation of availability at fixed lags (hour, day, week).
 
@@ -93,14 +94,16 @@ def temporal_autocorrelation(
     Parameters
     ----------
     panel : pandas.DataFrame
-        From :func:`build_availability_panel` or a flat frame with ``system_id, station_id,
-        fetched_at`` and ``column``.
+        From [`build_availability_panel`][gbfs_toolkit.build_availability_panel] or a flat frame with ``system_id, station_id,
+        fetched_at`` and ``value_col``.
     lags : tuple of int, default (1, 24, 168)
         Lags in units of ``freq`` (with the default ``"1h"``: hour, day, week).
     freq : str, default "1h"
         Resampling frequency.
-    column : str, default "num_bikes_available"
+    value_col : str, default "num_bikes_available"
         Series to correlate.
+    column : str, optional
+        Deprecated alias for ``value_col`` (emits a ``FutureWarning``).
 
     Returns
     -------
@@ -128,15 +131,19 @@ def temporal_autocorrelation(
     >>> round(float(temporal_autocorrelation(panel, lags=(2,))["acf_lag_2"].iloc[0]), 1)
     1.0
     """
+    if column is not None:
+        value_col = deprecated_kwarg(column, old="column", new="value_col")
     df = panel_frame(panel)
     require_columns(
-        df, ["system_id", "station_id", "fetched_at", column], what="temporal_autocorrelation"
+        df, ["system_id", "station_id", "fetched_at", value_col], what="temporal_autocorrelation"
     )
     df = df.sort_values(["system_id", "station_id", "fetched_at"])
     rows = []
     for (sid, stid), g in df.groupby(["system_id", "station_id"], sort=False):
         series = (
-            pd.to_numeric(g.set_index("fetched_at")[column], errors="coerce").resample(freq).mean()
+            pd.to_numeric(g.set_index("fetched_at")[value_col], errors="coerce")
+            .resample(freq)
+            .mean()
         )
         row: dict[str, Any] = {"system_id": sid, "station_id": stid}
         for lag in lags:
@@ -160,7 +167,7 @@ def join_exogenous_timeseries(
 
     Almost every cycling-usage study correlates demand with weather. Doing the time alignment by
     hand (unequal cadences, clock offsets, time zones) is a frequent source of methodological error.
-    This wraps :func:`pandas.merge_asof` to attach each exogenous record to the nearest panel
+    This wraps `merge_asof` to attach each exogenous record to the nearest panel
     timestamp within ``tolerance``, safely. No network calls: bring your own exogenous frame.
 
     Both timestamp columns must share time-zone awareness (both tz-aware, ideally UTC, or both
@@ -169,7 +176,7 @@ def join_exogenous_timeseries(
     Parameters
     ----------
     panel : pandas.DataFrame
-        From :func:`build_availability_panel` or a flat frame with ``on_time``.
+        From [`build_availability_panel`][gbfs_toolkit.build_availability_panel] or a flat frame with ``on_time``.
     exogenous : pandas.DataFrame
         External series with a timestamp column (``exo_time``, defaults to ``on_time``).
     tolerance : str, default "1h"
@@ -226,7 +233,7 @@ def temporal_concentration(panel: pd.DataFrame, *, freq: str = "1h") -> pd.DataF
 
     Distributes each station's activity (turnover :math:`\\sum|\\Delta|`) across the day's ``freq``
     bins and takes the Gini of that distribution: ``1`` means all activity in one peak bin, ``0``
-    means uniform. The temporal analogue of the spatial :func:`dynamic_gini_index`, for sizing
+    means uniform. The temporal analogue of the spatial [`dynamic_gini_index`][gbfs_toolkit.dynamic_gini_index], for sizing
     peak-hour infrastructure and rebalancing windows. Convert to local time first for local hours.
 
     Returns
@@ -257,12 +264,9 @@ def temporal_concentration(panel: pd.DataFrame, *, freq: str = "1h") -> pd.DataF
         return pd.DataFrame(
             columns=["system_id", "station_id", "temporal_gini", "peak_share", "peak_bin"]
         )
-    step_min = pd.tseries.frequencies.to_offset(freq).nanos / 6e10
-    ts = pd.to_datetime(flow["fetched_at"])
-    minutes = ts.dt.hour * 60 + ts.dt.minute + ts.dt.second / 60
-    tod = (np.floor(minutes / step_min) * step_min).astype("int64")
+    tod = time_of_day_minutes(flow["fetched_at"], freq).astype("int64")
     by_bin = (
-        flow.assign(activity=flow["net_flow"].abs(), _tod=tod.to_numpy())
+        flow.assign(activity=flow["net_flow"].abs(), _tod=tod)
         .groupby(["system_id", "station_id", "_tod"])["activity"]
         .sum()
     )
@@ -313,7 +317,7 @@ def diurnal_summary_stats(
     >>> float(diurnal_summary_stats(panel).set_index("hour").loc[8, "mean"])
     5.0
     """
-    df = panel.reset_index() if isinstance(panel.index, pd.MultiIndex) else panel.copy()
+    df = panel_frame(panel)
     require_columns(df, [value_col, time_col], what="diurnal_summary_stats")
     work = pd.DataFrame(
         {
@@ -373,7 +377,7 @@ def diurnal_bimodality(
     """
     from scipy.stats import kurtosis, skew
 
-    df = panel.reset_index() if isinstance(panel.index, pd.MultiIndex) else panel.copy()
+    df = panel_frame(panel)
     require_columns(df, ["station_id", value_col, time_col], what="diurnal_bimodality")
     work = pd.DataFrame(
         {
@@ -430,7 +434,7 @@ def availability_synchrony(
     Parameters
     ----------
     panel : pandas.DataFrame
-        From :func:`build_availability_panel` or a flat frame with ``station_id, fetched_at`` and
+        From [`build_availability_panel`][gbfs_toolkit.build_availability_panel] or a flat frame with ``station_id, fetched_at`` and
         ``value_col``.
     freq : str, default "1h"
         Resampling bin for the per-station series.
@@ -499,14 +503,14 @@ def availability_synchrony(
 def availability_stats(panel: pd.DataFrame, *, time_col: str = "fetched_at") -> pd.DataFrame:
     """Per-station longitudinal statistics from an availability panel.
 
-    Complements :func:`~gbfs_toolkit.diurnal_profiles` (which yields the curves) with
+    Complements [`diurnal_profiles`][gbfs_toolkit.diurnal_profiles] (which yields the curves) with
     comparable scalars per station: central tendency, time spent empty/full, volatility, and
     the diurnal amplitude / peak hour of occupancy.
 
     Parameters
     ----------
     panel : pandas.DataFrame
-        A panel from :func:`~gbfs_toolkit.build_availability_panel` (MultiIndexed) or a flat
+        A panel from [`build_availability_panel`][gbfs_toolkit.build_availability_panel] (MultiIndexed) or a flat
         frame with ``system_id, station_id, num_bikes_available, num_docks_available`` and a
         time column. Hour-of-day uses ``time_col`` **as stored**; pass a panel built with
         ``target_tz`` for local-time peaks.
@@ -534,7 +538,7 @@ def availability_stats(panel: pd.DataFrame, *, time_col: str = "fetched_at") -> 
     >>> float(availability_stats(panel)["pct_time_empty"].iloc[0])
     0.5
     """
-    df = panel.reset_index() if isinstance(panel.index, pd.MultiIndex) else panel.copy()
+    df = panel_frame(panel)
     bikes, docks = num(df, "num_bikes_available"), num(df, "num_docks_available")
     denom = bikes + docks
     work = pd.DataFrame(
@@ -598,14 +602,14 @@ def temporal_context_features(
     time_col : str, default "fetched_at"
         The timestamp to derive context from.
     holidays : optional
-        A collection of dates (anything :func:`pandas.to_datetime` accepts). When given, an
+        A collection of dates (anything `to_datetime` accepts). When given, an
         ``is_holiday`` boolean column is added; omitted otherwise (no silent assumption).
 
     Returns
     -------
     pandas.DataFrame
         A copy of ``panel`` with ``is_weekend`` (boolean), ``time_block`` (ordered Categorical of
-        :data:`TIME_BLOCKS`) and, when ``holidays`` is given, ``is_holiday`` (boolean).
+        `TIME_BLOCKS`) and, when ``holidays`` is given, ``is_holiday`` (boolean).
 
     See Also
     --------

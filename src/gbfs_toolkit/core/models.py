@@ -63,7 +63,7 @@ VEHICLE_STATUS_COLUMNS: list[str] = [
     "is_reserved",
     "is_disabled",
     "current_range_meters",  # remaining range: the core e-bike/battery research signal
-    "current_fuel_percent",  # remaining battery as a 0–1 fraction (GBFS 3.0)
+    "current_fuel_percent",  # remaining battery as a 0 to 1 fraction (GBFS 3.0)
     "pricing_plan_id",  # preserved (not parsed) for equity / pricing joins
     "fetched_at",  # UTC datetime
     "gbfs_version",
@@ -88,7 +88,7 @@ GEOFENCING_COLUMNS: list[str] = [
 #: Canonical per-vehicle-type availability at docked stations (GBFS 2.2+/3.x
 #: ``vehicle_types_available``): *melted* (long), one row per station × vehicle type.
 #: ``num_bikes_available`` aggregates these; this schema preserves the breakdown so
-#: "where are the e-bikes?" is answerable. Joins to :data:`VEHICLE_TYPE_COLUMNS`.
+#: "where are the e-bikes?" is answerable. Joins to `VEHICLE_TYPE_COLUMNS`.
 STATION_VEHICLE_COUNTS_COLUMNS: list[str] = [
     "system_id",
     "station_id",
@@ -174,6 +174,7 @@ RULES: dict[str, dict[str, str]] = {
 
 # Thresholds (kept identical to the published catalogue so verdicts reproduce).
 A2_MIN_STATIONS = 20
+A3_RATIO_THRESHOLD = 5.0  # over-capacity ratio above which a system is flagged free-floating (A3)
 A4_MIN_STATIONS = 5
 A4_SIGMA = 3.0
 A4_MIN_THRESHOLD_M = 1_000.0
@@ -187,8 +188,8 @@ A7_MIN_STATIONS = 20
 class SchemaError(GBFSValidationError, ValueError):
     """Raised when a frame does not satisfy the canonical schema.
 
-    Subclasses both :class:`~gbfs_toolkit.core.errors.GBFSValidationError` (so
-    ``except GBFSError`` catches it) and :class:`ValueError` (backward compatibility).
+    Subclasses both [`GBFSValidationError`][gbfs_toolkit.GBFSValidationError] (so
+    ``except GBFSError`` catches it) and `ValueError` (backward compatibility).
 
     For schema-mismatch cases the exception also carries structured fields, so an
     automated pipeline can branch on them without parsing the message: ``missing`` (the
@@ -220,7 +221,7 @@ _DATA_MODEL_URL = "https://cycling-data-lab.github.io/gbfs-toolkit/data-model/"
 
 
 def require_columns(df: pd.DataFrame, columns: list[str], *, what: str) -> None:
-    """Raise a didactic :class:`SchemaError` if ``df`` is missing any of ``columns``.
+    """Raise a didactic [`SchemaError`][gbfs_toolkit.SchemaError] if ``df`` is missing any of ``columns``.
 
     The message names the missing columns, lists the columns that were present, gives the
     likely cause, and points to a concrete fix, so the most common user error (passing a
@@ -241,7 +242,7 @@ def require_columns(df: pd.DataFrame, columns: list[str], *, what: str) -> None:
     raise SchemaError(message, missing=missing, present=present, what=what)
 
 
-#: Named canonical schemas (column contracts) addressable by :func:`validate_schema`.
+#: Named canonical schemas (column contracts) addressable by [`validate_schema`][gbfs_toolkit.validate_schema].
 SCHEMAS: dict[str, list[str]] = {
     "station_info": STATION_INFO_COLUMNS,
     "station_status": STATION_STATUS_COLUMNS,
@@ -289,8 +290,8 @@ def validate_schema(df: pd.DataFrame, schema: str) -> pd.DataFrame:
     """Assert a frame still obeys a canonical schema, then return it (for chaining).
 
     Use after slicing/grouping/mutating a canonical frame (e.g. before appending to the
-    Parquet lake) to fail fast with a clear :class:`SchemaError` instead of corrupting the
-    dataset. ``schema`` is one of :data:`SCHEMAS` (``"station_status"``, ``"vehicle_status"``…).
+    Parquet lake) to fail fast with a clear [`SchemaError`][gbfs_toolkit.SchemaError] instead of corrupting the
+    dataset. ``schema`` is one of [`SCHEMAS`][gbfs_toolkit.SCHEMAS] (``"station_status"``, ``"vehicle_status"``…).
 
     See Also
     --------

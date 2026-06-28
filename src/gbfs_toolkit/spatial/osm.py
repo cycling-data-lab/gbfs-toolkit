@@ -81,8 +81,8 @@ def station_surroundings(
 ) -> pd.DataFrame:
     """**One-shot "what's around each station"**: transit feeders + OSM features in a radius.
 
-    Combines :func:`~gbfs_toolkit.link_transit_stops` and :func:`enrich_with_osm` /
-    :func:`~gbfs_toolkit.features_within` into a single context frame.
+    Combines [`link_transit_stops`][gbfs_toolkit.link_transit_stops] and [`enrich_with_osm`][gbfs_toolkit.enrich_with_osm] /
+    [`features_within`][gbfs_toolkit.features_within] into a single context frame.
 
     Parameters
     ----------

@@ -1,6 +1,6 @@
 """Batch audit of many GBFS systems in one call (fetch + A1-A7 + per-system status).
 
-The high-level counterpart to :func:`~gbfs_toolkit.audit_static`: instead of one
+The high-level counterpart to [`audit_static`][gbfs_toolkit.audit_static]: instead of one
 in-memory frame, give it a list of MobilityData ``system_id`` values (and a
 catalogue) and it fetches every reachable ``station_information``, audits the
 union with the same function, and reports a per-system status so dead or empty
@@ -38,14 +38,14 @@ def audit_catalogue(
         MobilityData system identifiers to fetch and audit.
     catalog : pandas.DataFrame, optional
         Systems catalogue used to resolve discovery URLs (see
-        :func:`~gbfs_toolkit.systems_catalog`). Resolved from the default catalogue
+        [`systems_catalog`][gbfs_toolkit.systems_catalog]). Resolved from the default catalogue
         when omitted.
     a7_scope : {"docked", "all"}, default "docked"
-        Passed through to :func:`audit_static`.
+        Passed through to [`audit_static`][gbfs_toolkit.audit_static].
     max_workers : int, default 8
         Concurrency for the fetch stage.
     **audit_kwargs
-        Forwarded to :func:`audit_static` (``a4_sigma``, ``a6_tau``, ``a7_tau``,
+        Forwarded to [`audit_static`][gbfs_toolkit.audit_static] (``a4_sigma``, ``a6_tau``, ``a7_tau``,
         ``a5_area_km2``, ``n_min``).
 
     Returns

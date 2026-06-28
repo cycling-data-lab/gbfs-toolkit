@@ -3,6 +3,70 @@
 All notable changes are documented here ([Keep a Changelog](https://keepachangelog.com),
 [SemVer](https://semver.org)).
 
+## [1.7.0] - correctness, consistency and hardening (professionalism audit)
+
+### Deprecated
+- `dynamic_gini_index(target_col=...)` and `temporal_autocorrelation(column=...)` are
+  renamed to `value_col` for consistency with the rest of the library. The old keywords
+  still work for one release cycle and emit a `FutureWarning`.
+
+### Changed
+- **Uniform validation contract.** `concentration_metrics`, `lorenz_curve`, `morans_i`,
+  `ripley_k`, `coverage_stats` and `station_state` now raise the didactic `SchemaError`
+  (via `require_columns`) on a missing required column instead of a raw `KeyError`.
+  `system_profile` stays deliberately lenient (a profile/describe works on any frame).
+- **Internal consolidation.** The equirectangular projection behind `ripley_k`,
+  `coverage_stats` and the clustering helpers now routes through the single
+  `project_meters` helper; the A3 ratio threshold lives in `core.models` with the other
+  audit thresholds.
+- **io error taxonomy.** `fetch_feed_json` now raises `GBFSFetchError` (not a raw
+  `requests.HTTPError`) on a 4xx/5xx or a malformed body, and `resolve` raises
+  `GBFSDiscoveryError` (a `KeyError` subclass) for an unknown `system_id`, so
+  `except GBFSError` catches both as the error hierarchy promises.
+- The `gbfs` CLI now prints a one-line message to stderr and exits with code 2 on a
+  missing file, malformed JSON or fetch failure, instead of dumping a Python traceback.
+- **Release pipeline gates on tests.** `release.yml` now runs the suite (py3.10 + py3.12)
+  and only builds/publishes to PyPI if it passes, so a tag whose tests are red can no
+  longer ship a wheel.
+- **Documentation cross-references render.** ~120 Sphinx `:func:`/`:class:`/`:data:`
+  roles (which displayed as raw text under mkdocstrings) were rewritten to the
+  mkdocstrings autoref form.
+- Internal hygiene: the panel-flatten idiom is now the single `panel_frame` helper (10
+  call sites de-duplicated), the time-of-day bucket helper is reused instead of inlined,
+  and `require_columns` (the validation primitive) is now public for extension authors.
+
+### Fixed
+- **Join-key dtype mismatch (silent wrong results / merge error).** `to_canonical_vehicles`
+  and `to_canonical_station_info` left `vehicle_type_id` / `region_id` numeric while their
+  lookup tables coerced them to strings, so `join_vehicle_types` and region joins failed
+  (all-`NaN` or a merge error) for any feed using integer ids. All foreign keys are now
+  `string`-typed on both sides.
+- **`spatial_outage_redundancy`** gave wrong results on real sparse panels: an
+  *unobserved* neighbour was counted as empty (so neighbourhood deserts were
+  over-reported), and duplicate `(station, timestamp)` polls were summed rather than
+  de-duplicated. A systemic outage now requires at least one *observed* neighbour and
+  treats unobserved neighbours as unknown; repeated polls are de-duplicated (last kept).
+- **`boundary_stress`** nulled the whole drop-off metric when a `capacity` column was
+  present but all-`NaN` (a common GBFS case). Only a *finite* non-positive capacity now
+  means "no physical docks"; missing capacity is treated as unknown.
+- **Non-fixed frequencies** (`service_reliability_index`, `temporal_concentration`) now
+  raise a clear `ValueError` for offsets with no constant width (`"ME"`, `"W"`, ...)
+  instead of a cryptic internal error.
+- `spatial_outage_redundancy` is now **order-independent**: a duplicate
+  `(station, timestamp)` is resolved deterministically (highest reported count) rather
+  than by input row order.
+- `_hull_area_km2` (behind `ripley_k` / `coverage_stats`) uses `nanmean`, so a single
+  `NaN` coordinate no longer poisons the projected area.
+- `vehicle_id_persistence` coerces timestamps with `errors="coerce"` (a bad timestamp
+  yields `NaT` rather than raising), matching `audit_dynamic`.
+
+### Added
+- A CI job that installs the package **core-only** (no extras) and runs a smoke import
+  plus the dependency-free test subset, so a code path silently needing an optional or
+  transitive package fails CI instead of a user's environment.
+- An **input-purity** test asserting that public functions never mutate their input
+  frames, and least-privilege `permissions: contents: read` on the CI workflow.
+
 ## [1.6.1] - patch
 
 ### Fixed
@@ -270,9 +334,12 @@ PyPI Trusted-Publishing release workflow. The sections below list everything sin
 ### Changed
 - Version `0.1.0` → `0.8.0`; development status Alpha → Beta.
 
-## [Unreleased]
+## [1.0.0rc1] - pre-1.0 consolidation (second peer-review pass)
 
-### Changed / Removed (pre-1.0 consolidation, second peer-review pass)
+<!-- These changes shipped as part of the 1.0.0rc1 release candidate above; they are
+     recorded separately here for the detailed pre-1.0 consolidation history. -->
+
+### Changed / Removed
 - **Decoupled analysis from fetching.** The join and audit logic are now pure functions on
   canonical frames: `join_availability(info, status)` and `audit_frames(info, status=...,
   ttl_seconds=..., system_id=...)`, so they work on frames read back from a Parquet lake, not

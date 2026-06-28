@@ -121,12 +121,12 @@ def cumulative_imbalance(panel: pd.DataFrame, *, reset: str | None = "1D") -> pd
 
     This is a descriptive reconstruction of the *observed* inventory change. It does not attribute
     the change to rebalancing versus organic demand, which is not identifiable from
-    station-aggregate counts (see :func:`calculate_net_flow` and the methodology).
+    station-aggregate counts (see [`calculate_net_flow`][gbfs_toolkit.calculate_net_flow] and the methodology).
 
     Returns
     -------
     pandas.DataFrame
-        The :func:`calculate_net_flow` frame plus a ``cumulative_drift`` column.
+        The [`calculate_net_flow`][gbfs_toolkit.calculate_net_flow] frame plus a ``cumulative_drift`` column.
 
     See Also
     --------
@@ -158,7 +158,7 @@ def cumulative_imbalance(panel: pd.DataFrame, *, reset: str | None = "1D") -> pd
 def aliasing_vulnerability(panel: pd.DataFrame) -> pd.DataFrame:
     """Per-station risk that the polling cadence misses short-timescale dynamics.
 
-    A diagnostic for the polling Nyquist limit (see :func:`calculate_net_flow`). For each station
+    A diagnostic for the polling Nyquist limit (see [`calculate_net_flow`][gbfs_toolkit.calculate_net_flow]). For each station
     it measures how often consecutive non-zero net-flow steps reverse sign: frequent reversals at
     the sampling scale signal even faster reversals (rent-and-return round trips) being aliased
     away. Report it to justify, or caution against, a chosen polling cadence in a study.
@@ -255,7 +255,7 @@ def fleet_turnover_proxy(panel: pd.DataFrame, *, freq: str = "1D") -> pd.DataFra
     The headline operational metric, "how many times is a vehicle used per day". Without trip (OD)
     data the summed absolute change in station availability is the best mathematical approximation
     of usage. It is a strict **lower bound**: by the aliasing argument in
-    :func:`calculate_net_flow`, trips that cancel within a polling interval are invisible.
+    [`calculate_net_flow`][gbfs_toolkit.calculate_net_flow], trips that cancel within a polling interval are invisible.
 
     Returns
     -------

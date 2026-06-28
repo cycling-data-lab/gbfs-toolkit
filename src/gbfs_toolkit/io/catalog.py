@@ -15,7 +15,7 @@ from pathlib import Path
 
 import pandas as pd
 
-from gbfs_toolkit.core.errors import GBFSFetchError
+from gbfs_toolkit.core.errors import GBFSDiscoveryError, GBFSFetchError
 
 #: MobilityData's canonical registry of GBFS systems.
 DEFAULT_CATALOG_URL = "https://raw.githubusercontent.com/MobilityData/gbfs/master/systems.csv"
@@ -50,7 +50,7 @@ def normalize_operator(value: str | None, *, default: str | None = None) -> str 
     """Canonicalise an operator brand from a system id / name (``"smovengo"`` → ``"Vélib'
     Métropole"``).
 
-    Pattern-matches against :data:`OPERATOR_PATTERNS` (case-insensitive). On no match returns
+    Pattern-matches against `OPERATOR_PATTERNS` (case-insensitive). On no match returns
     ``default`` if given, else the original value unchanged (non-lossy); safe to apply across a
     whole catalogue so only recognised brands get collapsed.
 
@@ -89,14 +89,14 @@ def systems_catalog(
 
     The parsed catalogue is memoised for the life of the process, so resolving many systems in
     a loop hits the network once. On a successful download it is also cached to
-    :data:`CACHE_PATH`; if a later download fails (network down, registry outage) the disk copy
+    `CACHE_PATH`; if a later download fails (network down, registry outage) the disk copy
     is used with a warning, so a long-running study never breaks on a transient outage. A fresh
     copy is returned each call (safe to mutate).
 
     Parameters
     ----------
     source : str, optional
-        URL or local path to a ``systems.csv``. Defaults to :data:`DEFAULT_CATALOG_URL`
+        URL or local path to a ``systems.csv``. Defaults to `DEFAULT_CATALOG_URL`
         (requires the optional ``[fetch]`` extra).
     timeout : int, default 30
         HTTP timeout in seconds (only when fetching a URL).
@@ -202,7 +202,7 @@ def resolve(system_id: str, catalog: pd.DataFrame) -> dict:
     )
     hit = catalog[catalog[id_col].astype(str).str.lower() == str(system_id).lower()]
     if hit.empty:
-        raise KeyError(f"system_id {system_id!r} not found in catalogue")
+        raise GBFSDiscoveryError(f"system_id {system_id!r} not found in catalogue")
     row = hit.iloc[0]
     return {
         "system_id": str(row[id_col]),

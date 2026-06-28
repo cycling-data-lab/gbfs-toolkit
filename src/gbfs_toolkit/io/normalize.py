@@ -4,7 +4,7 @@ Handles the cross-version differences that every consumer otherwise re-implement
 GBFS 2.x exposes ``name`` as a plain string, GBFS 3.x as a localized array of
 ``{text, language}`` objects; vehicle feeds are ``free_bike_status`` (2.x) vs
 ``vehicle_status`` (3.x). Output always conforms to
-:data:`~gbfs_toolkit.core.models.STATION_INFO_COLUMNS` etc.
+`STATION_INFO_COLUMNS` etc.
 """
 
 from __future__ import annotations
@@ -97,7 +97,7 @@ def to_canonical_station_info(
     Returns
     -------
     pandas.DataFrame
-        Canonical station-information frame (:data:`STATION_INFO_COLUMNS`).
+        Canonical station-information frame (`STATION_INFO_COLUMNS`).
 
     See Also
     --------
@@ -124,6 +124,7 @@ def to_canonical_station_info(
     df = pd.DataFrame(rows, columns=STATION_INFO_COLUMNS)
     for col in ("lat", "lon", "capacity"):
         df[col] = pd.to_numeric(df[col], errors="coerce")
+    df["region_id"] = df["region_id"].astype("string")  # join key, see to_canonical_system_regions
     return df
 
 
@@ -155,7 +156,7 @@ def to_canonical_station_status(
 ) -> pd.DataFrame:
     """Parse a ``station_status.json`` document into a canonical frame.
 
-    Returns :data:`~gbfs_toolkit.core.models.STATION_STATUS_COLUMNS`. ``fetched_at`` is a
+    Returns `STATION_STATUS_COLUMNS`. ``fetched_at`` is a
     tz-aware UTC timestamp stamped on every row (defaults to *now*) for provenance.
 
     See Also
@@ -213,8 +214,8 @@ def to_canonical_station_vehicle_counts(
 
     GBFS 2.2+/3.x stations may report ``vehicle_types_available`` (a list of
     ``{vehicle_type_id, count}``). This explodes it to one row per station × vehicle type
-    (:data:`~gbfs_toolkit.core.models.STATION_VEHICLE_COUNTS_COLUMNS`), so "where are the e-bikes?"
-    is a join to :func:`to_canonical_vehicle_types`; the aggregate ``num_bikes_available``
+    (`STATION_VEHICLE_COUNTS_COLUMNS`), so "where are the e-bikes?"
+    is a join to [`to_canonical_vehicle_types`][gbfs_toolkit.to_canonical_vehicle_types]; the aggregate ``num_bikes_available``
     cannot answer it. Stations without the field contribute no rows.
 
     See Also
@@ -240,6 +241,9 @@ def to_canonical_station_vehicle_counts(
     df["num_vehicles_available"] = pd.to_numeric(
         df["num_vehicles_available"], errors="coerce"
     ).astype("Int64")
+    df["vehicle_type_id"] = df["vehicle_type_id"].astype(
+        "string"
+    )  # join key, see to_canonical_vehicles
     df["fetched_at"] = pd.to_datetime(df["fetched_at"], utc=True)
     return df
 
@@ -253,7 +257,7 @@ def to_canonical_vehicles(
 ) -> pd.DataFrame:
     """Parse ``free_bike_status`` (2.x) or ``vehicle_status`` (3.x) into a canonical frame.
 
-    Returns :data:`~gbfs_toolkit.core.models.VEHICLE_STATUS_COLUMNS`.
+    Returns `VEHICLE_STATUS_COLUMNS`.
 
     See Also
     --------
@@ -275,7 +279,7 @@ def to_canonical_vehicles(
             "is_reserved": bool(v.get("is_reserved", False)),
             "is_disabled": bool(v.get("is_disabled", False)),
             "current_range_meters": v.get("current_range_meters"),
-            "current_fuel_percent": v.get("current_fuel_percent"),  # GBFS 3.0 battery %
+            "current_fuel_percent": v.get("current_fuel_percent"),  # GBFS 3.0: a 0 to 1 fraction
             "pricing_plan_id": v.get("pricing_plan_id"),
             "fetched_at": fetched_at,
             "gbfs_version": gbfs_version,
@@ -287,7 +291,9 @@ def to_canonical_vehicles(
         df[col] = pd.to_numeric(df[col], errors="coerce")
     for col in ("is_reserved", "is_disabled"):
         df[col] = df[col].astype("boolean")
-    for col in ("station_id", "pricing_plan_id"):
+    # Foreign keys are string-typed so they join against the lookup tables
+    # (vehicle_types / pricing_plans), which a numeric id would silently fail to match.
+    for col in ("station_id", "pricing_plan_id", "vehicle_type_id"):
         df[col] = df[col].astype("string")
     df["fetched_at"] = pd.to_datetime(df["fetched_at"], utc=True)
     return df
@@ -298,7 +304,7 @@ def to_canonical_vehicle_types(raw: dict, *, system_id: str) -> pd.DataFrame:
 
     Resolves ``VehicleStatus.vehicle_type_id`` to a form factor / propulsion, so
     "where are the e-bikes?" becomes a join. Returns
-    :data:`~gbfs_toolkit.core.models.VEHICLE_TYPE_COLUMNS`.
+    `VEHICLE_TYPE_COLUMNS`.
 
     See Also
     --------
@@ -318,6 +324,9 @@ def to_canonical_vehicle_types(raw: dict, *, system_id: str) -> pd.DataFrame:
     ]
     df = pd.DataFrame(rows, columns=VEHICLE_TYPE_COLUMNS)
     df["max_range_meters"] = pd.to_numeric(df["max_range_meters"], errors="coerce")
+    df["vehicle_type_id"] = df["vehicle_type_id"].astype(
+        "string"
+    )  # join key, see to_canonical_vehicles
     return df
 
 
@@ -326,7 +335,7 @@ def to_canonical_pricing_plans(raw: dict, *, system_id: str) -> pd.DataFrame:
 
     Resolves the ``pricing_plan_id`` foreign key carried on vehicles, so cost / equity
     studies can join price to availability. Returns
-    :data:`~gbfs_toolkit.core.models.PRICING_PLAN_COLUMNS`; ``name``/``description`` are localised
+    `PRICING_PLAN_COLUMNS`; ``name``/``description`` are localised
     via the same v2/v3 heuristic as elsewhere.
 
     See Also
@@ -358,7 +367,7 @@ def to_canonical_system_regions(raw: dict, *, system_id: str) -> pd.DataFrame:
 
     Resolves the ``region_id`` foreign key carried on stations, so large multi-region
     networks can be subset or aggregated by region. Returns
-    :data:`~gbfs_toolkit.core.models.SYSTEM_REGION_COLUMNS`.
+    `SYSTEM_REGION_COLUMNS`.
 
     See Also
     --------
@@ -374,7 +383,9 @@ def to_canonical_system_regions(raw: dict, *, system_id: str) -> pd.DataFrame:
         }
         for r in regions
     ]
-    return pd.DataFrame(rows, columns=SYSTEM_REGION_COLUMNS)
+    df = pd.DataFrame(rows, columns=SYSTEM_REGION_COLUMNS)
+    df["region_id"] = df["region_id"].astype("string")  # join key, see to_canonical_station_info
+    return df
 
 
 def to_canonical_alerts(raw: dict, *, system_id: str) -> pd.DataFrame:
@@ -382,7 +393,7 @@ def to_canonical_alerts(raw: dict, *, system_id: str) -> pd.DataFrame:
 
     Service disruptions (strikes, closures, weather) that explain anomalies in the data.
     Each alert's first time window is used for ``start``/``end`` (tz-aware UTC, NaT if
-    open-ended). Returns :data:`~gbfs_toolkit.core.models.ALERT_COLUMNS`.
+    open-ended). Returns `ALERT_COLUMNS`.
 
     See Also
     --------

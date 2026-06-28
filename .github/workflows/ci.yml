@@ -5,7 +5,27 @@ on:
   pull_request:
   workflow_dispatch:
 
+# Least privilege: CI only needs to read the repository.
+permissions:
+  contents: read
+
 jobs:
+  core-install:
+    name: Core-only install (no extras)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      # Install the package with ONLY its core deps (numpy/scipy/pandas), then a
+      # smoke import + the dependency-free test subset. This is the guard that a code
+      # path silently needing an optional/transitive package (e.g. jinja2) fails here
+      # instead of in a user's environment.
+      - run: pip install -e . pytest
+      - run: python -c "import gbfs_toolkit as gb; gb.audit_static; gb.format_paper_summary; print(gb.__version__)"
+      - run: pytest -q tests/test_v160.py tests/test_v162_fixes.py
+
   test:
     name: Test (${{ matrix.os }}, py${{ matrix.python-version }})
     runs-on: ${{ matrix.os }}

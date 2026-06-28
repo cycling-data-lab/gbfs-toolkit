@@ -13,10 +13,12 @@ from __future__ import annotations
 import argparse
 import json
 import sys
+import urllib.error
 import urllib.request
 
 from gbfs_toolkit import __version__
 from gbfs_toolkit.audit import audit_static
+from gbfs_toolkit.core.errors import GBFSError
 from gbfs_toolkit.core.models import AUDIT_FLAGS, RULES
 from gbfs_toolkit.io.normalize import to_canonical_station_info
 
@@ -141,7 +143,17 @@ def main(argv: list[str] | None = None) -> int:
     p_audit.set_defaults(func=_cmd_audit)
 
     args = parser.parse_args(argv)
-    return args.func(args)
+    try:
+        return args.func(args)
+    except FileNotFoundError as e:
+        print(f"gbfs: file not found: {e.filename}", file=sys.stderr)
+    except (json.JSONDecodeError, UnicodeDecodeError) as e:
+        print(f"gbfs: could not parse JSON from {args.source!r}: {e}", file=sys.stderr)
+    except urllib.error.URLError as e:
+        print(f"gbfs: could not fetch {args.source!r}: {e.reason}", file=sys.stderr)
+    except (GBFSError, OSError) as e:
+        print(f"gbfs: {e}", file=sys.stderr)
+    return 2
 
 
 if __name__ == "__main__":

@@ -2,7 +2,7 @@ cff-version: 1.2.0
 message: "If you use this software, please cite it (and the accompanying dataset paper)."
 title: "gbfs-toolkit: research-grade ingestion and semantic quality audit for GBFS feeds"
 type: software
-version: "1.6.1"
+version: "1.7.0"
 date-released: "2026-06-28"
 doi: "10.5281/zenodo.20992153"
 identifiers:

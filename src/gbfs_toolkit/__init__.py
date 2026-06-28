@@ -1,6 +1,6 @@
 """gbfs-toolkit: research-grade ingestion + semantic quality audit for GBFS feeds.
 
-The community's :mod:`gbfs-validator` checks that a feed is *syntactically* valid;
+The community's `gbfs-validator` checks that a feed is *syntactically* valid;
 this package checks whether it is *semantically* trustworthy and analysis-ready
 (the A1–A7 taxonomy of Fossé & Pallares) and normalises feeds into a stable,
 version-independent data model you can reuse across studies.
@@ -110,6 +110,7 @@ from gbfs_toolkit.core.models import (
     SCHEMAS,
     SchemaError,
     coerce_schema,
+    require_columns,
     validate_schema,
 )
 from gbfs_toolkit.interfaces import (
@@ -184,7 +185,7 @@ from gbfs_toolkit.spatial.geometry import (
 from gbfs_toolkit.spatial.multimodal import link_transit_stops
 from gbfs_toolkit.spatial.osm import enrich_with_osm, station_surroundings
 
-__version__ = "1.6.1"
+__version__ = "1.7.0"
 
 __all__ = [
     # audit (the flagship)
@@ -291,6 +292,7 @@ __all__ = [
     # schema / library ergonomics
     "validate_schema",
     "coerce_schema",
+    "require_columns",
     "SCHEMAS",
     "load_example",
     "show_versions",

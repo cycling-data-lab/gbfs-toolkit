@@ -6,11 +6,11 @@ Airflow / Dagster) owns the polling loop. Requires the optional ``[parquet]`` ex
 
 Workflow
 --------
-1. A poller calls :func:`append_to_parquet` on each fetched snapshot: fast, append-only,
+1. A poller calls [`append_to_parquet`][gbfs_toolkit.append_to_parquet] on each fetched snapshot: fast, append-only,
    Hive-partitioned by ``system_id`` / ``date``.
-2. Analysis calls :func:`build_availability_panel` to read a system/time window back
+2. Analysis calls [`build_availability_panel`][gbfs_toolkit.build_availability_panel] to read a system/time window back
    (PyArrow filters partitions *before* loading), de-duplicated and optionally resampled.
-3. :func:`calculate_net_flow` turns the panel into period-over-period bike deltas.
+3. [`calculate_net_flow`][gbfs_toolkit.calculate_net_flow] turns the panel into period-over-period bike deltas.
 """
 
 from __future__ import annotations
@@ -209,7 +209,7 @@ def calculate_net_flow(panel: pd.DataFrame) -> pd.DataFrame:
        absolute flow as a **lower bound** on true activity, and poll well below the timescale
        of the dynamics you want to measure.
 
-    Accepts a panel from :func:`build_availability_panel` (MultiIndexed) or a flat frame;
+    Accepts a panel from [`build_availability_panel`][gbfs_toolkit.build_availability_panel] (MultiIndexed) or a flat frame;
     returns a flat frame with ``system_id, station_id, fetched_at`` columns.
 
     See Also
@@ -218,7 +218,7 @@ def calculate_net_flow(panel: pd.DataFrame) -> pd.DataFrame:
     [`turnover`][gbfs_toolkit.turnover] : Aggregate absolute flow.
     [`flow_balance`][gbfs_toolkit.flow_balance] : Net source/sink balance.
     """
-    df = panel.reset_index() if isinstance(panel.index, pd.MultiIndex) else panel.copy()
+    df = panel_frame(panel)
     require_columns(
         df,
         ["system_id", "station_id", "fetched_at", "num_bikes_available"],
@@ -250,16 +250,16 @@ def stockout_episodes(
 ) -> pd.DataFrame:
     """Discrete empty/full episodes per station: the service-quality view of a panel.
 
-    Where :func:`coverage_report` and ``availability_stats`` give *fractions* of time, this
+    Where [`coverage_report`][gbfs_toolkit.coverage_report] and ``availability_stats`` give *fractions* of time, this
     returns the individual outage **events**: each contiguous run of empty (no bikes) or full
     (no docks) snapshots becomes one row, so you can study how *often* stockouts happen and how
     *long* they last. Durations span the observed snapshots in the run (a single-observation
-    episode has duration 0); read them together with :func:`coverage_report`.
+    episode has duration 0); read them together with [`coverage_report`][gbfs_toolkit.coverage_report].
 
     Parameters
     ----------
     panel : pandas.DataFrame
-        From :func:`build_availability_panel` (MultiIndexed) or a flat frame with
+        From [`build_availability_panel`][gbfs_toolkit.build_availability_panel] (MultiIndexed) or a flat frame with
         ``system_id, station_id, fetched_at, num_bikes_available, num_docks_available``.
     kinds : tuple of {"empty", "full"}
         Which outage types to extract.
@@ -275,7 +275,7 @@ def stockout_episodes(
     [`detect_frozen_stations`][gbfs_toolkit.detect_frozen_stations] : Find stuck (never-changing) stations.
     [`build_availability_panel`][gbfs_toolkit.build_availability_panel] : The panel this scans.
     """
-    df = panel.reset_index() if isinstance(panel.index, pd.MultiIndex) else panel.copy()
+    df = panel_frame(panel)
     require_columns(
         df,
         ["system_id", "station_id", "fetched_at", "num_bikes_available", "num_docks_available"],
@@ -319,7 +319,7 @@ def turnover(
     """Per-station activity proxy: summed absolute net flow per period.
 
     A cheap, model-free measure of how busy a station is. It is a **lower bound**: by the
-    aliasing argument in :func:`calculate_net_flow`, trips that cancel within a polling interval
+    aliasing argument in [`calculate_net_flow`][gbfs_toolkit.calculate_net_flow], trips that cancel within a polling interval
     are invisible. Use it for relative comparison (which stations / days are busier), not as a
     trip count.
 
@@ -365,7 +365,7 @@ def turnover(
 def flow_balance(panel: pd.DataFrame) -> pd.DataFrame:
     """Per-station inflow / outflow split and source↔sink balance.
 
-    Splits :func:`calculate_net_flow` into bikes gained (``inflow`` = Σ positive Δ) and lost
+    Splits [`calculate_net_flow`][gbfs_toolkit.calculate_net_flow] into bikes gained (``inflow`` = Σ positive Δ) and lost
     (``outflow`` = Σ |negative Δ|), with ``balance = outflow / inflow``: ``>1`` ⇒ a net
     *source* (more departures than arrivals, a morning residential origin), ``<1`` ⇒ a net
     *sink* (destination). Like turnover, these are lower bounds (intra-interval trips cancel).
@@ -467,7 +467,7 @@ def detect_frozen_stations(
     [`stockout_episodes`][gbfs_toolkit.stockout_episodes] : Genuine outage episodes.
     """
     cols = list(columns) if columns else [value_col]
-    df = panel.reset_index() if isinstance(panel.index, pd.MultiIndex) else panel.copy()
+    df = panel_frame(panel)
     require_columns(
         df, ["system_id", "station_id", "fetched_at", *cols], what="detect_frozen_stations"
     )
@@ -524,7 +524,7 @@ def coverage_report(
     Parameters
     ----------
     panel : pandas.DataFrame
-        A panel from :func:`build_availability_panel` (MultiIndexed) or a flat frame with
+        A panel from [`build_availability_panel`][gbfs_toolkit.build_availability_panel] (MultiIndexed) or a flat frame with
         ``system_id, station_id, fetched_at``.
     expected_freq : str, default "5min"
         Your intended polling cadence (a pandas offset alias).
@@ -559,7 +559,7 @@ def coverage_report(
     """
     if level not in ("station", "system"):
         raise ValueError(f"level must be 'station' or 'system', got {level!r}")
-    df = panel.reset_index() if isinstance(panel.index, pd.MultiIndex) else panel.copy()
+    df = panel_frame(panel)
     require_columns(df, ["system_id", "station_id", "fetched_at"], what="coverage_report")
     df = df[["system_id", "station_id", "fetched_at"]].copy()
     df["fetched_at"] = pd.to_datetime(df["fetched_at"])
@@ -826,7 +826,7 @@ def insert_explicit_gaps(
         The intended cadence (documented for intent; the test is against ``tolerance``).
     tolerance : str, default "15min"
         Gaps strictly larger than this get a ``NaN`` marker row at their midpoint.
-    time_col, by : see :func:`resample_panel`.
+    time_col, by : see [`resample_panel`][gbfs_toolkit.resample_panel].
 
     Returns
     -------
@@ -900,7 +900,7 @@ def extract_snapshot_asof(
         The instant to reconstruct (naive is read as UTC).
     tolerance : str, default "10min"
         How far before ``target_time`` a reading may be and still count.
-    time_col, by : see :func:`resample_panel`.
+    time_col, by : see [`resample_panel`][gbfs_toolkit.resample_panel].
 
     Returns
     -------

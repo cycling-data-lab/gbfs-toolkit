@@ -26,7 +26,7 @@ per station rather than a re-run of someone's notebook.
 ## Install
 
 ```bash
-pip install gbfs-toolkit            # from PyPI (when released)
+pip install gbfs-toolkit            # from PyPI
 pip install -e ".[dev]"            # from a local clone
 ```
 
@@ -257,9 +257,10 @@ turnover), and a network equity/coverage report.
 
 ## Project status
 
-The package is stable at 1.1.0 and follows semantic versioning. The canonical schema and
-the public API are frozen, so studies built on the data model and function signatures remain
-reproducible across releases. See the Changelog for the full release history.
+The package is stable and follows semantic versioning. The canonical schema and the public
+API are frozen within a major version, so studies built on the data model and function
+signatures remain reproducible across releases. See the [Changelog](CHANGELOG.md) for the
+current version and full release history.
 
 ## Methodology & limitations
 

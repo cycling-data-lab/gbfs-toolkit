@@ -12,10 +12,10 @@ import pandas as pd
 from gbfs_toolkit.core.models import require_columns
 from gbfs_toolkit.spatial.geometry import haversine_m
 
-#: Ordered categories returned by :func:`station_state`.
+#: Ordered categories returned by [`station_state`][gbfs_toolkit.station_state].
 STATION_STATES = ("disabled", "virtual", "empty", "full", "normal")
 
-#: Ordered categories of the ``presence`` indicator from :func:`join_availability`.
+#: Ordered categories of the ``presence`` indicator from [`join_availability`][gbfs_toolkit.join_availability].
 PRESENCE_STATES = ("both", "info_only", "status_only")
 
 
@@ -31,9 +31,9 @@ def join_availability(info: pd.DataFrame, status: pd.DataFrame) -> pd.DataFrame:
     Parameters
     ----------
     info : pandas.DataFrame
-        Canonical station information (:data:`~gbfs_toolkit.core.models.STATION_INFO_COLUMNS`).
+        Canonical station information (`STATION_INFO_COLUMNS`).
     status : pandas.DataFrame
-        Canonical station status (:data:`~gbfs_toolkit.core.models.STATION_STATUS_COLUMNS`).
+        Canonical station status (`STATION_STATUS_COLUMNS`).
 
     See Also
     --------
@@ -166,7 +166,7 @@ def station_state(availability: pd.DataFrame) -> pd.Series:
     Returns
     -------
     pandas.Series
-        Categorical (categories = :data:`STATION_STATES`), aligned to the input index.
+        Categorical (categories = `STATION_STATES`), aligned to the input index.
 
     See Also
     --------
@@ -181,6 +181,9 @@ def station_state(availability: pd.DataFrame) -> pd.Series:
     >>> list(station_state(av))
     ['empty', 'full', 'normal']
     """
+    require_columns(
+        availability, ["num_bikes_available", "num_docks_available"], what="station_state"
+    )
     n = len(availability)
     bikes = (
         pd.to_numeric(availability["num_bikes_available"], errors="coerce").fillna(-1).to_numpy()
@@ -315,7 +318,7 @@ def join_vehicle_types(vehicles: pd.DataFrame, vehicle_types: pd.DataFrame) -> p
 def join_pricing(vehicles: pd.DataFrame, plans: pd.DataFrame) -> pd.DataFrame:
     """Resolve ``pricing_plan_id`` → plan name / price / currency onto a vehicles frame.
 
-    Left join of :func:`~gbfs_toolkit.to_canonical_pricing_plans` (its ``plan_id`` matches the
+    Left join of [`to_canonical_pricing_plans`][gbfs_toolkit.to_canonical_pricing_plans] (its ``plan_id`` matches the
     vehicle's ``pricing_plan_id``); plan ``name``/``description`` are prefixed ``plan_`` to
     avoid clashes.
 

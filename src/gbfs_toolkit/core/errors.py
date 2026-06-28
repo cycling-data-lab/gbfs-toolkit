@@ -1,10 +1,10 @@
 """Exception hierarchy, so orchestrators can catch and react precisely.
 
-A single base (:class:`GBFSError`) lets a scraper ``except GBFSError`` to catch anything
+A single base ([`GBFSError`][gbfs_toolkit.GBFSError]) lets a scraper ``except GBFSError`` to catch anything
 this library raises, while the specific subclasses let it branch (retry a fetch, skip a
-not-modified feed, surface a schema problem). :class:`SchemaError` lives in
-:mod:`gbfs_toolkit.core.models` for backward compatibility but subclasses
-:class:`GBFSValidationError`.
+not-modified feed, surface a schema problem). [`SchemaError`][gbfs_toolkit.SchemaError] lives in
+[`models`][gbfs_toolkit.models] for backward compatibility but subclasses
+[`GBFSValidationError`][gbfs_toolkit.GBFSValidationError].
 """
 
 from __future__ import annotations
@@ -34,7 +34,7 @@ class GBFSFetchError(GBFSError):
 class GBFSDiscoveryError(GBFSError, KeyError):
     """A ``gbfs.json`` could not be parsed, or a required feed is absent.
 
-    Also subclasses :class:`KeyError` (a missing feed *is* a missing key) for backward
+    Also subclasses `KeyError` (a missing feed *is* a missing key) for backward
     compatibility: ``except KeyError`` and ``except GBFSError`` both catch it.
 
     See Also

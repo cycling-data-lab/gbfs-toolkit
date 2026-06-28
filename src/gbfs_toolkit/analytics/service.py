@@ -10,7 +10,7 @@ import numpy as np
 import pandas as pd
 
 from gbfs_toolkit.core.models import require_columns
-from gbfs_toolkit.core.utils import num, panel_frame
+from gbfs_toolkit.core.utils import num, panel_frame, time_of_day_minutes
 from gbfs_toolkit.io.timeseries import calculate_net_flow
 
 
@@ -90,7 +90,7 @@ def service_reliability_index(
     Parameters
     ----------
     panel : pandas.DataFrame
-        From :func:`build_availability_panel` (MultiIndexed) or a flat frame with
+        From [`build_availability_panel`][gbfs_toolkit.build_availability_panel] (MultiIndexed) or a flat frame with
         ``system_id, station_id, fetched_at, num_bikes_available, num_docks_available``.
         Convert to local time (``build_availability_panel(target_tz=...)``) first, so the buckets
         are local hours.
@@ -132,17 +132,14 @@ def service_reliability_index(
         ["system_id", "station_id", "fetched_at", "num_bikes_available", "num_docks_available"],
         what="service_reliability_index",
     )
-    ts = pd.to_datetime(df["fetched_at"])
-    step_min = pd.tseries.frequencies.to_offset(freq).nanos / 6e10
-    minutes = ts.dt.hour * 60 + ts.dt.minute + ts.dt.second / 60
-    bucket = np.floor(minutes / step_min) * step_min
+    bucket = time_of_day_minutes(df["fetched_at"], freq)
     bikes_ok = pd.to_numeric(df["num_bikes_available"], errors="coerce") >= min_bikes
     docks_ok = pd.to_numeric(df["num_docks_available"], errors="coerce") >= min_docks
     work = pd.DataFrame(
         {
             "system_id": df["system_id"].to_numpy(),
             "station_id": df["station_id"].to_numpy(),
-            "time_of_day": pd.to_timedelta(bucket.to_numpy(), unit="m"),
+            "time_of_day": pd.to_timedelta(bucket, unit="m"),
             "_bikes": bikes_ok.to_numpy(),
             "_docks": docks_ok.to_numpy(),
         }
@@ -172,7 +169,7 @@ def docking_pressure(panel: pd.DataFrame) -> pd.DataFrame:
     Returns
     -------
     pandas.DataFrame
-        The :func:`calculate_net_flow` frame plus ``expected_inflow`` (mean positive net flow per
+        The [`calculate_net_flow`][gbfs_toolkit.calculate_net_flow] frame plus ``expected_inflow`` (mean positive net flow per
         station) and ``docking_pressure`` (= ``expected_inflow / num_docks_available``, ``NaN`` when
         no docks are free).
 
@@ -260,7 +257,7 @@ def station_outage_rates(panel: pd.DataFrame) -> pd.DataFrame:
 def outage_survival(episodes: pd.DataFrame, *, by: str | None = None) -> pd.DataFrame:
     """Empirical survival function of outage durations: the time-to-recovery view.
 
-    From the :func:`stockout_episodes` event table, the empirical survival
+    From the [`stockout_episodes`][gbfs_toolkit.stockout_episodes] event table, the empirical survival
     :math:`S(t) = \\Pr(\\text{duration} > t)` of outage durations, optionally grouped, with the
     median and P90 time-to-recovery. Strictly empirical (Kaplan-Meier reduces to the ECDF without
     censoring). Episodes still open at the observation window's edge are right-censored in the data;
@@ -269,7 +266,7 @@ def outage_survival(episodes: pd.DataFrame, *, by: str | None = None) -> pd.Data
     Parameters
     ----------
     episodes : pandas.DataFrame
-        Output of :func:`stockout_episodes` (needs ``duration_minutes``).
+        Output of [`stockout_episodes`][gbfs_toolkit.stockout_episodes] (needs ``duration_minutes``).
     by : str, optional
         A grouping column (e.g. ``"station_id"`` or ``"kind"``); one survival curve per group.
 
@@ -386,7 +383,7 @@ def boundary_stress(panel: pd.DataFrame, *, bikes_le: int = 2, docks_le: int = 2
     """Per-station share of time *near* empty or *near* full, not just at the boundary.
 
     A user reads a station with two bikes left as unreliable (they may be the broken
-    ones), long before it hits zero; :func:`station_outage_rates` (strictly ``== 0``)
+    ones), long before it hits zero; [`station_outage_rates`][gbfs_toolkit.station_outage_rates] (strictly ``== 0``)
     undercounts that perceived stress. This reports the fraction of observations with
     at most ``bikes_le`` bikes (pick-up stress) and at most ``docks_le`` docks
     (drop-off stress), using **absolute** thresholds, since two bikes mean stress at a
@@ -439,7 +436,10 @@ def boundary_stress(panel: pd.DataFrame, *, bikes_le: int = 2, docks_le: int = 2
     if "is_virtual_station" in df.columns:
         virtual |= df["is_virtual_station"].fillna(False).astype(bool).to_numpy()
     if "capacity" in df.columns:
-        virtual |= ~(num(df, "capacity").to_numpy() > 0)
+        # Only a *finite* non-positive capacity means "no physical docks"; a missing
+        # (NaN) capacity is unknown, not virtual, so it must not null the dock metric.
+        cap = num(df, "capacity").to_numpy()
+        virtual |= np.isfinite(cap) & (cap <= 0)
     low_docks = np.where(virtual, np.nan, (docks <= docks_le).to_numpy().astype("float64"))
     work = pd.DataFrame(
         {

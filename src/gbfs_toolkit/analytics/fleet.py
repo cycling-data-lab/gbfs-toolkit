@@ -4,7 +4,7 @@ GBFS routinely reports the same fleet two ways: docked bikes as aggregate counts
 ``station_status``, and individual units (some parked at stations) in
 ``vehicle_status`` / ``free_bike_status``. Naively adding ``sum(num_bikes_available)``
 to ``len(vehicles)`` double-counts every vehicle that is sitting at a station.
-:func:`reconcile_fleet_state` resolves that; :func:`detect_ghost_vehicles` flags units that
+[`reconcile_fleet_state`][gbfs_toolkit.reconcile_fleet_state] resolves that; [`detect_ghost_vehicles`][gbfs_toolkit.detect_ghost_vehicles] flags units that
 never move over a long window (lost / broken / abandoned but still advertised).
 """
 
@@ -116,7 +116,7 @@ def detect_ghost_vehicles(
     ----------
     vehicle_panel : pandas.DataFrame
         Long frame of vehicle snapshots with ``system_id, vehicle_id, lat, lon, fetched_at``
-        (e.g. concatenated :func:`~gbfs_toolkit.to_canonical_vehicles` outputs). Note GBFS 2.1+
+        (e.g. concatenated [`to_canonical_vehicles`][gbfs_toolkit.to_canonical_vehicles] outputs). Note GBFS 2.1+
         rotates ``vehicle_id`` for privacy; ghost detection is only meaningful where the feed
         keeps stable ids.
     idle_days : float, default 14
