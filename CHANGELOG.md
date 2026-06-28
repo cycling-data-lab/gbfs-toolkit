@@ -3,6 +3,96 @@
 All notable changes are documented here ([Keep a Changelog](https://keepachangelog.com),
 [SemVer](https://semver.org)).
 
+## [3.0.0](https://github.com/cycling-data-lab/gbfs-toolkit/compare/gbfs-toolkit-v2.0.0...gbfs-toolkit-v3.0.0) (2026-06-28)
+
+
+### ⚠ BREAKING CHANGES
+
+* pre-1.0 consolidation — pure analysis fns, v3 schemas, cut liabilities
+
+### Added
+
+* 1.1.0 — v3 conformance, language-nested feeds, strict frozen mode ([b76e763](https://github.com/cycling-data-lab/gbfs-toolkit/commit/b76e7639b7ab5d4b2ca02ea13d70299c9dc98a20))
+* advanced descriptive analytics (1.4.0) ([200a7fa](https://github.com/cycling-data-lab/gbfs-toolkit/commit/200a7fab5e3c4aa44d70e094c83097b57bc3750c))
+* audit_catalogue (batch fetch+audit) + inter-rater agreement helpers ([ca0c7dd](https://github.com/cycling-data-lab/gbfs-toolkit/commit/ca0c7dd7c33ca829fc19a8150d9e2bff8c764bdd))
+* **audit:** a7_scope and a4_sigma options on audit_static (1.2.0) ([2427a56](https://github.com/cycling-data-lab/gbfs-toolkit/commit/2427a5620388392fb8501467b4a71cc5ea620ade))
+* **audit:** capacity_convention (the six capacity semantics) ([d2e98dd](https://github.com/cycling-data-lab/gbfs-toolkit/commit/d2e98dd7e7ba4c0db0b8a0c30dfbb0361f308616))
+* **audit:** classify_from_vehicle_types (feed-intrinsic A1) ([e4e3389](https://github.com/cycling-data-lab/gbfs-toolkit/commit/e4e33892fca2dcaf0aea4ca8510a7891993d4129))
+* **audit:** classify_from_virtual_station + flag_sentinel_coordinates ([5496432](https://github.com/cycling-data-lab/gbfs-toolkit/commit/5496432e8641aba25db43eca50bf5629525f1431))
+* **audit:** overcapacity_ratio + reclassify_overcapacity (A3 mechanism) ([e32307b](https://github.com/cycling-data-lab/gbfs-toolkit/commit/e32307ba62b343169b0652447a0d31abf4d86302))
+* **audit:** parameterize thresholds + audit_sensitivity + flag_rate_ci ([4bff531](https://github.com/cycling-data-lab/gbfs-toolkit/commit/4bff531a0027895c5799052e5ee2e1d3b224815c))
+* **cli:** context-aware output (rich table, --json) behind [cli] extra ([6ad8143](https://github.com/cycling-data-lab/gbfs-toolkit/commit/6ad81435c191ada3f531e88bf2b4315a04e4125f))
+* **cluster:** modern methods + named station typologies ([ff4bbfe](https://github.com/cycling-data-lab/gbfs-toolkit/commit/ff4bbfe51bd948c66fc136ed3c0f19002f25d102))
+* daily-use functions + pre-1.0 schema hardening (from Gemini review) ([b81ff87](https://github.com/cycling-data-lab/gbfs-toolkit/commit/b81ff871acd778592e2b1d965f20145e8f4d4acb))
+* descriptive research-indicator layer (1.3.0) ([4304df8](https://github.com/cycling-data-lab/gbfs-toolkit/commit/4304df8bc588fcc6909b20f9afbe113b1927950c))
+* ergonomic one-liners — drop_flagged, occupancy, filter_vehicles/ebikes, catalogue memo ([2225cbc](https://github.com/cycling-data-lab/gbfs-toolkit/commit/2225cbcd84838b40522be09e2c64e5ff6f107f9b))
+* feed governance, service stress and panel ergonomics (v1.6.0) ([b9ae04f](https://github.com/cycling-data-lab/gbfs-toolkit/commit/b9ae04f57000e0cd886b4d7b684d6362c7695ddd))
+* fetch/scrape layer — GBFSFeed + one-liners (availability, audit_feed) ([2190735](https://github.com/cycling-data-lab/gbfs-toolkit/commit/219073586533c875e0b9be2839f0c272a0a987c0))
+* **fetch:** fetch_multiple(progress=True) feedback + doctests ([683adb2](https://github.com/cycling-data-lab/gbfs-toolkit/commit/683adb2e41c0f5af2b532fa0a69e1741ccc38400))
+* **fleet:** detect_ghost_vehicles — flag immobile units from a vehicle panel ([3de369d](https://github.com/cycling-data-lab/gbfs-toolkit/commit/3de369d64fdfa6d432e282e0ae341954be92e415))
+* **fleet:** reconcile docked + free-floating feeds into one authoritative tally ([09c6b68](https://github.com/cycling-data-lab/gbfs-toolkit/commit/09c6b68d1e0b76c149d672d2573a79f9c22f2896))
+* **geofencing:** service-area zones, point-in-zone joins, equal-area density ([add8349](https://github.com/cycling-data-lab/gbfs-toolkit/commit/add8349659e2a158a4638d958ef4168bee61f9ca))
+* **geo:** GeoKDTree — shared great-circle spatial-join primitive (pre-freeze) ([e3ba0d0](https://github.com/cycling-data-lab/gbfs-toolkit/commit/e3ba0d05298ad717be31c783c36b5d36d327d65a))
+* helpers distilled from the lab's research code ([648d4d4](https://github.com/cycling-data-lab/gbfs-toolkit/commit/648d4d432db95d36b6e2c43041a4f7fdaafda494))
+* library-API conventions — .gbfs accessor, load_example, show_versions, schema validate/coerce, feed repr ([ee04079](https://github.com/cycling-data-lab/gbfs-toolkit/commit/ee0407953707107642bfb57fbeb2f999c305e923))
+* mass-conserving flow simulator and empirical compiler ([#6](https://github.com/cycling-data-lab/gbfs-toolkit/issues/6)) ([66567f9](https://github.com/cycling-data-lab/gbfs-toolkit/commit/66567f92bc1cfb604794c4126c6a8c4ff03c370c))
+* **osm:** station surroundings within a radius (features_within, station_surroundings, enrich_with_osm) ([46aaacb](https://github.com/cycling-data-lab/gbfs-toolkit/commit/46aaacba9a17d4eaa9da921bf9192db3d50a6fc9))
+* research algorithms (FDR, equity, rebalancing tension, resampling) ([d428f5a](https://github.com/cycling-data-lab/gbfs-toolkit/commit/d428f5a578b2e38ad6cef5bb91f0754c3769c6cd))
+* research helpers — stockout episodes, turnover, network changes, accessibility, geojson, joins ([513aa14](https://github.com/cycling-data-lab/gbfs-toolkit/commit/513aa14ca7fe50e440243c99b7c09d611ad5cf70))
+* round-2 hardening — schema fields, unified audit, ttl staleness, timezone ([ced6cb5](https://github.com/cycling-data-lab/gbfs-toolkit/commit/ced6cb545752ebb47d7063cadf4a0e9360c6d43f))
+* **stats:** coverage_stats — density, nearest-neighbour, Clark-Evans dispersion ([846417c](https://github.com/cycling-data-lab/gbfs-toolkit/commit/846417cfa80dfd68109e5d4eddd5af1613c5332a))
+* **stats:** descriptive summaries — system_profile, compare_systems, concentration, availability_stats ([4e77bae](https://github.com/cycling-data-lab/gbfs-toolkit/commit/4e77baed3a601b849c21b3b555dfa5acba7e439b))
+* **stats:** standard spatial/inequality algorithms — Moran's I, Ripley's K/L, Lorenz, Theil ([4aacb1d](https://github.com/cycling-data-lab/gbfs-toolkit/commit/4aacb1d606d292f8c8c84908b5e90c8a42b4de70))
+* synthetic city generator and graph-signal primitives ([#5](https://github.com/cycling-data-lab/gbfs-toolkit/issues/5)) ([36e35be](https://github.com/cycling-data-lab/gbfs-toolkit/commit/36e35be94661ee709f28187f8211fcb782f9f72b))
+* **timeseries:** column projection + predicate pushdown in build_availability_panel ([0974173](https://github.com/cycling-data-lab/gbfs-toolkit/commit/09741735419f4427d43fe00b8f8f6ca5011b7e99))
+* v0.3 longitudinal data lake (parquet panel + net-flow) ([44a5645](https://github.com/cycling-data-lab/gbfs-toolkit/commit/44a564590e111b54f91eed8d42f87af0da713a9f))
+* v0.4 station clustering (spatial / spectral / diurnal profiles) ([a931caf](https://github.com/cycling-data-lab/gbfs-toolkit/commit/a931cafd810493368208b7cb6bc3bdb70c0e8a0d))
+* v0.5 multimodal — bikeshare ↔ transit feeders (BYOG GTFS) ([c74686a](https://github.com/cycling-data-lab/gbfs-toolkit/commit/c74686aa4756dacc4acb0a352751ca2333d30d5a))
+* v1.0-readiness — provenance, polite networking, errors, regions/alerts ([23eb3e4](https://github.com/cycling-data-lab/gbfs-toolkit/commit/23eb3e4823e94cbc2753f640d11e618c43474395))
+
+
+### Fixed
+
+* accept GBFS 3.0 num_vehicles_available in to_canonical_station_status (1.0.1) ([d226dab](https://github.com/cycling-data-lab/gbfs-toolkit/commit/d226dab1dc9d948f9583b458045bbfd03b4d2805))
+* **ci:** pin mypy to python 3.12 target and the 3.12 job ([4ddfb25](https://github.com/cycling-data-lab/gbfs-toolkit/commit/4ddfb2505852896e24fa762b4e2294acab858388))
+* generate LaTeX in format_paper_summary without jinja2 (v1.6.1) ([8b458d7](https://github.com/cycling-data-lab/gbfs-toolkit/commit/8b458d745c59fb351cf4c3228607d8ca0e90ae8f))
+* hardening pass — nullable dtypes, dockless-aware A7, antimeridian A5, mass-conservation net flow ([a6709c5](https://github.com/cycling-data-lab/gbfs-toolkit/commit/a6709c5cd27f565c131ef9148e47979c91f32fac))
+* pandas 3.0 compatibility for daily frequencies; add benchmark suite (v1.7.2) ([826280f](https://github.com/cycling-data-lab/gbfs-toolkit/commit/826280fb8276516f9ec84bb0af172c6ff4f9ee78))
+
+
+### Changed
+
+* centralise shared helpers in _internal (DRY) ([952b14a](https://github.com/cycling-data-lab/gbfs-toolkit/commit/952b14a46dfabd4e5008ecb4a677137f9d749962))
+* extract the research-indicator layer into gbfs_toolkit.metrics ([5b52547](https://github.com/cycling-data-lab/gbfs-toolkit/commit/5b52547a14d4be97012f915f09ecbd22ddc2a076))
+* layered package architecture (core/io/audit/spatial/analytics/interfaces) ([16b6376](https://github.com/cycling-data-lab/gbfs-toolkit/commit/16b6376fd269e43c63f19706389c29a653761af3))
+* pre-1.0 consolidation — pure analysis fns, v3 schemas, cut liabilities ([18790dc](https://github.com/cycling-data-lab/gbfs-toolkit/commit/18790dca8bd5a59c8cb21e16e5e0af1f662faa55))
+* split analytics/spatial into domain modules (engineering pass, phase 4) ([e634e5e](https://github.com/cycling-data-lab/gbfs-toolkit/commit/e634e5efcc8dd6d515fa5c57ee2c6554f372a31f))
+
+
+### Documentation
+
+* add scenarios 08-10 (reliability, context, macro) + manifest note ([87d892d](https://github.com/cycling-data-lab/gbfs-toolkit/commit/87d892d79af402b8b5cb90ec8c4119738cb5a2d5))
+* add the signature scenario — free-floating & ghost fleets ([bc3f76a](https://github.com/cycling-data-lab/gbfs-toolkit/commit/bc3f76aad7e86c175021f4b7df17653f675244b0))
+* add Zenodo DOI (concept 10.5281/zenodo.20992153) to citation metadata ([3be6a23](https://github.com/cycling-data-lab/gbfs-toolkit/commit/3be6a23d8ded46062b62fecc8e691613d9b4f9f4))
+* API reference nav, full Examples coverage, library-wide See Also links ([2a7b505](https://github.com/cycling-data-lab/gbfs-toolkit/commit/2a7b5058e6f963801534780821dea01e21b92a6e))
+* dedicated how-to page per example with walkthroughs ([fd10cc5](https://github.com/cycling-data-lab/gbfs-toolkit/commit/fd10cc5f1ad4ee4b9c5bf61365a5ab4133e3790a))
+* Diataxis structure, curated landing, citing/data-model/glossary pages ([68ad616](https://github.com/cycling-data-lab/gbfs-toolkit/commit/68ad616f975d7569d8a306c6d9e43d3834a4ad30))
+* doctested Examples on the analytical API + doctest governance ([ce7bc1f](https://github.com/cycling-data-lab/gbfs-toolkit/commit/ce7bc1f17b720afb53ede070cebd596af950a4dc))
+* document the great-circle weighting choice in the methodology ([e509975](https://github.com/cycling-data-lab/gbfs-toolkit/commit/e5099750337be142b109c862021f56e960f7e77c))
+* drop README references to removed fetch_osm_around and rebalancing flag ([ee397b2](https://github.com/cycling-data-lab/gbfs-toolkit/commit/ee397b2217eb13ed1698a6be363036af1728f812))
+* empirical validation section in methodology ([0cc862b](https://github.com/cycling-data-lab/gbfs-toolkit/commit/0cc862bb629a2ae7d57cc9d8c9a0f23ba65833d7))
+* **examples:** add four runnable end-to-end example scripts ([b1c5fb8](https://github.com/cycling-data-lab/gbfs-toolkit/commit/b1c5fb80d2c30b4d5e05384f377cee87ed1a3aba))
+* explode the API monolith into a generated per-function catalogue ([9cc3a6f](https://github.com/cycling-data-lab/gbfs-toolkit/commit/9cc3a6fca55485dd3bfc8bdc661e4abb81782a53))
+* human-validation explanation page + fuse rigour/comparative scenarios ([1c477b5](https://github.com/cycling-data-lab/gbfs-toolkit/commit/1c477b59f3287d21cbe817859fe1703fae012cbe))
+* MkDocs Material site with auto API reference (mkdocstrings) ([b3a5eb1](https://github.com/cycling-data-lab/gbfs-toolkit/commit/b3a5eb1a31ce29001716053e10e11edb6272deac))
+* **nav:** standard Diataxis tabs + imperative how-to labels ([c3f9b59](https://github.com/cycling-data-lab/gbfs-toolkit/commit/c3f9b5959dcd10a9e358c49dfa460a670c3821db))
+* professional function-reference standard + full-surface scenarios ([43b382c](https://github.com/cycling-data-lab/gbfs-toolkit/commit/43b382c8dbfab352e2905daf49c6bc95a91d4b4f))
+* record the v1.5.0 Zenodo version DOI (10.5281/zenodo.20998334) ([5126482](https://github.com/cycling-data-lab/gbfs-toolkit/commit/512648240277f04bbacdcea7711d9535c33b39f5))
+* research-grade visual design and richer examples ([a994fe9](https://github.com/cycling-data-lab/gbfs-toolkit/commit/a994fe98d8d2bc2e3ea13c4140158b827811ce85))
+* research-register rewrite, modern MkDocs site, math methodology ([d5554de](https://github.com/cycling-data-lab/gbfs-toolkit/commit/d5554debf30a3d85e641a2c42e11a3de4bb49ad8))
+* scientific-credibility pass (real audit, threshold rationale, refs, reproducibility) ([1d5dcb9](https://github.com/cycling-data-lab/gbfs-toolkit/commit/1d5dcb93acae9ee68bd2581c2ad84e4a3374e922))
+* versioned site (mike), DRY How-To migration, more doctested Examples ([e3b88ef](https://github.com/cycling-data-lab/gbfs-toolkit/commit/e3b88eff0fe8ea9618feb7d926b08cf40fb05790))
+
 ## [2.0.0](https://github.com/cycling-data-lab/gbfs-toolkit/compare/gbfs-toolkit-v1.7.2...gbfs-toolkit-v2.0.0) (2026-06-28)
 
 
