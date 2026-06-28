@@ -51,6 +51,11 @@ def link_transit_stops(
     pandas.DataFrame
         ``info`` plus ``nearest_stop_id``, ``nearest_stop_dist_m``,
         ``n_transit_within`` (stops within ``radius_m``) and ``is_transit_feeder`` (bool).
+
+    See Also
+    --------
+    [`station_surroundings`][gbfs_toolkit.station_surroundings] : Generic buffer summary.
+    [`two_step_fca`][gbfs_toolkit.two_step_fca] : Turn transit access into accessibility.
     """
     require_columns(info, ["lat", "lon"], what="link_transit_stops(info)")
     out = info.reset_index(drop=True).copy()

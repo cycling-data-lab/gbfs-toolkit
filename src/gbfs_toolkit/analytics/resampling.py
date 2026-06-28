@@ -4,6 +4,7 @@ Bike availability at 8:00 is highly correlated with 8:05; a naive i.i.d. bootstr
 or a raw n then badly understate uncertainty. These give an honest interval and an
 honest sample size for dependent data, so reported confidence bounds survive review.
 """
+
 from __future__ import annotations
 
 from collections.abc import Callable
@@ -19,6 +20,10 @@ def effective_sample_size(series) -> float:
     autocorrelations. A strongly autocorrelated series of length ``n`` carries far
     fewer than ``n`` independent observations; ESS is the count to use in an analytic
     standard error.
+
+    See Also
+    --------
+    [`block_bootstrap_ci`][gbfs_toolkit.block_bootstrap_ci] : Block bootstrap using this idea.
 
     Examples
     --------
@@ -71,6 +76,11 @@ def block_bootstrap_ci(
     ----------
     Lahiri (2003). *Resampling Methods for Dependent Data*. Springer.
 
+    See Also
+    --------
+    [`effective_sample_size`][gbfs_toolkit.effective_sample_size] : Autocorrelation-adjusted sample size.
+    [`flag_rate_ci`][gbfs_toolkit.flag_rate_ci] : Cluster bootstrap on audit flag rates.
+
     Examples
     --------
     >>> import pandas as pd
@@ -95,6 +105,4 @@ def block_bootstrap_ci(
         sample = np.concatenate([x[s : s + block_size] for s in starts])[:n]
         boots[b] = statistic(sample)
     lo, hi = np.percentile(boots, [100 * alpha / 2, 100 * (1 - alpha / 2)])
-    return pd.Series(
-        {"estimate": float(statistic(x)), "ci_lo": float(lo), "ci_hi": float(hi)}
-    )
+    return pd.Series({"estimate": float(statistic(x)), "ci_lo": float(lo), "ci_hi": float(hi)})

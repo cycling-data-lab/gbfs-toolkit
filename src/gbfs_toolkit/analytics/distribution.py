@@ -32,6 +32,11 @@ def system_profile(availability: pd.DataFrame) -> pd.Series:
         ``total_docks_available``, ``mean_occupancy``, ``pct_<state>`` for each
         :data:`~gbfs_toolkit.analytics.frames.STATION_STATES`, and ``staleness_min_median``.
 
+    See Also
+    --------
+    [`compare_systems`][gbfs_toolkit.compare_systems] : Stack this profile across many systems.
+    [`concentration_metrics`][gbfs_toolkit.concentration_metrics] : Inequality of capacity behind the profile.
+
     Examples
     --------
     >>> import pandas as pd
@@ -82,6 +87,19 @@ def compare_systems(frames: dict[str, pd.DataFrame]) -> pd.DataFrame:
     -------
     pandas.DataFrame
         One row per system (index ``system_id``), one column per profile metric.
+
+    See Also
+    --------
+    [`system_profile`][gbfs_toolkit.system_profile] : The per-system profile this stacks.
+    [`concentration_metrics`][gbfs_toolkit.concentration_metrics] : Add an inequality lens per system.
+
+    Examples
+    --------
+    >>> import pandas as pd
+    >>> a = pd.DataFrame({"num_bikes_available": [5], "num_docks_available": [5]})
+    >>> b = pd.DataFrame({"num_bikes_available": [2], "num_docks_available": [8]})
+    >>> compare_systems({"sys_a": a, "sys_b": b}).index.tolist()
+    ['sys_a', 'sys_b']
     """
     rows = {sid: system_profile(av) for sid, av in frames.items()}
     out = pd.DataFrame(rows).T
@@ -123,6 +141,12 @@ def theil_index(values, *, groups=None):
         The scalar Theil T, or a Series ``{total, between, within}`` (``total ==
         between + within``).
 
+    See Also
+    --------
+    [`palma_ratio`][gbfs_toolkit.palma_ratio] : A tail-sensitive inequality alternative.
+    [`concentration_metrics`][gbfs_toolkit.concentration_metrics] : Gini + Theil + top-decile share in one call.
+    [`dynamic_gini_index`][gbfs_toolkit.dynamic_gini_index] : The same inequality over time.
+
     Examples
     --------
     >>> round(float(theil_index([1, 1, 10, 10])), 3)
@@ -159,6 +183,11 @@ def palma_ratio(values) -> float:
     tails: the total quantity held by the best-served 10% of stations divided by
     that of the least-served 40%.
 
+    See Also
+    --------
+    [`theil_index`][gbfs_toolkit.theil_index] : A decomposable inequality alternative.
+    [`concentration_metrics`][gbfs_toolkit.concentration_metrics] : Gini + Theil + top-decile share in one call.
+
     Examples
     --------
     >>> round(palma_ratio(list(range(1, 11))), 1)
@@ -188,6 +217,13 @@ def concentration_metrics(info: pd.DataFrame, *, value_col: str = "capacity") ->
     -------
     pandas.Series
         ``n_stations``, ``total_capacity``, ``gini``, ``theil``, ``top_decile_share``.
+
+    See Also
+    --------
+    [`lorenz_curve`][gbfs_toolkit.lorenz_curve] : The curve behind these scalars.
+    [`theil_index`][gbfs_toolkit.theil_index] : The decomposable Theil index alone.
+    [`palma_ratio`][gbfs_toolkit.palma_ratio] : The tail-sensitive Palma ratio alone.
+    [`dynamic_gini_index`][gbfs_toolkit.dynamic_gini_index] : The same concentration over time.
 
     Examples
     --------
@@ -224,6 +260,11 @@ def lorenz_curve(info: pd.DataFrame, *, value_col: str = "capacity") -> pd.DataF
     -------
     pandas.DataFrame
         ``cum_population_share``, ``cum_value_share`` (both in ``[0, 1]``, ascending).
+
+    See Also
+    --------
+    [`concentration_metrics`][gbfs_toolkit.concentration_metrics] : The Gini/Theil scalars summarising this curve.
+    [`theil_index`][gbfs_toolkit.theil_index] : A decomposable inequality scalar.
 
     Examples
     --------
@@ -270,6 +311,25 @@ def dynamic_gini_index(
     -------
     pandas.DataFrame
         ``<time_col>, gini, n_stations`` (one row per snapshot).
+
+    See Also
+    --------
+    [`concentration_metrics`][gbfs_toolkit.concentration_metrics] : Static capacity concentration.
+    [`temporal_concentration`][gbfs_toolkit.temporal_concentration] : The temporal (per-station) analogue.
+    [`theil_index`][gbfs_toolkit.theil_index] : A decomposable inequality scalar.
+
+    Examples
+    --------
+    >>> import pandas as pd
+    >>> panel = pd.DataFrame({
+    ...     "station_id": ["a", "b", "a", "b"],
+    ...     "fetched_at": pd.to_datetime(
+    ...         ["2026-01-01T08:00Z"] * 2 + ["2026-01-01T18:00Z"] * 2),
+    ...     "num_bikes_available": [5, 5, 10, 0],
+    ... })
+    >>> out = dynamic_gini_index(panel)
+    >>> bool(out["gini"].iloc[0] < out["gini"].iloc[1])
+    True
     """
     df = panel.reset_index() if isinstance(panel.index, pd.MultiIndex) else panel.copy()
     require_columns(df, [time_col, target_col], what="dynamic_gini_index")

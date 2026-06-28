@@ -53,6 +53,12 @@ def rebalancing_tension(
     ----------
     Rubner, Tomasi & Guibas (2000). The Earth Mover's Distance. *IJCV*, 40(2).
 
+    See Also
+    --------
+    [`cumulative_imbalance`][gbfs_toolkit.cumulative_imbalance] : Per-station drift behind the tension.
+    [`flow_asymmetry_ratio`][gbfs_toolkit.flow_asymmetry_ratio] : Structural source/sink roles.
+    [`calculate_net_flow`][gbfs_toolkit.calculate_net_flow] : The observed flow this builds on.
+
     Examples
     --------
     >>> import pandas as pd
@@ -121,6 +127,24 @@ def cumulative_imbalance(panel: pd.DataFrame, *, reset: str | None = "1D") -> pd
     -------
     pandas.DataFrame
         The :func:`calculate_net_flow` frame plus a ``cumulative_drift`` column.
+
+    See Also
+    --------
+    [`calculate_net_flow`][gbfs_toolkit.calculate_net_flow] : The per-interval flow this accumulates.
+    [`flow_asymmetry_ratio`][gbfs_toolkit.flow_asymmetry_ratio] : In/out balance of the same flow.
+    [`fleet_turnover_proxy`][gbfs_toolkit.fleet_turnover_proxy] : System-level turnover from the same flow.
+
+    Examples
+    --------
+    >>> import pandas as pd
+    >>> panel = pd.DataFrame({
+    ...     "system_id": "s", "station_id": "a",
+    ...     "fetched_at": pd.to_datetime(
+    ...         ["2026-01-01T08:00Z", "2026-01-01T09:00Z", "2026-01-01T10:00Z"]),
+    ...     "num_bikes_available": [10, 7, 9],
+    ... })
+    >>> cumulative_imbalance(panel)["cumulative_drift"].tolist()
+    [0.0, -3.0, -1.0]
     """
     flow = calculate_net_flow(panel).sort_values(["system_id", "station_id", "fetched_at"])
     filled = flow["net_flow"].fillna(0.0)
@@ -144,6 +168,23 @@ def aliasing_vulnerability(panel: pd.DataFrame) -> pd.DataFrame:
     pandas.DataFrame
         ``system_id, station_id, high_frequency_loss_risk`` (the sign-reversal rate in ``[0, 1]``,
         ``NaN`` when there are too few moves) and ``n_intervals``.
+
+    See Also
+    --------
+    [`calculate_net_flow`][gbfs_toolkit.calculate_net_flow] : The flow whose sampling limit this probes.
+    [`fleet_turnover_proxy`][gbfs_toolkit.fleet_turnover_proxy] : The turnover proxy this cautions about.
+
+    Examples
+    --------
+    >>> import pandas as pd
+    >>> panel = pd.DataFrame({
+    ...     "system_id": "s", "station_id": "a",
+    ...     "fetched_at": pd.to_datetime(
+    ...         ["2026-01-01T08:00Z", "2026-01-01T09:00Z", "2026-01-01T10:00Z"]),
+    ...     "num_bikes_available": [10, 7, 9],
+    ... })
+    >>> float(aliasing_vulnerability(panel)["high_frequency_loss_risk"].iloc[0])
+    1.0
     """
     flow = calculate_net_flow(panel).dropna(subset=["net_flow"])
     rows = []
@@ -177,6 +218,24 @@ def flow_asymmetry_ratio(panel: pd.DataFrame, *, eps: float = 1e-9) -> pd.DataFr
     -------
     pandas.DataFrame
         ``system_id, station_id, inflow, outflow, asymmetry_ratio`` (= ``inflow / (outflow + eps)``).
+
+    See Also
+    --------
+    [`cumulative_imbalance`][gbfs_toolkit.cumulative_imbalance] : The cumulative view of the same flow.
+    [`rebalancing_tension`][gbfs_toolkit.rebalancing_tension] : The system-level spatial tension.
+    [`calculate_net_flow`][gbfs_toolkit.calculate_net_flow] : The observed flow this summarises.
+
+    Examples
+    --------
+    >>> import pandas as pd
+    >>> panel = pd.DataFrame({
+    ...     "system_id": "s", "station_id": "a",
+    ...     "fetched_at": pd.to_datetime(
+    ...         ["2026-01-01T08:00Z", "2026-01-01T09:00Z", "2026-01-01T10:00Z"]),
+    ...     "num_bikes_available": [10, 7, 9],
+    ... })
+    >>> round(float(flow_asymmetry_ratio(panel)["asymmetry_ratio"].iloc[0]), 2)
+    0.67
     """
     flow = calculate_net_flow(panel).dropna(subset=["net_flow"])
     nf = flow["net_flow"]
@@ -202,6 +261,23 @@ def fleet_turnover_proxy(panel: pd.DataFrame, *, freq: str = "1D") -> pd.DataFra
     -------
     pandas.DataFrame
         ``system_id, period, activity, fleet_size, turnover_proxy`` (one row per system and period).
+
+    See Also
+    --------
+    [`cumulative_imbalance`][gbfs_toolkit.cumulative_imbalance] : Per-station drift behind the activity.
+    [`calculate_net_flow`][gbfs_toolkit.calculate_net_flow] : The observed flow this aggregates.
+
+    Examples
+    --------
+    >>> import pandas as pd
+    >>> panel = pd.DataFrame({
+    ...     "system_id": "s", "station_id": "a",
+    ...     "fetched_at": pd.to_datetime(
+    ...         ["2026-01-01T08:00Z", "2026-01-01T09:00Z", "2026-01-01T10:00Z"]),
+    ...     "num_bikes_available": [10, 7, 9],
+    ... })
+    >>> round(float(fleet_turnover_proxy(panel)["turnover_proxy"].iloc[0]), 3)
+    0.25
     """
     flow = calculate_net_flow(panel)
     require_columns(flow, ["num_bikes_available", "fetched_at"], what="fleet_turnover_proxy")

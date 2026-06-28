@@ -74,6 +74,10 @@ def build_session(
     Transient 429/5xx responses from operator API gateways are routine; this retries them with
     exponential backoff instead of failing the whole poll. Reusing one session across systems
     also pools TCP connections (avoids port exhaustion). Requires the ``[fetch]`` extra.
+
+    See Also
+    --------
+    [`fetch_feed_json`][gbfs_toolkit.fetch_feed_json] : The fetch that uses the session.
     """
     requests = _require_requests()
     from requests.adapters import HTTPAdapter
@@ -130,6 +134,12 @@ def fetch_feed_json(
     scraper can skip re-ingesting an unchanged snapshot (saving bandwidth and avoiding an
     IP ban). Otherwise returns a :data:`FeedResponse` ``(data, etag, last_modified)`` to store
     for next time. Requires the ``[fetch]`` extra.
+
+    See Also
+    --------
+    [`GBFSFeed`][gbfs_toolkit.GBFSFeed] : The high-level feed interface.
+    [`fetch_multiple`][gbfs_toolkit.fetch_multiple] : Fetch many systems concurrently.
+    [`build_session`][gbfs_toolkit.build_session] : Configure the HTTP session.
     """
     requests = _require_requests()
     headers = {"User-Agent": _USER_AGENT}
@@ -164,6 +174,11 @@ def parse_discovery(doc: dict, language: str | None = None) -> tuple[dict[str, s
     """Parse a ``gbfs.json`` auto-discovery document → ({feed_name: url}, version).
 
     Handles GBFS 2.x (``data`` keyed by language) and 3.x (``data.feeds`` directly).
+
+    See Also
+    --------
+    [`resolve`][gbfs_toolkit.resolve] : Resolve the discovery URL first.
+    [`GBFSFeed`][gbfs_toolkit.GBFSFeed] : The feed object it underpins.
     """
     version = str(doc.get("version", "2.x"))
     data = doc.get("data", {})
@@ -192,6 +207,12 @@ class GBFSFeed:
     timeout : int, default 30
     get_json : callable, optional
         ``url -> dict`` override (dependency injection for tests / caching).
+
+    See Also
+    --------
+    [`fetch_feed_json`][gbfs_toolkit.fetch_feed_json] : Fetch a single GBFS document.
+    [`audit_feed`][gbfs_toolkit.audit_feed] : Audit a fetched feed end to end.
+    [`build_availability_panel`][gbfs_toolkit.build_availability_panel] : Build a panel from fetched snapshots.
     """
 
     def __init__(
@@ -456,12 +477,24 @@ class GBFSFeed:
 
 
 def availability(gbfs_url: str, **kwargs: Any) -> pd.DataFrame:
-    """One-liner: live availability (bikes/docks + name/coords) from a ``gbfs.json`` URL."""
+    """One-liner: live availability (bikes/docks + name/coords) from a ``gbfs.json`` URL.
+
+    See Also
+    --------
+    [`build_availability_panel`][gbfs_toolkit.build_availability_panel] : The longitudinal panel version.
+    [`stockout_episodes`][gbfs_toolkit.stockout_episodes] : Detect outages over time.
+    """
     return GBFSFeed.from_url(gbfs_url, **kwargs).availability()
 
 
 def audit_feed(gbfs_url: str, **kwargs: Any) -> pd.DataFrame:
-    """One-liner: A1–A7 semantic audit of a live feed."""
+    """One-liner: A1–A7 semantic audit of a live feed.
+
+    See Also
+    --------
+    [`GBFSFeed`][gbfs_toolkit.GBFSFeed] : The feed this audits.
+    [`coverage_report`][gbfs_toolkit.coverage_report] : Summarise feed coverage.
+    """
     return GBFSFeed.from_url(gbfs_url, **kwargs).audit()
 
 
@@ -510,6 +543,11 @@ def fetch_multiple(
     Set ``progress=True`` for feedback on a long pull: a tqdm bar when tqdm is installed
     (``pip install gbfs-toolkit[cli]``), otherwise periodic log lines. Feeds complete out
     of order; a failure is logged and recorded, never raised, so the bar always finishes.
+
+    See Also
+    --------
+    [`fetch_feed_json`][gbfs_toolkit.fetch_feed_json] : Fetch one document.
+    [`systems_catalog`][gbfs_toolkit.systems_catalog] : Resolve the system ids to fetch.
     """
     from concurrent.futures import ThreadPoolExecutor, as_completed
 

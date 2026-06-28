@@ -55,6 +55,12 @@ with mkdocs_gen_files.open("reference/index.md", "w") as fd:
         "is always complete). Use the search bar to jump straight to a function, or browse "
         "by theme below.\n\n"
     )
+    fd.write(
+        "!!! abstract \"Start with the data model\"\n"
+        "    Every function in this library consumes or returns the canonical, tz-aware "
+        "UTC pandas frames described in **[Data model & schemas](../data-model.md)**. Read "
+        "it first: the column names and dtypes are the contract these functions rely on.\n\n"
+    )
     for key, title in CATEGORIES.items():
         names = sorted(by_category[key], key=str.lower)
         if not names:
@@ -66,4 +72,7 @@ with mkdocs_gen_files.open("reference/index.md", "w") as fd:
 
 with mkdocs_gen_files.open("reference/SUMMARY.md", "w") as fd:
     fd.write("- [Overview](index.md)\n")
+    # The data model is the contract every function relies on, so it leads the
+    # catalogue (the schema is part of the API). The page itself lives in docs/.
+    fd.write("- [Data model & schemas](../data-model.md)\n")
     fd.writelines(nav.build_literate_nav())

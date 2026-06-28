@@ -34,6 +34,21 @@ def join_availability(info: pd.DataFrame, status: pd.DataFrame) -> pd.DataFrame:
         Canonical station information (:data:`~gbfs_toolkit.core.models.STATION_INFO_COLUMNS`).
     status : pandas.DataFrame
         Canonical station status (:data:`~gbfs_toolkit.core.models.STATION_STATUS_COLUMNS`).
+
+    See Also
+    --------
+    [`occupancy`][gbfs_toolkit.occupancy] : Occupancy ratio on the joined frame.
+    [`station_state`][gbfs_toolkit.station_state] : Classify each joined station.
+    [`system_profile`][gbfs_toolkit.system_profile] : Summarise the joined snapshot.
+
+    Examples
+    --------
+    >>> import pandas as pd
+    >>> info = pd.DataFrame({"station_id": ["a", "b"], "capacity": [20, 10]})
+    >>> status = pd.DataFrame({"station_id": ["a"], "num_bikes_available": [5]})
+    >>> out = join_availability(info, status)
+    >>> out.sort_values("station_id")["presence"].tolist()
+    ['both', 'info_only']
     """
     require_columns(info, ["station_id"], what="join_availability(info)")
     require_columns(status, ["station_id"], what="join_availability(status)")
@@ -53,6 +68,12 @@ def occupancy(availability: pd.DataFrame) -> pd.Series:
 
     The quantity everyone recomputes by hand. Returns ``NaN`` where there are no bikes *and*
     no docks (a virtual/dead station), so the divide-by-zero is handled once, consistently.
+
+    See Also
+    --------
+    [`station_state`][gbfs_toolkit.station_state] : A categorical state instead of a ratio.
+    [`system_profile`][gbfs_toolkit.system_profile] : The system-wide occupancy summary.
+    [`capacity_utilization`][gbfs_toolkit.capacity_utilization] : Occupancy normalised by capacity.
 
     Examples
     --------
@@ -80,6 +101,21 @@ def filter_vehicles(
 
     ``form_factor`` matches exactly (e.g. ``"bicycle"``, ``"scooter"``); ``propulsion`` matches
     as a substring (so ``"electric"`` catches both ``electric`` and ``electric_assist``).
+
+    See Also
+    --------
+    [`ebikes`][gbfs_toolkit.ebikes] : The electric-only shorthand.
+    [`join_vehicle_types`][gbfs_toolkit.join_vehicle_types] : Resolve the type attributes this filters on.
+
+    Examples
+    --------
+    >>> import pandas as pd
+    >>> vehicles = pd.DataFrame({"bike_id": ["v1", "v2"], "vehicle_type_id": ["t1", "t2"]})
+    >>> types = pd.DataFrame({
+    ...     "vehicle_type_id": ["t1", "t2"], "form_factor": ["bicycle", "scooter"],
+    ...     "propulsion_type": ["human", "electric"]})
+    >>> filter_vehicles(vehicles, types, form_factor="scooter")["bike_id"].tolist()
+    ['v2']
     """
     out = join_vehicle_types(vehicles, vehicle_types)
     mask = pd.Series(True, index=out.index)
@@ -93,7 +129,23 @@ def filter_vehicles(
 
 
 def ebikes(vehicles: pd.DataFrame, vehicle_types: pd.DataFrame) -> pd.DataFrame:
-    """Electric vehicles only (any ``electric*`` propulsion), with their type attributes joined."""
+    """Electric vehicles only (any ``electric*`` propulsion), with their type attributes joined.
+
+    See Also
+    --------
+    [`filter_vehicles`][gbfs_toolkit.filter_vehicles] : The general type/propulsion filter.
+    [`join_vehicle_types`][gbfs_toolkit.join_vehicle_types] : Resolve the attributes behind the filter.
+
+    Examples
+    --------
+    >>> import pandas as pd
+    >>> vehicles = pd.DataFrame({"bike_id": ["v1", "v2"], "vehicle_type_id": ["t1", "t2"]})
+    >>> types = pd.DataFrame({
+    ...     "vehicle_type_id": ["t1", "t2"], "form_factor": ["bicycle", "bicycle"],
+    ...     "propulsion_type": ["human", "electric_assist"]})
+    >>> ebikes(vehicles, types)["bike_id"].tolist()
+    ['v2']
+    """
     return filter_vehicles(vehicles, vehicle_types, propulsion="electric")
 
 
@@ -115,6 +167,11 @@ def station_state(availability: pd.DataFrame) -> pd.Series:
     -------
     pandas.Series
         Categorical (categories = :data:`STATION_STATES`), aligned to the input index.
+
+    See Also
+    --------
+    [`occupancy`][gbfs_toolkit.occupancy] : The continuous occupancy ratio.
+    [`system_profile`][gbfs_toolkit.system_profile] : Per-state shares across the system.
 
     Examples
     --------
@@ -178,6 +235,18 @@ def network_changes(
     pandas.DataFrame
         ``system_id, station_id, change, old_value, new_value, distance_m``; ``old/new_value``
         carry the capacity for recapacitations; ``distance_m`` the move distance for moves.
+
+    See Also
+    --------
+    [`join_availability`][gbfs_toolkit.join_availability] : Compare states rather than inventories.
+
+    Examples
+    --------
+    >>> import pandas as pd
+    >>> old = pd.DataFrame({"system_id": "s", "station_id": ["a", "b"], "capacity": [20, 10]})
+    >>> new = pd.DataFrame({"system_id": "s", "station_id": ["a", "c"], "capacity": [25, 12]})
+    >>> sorted(network_changes(old, new)["change"].tolist())
+    ['added', 'recapacitated', 'removed']
     """
     require_columns(old, ["station_id"], what="network_changes(old)")
     require_columns(new, ["station_id"], what="network_changes(new)")
@@ -224,6 +293,20 @@ def join_vehicle_types(vehicles: pd.DataFrame, vehicle_types: pd.DataFrame) -> p
 
     Turns "where are the e-bikes?" into a filter: ``out[out.form_factor == "bicycle"]`` etc.
     Left join on ``vehicle_type_id``; the catalogue's ``system_id`` is dropped to avoid a clash.
+
+    See Also
+    --------
+    [`filter_vehicles`][gbfs_toolkit.filter_vehicles] : Filter on the resolved attributes.
+    [`ebikes`][gbfs_toolkit.ebikes] : The electric-only shorthand.
+    [`join_pricing`][gbfs_toolkit.join_pricing] : Resolve pricing onto the same vehicles.
+
+    Examples
+    --------
+    >>> import pandas as pd
+    >>> vehicles = pd.DataFrame({"bike_id": ["v1"], "vehicle_type_id": ["t1"]})
+    >>> types = pd.DataFrame({"vehicle_type_id": ["t1"], "form_factor": ["bicycle"]})
+    >>> join_vehicle_types(vehicles, types)["form_factor"].tolist()
+    ['bicycle']
     """
     cat = vehicle_types.drop(columns=["system_id"], errors="ignore")
     return vehicles.merge(cat, on="vehicle_type_id", how="left")
@@ -235,6 +318,18 @@ def join_pricing(vehicles: pd.DataFrame, plans: pd.DataFrame) -> pd.DataFrame:
     Left join of :func:`~gbfs_toolkit.to_canonical_pricing_plans` (its ``plan_id`` matches the
     vehicle's ``pricing_plan_id``); plan ``name``/``description`` are prefixed ``plan_`` to
     avoid clashes.
+
+    See Also
+    --------
+    [`join_vehicle_types`][gbfs_toolkit.join_vehicle_types] : Resolve type attributes onto vehicles.
+
+    Examples
+    --------
+    >>> import pandas as pd
+    >>> vehicles = pd.DataFrame({"bike_id": ["v1"], "pricing_plan_id": ["p1"]})
+    >>> plans = pd.DataFrame({"plan_id": ["p1"], "name": ["Day Pass"], "price": [5.0]})
+    >>> join_pricing(vehicles, plans)["plan_name"].tolist()
+    ['Day Pass']
     """
     p = plans.drop(columns=["system_id"], errors="ignore").rename(
         columns={

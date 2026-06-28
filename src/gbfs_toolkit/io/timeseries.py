@@ -57,6 +57,11 @@ def append_to_parquet(
     A ``date`` column (UTC, ``YYYY-MM-DD``) is derived from ``fetched_at`` when missing,
     for stable daily partitioning. Each call writes a *new* file (unique basename), so
     concurrent pollers never clobber each other; de-duplication happens on read, not write.
+
+    See Also
+    --------
+    [`generate_manifest`][gbfs_toolkit.generate_manifest] : Manifest of the written archive.
+    [`build_availability_panel`][gbfs_toolkit.build_availability_panel] : Read the archive back into a panel.
     """
     ds = _require_pyarrow()
     import pyarrow as pa
@@ -117,6 +122,12 @@ def build_availability_panel(
     -------
     pandas.DataFrame
         MultiIndexed by ``(system_id, station_id, fetched_at)``, sorted.
+
+    See Also
+    --------
+    [`availability`][gbfs_toolkit.availability] : A single-snapshot availability frame.
+    [`calculate_net_flow`][gbfs_toolkit.calculate_net_flow] : Per-interval flow from this panel.
+    [`stockout_episodes`][gbfs_toolkit.stockout_episodes] : Outage episodes from this panel.
     """
     ds = _require_pyarrow()
     dataset = ds.dataset(str(base_path), format="parquet", partitioning="hive")
@@ -199,6 +210,12 @@ def calculate_net_flow(panel: pd.DataFrame) -> pd.DataFrame:
 
     Accepts a panel from :func:`build_availability_panel` (MultiIndexed) or a flat frame;
     returns a flat frame with ``system_id, station_id, fetched_at`` columns.
+
+    See Also
+    --------
+    [`build_availability_panel`][gbfs_toolkit.build_availability_panel] : The panel this consumes.
+    [`turnover`][gbfs_toolkit.turnover] : Aggregate absolute flow.
+    [`flow_balance`][gbfs_toolkit.flow_balance] : Net source/sink balance.
     """
     df = panel.reset_index() if isinstance(panel.index, pd.MultiIndex) else panel.copy()
     require_columns(
@@ -251,6 +268,11 @@ def stockout_episodes(
     pandas.DataFrame
         One row per episode: ``system_id, station_id, kind, start, end, duration_minutes,
         n_obs`` (sorted by station then start).
+
+    See Also
+    --------
+    [`detect_frozen_stations`][gbfs_toolkit.detect_frozen_stations] : Find stuck (never-changing) stations.
+    [`build_availability_panel`][gbfs_toolkit.build_availability_panel] : The panel this scans.
     """
     df = panel.reset_index() if isinstance(panel.index, pd.MultiIndex) else panel.copy()
     require_columns(
@@ -312,6 +334,11 @@ def turnover(
     -------
     pandas.DataFrame
         ``system_id, station_id, period, turnover`` (Σ ``|net_flow|`` over each ``freq`` bin).
+
+    See Also
+    --------
+    [`calculate_net_flow`][gbfs_toolkit.calculate_net_flow] : The per-interval flow this sums.
+    [`flow_balance`][gbfs_toolkit.flow_balance] : Signed instead of absolute flow.
     """
     flow = calculate_net_flow(panel).dropna(subset=["net_flow"])
     if flow.empty:
@@ -346,6 +373,11 @@ def flow_balance(panel: pd.DataFrame) -> pd.DataFrame:
     -------
     pandas.DataFrame
         Indexed by ``(system_id, station_id)``: ``inflow``, ``outflow``, ``net``, ``balance``.
+
+    See Also
+    --------
+    [`calculate_net_flow`][gbfs_toolkit.calculate_net_flow] : The per-interval flow this nets.
+    [`turnover`][gbfs_toolkit.turnover] : Absolute instead of signed flow.
     """
     flow = calculate_net_flow(panel).dropna(subset=["net_flow"])
     keys = ["system_id", "station_id"]
@@ -428,6 +460,10 @@ def detect_frozen_stations(
     pandas.DataFrame
         Indexed by ``(system_id, station_id)``: ``n_obs``, ``longest_const_run_hours``,
         ``frozen_value`` (for the first column), ``is_frozen``.
+
+    See Also
+    --------
+    [`stockout_episodes`][gbfs_toolkit.stockout_episodes] : Genuine outage episodes.
     """
     cols = list(columns) if columns else [value_col]
     df = panel.reset_index() if isinstance(panel.index, pd.MultiIndex) else panel.copy()
@@ -492,6 +528,11 @@ def coverage_report(panel: pd.DataFrame, *, expected_freq: str = "5min") -> pd.D
     pandas.DataFrame
         Indexed by ``(system_id, station_id)``: ``expected_snapshots``, ``actual_snapshots``,
         ``uptime_pct``, ``longest_gap_minutes``.
+
+    See Also
+    --------
+    [`audit_feed`][gbfs_toolkit.audit_feed] : The audit behind the report.
+    [`generate_manifest`][gbfs_toolkit.generate_manifest] : Manifest of an archived collection.
     """
     df = panel.reset_index() if isinstance(panel.index, pd.MultiIndex) else panel.copy()
     require_columns(df, ["system_id", "station_id", "fetched_at"], what="coverage_report")
@@ -539,6 +580,11 @@ def generate_manifest(lake_dir: str | Path, *, chunk_size: int = 1 << 20) -> dic
         ``gbfs_toolkit_version``, ``generated_at`` (UTC ISO), ``n_files``, ``total_bytes``,
         ``total_rows``, ``system_ids``, ``min_date``, ``max_date``, and ``files`` (a sorted
         list of ``{path, sha256, bytes}`` with paths relative to ``lake_dir``).
+
+    See Also
+    --------
+    [`append_to_parquet`][gbfs_toolkit.append_to_parquet] : The append step it documents.
+    [`coverage_report`][gbfs_toolkit.coverage_report] : Per-feed coverage summary.
     """
     from gbfs_toolkit import __version__
 

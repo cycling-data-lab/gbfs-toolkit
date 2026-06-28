@@ -98,6 +98,11 @@ def to_canonical_station_info(
     -------
     pandas.DataFrame
         Canonical station-information frame (:data:`STATION_INFO_COLUMNS`).
+
+    See Also
+    --------
+    [`to_canonical_station_status`][gbfs_toolkit.to_canonical_station_status] : The matching live-status parser.
+    [`GBFSFeed`][gbfs_toolkit.GBFSFeed] : The feed that calls these parsers.
     """
     data = raw.get("data", raw)
     stations = _records(data, "stations")
@@ -152,6 +157,11 @@ def to_canonical_station_status(
 
     Returns :data:`~gbfs_toolkit.core.models.STATION_STATUS_COLUMNS`. ``fetched_at`` is a
     tz-aware UTC timestamp stamped on every row (defaults to *now*) for provenance.
+
+    See Also
+    --------
+    [`to_canonical_station_info`][gbfs_toolkit.to_canonical_station_info] : The matching inventory parser.
+    [`to_canonical_station_vehicle_counts`][gbfs_toolkit.to_canonical_station_vehicle_counts] : Per-type counts at the station.
     """
     fetched_at = fetched_at if fetched_at is not None else _now_utc()
     data = raw.get("data", raw)
@@ -206,6 +216,11 @@ def to_canonical_station_vehicle_counts(
     (:data:`~gbfs_toolkit.core.models.STATION_VEHICLE_COUNTS_COLUMNS`), so "where are the e-bikes?"
     is a join to :func:`to_canonical_vehicle_types`; the aggregate ``num_bikes_available``
     cannot answer it. Stations without the field contribute no rows.
+
+    See Also
+    --------
+    [`to_canonical_station_status`][gbfs_toolkit.to_canonical_station_status] : The aggregate status parser.
+    [`to_canonical_vehicle_types`][gbfs_toolkit.to_canonical_vehicle_types] : Resolve the vehicle types counted.
     """
     fetched_at = fetched_at if fetched_at is not None else _now_utc()
     data = raw.get("data", raw)
@@ -239,6 +254,11 @@ def to_canonical_vehicles(
     """Parse ``free_bike_status`` (2.x) or ``vehicle_status`` (3.x) into a canonical frame.
 
     Returns :data:`~gbfs_toolkit.core.models.VEHICLE_STATUS_COLUMNS`.
+
+    See Also
+    --------
+    [`to_canonical_vehicle_types`][gbfs_toolkit.to_canonical_vehicle_types] : Resolve each vehicle's type.
+    [`to_canonical_pricing_plans`][gbfs_toolkit.to_canonical_pricing_plans] : Resolve each vehicle's pricing.
     """
     fetched_at = fetched_at if fetched_at is not None else _now_utc()
     data = raw.get("data", raw)
@@ -279,6 +299,10 @@ def to_canonical_vehicle_types(raw: dict, *, system_id: str) -> pd.DataFrame:
     Resolves ``VehicleStatus.vehicle_type_id`` to a form factor / propulsion, so
     "where are the e-bikes?" becomes a join. Returns
     :data:`~gbfs_toolkit.core.models.VEHICLE_TYPE_COLUMNS`.
+
+    See Also
+    --------
+    [`to_canonical_vehicles`][gbfs_toolkit.to_canonical_vehicles] : The vehicles these types describe.
     """
     data = raw.get("data", raw)
     types = _records(data, "vehicle_types")
@@ -304,6 +328,10 @@ def to_canonical_pricing_plans(raw: dict, *, system_id: str) -> pd.DataFrame:
     studies can join price to availability. Returns
     :data:`~gbfs_toolkit.core.models.PRICING_PLAN_COLUMNS`; ``name``/``description`` are localised
     via the same v2/v3 heuristic as elsewhere.
+
+    See Also
+    --------
+    [`to_canonical_vehicles`][gbfs_toolkit.to_canonical_vehicles] : The vehicles these plans price.
     """
     data = raw.get("data", raw)
     plans = _records(data, "plans")
@@ -331,6 +359,10 @@ def to_canonical_system_regions(raw: dict, *, system_id: str) -> pd.DataFrame:
     Resolves the ``region_id`` foreign key carried on stations, so large multi-region
     networks can be subset or aggregated by region. Returns
     :data:`~gbfs_toolkit.core.models.SYSTEM_REGION_COLUMNS`.
+
+    See Also
+    --------
+    [`to_canonical_system_information`][gbfs_toolkit.to_canonical_system_information] : The matching system-information parser.
     """
     data = raw.get("data", raw)
     regions = _records(data, "regions")
@@ -351,6 +383,10 @@ def to_canonical_alerts(raw: dict, *, system_id: str) -> pd.DataFrame:
     Service disruptions (strikes, closures, weather) that explain anomalies in the data.
     Each alert's first time window is used for ``start``/``end`` (tz-aware UTC, NaT if
     open-ended). Returns :data:`~gbfs_toolkit.core.models.ALERT_COLUMNS`.
+
+    See Also
+    --------
+    [`GBFSFeed`][gbfs_toolkit.GBFSFeed] : The feed that calls these parsers.
     """
     data = raw.get("data", raw)
     alerts = _records(data, "alerts")
@@ -381,6 +417,11 @@ def to_canonical_system_information(raw: dict, *, system_id: str | None = None) 
 
     Crucially exposes ``timezone`` (e.g. ``"Europe/Paris"``) so UTC frames can be
     converted to local diurnal time without a manual lookup per city.
+
+    See Also
+    --------
+    [`to_canonical_system_regions`][gbfs_toolkit.to_canonical_system_regions] : The matching regions parser.
+    [`GBFSFeed`][gbfs_toolkit.GBFSFeed] : The feed that calls these parsers.
     """
     data = raw.get("data", raw)
     if not isinstance(data, dict):

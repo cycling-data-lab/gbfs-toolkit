@@ -48,6 +48,26 @@ def audit_dynamic(
     pandas.DataFrame
         ``station_id``, ``D1_negative``, ``D2_over_capacity``, ``D3_stale``,
         ``flagged`` and a human-readable ``reason``.
+
+    See Also
+    --------
+    [`audit_static`][gbfs_toolkit.audit_static] : The companion A1-A7 audit of the static inventory.
+    [`audit_frames`][gbfs_toolkit.audit_frames] : Run the static and dynamic audits together on canonical frames.
+
+    Examples
+    --------
+    A negative bike count trips D1; the healthy station passes:
+
+    >>> import pandas as pd
+    >>> avail = pd.DataFrame({
+    ...     "station_id": ["a", "b"],
+    ...     "num_bikes_available": [5, -1],
+    ...     "num_docks_available": [10, 4],
+    ... })
+    >>> audit_dynamic(avail)[["station_id", "D1_negative", "flagged"]]  # doctest: +NORMALIZE_WHITESPACE
+      station_id  D1_negative  flagged
+    0          a        False    False
+    1          b         True     True
     """
     require_columns(availability, _REQUIRED, what="audit_dynamic")
     df = availability.reset_index(drop=True)

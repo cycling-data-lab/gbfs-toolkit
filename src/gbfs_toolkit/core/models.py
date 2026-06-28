@@ -194,6 +194,11 @@ class SchemaError(GBFSValidationError, ValueError):
     automated pipeline can branch on them without parsing the message: ``missing`` (the
     absent columns), ``present`` (the columns that were supplied), and ``what`` (the
     operation that required them). They are ``None`` for other validation failures.
+
+    See Also
+    --------
+    [`validate_schema`][gbfs_toolkit.validate_schema] : Raises this on failure.
+    [`GBFSValidationError`][gbfs_toolkit.GBFSValidationError] : The feed-level validation error.
     """
 
     def __init__(
@@ -286,6 +291,11 @@ def validate_schema(df: pd.DataFrame, schema: str) -> pd.DataFrame:
     Use after slicing/grouping/mutating a canonical frame (e.g. before appending to the
     Parquet lake) to fail fast with a clear :class:`SchemaError` instead of corrupting the
     dataset. ``schema`` is one of :data:`SCHEMAS` (``"station_status"``, ``"vehicle_status"``…).
+
+    See Also
+    --------
+    [`coerce_schema`][gbfs_toolkit.coerce_schema] : Coerce to the schema instead.
+    [`SchemaError`][gbfs_toolkit.SchemaError] : Raised on validation failure.
     """
     require_columns(df, _schema_columns(schema), what=f"validate_schema({schema!r})")
     return df
@@ -296,6 +306,11 @@ def coerce_schema(df: pd.DataFrame, schema: str) -> pd.DataFrame:
 
     Best-effort: only columns present are touched; unparseable values become ``pd.NA``/``NaT``.
     Handy after reading frames from CSV or a third-party source before feeding the toolkit.
+
+    See Also
+    --------
+    [`validate_schema`][gbfs_toolkit.validate_schema] : Validate without coercing.
+    [`SchemaError`][gbfs_toolkit.SchemaError] : Raised on an irreconcilable schema.
     """
     out = df.copy()
     for col in _schema_columns(schema):

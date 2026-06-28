@@ -34,6 +34,25 @@ def audit_frames(
     A pure function (no feed object), so it audits feeds you fetched yourself *or* frames read
     back from a Parquet lake. Results are stacked with an ``audit_type`` column. Use
     :func:`audit_static` / :func:`audit_dynamic` directly for the per-rule boolean columns.
+
+    See Also
+    --------
+    [`audit_static`][gbfs_toolkit.audit_static] : The static A1-A7 half, with per-rule boolean columns.
+    [`audit_dynamic`][gbfs_toolkit.audit_dynamic] : The dynamic D1-D3 half, with per-rule boolean columns.
+    [`drop_flagged`][gbfs_toolkit.drop_flagged] : Keep only the stations that pass the static audit.
+
+    Examples
+    --------
+    >>> import pandas as pd
+    >>> info = pd.DataFrame({
+    ...     "system_id": "s", "station_id": ["a", "b"],
+    ...     "station_type": ["docked_bike", "carsharing"],
+    ...     "capacity": [20, 5], "lat": [48.85, 48.86], "lon": [2.35, 2.36],
+    ... })
+    >>> audit_frames(info)[["station_id", "audit_type", "flagged"]]  # doctest: +NORMALIZE_WHITESPACE
+      station_id audit_type  flagged
+    0          a     static    False
+    1          b     static     True
     """
     static = audit_static(info).assign(audit_type="static")
     parts = [static[AUDIT_RESULT_COLUMNS]]
@@ -53,6 +72,24 @@ def drop_flagged(stations: pd.DataFrame) -> pd.DataFrame:
 
     Shorthand for running :func:`audit_static` and keeping the unflagged rows: the first thing
     most studies do before anything else.
+
+    See Also
+    --------
+    [`audit_static`][gbfs_toolkit.audit_static] : The audit whose ``flagged`` column this filters on.
+    [`audit_frames`][gbfs_toolkit.audit_frames] : Run the static and dynamic audits and stack their verdicts.
+
+    Examples
+    --------
+    The car-sharing station (A1) is dropped; the docked station survives:
+
+    >>> import pandas as pd
+    >>> stations = pd.DataFrame({
+    ...     "system_id": "s", "station_id": ["a", "b"],
+    ...     "station_type": ["docked_bike", "carsharing"],
+    ...     "capacity": [20, 5], "lat": [48.85, 48.86], "lon": [2.35, 2.36],
+    ... })
+    >>> drop_flagged(stations)["station_id"].tolist()
+    ['a']
     """
     verdict = audit_static(stations)
     return stations[~verdict["flagged"].to_numpy()].reset_index(drop=True)

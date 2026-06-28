@@ -58,6 +58,24 @@ def cluster_spatial(
         Minimum stations to form a zone.
     eps_m : float
         Neighbourhood radius in metres (DBSCAN only).
+
+    See Also
+    --------
+    [`cluster_spectral`][gbfs_toolkit.cluster_spectral] : Topological instead of proximity zones.
+    [`cluster_diurnal_profiles`][gbfs_toolkit.cluster_diurnal_profiles] : Behavioural instead of spatial clusters.
+
+    Examples
+    --------
+    Two tight groups ~11 km apart resolve into two DBSCAN clusters:
+
+    >>> import pandas as pd
+    >>> info = pd.DataFrame({
+    ...     "station_id": list("abcdef"),
+    ...     "lat": [48.85, 48.8501, 48.8502, 48.95, 48.9501, 48.9502],
+    ...     "lon": [2.35, 2.3501, 2.3502, 2.45, 2.4501, 2.4502],
+    ... })
+    >>> sorted(int(c) for c in cluster_spatial(info, method="dbscan", eps_m=100, min_cluster_size=3)["cluster"].unique())
+    [0, 1]
     """
     _require_sklearn()
     out = info.reset_index(drop=True).copy()
@@ -84,6 +102,22 @@ def cluster_spectral(info: pd.DataFrame, *, k: int, n_neighbors: int = 10) -> pd
 
     Returns ``info`` with a ``spectral_cluster`` column. Groups by network significance
     rather than raw distance (e.g. a bridge or a corridor).
+
+    See Also
+    --------
+    [`cluster_spatial`][gbfs_toolkit.cluster_spatial] : Density-based proximity zones.
+    [`cluster_diurnal_profiles`][gbfs_toolkit.cluster_diurnal_profiles] : Behavioural instead of spatial clusters.
+
+    Examples
+    --------
+    >>> import pandas as pd
+    >>> info = pd.DataFrame({
+    ...     "station_id": list("abcdef"),
+    ...     "lat": [48.85, 48.8501, 48.8502, 48.95, 48.9501, 48.9502],
+    ...     "lon": [2.35, 2.3501, 2.3502, 2.45, 2.4501, 2.4502],
+    ... })
+    >>> int(cluster_spectral(info, k=2)["spectral_cluster"].nunique())
+    2
     """
     _require_sklearn()
     out = info.reset_index(drop=True).copy()
@@ -136,6 +170,23 @@ def diurnal_profiles(
 
     Returns ``(profiles, n_obs)``; ``profiles`` indexed by ``(system_id, station_id)``
     with hour columns, and the per-station observation count.
+
+    See Also
+    --------
+    [`cluster_diurnal_profiles`][gbfs_toolkit.cluster_diurnal_profiles] : Cluster these profiles into typologies.
+    [`availability_stats`][gbfs_toolkit.availability_stats] : Scalar per-station statistics.
+
+    Examples
+    --------
+    >>> import pandas as pd
+    >>> idx = pd.date_range("2026-01-01", periods=4, freq="6h", tz="UTC")
+    >>> panel = pd.DataFrame({
+    ...     "system_id": "s", "station_id": "a", "fetched_at": idx,
+    ...     "num_bikes_available": [0, 5, 10, 5], "num_docks_available": [10, 5, 0, 5],
+    ... })
+    >>> profiles, n_obs = diurnal_profiles(panel, min_obs=2)
+    >>> int(n_obs.loc[("s", "a")])
+    4
     """
     df = panel.reset_index() if isinstance(panel.index, pd.MultiIndex) else panel.copy()
     df = df.copy()
@@ -221,6 +272,27 @@ def cluster_diurnal_profiles(
     pandas.DataFrame
         ``system_id, station_id, cluster, n_obs`` (+ ``cluster_confidence`` for gmm) and the
         profile columns.
+
+    See Also
+    --------
+    [`diurnal_profiles`][gbfs_toolkit.diurnal_profiles] : The profiles this clusters.
+    [`label_diurnal_typology`][gbfs_toolkit.label_diurnal_typology] : Name the resulting clusters.
+    [`cluster_spatial`][gbfs_toolkit.cluster_spatial] : Cluster by location instead of rhythm.
+
+    Examples
+    --------
+    Two low-occupancy and two high-occupancy stations split into two typologies:
+
+    >>> import pandas as pd
+    >>> idx = pd.date_range("2026-01-01", periods=24, freq="1h", tz="UTC")
+    >>> rows = []
+    >>> for sid, bikes in [("a", 2), ("b", 2), ("c", 8), ("d", 8)]:
+    ...     for t in idx:
+    ...         rows.append({"system_id": "s", "station_id": sid, "fetched_at": t,
+    ...                      "num_bikes_available": bikes, "num_docks_available": 10 - bikes})
+    >>> panel = pd.DataFrame(rows)
+    >>> int(cluster_diurnal_profiles(panel, n_clusters=2, min_obs=12)["cluster"].nunique())
+    2
     """
     _require_sklearn()
 
@@ -313,6 +385,21 @@ def label_diurnal_typology(profiles: pd.DataFrame, *, amplitude: float = 0.15) -
     -------
     pandas.Series
         Categorical typology, aligned to ``profiles`` rows.
+
+    See Also
+    --------
+    [`cluster_diurnal_profiles`][gbfs_toolkit.cluster_diurnal_profiles] : The clustering this labels.
+    [`diurnal_profiles`][gbfs_toolkit.diurnal_profiles] : The profiles being interpreted.
+
+    Examples
+    --------
+    A station that empties during the morning commute is a residential origin:
+
+    >>> import pandas as pd
+    >>> profile = {f"h{h:02d}": (0.1 if 7 <= h <= 10 else 0.8) for h in range(24)}
+    >>> profiles = pd.DataFrame([profile], index=["a"])
+    >>> label_diurnal_typology(profiles).iloc[0]
+    'morning_origin'
     """
     hours = [f"h{h:02d}" for h in range(24)]
     missing = [h for h in hours if h not in profiles.columns]

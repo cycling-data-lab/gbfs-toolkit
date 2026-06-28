@@ -148,8 +148,9 @@ markdown_extensions:
 
 nav:
   - Home: index.md
-  - Getting started: getting-started.md
-  - User guide: guide.md
+  - Getting started:
+      - Installation & first audit: getting-started.md
+      - Feature overview: guide.md
   - How-to guides:
       - Overview: examples.md
       - Audit a feed: examples/01-audit-a-feed.md
@@ -161,12 +162,11 @@ nav:
       - Measure service reliability: examples/08-service-reliability.md
       - Add transit & weather context: examples/09-contextualize.md
       - Compare systems at scale (live): examples/10-macro-scale-audit.md
-  - Reference: reference/
+  - API reference: reference/
   - Explanation:
       - Methodology: methodology.md
       - Validating an audit by hand: human-validation.md
       - Glossary: glossary.md
-      - Data model: data-model.md
   - About:
       - Citing this work: citing.md
       - Contributing: contributing.md

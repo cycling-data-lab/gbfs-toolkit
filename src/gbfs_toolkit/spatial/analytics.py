@@ -47,6 +47,12 @@ def morans_i(info: pd.DataFrame, value_col: str, *, k: int = 8) -> pd.Series:
     pandas.Series
         ``morans_i``, ``expected_i`` (= ``-1/(n-1)``), ``z_score``, ``p_value``, ``n``.
 
+    See Also
+    --------
+    [`local_morans_i`][gbfs_toolkit.local_morans_i] : Per-station LISA decomposition of this global statistic.
+    [`ripley_k`][gbfs_toolkit.ripley_k] : Multi-scale clustering of the point pattern.
+    [`spatial_entropy`][gbfs_toolkit.spatial_entropy] : Spread of the same distribution.
+
     Examples
     --------
     Two spatially separated clusters (low capacities to the south, high to the
@@ -134,6 +140,11 @@ def ripley_k(info: pd.DataFrame, radii: object, *, area_km2: float | None = None
     -------
     pandas.DataFrame
         ``radius_m``, ``k``, ``l`` (one row per radius).
+
+    See Also
+    --------
+    [`morans_i`][gbfs_toolkit.morans_i] : Single-scale spatial autocorrelation.
+    [`spatial_entropy`][gbfs_toolkit.spatial_entropy] : Concentration of the point pattern.
     """
     lat, lon = num(info, "lat").to_numpy(), num(info, "lon").to_numpy()
     finite = np.isfinite(lat) & np.isfinite(lon)
@@ -185,6 +196,12 @@ def coverage_stats(info: pd.DataFrame, *, zones: object = None) -> pd.Series:
     pandas.Series
         ``n_stations``, ``mean_nearest_neighbor_m``, ``median_nearest_neighbor_m``,
         ``hull_area_km2`` *or* ``service_area_km2``, ``stations_per_km2``, ``clark_evans_index``.
+
+    See Also
+    --------
+    [`two_step_fca`][gbfs_toolkit.two_step_fca] : Demand-weighted accessibility.
+    [`zone_area_km2`][gbfs_toolkit.zone_area_km2] : Area of a service polygon.
+    [`spatial_center_of_mass`][gbfs_toolkit.spatial_center_of_mass] : Centre of the served area.
     """
     lat, lon = num(info, "lat").to_numpy(), num(info, "lon").to_numpy()
     finite = np.isfinite(lat) & np.isfinite(lon)
@@ -246,6 +263,11 @@ def spatial_entropy(
     -------
     pandas.DataFrame
         One row per snapshot: ``<time_col>, n_vehicles, n_cells, shannon_entropy, evenness``.
+
+    See Also
+    --------
+    [`spatial_center_of_mass`][gbfs_toolkit.spatial_center_of_mass] : Where the distribution is centred.
+    [`morans_i`][gbfs_toolkit.morans_i] : Autocorrelation of the same field.
     """
     df = (
         vehicle_panel.reset_index()
@@ -317,6 +339,11 @@ def spatial_center_of_mass(
     -------
     pandas.DataFrame
         ``period, center_lat, center_lon, total_weight``.
+
+    See Also
+    --------
+    [`spatial_entropy`][gbfs_toolkit.spatial_entropy] : Spread around this centre.
+    [`coverage_stats`][gbfs_toolkit.coverage_stats] : Areal coverage of the network.
     """
     df = panel.reset_index() if isinstance(panel.index, pd.MultiIndex) else panel.copy()
     require_columns(df, ["lat", "lon", time_col, weight_col], what="spatial_center_of_mass")
@@ -358,6 +385,10 @@ def fdr_adjust(pvalues, *, method: str = "bh") -> np.ndarray:
     ----------
     Benjamini, Y. & Hochberg, Y. (1995). Controlling the false discovery rate.
     *JRSS B*, 57(1), 289-300.
+
+    See Also
+    --------
+    [`local_morans_i`][gbfs_toolkit.local_morans_i] : The per-station tests this corrects.
 
     Examples
     --------
@@ -418,6 +449,11 @@ def local_morans_i(
     ----------
     Anselin, L. (1995). Local Indicators of Spatial Association (LISA). *Geographical Analysis*,
     27(2), 93-115.
+
+    See Also
+    --------
+    [`morans_i`][gbfs_toolkit.morans_i] : The global Moran's I this decomposes.
+    [`fdr_adjust`][gbfs_toolkit.fdr_adjust] : Control the false-discovery rate across stations.
     """
     require_columns(info, ["lat", "lon", value_col], what="local_morans_i")
     base = info.reset_index(drop=True)
@@ -507,9 +543,7 @@ def _decay_weights(d: np.ndarray, d_max: float, decay: str) -> np.ndarray:
     if decay == "exponential":
         # Gravity-style exponential decay; ~5% weight remains at the catchment edge.
         return np.exp(-3.0 * d / d_max)
-    raise ValueError(
-        f"decay must be 'gaussian', 'exponential', 'linear' or 'none', got {decay!r}"
-    )
+    raise ValueError(f"decay must be 'gaussian', 'exponential', 'linear' or 'none', got {decay!r}")
 
 
 def _point_latlon(frame: pd.DataFrame) -> tuple[np.ndarray, np.ndarray]:
@@ -567,6 +601,11 @@ def two_step_fca(
     References
     ----------
     Luo and Wang (2003); Radke and Mu (2000). Applied to bike-share equity by e.g. Qian et al. (2020).
+
+    See Also
+    --------
+    [`coverage_stats`][gbfs_toolkit.coverage_stats] : Unweighted coverage extent.
+    [`link_transit_stops`][gbfs_toolkit.link_transit_stops] : Attach the transit demand layer.
     """
     require_columns(info, ["lat", "lon", supply_col], what="two_step_fca")
     require_columns(demand, [demand_col], what="two_step_fca")

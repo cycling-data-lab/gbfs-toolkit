@@ -67,6 +67,10 @@ def load_example(
     fetched_at : optional
         Fetch timestamp stamped on the status frame (default: a fixed 2026-01-05 08:00 UTC, so
         results are deterministic for doctests).
+
+    See Also
+    --------
+    [`show_versions`][gbfs_toolkit.show_versions] : Report installed optional dependencies.
     """
     if name not in DATASETS:
         raise ValueError(

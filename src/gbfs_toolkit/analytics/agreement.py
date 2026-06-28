@@ -5,6 +5,7 @@ panel re-labels a sample by hand: Krippendorff's nominal alpha (handles missing
 ratings and >2 raters), Cohen's kappa (two raters) and the Wilson score interval
 for a proportion. No heuristics, no I/O.
 """
+
 from __future__ import annotations
 
 import math
@@ -18,6 +19,11 @@ def wilson_interval(successes: int, n: int, *, z: float = 1.959963984540054) -> 
 
     More reliable than the normal approximation for small ``n`` or extreme rates,
     and it never leaves ``[0, 1]``.
+
+    See Also
+    --------
+    [`cohen_kappa`][gbfs_toolkit.cohen_kappa] : Inter-rater agreement.
+    [`flag_rate_ci`][gbfs_toolkit.flag_rate_ci] : Bootstrap interval on audit flag rates.
 
     Examples
     --------
@@ -38,6 +44,11 @@ def cohen_kappa(a, b) -> float:
     """Cohen's kappa between two raters over paired nominal labels.
 
     Pairs with a missing label in either rater are dropped.
+
+    See Also
+    --------
+    [`krippendorff_alpha`][gbfs_toolkit.krippendorff_alpha] : Multi-rater chance-corrected agreement.
+    [`wilson_interval`][gbfs_toolkit.wilson_interval] : A proportion confidence interval.
 
     Examples
     --------
@@ -77,6 +88,11 @@ def krippendorff_alpha(reliability_data, *, missing=np.nan) -> float:
     float
         ``1`` = perfect agreement, ``0`` = chance, ``< 0`` = systematic
         disagreement. ``nan`` if fewer than one pairable unit.
+
+    See Also
+    --------
+    [`cohen_kappa`][gbfs_toolkit.cohen_kappa] : Two-rater chance-corrected agreement.
+    [`wilson_interval`][gbfs_toolkit.wilson_interval] : A proportion confidence interval.
 
     Examples
     --------

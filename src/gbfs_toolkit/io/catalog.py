@@ -53,6 +53,10 @@ def normalize_operator(value: str | None, *, default: str | None = None) -> str 
     Pattern-matches against :data:`OPERATOR_PATTERNS` (case-insensitive). On no match returns
     ``default`` if given, else the original value unchanged (non-lossy); safe to apply across a
     whole catalogue so only recognised brands get collapsed.
+
+    See Also
+    --------
+    [`systems_catalog`][gbfs_toolkit.systems_catalog] : The catalogue whose operator names this cleans.
     """
     if value is None:
         return default
@@ -105,6 +109,12 @@ def systems_catalog(
     -------
     pandas.DataFrame
         The catalogue with normalised lowercase column names.
+
+    See Also
+    --------
+    [`filter_catalog`][gbfs_toolkit.filter_catalog] : Narrow the catalogue.
+    [`resolve`][gbfs_toolkit.resolve] : Resolve one system's discovery URL.
+    [`fetch_multiple`][gbfs_toolkit.fetch_multiple] : Fetch the resolved systems.
     """
     key = source or DEFAULT_CATALOG_URL
     if use_cache and not refresh and key in _MEMO:
@@ -153,6 +163,11 @@ def filter_catalog(
 
     All filters are case-insensitive; ``city`` / ``name`` match as substrings against
     the catalogue's ``location`` / ``name`` columns (whichever are present).
+
+    See Also
+    --------
+    [`systems_catalog`][gbfs_toolkit.systems_catalog] : The full catalogue this filters.
+    [`resolve`][gbfs_toolkit.resolve] : Resolve a filtered system.
     """
     out = catalog
     if country_code is not None and "country_code" in out.columns:
@@ -171,15 +186,20 @@ def resolve(system_id: str, catalog: pd.DataFrame) -> dict:
 
     Returns a dict with at least ``system_id``, ``name``, ``country_code`` and
     ``auto_discovery_url`` (the ``gbfs.json``). Raises ``KeyError`` if not found.
+
+    See Also
+    --------
+    [`systems_catalog`][gbfs_toolkit.systems_catalog] : The catalogue this looks up.
+    [`parse_discovery`][gbfs_toolkit.parse_discovery] : Parse the resolved discovery document.
     """
     id_col = "system_id" if "system_id" in catalog.columns else catalog.columns[0]
     # Prefer the GBFS auto-discovery endpoint; only fall back to a bare ``url``
     # column. The MobilityData export ships both an operator-website ``url`` and
     # an ``auto-discovery_url``; resolving to the website fetches the homepage
     # instead of ``gbfs.json``, so auto-discovery must win regardless of order.
-    url_col = next(
-        (c for c in catalog.columns if "auto" in c and "discovery" in c), None
-    ) or next((c for c in catalog.columns if c == "url"), None)
+    url_col = next((c for c in catalog.columns if "auto" in c and "discovery" in c), None) or next(
+        (c for c in catalog.columns if c == "url"), None
+    )
     hit = catalog[catalog[id_col].astype(str).str.lower() == str(system_id).lower()]
     if hit.empty:
         raise KeyError(f"system_id {system_id!r} not found in catalogue")

@@ -10,6 +10,7 @@ Heuristic-free: station types are taken from the feeds as declared. Operator-nam
 classification (car-sharing identification, free-floating reclassification) is a
 separate, opt-in concern, not baked in here.
 """
+
 from __future__ import annotations
 
 from typing import Any
@@ -54,6 +55,12 @@ def audit_catalogue(
         (empty if none reachable). ``status`` maps each ``system_id`` to one of
         ``"ok: N stations"``, ``"unreachable: <error>"``,
         ``"no station_information: <error>"``, ``"empty"`` or ``"missing columns"``.
+
+    See Also
+    --------
+    [`audit_static`][gbfs_toolkit.audit_static] : The single-frame audit this batches over many fetched systems.
+    [`audit_frames`][gbfs_toolkit.audit_frames] : Audit one system's static and dynamic frames you already hold.
+    [`fetch_multiple`][gbfs_toolkit.fetch_multiple] : The concurrent fetch stage underneath this batch audit.
     """
     from gbfs_toolkit.io.fetch import fetch_multiple  # lazy: io.fetch imports audit
 

@@ -20,7 +20,13 @@ if TYPE_CHECKING:  # pragma: no cover
 
 
 def haversine_m(lat1: Any, lon1: Any, lat2: Any, lon2: Any) -> np.ndarray:
-    """Vectorised great-circle distance in metres between two coordinate arrays."""
+    """Vectorised great-circle distance in metres between two coordinate arrays.
+
+    See Also
+    --------
+    [`GeoKDTree`][gbfs_toolkit.GeoKDTree] : Projected nearest-neighbour queries.
+    [`find_nearest_stations`][gbfs_toolkit.find_nearest_stations] : Nearest-station search.
+    """
     lat1, lon1, lat2, lon2 = (
         np.radians(np.asarray(a, dtype="float64")) for a in (lat1, lon1, lat2, lon2)
     )
@@ -61,6 +67,12 @@ class GeoKDTree:
     ----------
     lat, lon : array-like
         Point coordinates in degrees (EPSG:4326).
+
+    See Also
+    --------
+    [`find_nearest_stations`][gbfs_toolkit.find_nearest_stations] : k-nearest queries on this index.
+    [`stations_near`][gbfs_toolkit.stations_near] : Radius queries on this index.
+    [`features_within`][gbfs_toolkit.features_within] : Buffer joins on this index.
     """
 
     def __init__(self, lat: Any, lon: Any) -> None:
@@ -109,6 +121,11 @@ def find_nearest_stations(
     -------
     pandas.DataFrame
         ``info`` rows sorted by ascending distance, with a ``distance_m`` column.
+
+    See Also
+    --------
+    [`GeoKDTree`][gbfs_toolkit.GeoKDTree] : The spatial index underneath.
+    [`stations_near`][gbfs_toolkit.stations_near] : Radius instead of k-nearest.
     """
     out = info.copy()
     if out.empty:
@@ -157,6 +174,12 @@ def features_within(
     pandas.DataFrame
         ``points`` + ``{prefix}within``, ``nearest_dist_m`` and, if ``category_col`` is
         given, one ``{prefix}<category>`` count per category.
+
+    See Also
+    --------
+    [`GeoKDTree`][gbfs_toolkit.GeoKDTree] : The spatial index underneath.
+    [`station_surroundings`][gbfs_toolkit.station_surroundings] : A ready-made buffer summary.
+    [`stations_near`][gbfs_toolkit.stations_near] : Find the stations themselves.
     """
     out = points.reset_index(drop=True).copy()
     if out.empty:
@@ -206,6 +229,12 @@ def stations_near(
     pandas.DataFrame
         ``points`` + ``n_stations_within``, ``nearest_station_dist_m`` and (if ``info`` has
         ``station_id``) ``nearest_station_id``.
+
+    See Also
+    --------
+    [`GeoKDTree`][gbfs_toolkit.GeoKDTree] : The spatial index underneath.
+    [`find_nearest_stations`][gbfs_toolkit.find_nearest_stations] : k-nearest instead of radius.
+    [`features_within`][gbfs_toolkit.features_within] : Join external features in a buffer.
     """
     out = points.reset_index(drop=True).copy()
     if out.empty:
@@ -235,6 +264,11 @@ def to_gdf(
     """Convert a frame with lat/lon columns to a GeoPandas ``GeoDataFrame`` (lazy import).
 
     Requires the optional ``[geo]`` extra (``geopandas``).
+
+    See Also
+    --------
+    [`to_geojson`][gbfs_toolkit.to_geojson] : Serialise to GeoJSON instead.
+    [`zones_for_points`][gbfs_toolkit.zones_for_points] : Assign points to zones.
     """
     try:
         import geopandas as gpd
@@ -258,6 +292,10 @@ def to_geojson(
     Accepts a plain lat/lon frame (promoted to points) or a ``GeoDataFrame`` (any geometry,
     e.g. geofencing polygons). Returns the GeoJSON string, or writes it to ``path`` and returns
     the path. Requires the optional ``[geo]`` extra.
+
+    See Also
+    --------
+    [`to_gdf`][gbfs_toolkit.to_gdf] : Build a GeoDataFrame instead.
     """
     gdf = df if hasattr(df, "geometry") else to_gdf(df, lat=lat, lon=lon)
     text = gdf.to_json()

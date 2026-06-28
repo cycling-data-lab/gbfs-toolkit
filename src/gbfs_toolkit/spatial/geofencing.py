@@ -76,6 +76,11 @@ def to_canonical_geofencing(
         Parsed ``geofencing_zones`` document (full doc or its ``data`` mapping).
     system_id : str
         Identifier stamped on every row.
+
+    See Also
+    --------
+    [`zone_area_km2`][gbfs_toolkit.zone_area_km2] : Area of the parsed zones.
+    [`zones_for_points`][gbfs_toolkit.zones_for_points] : Assign points to the parsed zones.
     """
     gpd, shape = _require_geo()
     data = raw.get("data", raw)
@@ -135,6 +140,11 @@ def zones_for_points(
     columns : list of str, optional
         Zone attribute columns to attach (default: ``zone_id, name, ride_allowed,
         ride_through_allowed, maximum_speed_kph, station_parking``).
+
+    See Also
+    --------
+    [`zone_area_km2`][gbfs_toolkit.zone_area_km2] : Area of each zone.
+    [`to_canonical_geofencing`][gbfs_toolkit.to_canonical_geofencing] : Parse the zones first.
     """
     gpd, _ = _require_geo()
     from gbfs_toolkit.spatial.geometry import to_gdf
@@ -159,6 +169,11 @@ def zone_area_km2(zones: gpd.GeoDataFrame, *, equal_area_crs: str = "EPSG:6933")
 
     Reprojects to ``EPSG:6933`` (World Cylindrical Equal Area) so areas are metric and
     comparable across latitudes: the denominator for bikes-per-km² density. Requires ``[geo]``.
+
+    See Also
+    --------
+    [`zones_for_points`][gbfs_toolkit.zones_for_points] : Assign points to these zones.
+    [`to_canonical_geofencing`][gbfs_toolkit.to_canonical_geofencing] : Parse the zones first.
     """
     _require_geo()
     return zones.to_crs(equal_area_crs).geometry.area / 1e6

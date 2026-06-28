@@ -47,6 +47,20 @@ def reconcile_fleet_state(
         ``total_rentable``: available in stations + available free-floating.
         ``double_count_avoided``: vehicles that a naive sum would have double-counted
         (non-zero only when both feeds are given).
+
+    See Also
+    --------
+    [`detect_ghost_vehicles`][gbfs_toolkit.detect_ghost_vehicles] : Find immobile units in the fleet.
+    [`vehicle_idle_time`][gbfs_toolkit.vehicle_idle_time] : Track the idle share over time.
+
+    Examples
+    --------
+    >>> import pandas as pd
+    >>> stations = pd.DataFrame({"station_id": ["a"], "num_bikes_available": [8]})
+    >>> vehicles = pd.DataFrame({"vehicle_id": ["v1", "v2"], "station_id": [None, "a"]})
+    >>> tally = reconcile_fleet_state(stations, vehicles)
+    >>> int(tally["total_rentable"]), int(tally["double_count_avoided"])
+    (9, 1)
     """
     out: dict[str, int] = {}
 
@@ -116,6 +130,22 @@ def detect_ghost_vehicles(
     pandas.DataFrame
         Indexed by ``(system_id, vehicle_id)``: ``first_seen``, ``last_seen``, ``n_obs``,
         ``observed_days``, ``max_displacement_m``, ``is_ghost``.
+
+    See Also
+    --------
+    [`vehicle_idle_time`][gbfs_toolkit.vehicle_idle_time] : The fleet-wide idle share over time.
+    [`reconcile_fleet_state`][gbfs_toolkit.reconcile_fleet_state] : The deduplicated fleet tally.
+
+    Examples
+    --------
+    >>> import pandas as pd
+    >>> panel = pd.DataFrame({
+    ...     "system_id": "s", "vehicle_id": "v1",
+    ...     "lat": [48.85, 48.85], "lon": [2.35, 2.35],
+    ...     "fetched_at": pd.to_datetime(["2026-01-01T00:00Z", "2026-01-20T00:00Z"]),
+    ... })
+    >>> bool(detect_ghost_vehicles(panel)["is_ghost"].iloc[0])
+    True
     """
     df = panel_frame(vehicle_panel)
     require_columns(
@@ -181,6 +211,22 @@ def vehicle_idle_time(
     -------
     pandas.DataFrame
         ``system_id, fetched_at, n_vehicles, n_idle, idle_fraction`` (one row per snapshot).
+
+    See Also
+    --------
+    [`detect_ghost_vehicles`][gbfs_toolkit.detect_ghost_vehicles] : Flag individually immobile units.
+    [`reconcile_fleet_state`][gbfs_toolkit.reconcile_fleet_state] : The deduplicated fleet tally.
+
+    Examples
+    --------
+    >>> import pandas as pd
+    >>> panel = pd.DataFrame({
+    ...     "system_id": "s", "vehicle_id": "v1",
+    ...     "lat": [48.85, 48.85], "lon": [2.35, 2.35],
+    ...     "fetched_at": pd.to_datetime(["2026-01-01T00:00Z", "2026-01-05T00:00Z"]),
+    ... })
+    >>> float(vehicle_idle_time(panel)["idle_fraction"].iloc[-1])
+    1.0
     """
     df = panel_frame(vehicle_panel)
     require_columns(

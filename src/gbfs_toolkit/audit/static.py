@@ -63,6 +63,12 @@ def overcapacity_ratio(info: pd.DataFrame, *, n_min: int = 20) -> pd.Series:
     pandas.Series
         The ratio indexed by ``system_id`` (``NaN`` where undefined).
 
+    See Also
+    --------
+    [`reclassify_overcapacity`][gbfs_toolkit.reclassify_overcapacity] : Relabel the systems this ratio flags as free-floating.
+    [`capacity_convention`][gbfs_toolkit.capacity_convention] : Classify the capacity-field semantics behind the ratio.
+    [`audit_static`][gbfs_toolkit.audit_static] : Run the full A1-A7 audit, of which A3 uses this mechanism.
+
     Examples
     --------
     A free-floating fleet of 20 anchors, one currently occupied (capacity 12),
@@ -104,6 +110,23 @@ def reclassify_overcapacity(
     :func:`overcapacity_ratio` exceeds ``a3_ratio``, so a subsequent
     :func:`audit_static` flags A3 by the over-capacity mechanism rather than by
     the type a feed happens to declare. Returns a copy; the input is unchanged.
+
+    See Also
+    --------
+    [`overcapacity_ratio`][gbfs_toolkit.overcapacity_ratio] : The ratio this thresholds.
+    [`classify_from_virtual_station`][gbfs_toolkit.classify_from_virtual_station] : Feed-intrinsic free-floating tag (spec signal).
+    [`audit_static`][gbfs_toolkit.audit_static] : The A1-A7 audit that consumes the relabelled types.
+
+    Examples
+    --------
+    >>> import pandas as pd
+    >>> info = pd.DataFrame({
+    ...     "system_id": "ff", "station_id": [str(i) for i in range(20)],
+    ...     "station_type": "docked_bike",
+    ...     "capacity": [12.0] + [0.0] * 19,
+    ... })
+    >>> reclassify_overcapacity(info)["station_type"].unique().tolist()
+    ['free_floating']
     """
     ratio = overcapacity_ratio(info, n_min=n_min)
     over = set(ratio.index[ratio > a3_ratio])
@@ -146,6 +169,12 @@ def capacity_convention(
     -------
     pandas.Series
         The convention label indexed by ``system_id``.
+
+    See Also
+    --------
+    [`overcapacity_ratio`][gbfs_toolkit.overcapacity_ratio] : The A3 ratio behind the ``conditional_profile`` label.
+    [`reclassify_overcapacity`][gbfs_toolkit.reclassify_overcapacity] : Act on the over-capacity systems this labels.
+    [`audit_static`][gbfs_toolkit.audit_static] : The A1-A7 audit these conventions help interpret.
 
     Examples
     --------
@@ -214,6 +243,11 @@ def classify_from_vehicle_types(
         A copy of ``info`` with ``station_type = "carsharing"`` on the car-sharing
         systems; the input is unchanged.
 
+    See Also
+    --------
+    [`classify_from_virtual_station`][gbfs_toolkit.classify_from_virtual_station] : The sibling free-floating tag from ``is_virtual_station``.
+    [`audit_static`][gbfs_toolkit.audit_static] : The A1-A7 audit whose A1 consumes the ``carsharing`` label.
+
     Examples
     --------
     >>> import pandas as pd
@@ -244,6 +278,22 @@ def classify_from_virtual_station(info: pd.DataFrame) -> pd.DataFrame:
     ``"free_floating"`` directly from the feed, the spec-defined signal that the
     over-capacity ratio only approximates. If the field is absent the frame is
     returned unchanged. Returns a copy; the input is not mutated.
+
+    See Also
+    --------
+    [`classify_from_vehicle_types`][gbfs_toolkit.classify_from_vehicle_types] : The sibling car-sharing tag from ``form_factor``.
+    [`reclassify_overcapacity`][gbfs_toolkit.reclassify_overcapacity] : The ratio-based fallback when the spec signal is absent.
+    [`audit_static`][gbfs_toolkit.audit_static] : The A1-A7 audit whose A3 consumes the ``free_floating`` label.
+
+    Examples
+    --------
+    >>> import pandas as pd
+    >>> info = pd.DataFrame({
+    ...     "station_type": ["docked_bike", "docked_bike"],
+    ...     "is_virtual_station": [False, True],
+    ... })
+    >>> classify_from_virtual_station(info)["station_type"].tolist()
+    ['docked_bike', 'free_floating']
     """
     require_columns(info, ["station_type"], what="classify_from_virtual_station")
     out = info.copy()
@@ -274,6 +324,10 @@ def flag_sentinel_coordinates(info: pd.DataFrame, *, tol: float = 1e-6) -> pd.Se
     -------
     pandas.Series
         Boolean mask aligned to ``info`` (``True`` where a station is on the sentinel).
+
+    See Also
+    --------
+    [`audit_static`][gbfs_toolkit.audit_static] : The A1-A7 audit; filter the sentinel before its A4/A5 geometry rules.
 
     Examples
     --------
@@ -325,9 +379,7 @@ def _flag_a2(df: pd.DataFrame, *, min_stations: int = A2_MIN_STATIONS) -> pd.Ser
         .agg(["nunique", "median", "size"])
     )
     flagged = set(
-        caps.index[
-            (caps["nunique"] == 1) & (caps["median"] > 0) & (caps["size"] >= min_stations)
-        ]
+        caps.index[(caps["nunique"] == 1) & (caps["median"] > 0) & (caps["size"] >= min_stations)]
     )
     return df["system_id"].isin(flagged)
 
@@ -481,6 +533,14 @@ def audit_static(
         ``flagged`` column (any rule fired) and a human-readable ``reason``
         (comma-separated rule names).
 
+    See Also
+    --------
+    [`audit_dynamic`][gbfs_toolkit.audit_dynamic] : The companion D1-D3 audit of live availability payloads.
+    [`audit_frames`][gbfs_toolkit.audit_frames] : Run static and dynamic audits together on canonical frames.
+    [`drop_flagged`][gbfs_toolkit.drop_flagged] : Keep only the stations that pass this audit, in one call.
+    [`audit_sensitivity`][gbfs_toolkit.audit_sensitivity] : Sweep these thresholds to test conclusion robustness.
+    [`flag_rate_ci`][gbfs_toolkit.flag_rate_ci] : Bootstrap a confidence interval on each class's flag rate.
+
     Examples
     --------
     >>> import pandas as pd
@@ -563,6 +623,11 @@ def audit_sensitivity(
         a value near 1 across a wide grid is evidence the conclusion sits on a
         stability plateau.
 
+    See Also
+    --------
+    [`audit_static`][gbfs_toolkit.audit_static] : The single audit this sweeps one threshold at a time.
+    [`flag_rate_ci`][gbfs_toolkit.flag_rate_ci] : The complementary sampling-based uncertainty on flag rates.
+
     Examples
     --------
     >>> import pandas as pd
@@ -625,6 +690,11 @@ def flag_rate_ci(
     -------
     pandas.DataFrame
         Columns ``class, systems_flagged, rate, ci_lo, ci_hi`` (rates as fractions).
+
+    See Also
+    --------
+    [`audit_static`][gbfs_toolkit.audit_static] : Produces the per-station ``verdict`` this summarises.
+    [`audit_sensitivity`][gbfs_toolkit.audit_sensitivity] : The complementary threshold-robustness analysis.
 
     Examples
     --------

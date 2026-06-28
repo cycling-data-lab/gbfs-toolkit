@@ -21,7 +21,12 @@ _DEPS = (
 
 
 def show_versions() -> None:
-    """Print Python, OS and key dependency versions (the usual ``show_versions`` diagnostic)."""
+    """Print Python, OS and key dependency versions (the usual ``show_versions`` diagnostic).
+
+    See Also
+    --------
+    [`load_example`][gbfs_toolkit.load_example] : Load a bundled example dataset.
+    """
     print(f"python      : {sys.version.split()[0]}")
     print(f"os          : {platform.platform()}")
     for dep in _DEPS:

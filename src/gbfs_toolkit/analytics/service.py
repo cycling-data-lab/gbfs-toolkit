@@ -35,6 +35,11 @@ def censored_time_ratio(
         ``{empty_ratio, full_ratio, censored_ratio}`` where ``censored_ratio`` is the
         union (empty or full).
 
+    See Also
+    --------
+    [`station_outage_rates`][gbfs_toolkit.station_outage_rates] : Per-station empty/full rates.
+    [`service_reliability_index`][gbfs_toolkit.service_reliability_index] : Level-of-service probabilities.
+
     Examples
     --------
     >>> import pandas as pd
@@ -50,9 +55,15 @@ def censored_time_ratio(
     docks = num(panel, docks_col)
     valid = bikes.notna() & docks.notna()
     if not valid.any():
-        return pd.Series({"empty_ratio": float("nan"), "full_ratio": float("nan"), "censored_ratio": float("nan")})
-    empty = (bikes[valid] <= 0)
-    full = (docks[valid] <= 0)
+        return pd.Series(
+            {
+                "empty_ratio": float("nan"),
+                "full_ratio": float("nan"),
+                "censored_ratio": float("nan"),
+            }
+        )
+    empty = bikes[valid] <= 0
+    full = docks[valid] <= 0
     return pd.Series(
         {
             "empty_ratio": float(empty.mean()),
@@ -97,6 +108,23 @@ def service_reliability_index(
     References
     ----------
     Vogel, Greiser and Mattfeld (2011), Understanding bike-sharing systems using data mining.
+
+    See Also
+    --------
+    [`station_outage_rates`][gbfs_toolkit.station_outage_rates] : Time-share empty/full per station.
+    [`censored_time_ratio`][gbfs_toolkit.censored_time_ratio] : Share of demand lost to saturation.
+    [`capacity_utilization`][gbfs_toolkit.capacity_utilization] : Normalise availability by capacity first.
+
+    Examples
+    --------
+    >>> import pandas as pd
+    >>> panel = pd.DataFrame({
+    ...     "system_id": "s", "station_id": "a",
+    ...     "fetched_at": pd.to_datetime(["2026-01-01T08:00Z", "2026-01-08T08:00Z"]),
+    ...     "num_bikes_available": [5, 0], "num_docks_available": [5, 10],
+    ... })
+    >>> float(service_reliability_index(panel)["prob_bikes_avail"].iloc[0])
+    0.5
     """
     df = panel_frame(panel)
     require_columns(
@@ -147,6 +175,22 @@ def docking_pressure(panel: pd.DataFrame) -> pd.DataFrame:
         The :func:`calculate_net_flow` frame plus ``expected_inflow`` (mean positive net flow per
         station) and ``docking_pressure`` (= ``expected_inflow / num_docks_available``, ``NaN`` when
         no docks are free).
+
+    See Also
+    --------
+    [`station_outage_rates`][gbfs_toolkit.station_outage_rates] : Saturation rate behind the pressure.
+    [`service_reliability_index`][gbfs_toolkit.service_reliability_index] : Dock-availability probabilities.
+
+    Examples
+    --------
+    >>> import pandas as pd
+    >>> panel = pd.DataFrame({
+    ...     "system_id": "s", "station_id": "a",
+    ...     "fetched_at": pd.to_datetime(["2026-01-01T08:00Z", "2026-01-01T09:00Z"]),
+    ...     "num_bikes_available": [5, 8], "num_docks_available": [10, 7],
+    ... })
+    >>> round(float(docking_pressure(panel)["docking_pressure"].iloc[0]), 1)
+    0.3
     """
     flow = calculate_net_flow(panel)
     require_columns(flow, ["num_docks_available"], what="docking_pressure")
@@ -168,6 +212,23 @@ def station_outage_rates(panel: pd.DataFrame) -> pd.DataFrame:
     -------
     pandas.DataFrame
         ``system_id, station_id, stockout_rate, saturation_rate, n_obs`` (rates in ``[0, 1]``).
+
+    See Also
+    --------
+    [`service_reliability_index`][gbfs_toolkit.service_reliability_index] : Time-of-day service probabilities.
+    [`outage_survival`][gbfs_toolkit.outage_survival] : Duration of the outages this counts.
+    [`censored_time_ratio`][gbfs_toolkit.censored_time_ratio] : The same censoring as a single ratio.
+
+    Examples
+    --------
+    >>> import pandas as pd
+    >>> panel = pd.DataFrame({
+    ...     "system_id": "s", "station_id": "a",
+    ...     "num_bikes_available": [0, 0, 5, 5], "num_docks_available": [10, 10, 5, 0],
+    ... })
+    >>> out = station_outage_rates(panel)
+    >>> float(out["stockout_rate"].iloc[0]), float(out["saturation_rate"].iloc[0])
+    (0.5, 0.25)
     """
     df = panel_frame(panel)
     require_columns(
@@ -220,6 +281,18 @@ def outage_survival(episodes: pd.DataFrame, *, by: str | None = None) -> pd.Data
     References
     ----------
     Kaplan and Meier (1958), used here as a descriptive empirical survival estimator.
+
+    See Also
+    --------
+    [`station_outage_rates`][gbfs_toolkit.station_outage_rates] : How often outages occur.
+    [`stockout_episodes`][gbfs_toolkit.stockout_episodes] : The episode table this consumes.
+
+    Examples
+    --------
+    >>> import pandas as pd
+    >>> episodes = pd.DataFrame({"duration_minutes": [10, 20, 20, 60]})
+    >>> float(outage_survival(episodes)["median_recovery"].iloc[0])
+    20.0
     """
     require_columns(episodes, ["duration_minutes"], what="outage_survival")
 
@@ -281,6 +354,21 @@ def capacity_utilization(panel: pd.DataFrame, info: pd.DataFrame) -> pd.DataFram
     -------
     pandas.DataFrame
         A copy of ``panel`` with a nullable ``utilization_rate`` column in ``[0, 1]``.
+
+    See Also
+    --------
+    [`occupancy`][gbfs_toolkit.occupancy] : Bikes / (bikes + docks) without capacity.
+    [`service_reliability_index`][gbfs_toolkit.service_reliability_index] : Level of service on the normalised panel.
+
+    Examples
+    --------
+    >>> import pandas as pd
+    >>> panel = pd.DataFrame({
+    ...     "system_id": "s", "station_id": ["a", "b"], "num_bikes_available": [10, 10]})
+    >>> info = pd.DataFrame({
+    ...     "system_id": "s", "station_id": ["a", "b"], "capacity": [15, 40]})
+    >>> [round(float(x), 2) for x in capacity_utilization(panel, info)["utilization_rate"]]
+    [0.67, 0.25]
     """
     out = panel_frame(panel)
     require_columns(out, ["station_id", "num_bikes_available"], what="capacity_utilization")

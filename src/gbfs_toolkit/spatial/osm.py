@@ -52,6 +52,11 @@ def enrich_with_osm(
     category_col : str, optional
         Attribute to break counts down by; if omitted, the first present of
         ``amenity / shop / leisure / highway / railway / public_transport`` is used.
+
+    See Also
+    --------
+    [`station_surroundings`][gbfs_toolkit.station_surroundings] : Generic buffer summary.
+    [`link_transit_stops`][gbfs_toolkit.link_transit_stops] : The transit-specific equivalent.
     """
     try:
         import geopandas  # noqa: F401
@@ -93,6 +98,12 @@ def station_surroundings(
         Radius for OSM features (and transit if ``transit_radius_m`` is not set).
     transit_radius_m : float, optional
         Separate radius for the transit feeder test (defaults to ``radius_m``).
+
+    See Also
+    --------
+    [`features_within`][gbfs_toolkit.features_within] : The buffer join behind it.
+    [`enrich_with_osm`][gbfs_toolkit.enrich_with_osm] : Add OSM amenity counts.
+    [`link_transit_stops`][gbfs_toolkit.link_transit_stops] : Add transit access.
     """
     out = info.reset_index(drop=True).copy()
     if transit is not None:
