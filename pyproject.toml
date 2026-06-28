@@ -53,6 +53,7 @@ docs = [
     "mkdocs-gen-files>=0.5",  # generate the per-function reference pages
     "mkdocs-literate-nav>=0.6",  # SUMMARY.md drives the reference nav
     "mkdocs-section-index>=0.3",  # clickable section landing pages
+    "mike>=2.0",  # versioned documentation (/1.5/, /latest/)
 ]
 dev = [
     "pytest>=8.0",

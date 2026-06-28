@@ -46,6 +46,21 @@ def morans_i(info: pd.DataFrame, value_col: str, *, k: int = 8) -> pd.Series:
     -------
     pandas.Series
         ``morans_i``, ``expected_i`` (= ``-1/(n-1)``), ``z_score``, ``p_value``, ``n``.
+
+    Examples
+    --------
+    Two spatially separated clusters (low capacities to the south, high to the
+    north) are perfectly autocorrelated:
+
+    >>> import pandas as pd
+    >>> info = pd.DataFrame({
+    ...     "system_id": "s", "station_id": [str(i) for i in range(12)],
+    ...     "lat": [48.85] * 6 + [48.90] * 6,
+    ...     "lon": [2.35 + 0.001 * i for i in range(6)] * 2,
+    ...     "capacity": [5] * 6 + [50] * 6,
+    ... })
+    >>> round(float(morans_i(info, "capacity", k=3)["morans_i"]), 2)
+    1.0
     """
     sub = info[["lat", "lon", value_col]].copy()
     for c in ("lat", "lon", value_col):

@@ -31,6 +31,16 @@ def system_profile(availability: pd.DataFrame) -> pd.Series:
         Counts and rates: ``n_stations``, ``total_capacity``, ``total_bikes_available``,
         ``total_docks_available``, ``mean_occupancy``, ``pct_<state>`` for each
         :data:`~gbfs_toolkit.analytics.frames.STATION_STATES`, and ``staleness_min_median``.
+
+    Examples
+    --------
+    >>> import pandas as pd
+    >>> av = pd.DataFrame({
+    ...     "system_id": "s", "station_id": ["a", "b"], "capacity": [20, 20],
+    ...     "num_bikes_available": [5, 15], "num_docks_available": [15, 5],
+    ... })
+    >>> int(system_profile(av)["n_stations"])
+    2
     """
     df = availability
     bikes, docks = num(df, "num_bikes_available"), num(df, "num_docks_available")
@@ -178,6 +188,13 @@ def concentration_metrics(info: pd.DataFrame, *, value_col: str = "capacity") ->
     -------
     pandas.Series
         ``n_stations``, ``total_capacity``, ``gini``, ``theil``, ``top_decile_share``.
+
+    Examples
+    --------
+    >>> import pandas as pd
+    >>> info = pd.DataFrame({"system_id": "s", "station_id": list("abcd"), "capacity": [10, 10, 10, 70]})
+    >>> round(float(concentration_metrics(info)["gini"]), 2)
+    0.45
     """
     x = num(info, value_col).dropna().to_numpy()
     x = np.sort(x[x > 0])
@@ -207,6 +224,13 @@ def lorenz_curve(info: pd.DataFrame, *, value_col: str = "capacity") -> pd.DataF
     -------
     pandas.DataFrame
         ``cum_population_share``, ``cum_value_share`` (both in ``[0, 1]``, ascending).
+
+    Examples
+    --------
+    >>> import pandas as pd
+    >>> info = pd.DataFrame({"system_id": "s", "station_id": list("abcd"), "capacity": [10, 10, 10, 70]})
+    >>> lorenz_curve(info)["cum_value_share"].tolist()
+    [0.0, 0.1, 0.2, 0.3, 1.0]
     """
     x = num(info, value_col).dropna().to_numpy()
     x = np.sort(x[x > 0])

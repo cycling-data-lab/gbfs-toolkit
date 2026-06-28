@@ -1,23 +1,41 @@
 name: Docs
 
-# Build the MkDocs site and publish it to the gh-pages branch on every push to main.
+# Versioned docs with mike, published to the gh-pages branch.
+#   - push to main  -> the moving "dev" docs (/dev/)
+#   - tag v*        -> the released minor (/1.5/) and the "latest" alias (the default)
 # One-time: repo Settings → Pages → Source = "Deploy from a branch" → gh-pages.
 
 on:
   push:
     branches: [main]
+    tags: ["v*"]
   workflow_dispatch:
 
 permissions:
   contents: write
 
 jobs:
-  build-deploy:
+  deploy:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
       - run: pip install -e ".[docs]"
-      - run: mkdocs gh-deploy --force
+      - name: Configure git for mike
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+      - name: Deploy development docs
+        if: github.ref == 'refs/heads/main'
+        run: mike deploy --push dev
+      - name: Deploy released docs
+        if: startsWith(github.ref, 'refs/tags/v')
+        run: |
+          VERSION="${GITHUB_REF_NAME#v}"
+          MINOR="${VERSION%.*}"
+          mike deploy --push --update-aliases "$MINOR" latest
+          mike set-default --push latest
