@@ -25,15 +25,14 @@ from what was collected.
 | [Collect a snapshot](examples/02-collect-a-snapshot.md) | One cron-driven collection run into a Parquet lake | `[fetch]`, `[parquet]` |
 | [Analyse history](examples/03-analyze-history.md) | Coverage, daily typologies and turnover from a built-up lake | `[parquet]`, `[cluster]` |
 | [Equity and coverage](examples/04-equity-and-coverage.md) | Capacity concentration and spatial equity of a network | `[fetch]`, `[geo]` |
-| [Rigorous audit](examples/05-rigorous-audit.md) | Verdict + threshold robustness + bootstrap CIs + FDR-controlled hotspots | none (bundled data) |
-| [Equity, accessibility & rebalancing](examples/06-equity-rebalancing.md) | Theil/Palma, E2SFCA, Wasserstein rebalancing tension, observability loss | `[geo]` |
+| [Rigorous & comparative analysis](examples/05-rigorous-audit.md) | Threshold robustness, bootstrap CIs, FDR hotspots, Theil/Palma, E2SFCA, rebalancing tension | none (bundled data) |
 | [Free-floating & ghost fleets](examples/07-free-floating-fleets.md) | Reconcile docked + free-floating, ghost vehicles, spatial-entropy collapse | none (synthetic) |
 | [Service reliability](examples/08-service-reliability.md) | Stockout episodes, Kaplan–Meier outage survival, sampling vulnerability | none (synthetic) |
 | [Contextualize with transit & weather](examples/09-contextualize.md) | Transit feeders, leak-free exogenous join, autocorrelation | none (synthetic) |
 | [Macro-scale comparative audit](examples/10-macro-scale-audit.md) | Filter the world catalogue and audit N feeds in one call | `[fetch]` (live) |
 
-The last two scenarios use the bundled `load_example()` dataset and small synthetic
-frames, so they run with no network and are executed in CI.
+The scenarios marked *none* use the bundled `load_example()` dataset and small
+synthetic frames, so they run with no network and are executed in CI.
 
 Install what a script needs, for example:
 

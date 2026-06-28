@@ -157,14 +157,14 @@ nav:
           - Collect a snapshot: examples/02-collect-a-snapshot.md
           - Analyse history: examples/03-analyze-history.md
           - Equity and coverage: examples/04-equity-and-coverage.md
-          - Rigorous audit (robustness, CIs, FDR): examples/05-rigorous-audit.md
-          - Equity, accessibility & rebalancing: examples/06-equity-rebalancing.md
+          - Rigorous & comparative analysis: examples/05-rigorous-audit.md
           - Free-floating & ghost fleets (signature): examples/07-free-floating-fleets.md
           - Service reliability & outage survival: examples/08-service-reliability.md
           - Contextualize with transit & weather: examples/09-contextualize.md
           - Macro-scale comparative audit (live): examples/10-macro-scale-audit.md
   - Explanation:
       - Methodology: methodology.md
+      - Validating an audit by hand: human-validation.md
       - Glossary: glossary.md
       - Data model: data-model.md
   - Reference: reference/

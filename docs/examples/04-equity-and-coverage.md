@@ -18,7 +18,7 @@ What the script does:
   area instead of a convex hull.
 
 For richer equity and accessibility (Theil/Palma decomposition, E2SFCA, rebalancing
-tension), see [Equity, accessibility & rebalancing](06-equity-rebalancing.md).
+tension), see [Equity, accessibility & rebalancing](05-rigorous-audit.md).
 
 Run it:
 
