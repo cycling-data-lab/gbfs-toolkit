@@ -1,0 +1,25 @@
+{
+  "$schema": "https://raw.githubusercontent.com/googleapis/release-please/main/schemas/config.json",
+  "release-type": "python",
+  "packages": {
+    ".": {
+      "package-name": "gbfs-toolkit",
+      "changelog-path": "CHANGELOG.md",
+      "extra-files": [
+        "src/gbfs_toolkit/__init__.py",
+        "CITATION.cff"
+      ]
+    }
+  },
+  "changelog-sections": [
+    { "type": "feat", "section": "Added" },
+    { "type": "fix", "section": "Fixed" },
+    { "type": "perf", "section": "Changed" },
+    { "type": "refactor", "section": "Changed" },
+    { "type": "docs", "section": "Documentation" },
+    { "type": "test", "section": "Tests", "hidden": true },
+    { "type": "ci", "section": "Tests", "hidden": true },
+    { "type": "build", "section": "Tests", "hidden": true },
+    { "type": "chore", "section": "Tests", "hidden": true }
+  ]
+}
