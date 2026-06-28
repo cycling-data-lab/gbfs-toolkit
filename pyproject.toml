@@ -61,6 +61,9 @@ dev = [
     "geopandas>=0.14",  # exercises geo / osm / geofencing paths in CI
     "rich>=13.0",  # exercises the CLI rich-rendering path in CI
     "tqdm>=4.0",  # exercises the fetch_multiple progress path in CI
+    "esda>=2.5",  # numerical cross-validation of Moran's I / LISA
+    "libpysal>=4.9",  # spatial weights for the esda cross-checks
+    "lifelines>=0.27",  # numerical cross-validation of outage survival vs Kaplan-Meier
 ]
 
 [project.scripts]

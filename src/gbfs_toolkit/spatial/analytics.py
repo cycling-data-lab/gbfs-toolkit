@@ -392,11 +392,18 @@ def local_morans_i(
     neighbours = np.asarray(idx)[:, 1 : kk + 1]  # drop self
 
     z = xf - xf.mean()
-    m2 = float((z**2).mean())
+    # Variance with ddof=1, matching the PySAL/esda Moran_Local normalisation so the
+    # reported local_i is directly comparable to that reference implementation.
+    m2 = float((z**2).sum() / (z.size - 1)) if z.size > 1 else 0.0
     if m2 == 0:
         return out
     lag = z[neighbours].mean(axis=1)
     local_i = (z / m2) * lag
+
+    if permutations < 1:
+        # No inference requested: report the statistic only, no pseudo p-value or z-score.
+        out.loc[pos, "local_i"] = local_i
+        return out
 
     rng = np.random.default_rng(seed)
     abs_obs = np.abs(local_i)
