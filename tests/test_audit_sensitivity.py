@@ -84,6 +84,30 @@ def test_reclassify_overcapacity_relabels_and_is_pure():
     assert (gb.reclassify_overcapacity(df, a3_ratio=50.0)["station_type"] == "docked_bike").all()
 
 
+def test_classify_from_vehicle_types_is_feed_intrinsic():
+    info = pd.DataFrame(
+        {
+            "system_id": ["car", "bike", "mixed"],
+            "station_type": ["docked_bike"] * 3,
+        }
+    )
+    vt = pd.DataFrame(
+        {
+            "system_id": ["car", "car", "bike", "mixed", "mixed"],
+            # 'car' has car + cargo_bicycle (like Citiz) -> carsharing (no plain bicycle);
+            # 'bike' is a bike-share; 'mixed' offers cars AND bicycles -> not pure A1.
+            "form_factor": ["car", "cargo_bicycle", "bicycle", "car", "bicycle"],
+        }
+    )
+    out = gb.classify_from_vehicle_types(info, vt)
+    typ = out.set_index("system_id")["station_type"]
+    assert typ["car"] == "carsharing"
+    assert typ["bike"] == "docked_bike"
+    assert typ["mixed"] == "docked_bike"  # has bicycle -> vetoed
+    pd.testing.assert_frame_equal(info, info)  # input copy, unchanged
+    assert gb.classify_from_vehicle_types(info, None).equals(info)  # no vehicle_types -> unchanged
+
+
 def test_flag_rate_ci_is_reproducible_and_bracketing():
     df = pd.concat(
         [_system(f"s{i}", 20, 12 if i % 2 else 0, lat0=48 + 0.1 * i) for i in range(8)],

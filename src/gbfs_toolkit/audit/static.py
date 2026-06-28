@@ -99,6 +99,53 @@ def reclassify_overcapacity(
     return out
 
 
+def classify_from_vehicle_types(
+    info: pd.DataFrame,
+    vehicle_types: pd.DataFrame | None,
+    *,
+    car_factors: tuple[str, ...] = ("car",),
+    bike_factors: tuple[str, ...] = ("bicycle",),
+) -> pd.DataFrame:
+    """Feed-intrinsic car-sharing classification from GBFS v3 ``vehicle_types``.
+
+    A GBFS feed does not put a type on ``station_information``, but its
+    ``vehicle_types`` document declares a ``form_factor`` per vehicle. A system
+    whose fleet declares a car form factor and no plain ``bicycle`` is car-sharing
+    (out of bike-share domain, A1) directly from the feed, without any operator-name
+    heuristic. Matching is on the exact ``form_factor`` enum, so ``cargo_bicycle``
+    is never confused with ``car``.
+
+    Parameters
+    ----------
+    info : pandas.DataFrame
+        Canonical station information; requires ``system_id`` and ``station_type``.
+    vehicle_types : pandas.DataFrame or None
+        Canonical vehicle types with ``system_id`` and ``form_factor``. If ``None``
+        or lacking ``form_factor``, ``info`` is returned unchanged.
+    car_factors, bike_factors : tuple[str, ...]
+        Form factors that mark a car fleet, and those that veto the car label
+        (a system also offering plain bicycles is a multimodal bike-share, not A1).
+
+    Returns
+    -------
+    pandas.DataFrame
+        A copy of ``info`` with ``station_type = "carsharing"`` on the car-sharing
+        systems; the input is unchanged.
+    """
+    require_columns(info, ["system_id", "station_type"], what="classify_from_vehicle_types")
+    out = info.copy()
+    if vehicle_types is None or "form_factor" not in getattr(vehicle_types, "columns", []):
+        return out
+    factors = (
+        vehicle_types.dropna(subset=["form_factor"]).groupby("system_id")["form_factor"].agg(set)
+    )
+    cars = {str(c) for c in car_factors}
+    bikes = {str(b) for b in bike_factors}
+    car_systems = {sid for sid, fset in factors.items() if (cars & fset) and not (bikes & fset)}
+    out.loc[out["system_id"].isin(car_systems), "station_type"] = "carsharing"
+    return out
+
+
 def _docked_mask(df: pd.DataFrame) -> pd.Series:
     """Physical docked stations only; excludes free-floating *and* virtual anchors.
 
