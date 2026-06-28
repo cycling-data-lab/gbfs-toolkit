@@ -13,6 +13,9 @@ import pytest
 EXAMPLES = Path(__file__).resolve().parent.parent / "examples"
 
 
-@pytest.mark.parametrize("script", ["05_rigorous_audit.py", "06_equity_rebalancing.py"])
+@pytest.mark.parametrize(
+    "script",
+    ["05_rigorous_audit.py", "06_equity_rebalancing.py", "07_free_floating_fleets.py"],
+)
 def test_example_scenario_runs(script):
     runpy.run_path(str(EXAMPLES / script), run_name="__main__")

@@ -27,6 +27,7 @@ from what was collected.
 | [Equity and coverage](examples/04-equity-and-coverage.md) | Capacity concentration and spatial equity of a network | `[fetch]`, `[geo]` |
 | [Rigorous audit](examples/05-rigorous-audit.md) | Verdict + threshold robustness + bootstrap CIs + FDR-controlled hotspots | none (bundled data) |
 | [Equity, accessibility & rebalancing](examples/06-equity-rebalancing.md) | Theil/Palma, E2SFCA, Wasserstein rebalancing tension, observability loss | `[geo]` |
+| [Free-floating & ghost fleets](examples/07-free-floating-fleets.md) | Reconcile docked + free-floating, ghost vehicles, spatial-entropy collapse | none (synthetic) |
 
 The last two scenarios use the bundled `load_example()` dataset and small synthetic
 frames, so they run with no network and are executed in CI.

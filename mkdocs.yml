@@ -159,6 +159,7 @@ nav:
           - Equity and coverage: examples/04-equity-and-coverage.md
           - Rigorous audit (robustness, CIs, FDR): examples/05-rigorous-audit.md
           - Equity, accessibility & rebalancing: examples/06-equity-rebalancing.md
+          - Free-floating & ghost fleets (signature): examples/07-free-floating-fleets.md
   - Explanation:
       - Methodology: methodology.md
       - Glossary: glossary.md
