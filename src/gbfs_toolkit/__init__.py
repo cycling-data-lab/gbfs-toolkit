@@ -118,6 +118,7 @@ from gbfs_toolkit.interfaces import (
 )
 from gbfs_toolkit.interfaces.datasets import load_example
 from gbfs_toolkit.interfaces.diagnostics import show_versions
+from gbfs_toolkit.interfaces.synthetic import simulate_city
 from gbfs_toolkit.io.catalog import filter_catalog, normalize_operator, resolve, systems_catalog
 from gbfs_toolkit.io.fetch import (
     FeedResponse,
@@ -181,6 +182,15 @@ from gbfs_toolkit.spatial.geometry import (
     stations_near,
     to_gdf,
     to_geojson,
+)
+from gbfs_toolkit.spatial.graph import (
+    band_limited_signal,
+    degree_preserving_rewire,
+    knn_adjacency,
+    low_freq_basis,
+    normalized_laplacian,
+    permute_signal,
+    spectral_projection_r2,
 )
 from gbfs_toolkit.spatial.multimodal import link_transit_stops
 from gbfs_toolkit.spatial.osm import enrich_with_osm, station_surroundings
@@ -295,7 +305,16 @@ __all__ = [
     "require_columns",
     "SCHEMAS",
     "load_example",
+    "simulate_city",
     "show_versions",
+    # graph-signal primitives: Laplacian, null models, band-limited signals
+    "knn_adjacency",
+    "normalized_laplacian",
+    "low_freq_basis",
+    "spectral_projection_r2",
+    "degree_preserving_rewire",
+    "permute_signal",
+    "band_limited_signal",
     # research indicators (1.3.0): service, equity, dynamics, sampling, calendar
     "service_reliability_index",
     "station_outage_rates",
