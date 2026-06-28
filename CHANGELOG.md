@@ -3,7 +3,7 @@
 All notable changes are documented here ([Keep a Changelog](https://keepachangelog.com),
 [SemVer](https://semver.org)).
 
-## [1.8.0](https://github.com/cycling-data-lab/gbfs-toolkit/compare/gbfs-toolkit-v1.7.2...gbfs-toolkit-v1.8.0) (2026-06-28)
+## [2.0.0](https://github.com/cycling-data-lab/gbfs-toolkit/compare/gbfs-toolkit-v1.7.2...gbfs-toolkit-v2.0.0) (2026-06-28)
 
 
 ### Added
