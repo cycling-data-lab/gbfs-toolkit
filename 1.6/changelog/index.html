@@ -5856,6 +5856,34 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#161-patch" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        [1.6.1] - patch
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="[1.6.1] - patch">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fixed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fixed
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#160-feed-governance-service-stress-panel-ergonomics" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -5907,7 +5935,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#fixed" class="md-nav__link">
+  <a href="#fixed_1" class="md-nav__link">
     <span class="md-ellipsis">
       
         Fixed
@@ -6069,7 +6097,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#fixed_1" class="md-nav__link">
+  <a href="#fixed_2" class="md-nav__link">
     <span class="md-ellipsis">
       
         Fixed
@@ -6371,6 +6399,34 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#161-patch" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        [1.6.1] - patch
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="[1.6.1] - patch">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fixed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fixed
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#160-feed-governance-service-stress-panel-ergonomics" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -6422,7 +6478,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#fixed" class="md-nav__link">
+  <a href="#fixed_1" class="md-nav__link">
     <span class="md-ellipsis">
       
         Fixed
@@ -6584,7 +6640,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#fixed_1" class="md-nav__link">
+  <a href="#fixed_2" class="md-nav__link">
     <span class="md-ellipsis">
       
         Fixed
@@ -6866,6 +6922,14 @@
 <h1 id="changelog">Changelog<a class="headerlink" href="#changelog" title="Permanent link">&para;</a></h1>
 <p>All notable changes are documented here (<a href="https://keepachangelog.com">Keep a Changelog</a>,
 <a href="https://semver.org">SemVer</a>).</p>
+<h2 id="161-patch">[1.6.1] - patch<a class="headerlink" href="#161-patch" title="Permanent link">&para;</a></h2>
+<h3 id="fixed">Fixed<a class="headerlink" href="#fixed" title="Permanent link">&para;</a></h3>
+<ul>
+<li><code>format_paper_summary(fmt="latex")</code> now generates the LaTeX table directly instead of
+  delegating to <code>DataFrame.to_latex</code>, which on some pandas builds routes through the
+  Styler and raises <code>ImportError</code> when <code>jinja2</code> is not installed. The function is now
+  dependency-free for both Markdown and LaTeX output.</li>
+</ul>
 <h2 id="160-feed-governance-service-stress-panel-ergonomics">[1.6.0] - feed governance, service stress, panel ergonomics<a class="headerlink" href="#160-feed-governance-service-stress-panel-ergonomics" title="Permanent link">&para;</a></h2>
 <h3 id="added">Added<a class="headerlink" href="#added" title="Permanent link">&para;</a></h3>
 <p>Four descriptive metrics (grounded in the bike-share literature and an external review)
@@ -6921,7 +6985,7 @@ origin-destination, routing, prediction or imputation).</p>
 <li><strong>Human-validation helpers.</strong> <code>krippendorff_alpha</code>, <code>cohen_kappa</code>,
   <code>wilson_interval</code> for construct-validity studies.</li>
 </ul>
-<h3 id="fixed">Fixed<a class="headerlink" href="#fixed" title="Permanent link">&para;</a></h3>
+<h3 id="fixed_1">Fixed<a class="headerlink" href="#fixed_1" title="Permanent link">&para;</a></h3>
 <ul>
 <li><code>resolve</code> preferred the operator website <code>url</code> over the GBFS auto-discovery
   endpoint (fetched the homepage instead of <code>gbfs.json</code>).</li>
@@ -7017,7 +7081,7 @@ imputation), operate on the canonical frames, and are exposed on the <code>.gbfs
 <li>CI now runs the <code>load_example</code> <strong>doctest</strong>.</li>
 </ul>
 <h2 id="101">[1.0.1]<a class="headerlink" href="#101" title="Permanent link">&para;</a></h2>
-<h3 id="fixed_1">Fixed<a class="headerlink" href="#fixed_1" title="Permanent link">&para;</a></h3>
+<h3 id="fixed_2">Fixed<a class="headerlink" href="#fixed_2" title="Permanent link">&para;</a></h3>
 <ul>
 <li><code>to_canonical_station_status</code> now reads the GBFS 3.0 <strong><code>num_vehicles_available</code></strong> field as a
   fallback for <code>num_bikes_available</code> (3.0 renamed it). Surfaced while migrating a real consumer
