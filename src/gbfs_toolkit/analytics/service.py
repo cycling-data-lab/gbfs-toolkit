@@ -380,3 +380,83 @@ def capacity_utilization(panel: pd.DataFrame, info: pd.DataFrame) -> pd.DataFram
     bikes = pd.to_numeric(out["num_bikes_available"], errors="coerce")
     out["utilization_rate"] = (bikes / cap.where(cap > 0)).astype("Float64")
     return out
+
+
+def boundary_stress(panel: pd.DataFrame, *, bikes_le: int = 2, docks_le: int = 2) -> pd.DataFrame:
+    """Per-station share of time *near* empty or *near* full, not just at the boundary.
+
+    A user reads a station with two bikes left as unreliable (they may be the broken
+    ones), long before it hits zero; :func:`station_outage_rates` (strictly ``== 0``)
+    undercounts that perceived stress. This reports the fraction of observations with
+    at most ``bikes_le`` bikes (pick-up stress) and at most ``docks_le`` docks
+    (drop-off stress), using **absolute** thresholds, since two bikes mean stress at a
+    10-dock station but not at a 40-dock one. Drop-off stress is undefined for
+    free-floating or zero-capacity stations (no physical docks), so it returns ``NA``
+    there rather than a misleading number.
+
+    Parameters
+    ----------
+    panel : pandas.DataFrame
+        Panel or snapshots with ``system_id, station_id, num_bikes_available,
+        num_docks_available``; uses ``capacity`` / ``is_virtual_station`` when present.
+    bikes_le, docks_le : int, default 2
+        A station is under pick-up / drop-off stress when its bikes / docks are at or
+        below this absolute count.
+
+    Returns
+    -------
+    pandas.DataFrame
+        ``system_id, station_id, pickup_stress_ratio, dropoff_stress_ratio, n_obs``
+        (rates in ``[0, 1]``; ``dropoff_stress_ratio`` is nullable ``NA`` for
+        free-floating / zero-capacity stations).
+
+    See Also
+    --------
+    [`station_outage_rates`][gbfs_toolkit.station_outage_rates] : The strict empty/full (``== 0``) rates.
+    [`censored_time_ratio`][gbfs_toolkit.censored_time_ratio] : Share of demand lost at the boundary.
+    [`service_reliability_index`][gbfs_toolkit.service_reliability_index] : Level-of-service probabilities.
+
+    Examples
+    --------
+    >>> import pandas as pd
+    >>> panel = pd.DataFrame({
+    ...     "system_id": "s", "station_id": "a",
+    ...     "num_bikes_available": [0, 1, 5, 10],
+    ...     "num_docks_available": [10, 9, 5, 0],
+    ... })
+    >>> float(boundary_stress(panel)["pickup_stress_ratio"].iloc[0])
+    0.5
+    """
+    df = panel_frame(panel)
+    require_columns(
+        df,
+        ["system_id", "station_id", "num_bikes_available", "num_docks_available"],
+        what="boundary_stress",
+    )
+    bikes = num(df, "num_bikes_available")
+    docks = num(df, "num_docks_available")
+    virtual = np.zeros(len(df), dtype=bool)
+    if "is_virtual_station" in df.columns:
+        virtual |= df["is_virtual_station"].fillna(False).astype(bool).to_numpy()
+    if "capacity" in df.columns:
+        virtual |= ~(num(df, "capacity").to_numpy() > 0)
+    low_docks = np.where(virtual, np.nan, (docks <= docks_le).to_numpy().astype("float64"))
+    work = pd.DataFrame(
+        {
+            "system_id": df["system_id"].to_numpy(),
+            "station_id": df["station_id"].to_numpy(),
+            "_low_bikes": (bikes <= bikes_le).to_numpy(),
+            "_low_docks": low_docks,
+        }
+    )
+    out = (
+        work.groupby(["system_id", "station_id"], sort=False)
+        .agg(
+            pickup_stress_ratio=("_low_bikes", "mean"),
+            dropoff_stress_ratio=("_low_docks", "mean"),
+            n_obs=("_low_bikes", "size"),
+        )
+        .reset_index()
+    )
+    out["dropoff_stress_ratio"] = out["dropoff_stress_ratio"].astype("Float64")
+    return out

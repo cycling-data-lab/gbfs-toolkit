@@ -13,6 +13,7 @@ from typing import TYPE_CHECKING, Any
 import numpy as np
 import pandas as pd
 
+from gbfs_toolkit.core.models import require_columns
 from gbfs_toolkit.core.utils import EARTH_RADIUS_M
 
 if TYPE_CHECKING:  # pragma: no cover
@@ -305,3 +306,52 @@ def to_geojson(
 
     Path(path).write_text(text, encoding="utf-8")
     return path
+
+
+def filter_by_bbox(
+    df: pd.DataFrame,
+    bounds: tuple[float, float, float, float],
+    *,
+    lat_col: str = "lat",
+    lon_col: str = "lon",
+) -> pd.DataFrame:
+    """Keep only the rows inside a lon/lat bounding box.
+
+    The basic spatial filter the package was missing: it has polygon membership
+    (:func:`zones_for_points`) and k-NN, but cropping a frame to a rectangular extent
+    still meant hand-writing four boolean comparisons (and risking a lat/lon swap). The
+    ``bounds`` order follows the GeoJSON / Shapely convention
+    ``(min_lon, min_lat, max_lon, max_lat)``.
+
+    Parameters
+    ----------
+    df : pandas.DataFrame
+        Any frame of points with ``lat_col`` and ``lon_col`` (stations or vehicles).
+    bounds : tuple of float
+        ``(min_lon, min_lat, max_lon, max_lat)`` in degrees (EPSG:4326), inclusive.
+    lat_col, lon_col : str
+        Coordinate column names.
+
+    Returns
+    -------
+    pandas.DataFrame
+        The rows inside the box, with a fresh index.
+
+    See Also
+    --------
+    [`zones_for_points`][gbfs_toolkit.zones_for_points] : Membership in arbitrary polygons.
+    [`stations_near`][gbfs_toolkit.stations_near] : Points within a radius of one location.
+
+    Examples
+    --------
+    >>> import pandas as pd
+    >>> df = pd.DataFrame({"station_id": ["a", "b"], "lat": [48.85, 40.0], "lon": [2.35, -3.0]})
+    >>> filter_by_bbox(df, (2.0, 48.0, 3.0, 49.0))["station_id"].tolist()
+    ['a']
+    """
+    require_columns(df, [lat_col, lon_col], what="filter_by_bbox")
+    min_lon, min_lat, max_lon, max_lat = bounds
+    lat = pd.to_numeric(df[lat_col], errors="coerce")
+    lon = pd.to_numeric(df[lon_col], errors="coerce")
+    mask = lat.between(min_lat, max_lat) & lon.between(min_lon, max_lon)
+    return df[mask.to_numpy()].reset_index(drop=True)

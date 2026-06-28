@@ -50,7 +50,10 @@ jobs:
           src/gbfs_toolkit/audit/static.py
           src/gbfs_toolkit/audit/dynamic.py
           src/gbfs_toolkit/audit/__init__.py
+          src/gbfs_toolkit/audit/governance.py
+          src/gbfs_toolkit/io/timeseries.py
           src/gbfs_toolkit/spatial/analytics.py
+          src/gbfs_toolkit/spatial/geometry.py
       - name: Type check (mypy)
         if: runner.os == 'Linux' && matrix.python-version == '3.12'
         run: mypy

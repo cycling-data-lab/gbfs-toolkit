@@ -25,6 +25,7 @@ import numpy as np
 import pandas as pd
 
 from gbfs_toolkit.core.models import require_columns
+from gbfs_toolkit.core.utils import panel_frame
 
 
 def _require_pyarrow():
@@ -508,12 +509,17 @@ def detect_frozen_stations(
     return out[_FROZEN_COLUMNS]
 
 
-def coverage_report(panel: pd.DataFrame, *, expected_freq: str = "5min") -> pd.DataFrame:
-    """Per-station longitudinal coverage: quantify missingness *before* you model.
+def coverage_report(
+    panel: pd.DataFrame, *, expected_freq: str = "5min", level: str = "station"
+) -> pd.DataFrame:
+    """Longitudinal coverage: quantify missingness *before* you model.
 
     Operators go offline and scrapers crash; ``calculate_net_flow`` / clustering silently
-    assume continuity. This reports how complete each station's series is, against the
-    system-wide observation window (so a station that dropped out shows low uptime).
+    assume continuity. With ``level="station"`` this reports how complete each station's
+    series is, against the system-wide observation window (so a station that dropped out
+    shows low uptime). With ``level="system"`` it returns one row per system, the summary a
+    paper's "Data and methods" section needs: window, cadence, cadence jitter and overall
+    yield.
 
     Parameters
     ----------
@@ -522,23 +528,84 @@ def coverage_report(panel: pd.DataFrame, *, expected_freq: str = "5min") -> pd.D
         ``system_id, station_id, fetched_at``.
     expected_freq : str, default "5min"
         Your intended polling cadence (a pandas offset alias).
+    level : {"station", "system"}, default "station"
+        ``"station"`` returns the per-station coverage; ``"system"`` returns a per-system
+        summary (median cadence, cadence jitter, yield).
 
     Returns
     -------
     pandas.DataFrame
-        Indexed by ``(system_id, station_id)``: ``expected_snapshots``, ``actual_snapshots``,
-        ``uptime_pct``, ``longest_gap_minutes``.
+        For ``level="station"``, indexed by ``(system_id, station_id)``:
+        ``expected_snapshots, actual_snapshots, uptime_pct, longest_gap_minutes``.
+        For ``level="system"``, indexed by ``system_id``: ``global_start, global_end,
+        n_stations, total_snapshots, median_cadence_s, cadence_jitter_s,
+        station_hours_yield_pct``.
 
     See Also
     --------
     [`audit_feed`][gbfs_toolkit.audit_feed] : The audit behind the report.
     [`generate_manifest`][gbfs_toolkit.generate_manifest] : Manifest of an archived collection.
+
+    Examples
+    --------
+    >>> import pandas as pd
+    >>> panel = pd.DataFrame({
+    ...     "system_id": "s", "station_id": ["a", "a", "b"],
+    ...     "fetched_at": pd.to_datetime(
+    ...         ["2026-01-01T00:00Z", "2026-01-01T00:05Z", "2026-01-01T00:00Z"]),
+    ... })
+    >>> int(coverage_report(panel, level="system")["total_snapshots"].iloc[0])
+    2
     """
+    if level not in ("station", "system"):
+        raise ValueError(f"level must be 'station' or 'system', got {level!r}")
     df = panel.reset_index() if isinstance(panel.index, pd.MultiIndex) else panel.copy()
     require_columns(df, ["system_id", "station_id", "fetched_at"], what="coverage_report")
     df = df[["system_id", "station_id", "fetched_at"]].copy()
     df["fetched_at"] = pd.to_datetime(df["fetched_at"])
     step = pd.Timedelta(expected_freq)
+
+    if level == "system":
+        rows = []
+        for sid, sysdf in df.groupby("system_id", sort=False):
+            t0, t1 = sysdf["fetched_at"].min(), sysdf["fetched_at"].max()
+            snapshots = sysdf["fetched_at"].drop_duplicates().sort_values()
+            deltas = snapshots.diff().dropna().dt.total_seconds()
+            n_stations = int(sysdf["station_id"].nunique())
+            expected = int((t1 - t0) / step) + 1 if t1 > t0 else 1
+            actual_pairs = len(sysdf[["station_id", "fetched_at"]].drop_duplicates())
+            denom = expected * n_stations
+            median_dt = float(deltas.median()) if len(deltas) else float("nan")
+            rows.append(
+                {
+                    "system_id": sid,
+                    "global_start": t0,
+                    "global_end": t1,
+                    "n_stations": n_stations,
+                    "total_snapshots": int(len(snapshots)),
+                    "median_cadence_s": round(median_dt, 1),
+                    "cadence_jitter_s": round(float((deltas - median_dt).abs().median()), 1)
+                    if len(deltas)
+                    else float("nan"),
+                    "station_hours_yield_pct": round(min(1.0, actual_pairs / denom) * 100, 1)
+                    if denom
+                    else float("nan"),
+                }
+            )
+        if not rows:
+            return pd.DataFrame(
+                columns=[
+                    "global_start",
+                    "global_end",
+                    "n_stations",
+                    "total_snapshots",
+                    "median_cadence_s",
+                    "cadence_jitter_s",
+                    "station_hours_yield_pct",
+                ],
+                index=pd.Index([], name="system_id"),
+            )
+        return pd.DataFrame(rows).set_index("system_id")
 
     rows = []
     for sid, sysdf in df.groupby("system_id", sort=False):
@@ -622,3 +689,301 @@ def generate_manifest(lake_dir: str | Path, *, chunk_size: int = 1 << 20) -> dic
     except Exception:  # noqa: BLE001 (summary is best-effort; the hashes are the point)
         pass
     return manifest
+
+
+def add_local_time(
+    panel: pd.DataFrame, tz_name: str, *, time_col: str = "fetched_at", new_col: str = "local_time"
+) -> pd.DataFrame:
+    """Add a local-time column to a panel, handling the index correctly.
+
+    Converting a UTC timestamp to local time is the first step of any diurnal analysis,
+    and doing it on a MultiIndexed panel by hand (``reset_index`` then ``tz_convert`` then
+    ``set_index``) is a recurring papercut. This flattens the panel and appends one
+    tz-aware ``new_col`` in ``tz_name``, leaving ``time_col`` (UTC) untouched.
+
+    Parameters
+    ----------
+    panel : pandas.DataFrame
+        Any panel/frame with a tz-aware (or UTC-coercible) ``time_col``.
+    tz_name : str
+        An IANA zone, e.g. ``"Europe/Paris"`` or ``"America/New_York"``.
+    time_col, new_col : str
+        Source UTC column and the local-time column to add.
+
+    Returns
+    -------
+    pandas.DataFrame
+        A flattened copy of ``panel`` with the added ``new_col``.
+
+    See Also
+    --------
+    [`build_availability_panel`][gbfs_toolkit.build_availability_panel] : Build a panel already in local time via ``target_tz``.
+    [`resample_panel`][gbfs_toolkit.resample_panel] : Put the panel on a fixed time grid.
+
+    Examples
+    --------
+    >>> import pandas as pd
+    >>> df = pd.DataFrame({"fetched_at": pd.to_datetime(["2026-01-01T08:00Z"])})
+    >>> int(add_local_time(df, "Europe/Paris")["local_time"].dt.hour.iloc[0])
+    9
+    """
+    df = panel_frame(panel)
+    require_columns(df, [time_col], what="add_local_time")
+    out = df.copy()
+    out[new_col] = pd.to_datetime(out[time_col], utc=True).dt.tz_convert(tz_name)
+    return out
+
+
+def resample_panel(
+    panel: pd.DataFrame,
+    freq: str = "15min",
+    *,
+    time_col: str = "fetched_at",
+    by: tuple[str, ...] = ("system_id", "station_id"),
+) -> pd.DataFrame:
+    """Resample each station series onto a fixed time grid, carrying the last state forward.
+
+    Availability is a step function (a station's count holds until the next change), so a
+    panel polled at irregular instants must be aligned to a regular grid before clustering,
+    correlation or plotting. Doing this per station with ``groupby().resample().ffill()``
+    is four brittle lines that routinely break nullable dtypes; this is the one-call,
+    dtype-safe version. It carries the last observed state forward (it does not invent
+    values), so it is alignment, not imputation.
+
+    Parameters
+    ----------
+    panel : pandas.DataFrame
+        Panel/frame with the grouping columns in ``by`` and a ``time_col``.
+    freq : str, default "15min"
+        Target grid (a pandas offset alias).
+    time_col : str, default "fetched_at"
+        Timestamp column.
+    by : tuple of str, default ("system_id", "station_id")
+        Grouping keys present in ``panel`` (missing keys are ignored).
+
+    Returns
+    -------
+    pandas.DataFrame
+        A flat panel on the ``freq`` grid, last-observation-carried-forward per group.
+
+    See Also
+    --------
+    [`build_availability_panel`][gbfs_toolkit.build_availability_panel] : Read and resample a Parquet lake in one step.
+    [`insert_explicit_gaps`][gbfs_toolkit.insert_explicit_gaps] : Mark collection outages instead of filling them.
+    [`extract_snapshot_asof`][gbfs_toolkit.extract_snapshot_asof] : Take a single cross-section.
+
+    Examples
+    --------
+    >>> import pandas as pd
+    >>> panel = pd.DataFrame({
+    ...     "station_id": "a",
+    ...     "fetched_at": pd.to_datetime(["2026-01-01T00:00Z", "2026-01-01T00:30Z"]),
+    ...     "num_bikes_available": [5, 8],
+    ... })
+    >>> out = resample_panel(panel, "15min")
+    >>> out["num_bikes_available"].tolist()
+    [5, 5, 8]
+    """
+    df = panel_frame(panel)
+    keys = [k for k in by if k in df.columns]
+    require_columns(df, [*keys, time_col], what="resample_panel")
+    out = df.copy()
+    out[time_col] = pd.to_datetime(out[time_col], utc=True)
+    if not keys:
+        resampled = out.set_index(time_col).sort_index().resample(freq).ffill()
+        return resampled.reset_index()
+    parts = []
+    for kv, g in out.groupby(keys, sort=False):
+        block = g.drop(columns=keys).set_index(time_col).sort_index().resample(freq).ffill()
+        block = block.reset_index()
+        for key, value in zip(keys, kv if isinstance(kv, tuple) else (kv,), strict=True):
+            block[key] = value
+        parts.append(block)
+    cols = [*keys, time_col, *[c for c in out.columns if c not in keys and c != time_col]]
+    return pd.concat(parts, ignore_index=True)[cols]
+
+
+def insert_explicit_gaps(
+    panel: pd.DataFrame,
+    *,
+    expected_freq: str = "5min",
+    tolerance: str = "15min",
+    time_col: str = "fetched_at",
+    by: tuple[str, ...] = ("system_id", "station_id"),
+) -> pd.DataFrame:
+    """Insert ``NaN`` rows where collection stalled, so plots show the outage honestly.
+
+    When a scraper dies on Friday and resumes Monday, a line plot draws a misleading
+    straight segment across the gap. Inserting an explicit ``NaN`` row in each gap longer
+    than ``tolerance`` forces a visual break (and stops rolling statistics bridging the
+    hole). Purely descriptive: it makes missingness explicit, it does not fill it.
+
+    Parameters
+    ----------
+    panel : pandas.DataFrame
+        Panel/frame with the grouping columns in ``by`` and a ``time_col``.
+    expected_freq : str, default "5min"
+        The intended cadence (documented for intent; the test is against ``tolerance``).
+    tolerance : str, default "15min"
+        Gaps strictly larger than this get a ``NaN`` marker row at their midpoint.
+    time_col, by : see :func:`resample_panel`.
+
+    Returns
+    -------
+    pandas.DataFrame
+        A flat copy of ``panel`` with one ``NaN``-valued row inserted per detected gap.
+
+    See Also
+    --------
+    [`coverage_report`][gbfs_toolkit.coverage_report] : Quantify the same gaps numerically.
+    [`resample_panel`][gbfs_toolkit.resample_panel] : Carry state across gaps instead of marking them.
+
+    Examples
+    --------
+    >>> import pandas as pd
+    >>> panel = pd.DataFrame({
+    ...     "station_id": "a",
+    ...     "fetched_at": pd.to_datetime(
+    ...         ["2026-01-01T00:00Z", "2026-01-01T00:05Z", "2026-01-01T02:00Z"]),
+    ...     "num_bikes_available": [5, 4, 6],
+    ... })
+    >>> out = insert_explicit_gaps(panel)
+    >>> len(out), int(out["num_bikes_available"].isna().sum())
+    (4, 1)
+    """
+    df = panel_frame(panel).copy()
+    keys = [k for k in by if k in df.columns]
+    require_columns(df, [*keys, time_col], what="insert_explicit_gaps")
+    df[time_col] = pd.to_datetime(df[time_col], utc=True)
+    df = df.sort_values([*keys, time_col]) if keys else df.sort_values(time_col)
+    tol = pd.Timedelta(tolerance)
+    value_cols = [c for c in df.columns if c not in keys and c != time_col]
+
+    gap_rows = []
+    grouped = df.groupby(keys, sort=False) if keys else [((), df)]
+    for _, g in grouped:
+        g = g.reset_index(drop=True)
+        dt = g[time_col].diff()
+        for i in np.where((dt > tol).to_numpy())[0]:
+            prev, nxt = g.iloc[i - 1], g.iloc[i]
+            row = {k: prev[k] for k in keys}
+            row[time_col] = prev[time_col] + (nxt[time_col] - prev[time_col]) / 2
+            for c in value_cols:
+                row[c] = np.nan
+            gap_rows.append(row)
+    if gap_rows:
+        df = pd.concat([df, pd.DataFrame(gap_rows)], ignore_index=True)
+        df = df.sort_values([*keys, time_col]) if keys else df.sort_values(time_col)
+    return df.reset_index(drop=True)
+
+
+def extract_snapshot_asof(
+    panel: pd.DataFrame,
+    target_time: str | pd.Timestamp,
+    *,
+    tolerance: str = "10min",
+    time_col: str = "fetched_at",
+    by: tuple[str, ...] = ("system_id", "station_id"),
+) -> pd.DataFrame:
+    """Extract the city's state at one instant: each station's last reading at or before ``T``.
+
+    Stations answer at slightly different seconds, so "the state at 08:00" is not a clean
+    slice. This returns, per station, the most recent observation in
+    ``[target_time - tolerance, target_time]``, the cross-section a snapshot map or a
+    point-in-time comparison needs, without a hand-rolled ``merge_asof``.
+
+    Parameters
+    ----------
+    panel : pandas.DataFrame
+        Panel/frame with the grouping columns in ``by`` and a ``time_col``.
+    target_time : str or pandas.Timestamp
+        The instant to reconstruct (naive is read as UTC).
+    tolerance : str, default "10min"
+        How far before ``target_time`` a reading may be and still count.
+    time_col, by : see :func:`resample_panel`.
+
+    Returns
+    -------
+    pandas.DataFrame
+        One row per group: its latest reading within the window (empty if none qualify).
+
+    See Also
+    --------
+    [`resample_panel`][gbfs_toolkit.resample_panel] : Align the whole panel to a grid instead.
+    [`to_wide_matrix`][gbfs_toolkit.to_wide_matrix] : Pivot the panel to a station-by-time matrix.
+
+    Examples
+    --------
+    >>> import pandas as pd
+    >>> panel = pd.DataFrame({
+    ...     "station_id": ["a", "a", "b"],
+    ...     "fetched_at": pd.to_datetime(
+    ...         ["2026-01-01T07:59Z", "2026-01-01T08:30Z", "2026-01-01T08:00Z"]),
+    ...     "num_bikes_available": [3, 9, 7],
+    ... })
+    >>> snap = extract_snapshot_asof(panel, "2026-01-01T08:00Z").set_index("station_id")
+    >>> int(snap.loc["a", "num_bikes_available"])
+    3
+    """
+    df = panel_frame(panel).copy()
+    keys = [k for k in by if k in df.columns]
+    require_columns(df, [*keys, time_col], what="extract_snapshot_asof")
+    df[time_col] = pd.to_datetime(df[time_col], utc=True)
+    target = _as_utc(target_time)
+    window = df[(df[time_col] <= target) & (df[time_col] >= target - pd.Timedelta(tolerance))]
+    if window.empty:
+        return df.iloc[:0].reset_index(drop=True)
+    if not keys:
+        return df.loc[[window[time_col].idxmax()]].reset_index(drop=True)
+    idx = window.groupby(keys, sort=False)[time_col].idxmax()
+    return df.loc[idx].reset_index(drop=True)
+
+
+def to_wide_matrix(
+    panel: pd.DataFrame,
+    *,
+    value_col: str = "num_bikes_available",
+    time_col: str = "fetched_at",
+    station_col: str = "station_id",
+) -> pd.DataFrame:
+    """Pivot a long panel into a time-by-station matrix.
+
+    The "long/tidy" panel is right for storage but most external tools (scikit-learn,
+    a correlation matrix, a heatmap) want the "wide" form: rows are timestamps, columns
+    are stations, cells are ``value_col``. ``pivot_table`` does this but leaves fiddly
+    column-index names to clean up; this returns a flat, ready-to-use matrix.
+
+    Parameters
+    ----------
+    panel : pandas.DataFrame
+        Long panel/frame with ``time_col``, ``station_col`` and ``value_col``.
+    value_col, time_col, station_col : str
+        The cell value, the row key and the column key.
+
+    Returns
+    -------
+    pandas.DataFrame
+        Indexed by ``time_col``, one column per station (duplicates averaged).
+
+    See Also
+    --------
+    [`extract_snapshot_asof`][gbfs_toolkit.extract_snapshot_asof] : Take a single row of this matrix.
+    [`resample_panel`][gbfs_toolkit.resample_panel] : Put the rows on a regular grid first.
+
+    Examples
+    --------
+    >>> import pandas as pd
+    >>> panel = pd.DataFrame({
+    ...     "station_id": ["a", "b", "a", "b"],
+    ...     "fetched_at": pd.to_datetime(
+    ...         ["2026-01-01T08:00Z"] * 2 + ["2026-01-01T09:00Z"] * 2),
+    ...     "num_bikes_available": [5, 2, 3, 8],
+    ... })
+    >>> to_wide_matrix(panel).shape
+    (2, 2)
+    """
+    df = panel_frame(panel)
+    require_columns(df, [time_col, station_col, value_col], what="to_wide_matrix")
+    wide = df.pivot_table(index=time_col, columns=station_col, values=value_col, aggfunc="mean")
+    wide.columns.name = None
+    return wide

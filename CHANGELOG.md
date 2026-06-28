@@ -3,6 +3,34 @@
 All notable changes are documented here ([Keep a Changelog](https://keepachangelog.com),
 [SemVer](https://semver.org)).
 
+## [1.6.0] - feed governance, service stress, panel ergonomics
+
+### Added
+Four descriptive metrics (grounded in the bike-share literature and an external review)
+and a set of everyday panel utilities. All within the descriptive scope (no
+origin-destination, routing, prediction or imputation).
+
+- **Feed governance.** `vehicle_id_persistence` characterises whether a feed rotates or
+  keeps its `vehicle_id` (the GBFS 2.1+ privacy guidance), via the rolling Jaccard overlap
+  of the live id-set and the observed id lifespan. The inverse of this persistence is the
+  ceiling on origin-destination identifiability, so it is the check that tells a study
+  whether trip-level work is even admissible (a feed property, not trip inference).
+- **Service stress.** `boundary_stress` reports the share of time a station sits *near*
+  empty or full (absolute thresholds, default `<= 2`), the perceived-unreliability that the
+  strict `station_outage_rates` (`== 0`) undercounts; drop-off stress is `NA` for
+  free-floating / zero-capacity stations.
+- **Spatial redundancy.** `spatial_outage_redundancy` separates a station's local
+  stockouts from *systemic* failures where every station within a walking radius is also
+  empty, the rupture a user cannot walk around (uses the existing `GeoKDTree`).
+- **System-level coverage.** `coverage_report(level="system")` summarises a feed's temporal
+  completeness for a paper's data section: window, median cadence, cadence jitter and
+  overall station-hours yield (the per-station report is unchanged, `level="station"`).
+- **Panel ergonomics.** `add_local_time` (tz conversion that handles the index),
+  `resample_panel` (dtype-safe step-function resampling onto a fixed grid),
+  `insert_explicit_gaps` (mark collection outages with `NaN` rows so plots break honestly),
+  `extract_snapshot_asof` (the city's state at one instant), `to_wide_matrix` (long to
+  station-by-time matrix) and `filter_by_bbox` (the missing rectangular spatial filter).
+
 ## [1.5.0] - feed-first audit, research algorithms, generated reference
 
 ### Added

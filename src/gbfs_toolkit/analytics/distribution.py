@@ -339,3 +339,63 @@ def dynamic_gini_index(
         v = vals.loc[idx].dropna().to_numpy()
         rows.append({time_col: t, "gini": gini(v), "n_stations": int(v.size)})
     return pd.DataFrame(rows)
+
+
+def format_paper_summary(
+    profile: pd.Series | pd.DataFrame, *, fmt: str = "markdown", decimals: int = 2
+) -> str:
+    """Render a profile as a publication-ready Markdown or LaTeX table.
+
+    Every paper carries a "Table 1: dataset description". Turning the raw output of
+    :func:`system_profile` or :func:`compare_systems` into a clean table (rounded floats,
+    thousands separators, aligned columns) is a recurring twenty-minute chore. This does
+    it in one call. It only formats your own profiling output; it computes nothing new.
+
+    Parameters
+    ----------
+    profile : pandas.Series or pandas.DataFrame
+        A profile, e.g. from :func:`system_profile` (Series) or :func:`compare_systems`
+        (DataFrame).
+    fmt : {"markdown", "latex"}, default "markdown"
+        Output dialect. ``"latex"`` delegates to :meth:`pandas.DataFrame.to_latex`.
+    decimals : int, default 2
+        Rounding for floating-point cells (thousands separators are added in Markdown).
+
+    Returns
+    -------
+    str
+        The formatted table, ready to paste into a manuscript.
+
+    See Also
+    --------
+    [`system_profile`][gbfs_toolkit.system_profile] : The single-system profile to format.
+    [`compare_systems`][gbfs_toolkit.compare_systems] : The multi-system table to format.
+
+    Examples
+    --------
+    >>> import pandas as pd
+    >>> prof = pd.Series({"n_stations": 100, "mean_occupancy": 0.4123})
+    >>> out = format_paper_summary(prof)
+    >>> "mean_occupancy" in out and "0.41" in out
+    True
+    """
+    if fmt not in ("markdown", "latex"):
+        raise ValueError(f"fmt must be 'markdown' or 'latex', got {fmt!r}")
+    obj = profile.to_frame(name="value") if isinstance(profile, pd.Series) else profile.copy()
+    obj = obj.round(decimals)
+    if fmt == "latex":
+        return obj.to_latex()
+
+    def _cell(v: object) -> str:
+        if isinstance(v, (int, float, np.floating)) and pd.notna(v):
+            return f"{v:,.{decimals}f}"
+        return str(v)
+
+    header = [str(obj.index.name or "")] + [str(c) for c in obj.columns]
+    lines = [
+        "| " + " | ".join(header) + " |",
+        "| " + " | ".join("---" for _ in header) + " |",
+    ]
+    for idx, row in obj.iterrows():
+        lines.append("| " + " | ".join([str(idx), *[_cell(v) for v in row]]) + " |")
+    return "\n".join(lines)

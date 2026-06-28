@@ -31,6 +31,7 @@ from gbfs_toolkit.analytics.distribution import (
     compare_systems,
     concentration_metrics,
     dynamic_gini_index,
+    format_paper_summary,
     lorenz_curve,
     palma_ratio,
     system_profile,
@@ -60,6 +61,7 @@ from gbfs_toolkit.analytics.frames import (
 )
 from gbfs_toolkit.analytics.resampling import block_bootstrap_ci, effective_sample_size
 from gbfs_toolkit.analytics.service import (
+    boundary_stress,
     capacity_utilization,
     censored_time_ratio,
     docking_pressure,
@@ -92,6 +94,7 @@ from gbfs_toolkit.audit import (
     flag_sentinel_coordinates,
     overcapacity_ratio,
     reclassify_overcapacity,
+    vehicle_id_persistence,
 )
 from gbfs_toolkit.core import models
 from gbfs_toolkit.core.errors import (
@@ -137,14 +140,19 @@ from gbfs_toolkit.io.normalize import (
     to_canonical_vehicles,
 )
 from gbfs_toolkit.io.timeseries import (
+    add_local_time,
     append_to_parquet,
     build_availability_panel,
     calculate_net_flow,
     coverage_report,
     detect_frozen_stations,
+    extract_snapshot_asof,
     flow_balance,
     generate_manifest,
+    insert_explicit_gaps,
+    resample_panel,
     stockout_episodes,
+    to_wide_matrix,
     turnover,
 )
 from gbfs_toolkit.spatial.analytics import (
@@ -155,6 +163,7 @@ from gbfs_toolkit.spatial.analytics import (
     ripley_k,
     spatial_center_of_mass,
     spatial_entropy,
+    spatial_outage_redundancy,
     two_step_fca,
 )
 from gbfs_toolkit.spatial.geofencing import (
@@ -165,6 +174,7 @@ from gbfs_toolkit.spatial.geofencing import (
 from gbfs_toolkit.spatial.geometry import (
     GeoKDTree,
     features_within,
+    filter_by_bbox,
     find_nearest_stations,
     haversine_m,
     stations_near,
@@ -174,7 +184,7 @@ from gbfs_toolkit.spatial.geometry import (
 from gbfs_toolkit.spatial.multimodal import link_transit_stops
 from gbfs_toolkit.spatial.osm import enrich_with_osm, station_surroundings
 
-__version__ = "1.5.0"
+__version__ = "1.6.0"
 
 __all__ = [
     # audit (the flagship)
@@ -316,6 +326,17 @@ __all__ = [
     "block_bootstrap_ci",
     "effective_sample_size",
     "censored_time_ratio",
+    # feed governance, service stress & panel ergonomics (1.6.0)
+    "vehicle_id_persistence",
+    "boundary_stress",
+    "spatial_outage_redundancy",
+    "format_paper_summary",
+    "add_local_time",
+    "resample_panel",
+    "insert_explicit_gaps",
+    "extract_snapshot_asof",
+    "to_wide_matrix",
+    "filter_by_bbox",
     # meta
     "models",
     "RULES",

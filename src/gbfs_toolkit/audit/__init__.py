@@ -6,6 +6,7 @@ import pandas as pd
 
 from gbfs_toolkit.audit.catalogue import audit_catalogue
 from gbfs_toolkit.audit.dynamic import audit_dynamic
+from gbfs_toolkit.audit.governance import vehicle_id_persistence
 from gbfs_toolkit.audit.static import (
     audit_sensitivity,
     audit_static,
@@ -109,5 +110,6 @@ __all__ = [
     "audit_dynamic",
     "audit_frames",
     "drop_flagged",
+    "vehicle_id_persistence",
     "AUDIT_RESULT_COLUMNS",
 ]

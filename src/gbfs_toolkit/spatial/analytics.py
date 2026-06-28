@@ -636,3 +636,108 @@ def two_step_fca(
         access[i] = float((r_j[idx] * _decay_weights(d, max_distance_m, decay)).sum())
 
     return pd.Series(access, index=demand.index, name="accessibility_2sfca")
+
+
+def spatial_outage_redundancy(
+    panel: pd.DataFrame,
+    *,
+    radius_m: float = 300.0,
+    time_col: str = "fetched_at",
+    value_col: str = "num_bikes_available",
+) -> pd.DataFrame:
+    """Separate a station's *local* stockouts from *systemic* neighbourhood failures.
+
+    A station at zero bikes is not a service failure if a station 100 m away is full:
+    the user simply walks. The real rupture is *spatial*. For each station this reports
+    the share of time it is empty (``local_outage_ratio``) and the share of time it is
+    empty **and** every station within ``radius_m`` is also empty
+    (``systemic_outage_ratio``), the fraction of outages that no nearby station can
+    absorb. Purely descriptive: it reads observed stock, it neither predicts demand
+    nor reroutes anyone.
+
+    Parameters
+    ----------
+    panel : pandas.DataFrame
+        Availability panel with ``station_id, lat, lon``, ``time_col`` and ``value_col``
+        (available bikes). Coordinates are taken as each station's first observation.
+    radius_m : float, default 300.0
+        Great-circle walking radius defining a station's substitutes.
+    time_col, value_col : str
+        Timestamp and per-station available-bike column.
+
+    Returns
+    -------
+    pandas.DataFrame
+        ``station_id, local_outage_ratio, systemic_outage_ratio, n_neighbors, n_obs``.
+        A high ``local`` but low ``systemic`` ratio is a well-buffered station; the two
+        being close marks a genuine neighbourhood desert.
+
+    See Also
+    --------
+    [`station_outage_rates`][gbfs_toolkit.station_outage_rates] : The non-spatial stockout rate.
+    [`two_step_fca`][gbfs_toolkit.two_step_fca] : Demand-weighted spatial accessibility.
+    [`coverage_stats`][gbfs_toolkit.coverage_stats] : Areal coverage of the network.
+
+    Examples
+    --------
+    Station ``a`` is always empty, but only counts as a systemic outage when its
+    300 m neighbour ``b`` is empty too:
+
+    >>> import pandas as pd
+    >>> panel = pd.DataFrame({
+    ...     "station_id": ["a", "b", "a", "b"],
+    ...     "lat": [48.8500, 48.8501, 48.8500, 48.8501],
+    ...     "lon": [2.3500, 2.3501, 2.3500, 2.3501],
+    ...     "fetched_at": pd.to_datetime(
+    ...         ["2026-01-01T08:00Z", "2026-01-01T08:00Z",
+    ...          "2026-01-01T09:00Z", "2026-01-01T09:00Z"]),
+    ...     "num_bikes_available": [0, 5, 0, 0],
+    ... })
+    >>> out = spatial_outage_redundancy(panel, radius_m=300).set_index("station_id")
+    >>> float(out.loc["a", "local_outage_ratio"]), float(out.loc["a", "systemic_outage_ratio"])
+    (1.0, 0.5)
+    """
+    require_columns(
+        panel, ["station_id", "lat", "lon", time_col, value_col], what="spatial_outage_redundancy"
+    )
+    coords = panel.groupby("station_id")[["lat", "lon"]].first()
+    stations = coords.index.to_numpy()
+    pos = {s: i for i, s in enumerate(stations)}
+    n_st = len(stations)
+    tree = GeoKDTree(coords["lat"].to_numpy(), coords["lon"].to_numpy())
+    neigh = tree.query_radius(coords["lat"].to_numpy(), coords["lon"].to_numpy(), radius_m=radius_m)
+
+    vals = num(panel, value_col)
+    grid = (
+        pd.DataFrame(
+            {
+                "_s": panel["station_id"].map(pos).to_numpy(),
+                "_t": panel[time_col].to_numpy(),
+                "_v": vals.to_numpy(),
+            }
+        )
+        .pivot_table(index="_t", columns="_s", values="_v", aggfunc="sum")
+        .reindex(columns=range(n_st))
+    )
+    matrix = grid.to_numpy(dtype="float64")  # times x stations
+    empty = matrix == 0  # NaN (unobserved) compares False, so it is excluded below
+
+    rows = []
+    for i, station in enumerate(stations):
+        nb = neigh[i][neigh[i] < n_st]
+        nbsum = np.nansum(matrix[:, nb], axis=1)
+        systemic = empty[:, i] & (nbsum == 0)
+        observed = ~np.isnan(matrix[:, i])
+        n_obs = int(observed.sum())
+        rows.append(
+            {
+                "station_id": station,
+                "local_outage_ratio": float(empty[observed, i].mean()) if n_obs else float("nan"),
+                "systemic_outage_ratio": float(systemic[observed].mean())
+                if n_obs
+                else float("nan"),
+                "n_neighbors": int(nb.size - 1),
+                "n_obs": n_obs,
+            }
+        )
+    return pd.DataFrame(rows)
