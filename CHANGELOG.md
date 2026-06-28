@@ -3,6 +3,22 @@
 All notable changes are documented here ([Keep a Changelog](https://keepachangelog.com),
 [SemVer](https://semver.org)).
 
+## [1.7.2] - pandas 3.0 compatibility and benchmarks
+
+### Fixed
+- **pandas 3.0 compatibility.** `offset_minutes` (behind `service_reliability_index`,
+  `temporal_concentration`, `turnover`, `fleet_turnover_proxy`, ...) raised a spurious
+  "not a fixed-width frequency" error for `"1D"` on pandas 3.0, because
+  `pd.Timedelta(Day())` now raises there. It uses the cross-version `offset.nanos`
+  primitive again, so daily frequencies work on both pandas 2.x and 3.0. This is the bug
+  the new core-only CI job (the only one running on the latest pandas) caught.
+
+### Added
+- A `benchmarks/` suite (`pytest benchmarks/ --benchmark-only`) profiling the heaviest
+  descriptive functions on realistic synthetic panels, run informationally in CI. The
+  core-only CI job now also runs the dependency-free test files, so a pandas-major
+  incompatibility is caught before release.
+
 ## [1.7.1] - supply-chain and hygiene
 
 ### Changed

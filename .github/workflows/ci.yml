@@ -24,7 +24,16 @@ jobs:
       # instead of in a user's environment.
       - run: pip install -e . pytest
       - run: python -c "import gbfs_toolkit as gb; gb.audit_static; gb.format_paper_summary; print(gb.__version__)"
-      - run: pytest -q tests/test_v160.py tests/test_v162_fixes.py
+      # The dev extras (esda/lifelines) cap pandas < 3, so this no-extras install is the
+      # ONLY job that runs on the latest pandas. Run the dependency-free test files here
+      # so a pandas-major incompatibility is caught before release, not by a user.
+      - run: >
+          pytest -q
+          tests/test_v160.py
+          tests/test_v162_fixes.py
+          tests/test_v170_consistency.py
+          tests/test_v170_io_consistency.py
+          tests/test_input_purity.py
 
   test:
     name: Test (${{ matrix.os }}, py${{ matrix.python-version }})

@@ -103,10 +103,13 @@ def offset_minutes(freq: str) -> float:
     Raises a clear ``ValueError`` for non-fixed offsets (``"ME"``, ``"MS"``, ``"W"``,
     ``"Q"``, ``"Y"`` ...), which have no constant length and cannot index a time-of-day.
     """
+    # offset.nanos is the cross-version primitive: it returns nanoseconds for a fixed
+    # offset (including Day) on both pandas 2.x and 3.x, and raises ValueError for a
+    # non-fixed one. pd.Timedelta(offset) cannot be used: it raises for Day on pandas 3.0.
     offset = pd.tseries.frequencies.to_offset(freq)
     try:
-        return pd.Timedelta(offset).total_seconds() / 60.0
-    except (ValueError, TypeError) as exc:
+        return offset.nanos / 6e10
+    except ValueError as exc:
         raise ValueError(
             f"{freq!r} is not a fixed-width frequency; use a constant alias such as "
             "'1h', '30min', '15min' or '1D'."
