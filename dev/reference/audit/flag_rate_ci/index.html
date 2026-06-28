@@ -1070,6 +1070,8 @@
       
         
       
+        
+      
     
     
     
@@ -1357,6 +1359,34 @@
     
   
     models
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../core/require_columns/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    require_columns
   
 
     
@@ -5978,7 +6008,7 @@
     <div class="doc doc-contents first">
 
         <p>System-level flag rate per class with a cluster-bootstrap confidence interval.</p>
-<p>Collapses the per-station verdict of :func:<code>audit_static</code> to per-system
+<p>Collapses the per-station verdict of <a class="autorefs autorefs-internal" title="&lt;code class=&quot;doc-symbol doc-symbol-heading doc-symbol-function&quot;&gt;&lt;/code&gt;            &lt;span class=&quot;doc doc-object-name doc-function-name&quot;&gt;audit_static&lt;/span&gt;" href="../audit_static/#gbfs_toolkit.audit_static"><code>audit_static</code></a> to per-system
 (flagged iff any station of the system is flagged), then resamples <em>systems</em>
 with replacement to bound the rate, accounting for within-system correlation.
 Seeded, so the interval is reproducible.</p>
@@ -6004,7 +6034,7 @@ Seeded, so the interval is reproducible.</p>
             </td>
             <td>
               <div class="doc-md-description">
-                <p>Output of :func:<code>audit_static</code> (must carry <code>system_id</code> and <code>A1 … A7</code>).</p>
+                <p>Output of <a class="autorefs autorefs-internal" title="&lt;code class=&quot;doc-symbol doc-symbol-heading doc-symbol-function&quot;&gt;&lt;/code&gt;            &lt;span class=&quot;doc doc-object-name doc-function-name&quot;&gt;audit_static&lt;/span&gt;" href="../audit_static/#gbfs_toolkit.audit_static"><code>audit_static</code></a> (must carry <code>system_id</code> and <code>A1 … A7</code>).</p>
               </div>
             </td>
             <td>
@@ -6183,7 +6213,7 @@ Seeded, so the interval is reproducible.</p>
 </span><span id="__span-0-670"><a id="__codelineno-0-670" name="__codelineno-0-670"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
 </span><span id="__span-0-671"><a id="__codelineno-0-671" name="__codelineno-0-671"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;System-level flag rate per class with a cluster-bootstrap confidence interval.</span>
 </span><span id="__span-0-672"><a id="__codelineno-0-672" name="__codelineno-0-672"></a>
-</span><span id="__span-0-673"><a id="__codelineno-0-673" name="__codelineno-0-673"></a><span class="sd">    Collapses the per-station verdict of :func:`audit_static` to per-system</span>
+</span><span id="__span-0-673"><a id="__codelineno-0-673" name="__codelineno-0-673"></a><span class="sd">    Collapses the per-station verdict of [`audit_static`][gbfs_toolkit.audit_static] to per-system</span>
 </span><span id="__span-0-674"><a id="__codelineno-0-674" name="__codelineno-0-674"></a><span class="sd">    (flagged iff any station of the system is flagged), then resamples *systems*</span>
 </span><span id="__span-0-675"><a id="__codelineno-0-675" name="__codelineno-0-675"></a><span class="sd">    with replacement to bound the rate, accounting for within-system correlation.</span>
 </span><span id="__span-0-676"><a id="__codelineno-0-676" name="__codelineno-0-676"></a><span class="sd">    Seeded, so the interval is reproducible.</span>
@@ -6191,7 +6221,7 @@ Seeded, so the interval is reproducible.</p>
 </span><span id="__span-0-678"><a id="__codelineno-0-678" name="__codelineno-0-678"></a><span class="sd">    Parameters</span>
 </span><span id="__span-0-679"><a id="__codelineno-0-679" name="__codelineno-0-679"></a><span class="sd">    ----------</span>
 </span><span id="__span-0-680"><a id="__codelineno-0-680" name="__codelineno-0-680"></a><span class="sd">    verdict : pandas.DataFrame</span>
-</span><span id="__span-0-681"><a id="__codelineno-0-681" name="__codelineno-0-681"></a><span class="sd">        Output of :func:`audit_static` (must carry ``system_id`` and ``A1 … A7``).</span>
+</span><span id="__span-0-681"><a id="__codelineno-0-681" name="__codelineno-0-681"></a><span class="sd">        Output of [`audit_static`][gbfs_toolkit.audit_static] (must carry ``system_id`` and ``A1 … A7``).</span>
 </span><span id="__span-0-682"><a id="__codelineno-0-682" name="__codelineno-0-682"></a><span class="sd">    seed : int, default 42</span>
 </span><span id="__span-0-683"><a id="__codelineno-0-683" name="__codelineno-0-683"></a><span class="sd">        Seed for the bootstrap resampling.</span>
 </span><span id="__span-0-684"><a id="__codelineno-0-684" name="__codelineno-0-684"></a><span class="sd">    n_boot : int, default 10000</span>

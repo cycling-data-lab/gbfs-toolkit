@@ -1070,6 +1070,8 @@
       
         
       
+        
+      
     
     
     
@@ -1357,6 +1359,34 @@
     
   
     models
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../core/require_columns/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    require_columns
   
 
     
@@ -5978,7 +6008,7 @@
     <div class="doc doc-contents first">
 
         <p>One-at-a-time threshold sensitivity of the A1–A7 audit.</p>
-<p>For each <code>(parameter, value)</code> in <code>grids</code>, re-run :func:<code>audit_static</code> with
+<p>For each <code>(parameter, value)</code> in <code>grids</code>, re-run <a class="autorefs autorefs-internal" title="&lt;code class=&quot;doc-symbol doc-symbol-heading doc-symbol-function&quot;&gt;&lt;/code&gt;            &lt;span class=&quot;doc doc-object-name doc-function-name&quot;&gt;audit_static&lt;/span&gt;" href="../audit_static/#gbfs_toolkit.audit_static"><code>audit_static</code></a> with
 that single threshold changed (the others held at their baseline) and report,
 per class, the number of flagged systems and the Jaccard overlap of the
 flagged-system set against the baseline audit. Deterministic (no sampling), so
@@ -6005,7 +6035,7 @@ it is the reproducible backbone of a threshold-robustness analysis.</p>
             </td>
             <td>
               <div class="doc-md-description">
-                <p>Canonical station inventory (see :func:<code>audit_static</code>).</p>
+                <p>Canonical station inventory (see <a class="autorefs autorefs-internal" title="&lt;code class=&quot;doc-symbol doc-symbol-heading doc-symbol-function&quot;&gt;&lt;/code&gt;            &lt;span class=&quot;doc doc-object-name doc-function-name&quot;&gt;audit_static&lt;/span&gt;" href="../audit_static/#gbfs_toolkit.audit_static"><code>audit_static</code></a>).</p>
               </div>
             </td>
             <td>
@@ -6021,7 +6051,7 @@ it is the reproducible backbone of a threshold-robustness analysis.</p>
             </td>
             <td>
               <div class="doc-md-description">
-                <p>Maps an :func:<code>audit_static</code> threshold keyword (<code>a4_sigma</code>,
+                <p>Maps an <a class="autorefs autorefs-internal" title="&lt;code class=&quot;doc-symbol doc-symbol-heading doc-symbol-function&quot;&gt;&lt;/code&gt;            &lt;span class=&quot;doc doc-object-name doc-function-name&quot;&gt;audit_static&lt;/span&gt;" href="../audit_static/#gbfs_toolkit.audit_static"><code>audit_static</code></a> threshold keyword (<code>a4_sigma</code>,
 <code>a5_area_km2</code>, <code>a6_tau</code>, <code>a7_tau</code>, <code>n_min</code>) to the values to sweep.</p>
               </div>
             </td>
@@ -6194,7 +6224,7 @@ stability plateau.</p>
 </span><span id="__span-0-596"><a id="__codelineno-0-596" name="__codelineno-0-596"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
 </span><span id="__span-0-597"><a id="__codelineno-0-597" name="__codelineno-0-597"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;One-at-a-time threshold sensitivity of the A1–A7 audit.</span>
 </span><span id="__span-0-598"><a id="__codelineno-0-598" name="__codelineno-0-598"></a>
-</span><span id="__span-0-599"><a id="__codelineno-0-599" name="__codelineno-0-599"></a><span class="sd">    For each ``(parameter, value)`` in ``grids``, re-run :func:`audit_static` with</span>
+</span><span id="__span-0-599"><a id="__codelineno-0-599" name="__codelineno-0-599"></a><span class="sd">    For each ``(parameter, value)`` in ``grids``, re-run [`audit_static`][gbfs_toolkit.audit_static] with</span>
 </span><span id="__span-0-600"><a id="__codelineno-0-600" name="__codelineno-0-600"></a><span class="sd">    that single threshold changed (the others held at their baseline) and report,</span>
 </span><span id="__span-0-601"><a id="__codelineno-0-601" name="__codelineno-0-601"></a><span class="sd">    per class, the number of flagged systems and the Jaccard overlap of the</span>
 </span><span id="__span-0-602"><a id="__codelineno-0-602" name="__codelineno-0-602"></a><span class="sd">    flagged-system set against the baseline audit. Deterministic (no sampling), so</span>
@@ -6203,9 +6233,9 @@ stability plateau.</p>
 </span><span id="__span-0-605"><a id="__codelineno-0-605" name="__codelineno-0-605"></a><span class="sd">    Parameters</span>
 </span><span id="__span-0-606"><a id="__codelineno-0-606" name="__codelineno-0-606"></a><span class="sd">    ----------</span>
 </span><span id="__span-0-607"><a id="__codelineno-0-607" name="__codelineno-0-607"></a><span class="sd">    stations : pandas.DataFrame</span>
-</span><span id="__span-0-608"><a id="__codelineno-0-608" name="__codelineno-0-608"></a><span class="sd">        Canonical station inventory (see :func:`audit_static`).</span>
+</span><span id="__span-0-608"><a id="__codelineno-0-608" name="__codelineno-0-608"></a><span class="sd">        Canonical station inventory (see [`audit_static`][gbfs_toolkit.audit_static]).</span>
 </span><span id="__span-0-609"><a id="__codelineno-0-609" name="__codelineno-0-609"></a><span class="sd">    grids : dict[str, list]</span>
-</span><span id="__span-0-610"><a id="__codelineno-0-610" name="__codelineno-0-610"></a><span class="sd">        Maps an :func:`audit_static` threshold keyword (``a4_sigma``,</span>
+</span><span id="__span-0-610"><a id="__codelineno-0-610" name="__codelineno-0-610"></a><span class="sd">        Maps an [`audit_static`][gbfs_toolkit.audit_static] threshold keyword (``a4_sigma``,</span>
 </span><span id="__span-0-611"><a id="__codelineno-0-611" name="__codelineno-0-611"></a><span class="sd">        ``a5_area_km2``, ``a6_tau``, ``a7_tau``, ``n_min``) to the values to sweep.</span>
 </span><span id="__span-0-612"><a id="__codelineno-0-612" name="__codelineno-0-612"></a><span class="sd">    a7_scope : {&quot;docked&quot;, &quot;all&quot;}, default &quot;docked&quot;</span>
 </span><span id="__span-0-613"><a id="__codelineno-0-613" name="__codelineno-0-613"></a><span class="sd">        Held fixed across the sweep.</span>

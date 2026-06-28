@@ -1070,6 +1070,8 @@
       
         
       
+        
+      
     
     
     
@@ -1357,6 +1359,34 @@
     
   
     models
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../core/require_columns/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    require_columns
   
 
     
@@ -5978,11 +6008,11 @@
     <div class="doc doc-contents first">
 
         <p>Discrete empty/full episodes per station: the service-quality view of a panel.</p>
-<p>Where :func:<code>coverage_report</code> and <code>availability_stats</code> give <em>fractions</em> of time, this
+<p>Where <a class="autorefs autorefs-internal" title="&lt;code class=&quot;doc-symbol doc-symbol-heading doc-symbol-function&quot;&gt;&lt;/code&gt;            &lt;span class=&quot;doc doc-object-name doc-function-name&quot;&gt;coverage_report&lt;/span&gt;" href="../coverage_report/#gbfs_toolkit.coverage_report"><code>coverage_report</code></a> and <code>availability_stats</code> give <em>fractions</em> of time, this
 returns the individual outage <strong>events</strong>: each contiguous run of empty (no bikes) or full
 (no docks) snapshots becomes one row, so you can study how <em>often</em> stockouts happen and how
 <em>long</em> they last. Durations span the observed snapshots in the run (a single-observation
-episode has duration 0); read them together with :func:<code>coverage_report</code>.</p>
+episode has duration 0); read them together with <a class="autorefs autorefs-internal" title="&lt;code class=&quot;doc-symbol doc-symbol-heading doc-symbol-function&quot;&gt;&lt;/code&gt;            &lt;span class=&quot;doc doc-object-name doc-function-name&quot;&gt;coverage_report&lt;/span&gt;" href="../coverage_report/#gbfs_toolkit.coverage_report"><code>coverage_report</code></a>.</p>
 
 
 <p><span class="doc-section-title">Parameters:</span></p>
@@ -6005,7 +6035,7 @@ episode has duration 0); read them together with :func:<code>coverage_report</co
             </td>
             <td>
               <div class="doc-md-description">
-                <p>From :func:<code>build_availability_panel</code> (MultiIndexed) or a flat frame with
+                <p>From <a class="autorefs autorefs-internal" title="&lt;code class=&quot;doc-symbol doc-symbol-heading doc-symbol-function&quot;&gt;&lt;/code&gt;            &lt;span class=&quot;doc doc-object-name doc-function-name&quot;&gt;build_availability_panel&lt;/span&gt;" href="../build_availability_panel/#gbfs_toolkit.build_availability_panel"><code>build_availability_panel</code></a> (MultiIndexed) or a flat frame with
 <code>system_id, station_id, fetched_at, num_bikes_available, num_docks_available</code>.</p>
               </div>
             </td>
@@ -6135,16 +6165,16 @@ n_obs</code> (sorted by station then start).</p>
 </span><span id="__span-0-250"><a id="__codelineno-0-250" name="__codelineno-0-250"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
 </span><span id="__span-0-251"><a id="__codelineno-0-251" name="__codelineno-0-251"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Discrete empty/full episodes per station: the service-quality view of a panel.</span>
 </span><span id="__span-0-252"><a id="__codelineno-0-252" name="__codelineno-0-252"></a>
-</span><span id="__span-0-253"><a id="__codelineno-0-253" name="__codelineno-0-253"></a><span class="sd">    Where :func:`coverage_report` and ``availability_stats`` give *fractions* of time, this</span>
+</span><span id="__span-0-253"><a id="__codelineno-0-253" name="__codelineno-0-253"></a><span class="sd">    Where [`coverage_report`][gbfs_toolkit.coverage_report] and ``availability_stats`` give *fractions* of time, this</span>
 </span><span id="__span-0-254"><a id="__codelineno-0-254" name="__codelineno-0-254"></a><span class="sd">    returns the individual outage **events**: each contiguous run of empty (no bikes) or full</span>
 </span><span id="__span-0-255"><a id="__codelineno-0-255" name="__codelineno-0-255"></a><span class="sd">    (no docks) snapshots becomes one row, so you can study how *often* stockouts happen and how</span>
 </span><span id="__span-0-256"><a id="__codelineno-0-256" name="__codelineno-0-256"></a><span class="sd">    *long* they last. Durations span the observed snapshots in the run (a single-observation</span>
-</span><span id="__span-0-257"><a id="__codelineno-0-257" name="__codelineno-0-257"></a><span class="sd">    episode has duration 0); read them together with :func:`coverage_report`.</span>
+</span><span id="__span-0-257"><a id="__codelineno-0-257" name="__codelineno-0-257"></a><span class="sd">    episode has duration 0); read them together with [`coverage_report`][gbfs_toolkit.coverage_report].</span>
 </span><span id="__span-0-258"><a id="__codelineno-0-258" name="__codelineno-0-258"></a>
 </span><span id="__span-0-259"><a id="__codelineno-0-259" name="__codelineno-0-259"></a><span class="sd">    Parameters</span>
 </span><span id="__span-0-260"><a id="__codelineno-0-260" name="__codelineno-0-260"></a><span class="sd">    ----------</span>
 </span><span id="__span-0-261"><a id="__codelineno-0-261" name="__codelineno-0-261"></a><span class="sd">    panel : pandas.DataFrame</span>
-</span><span id="__span-0-262"><a id="__codelineno-0-262" name="__codelineno-0-262"></a><span class="sd">        From :func:`build_availability_panel` (MultiIndexed) or a flat frame with</span>
+</span><span id="__span-0-262"><a id="__codelineno-0-262" name="__codelineno-0-262"></a><span class="sd">        From [`build_availability_panel`][gbfs_toolkit.build_availability_panel] (MultiIndexed) or a flat frame with</span>
 </span><span id="__span-0-263"><a id="__codelineno-0-263" name="__codelineno-0-263"></a><span class="sd">        ``system_id, station_id, fetched_at, num_bikes_available, num_docks_available``.</span>
 </span><span id="__span-0-264"><a id="__codelineno-0-264" name="__codelineno-0-264"></a><span class="sd">    kinds : tuple of {&quot;empty&quot;, &quot;full&quot;}</span>
 </span><span id="__span-0-265"><a id="__codelineno-0-265" name="__codelineno-0-265"></a><span class="sd">        Which outage types to extract.</span>
@@ -6160,7 +6190,7 @@ n_obs</code> (sorted by station then start).</p>
 </span><span id="__span-0-275"><a id="__codelineno-0-275" name="__codelineno-0-275"></a><span class="sd">    [`detect_frozen_stations`][gbfs_toolkit.detect_frozen_stations] : Find stuck (never-changing) stations.</span>
 </span><span id="__span-0-276"><a id="__codelineno-0-276" name="__codelineno-0-276"></a><span class="sd">    [`build_availability_panel`][gbfs_toolkit.build_availability_panel] : The panel this scans.</span>
 </span><span id="__span-0-277"><a id="__codelineno-0-277" name="__codelineno-0-277"></a><span class="sd">    &quot;&quot;&quot;</span>
-</span><span id="__span-0-278"><a id="__codelineno-0-278" name="__codelineno-0-278"></a>    <span class="n">df</span> <span class="o">=</span> <span class="n">panel</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">panel</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">MultiIndex</span><span class="p">)</span> <span class="k">else</span> <span class="n">panel</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+</span><span id="__span-0-278"><a id="__codelineno-0-278" name="__codelineno-0-278"></a>    <span class="n">df</span> <span class="o">=</span> <span class="n">panel_frame</span><span class="p">(</span><span class="n">panel</span><span class="p">)</span>
 </span><span id="__span-0-279"><a id="__codelineno-0-279" name="__codelineno-0-279"></a>    <span class="n">require_columns</span><span class="p">(</span>
 </span><span id="__span-0-280"><a id="__codelineno-0-280" name="__codelineno-0-280"></a>        <span class="n">df</span><span class="p">,</span>
 </span><span id="__span-0-281"><a id="__codelineno-0-281" name="__codelineno-0-281"></a>        <span class="p">[</span><span class="s2">&quot;system_id&quot;</span><span class="p">,</span> <span class="s2">&quot;station_id&quot;</span><span class="p">,</span> <span class="s2">&quot;fetched_at&quot;</span><span class="p">,</span> <span class="s2">&quot;num_bikes_available&quot;</span><span class="p">,</span> <span class="s2">&quot;num_docks_available&quot;</span><span class="p">],</span>

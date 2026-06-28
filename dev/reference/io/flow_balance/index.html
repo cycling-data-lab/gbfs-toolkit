@@ -1070,6 +1070,8 @@
       
         
       
+        
+      
     
     
     
@@ -1357,6 +1359,34 @@
     
   
     models
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../core/require_columns/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    require_columns
   
 
     
@@ -5978,7 +6008,7 @@
     <div class="doc doc-contents first">
 
         <p>Per-station inflow / outflow split and source↔sink balance.</p>
-<p>Splits :func:<code>calculate_net_flow</code> into bikes gained (<code>inflow</code> = Σ positive Δ) and lost
+<p>Splits <a class="autorefs autorefs-internal" title="&lt;code class=&quot;doc-symbol doc-symbol-heading doc-symbol-function&quot;&gt;&lt;/code&gt;            &lt;span class=&quot;doc doc-object-name doc-function-name&quot;&gt;calculate_net_flow&lt;/span&gt;" href="../calculate_net_flow/#gbfs_toolkit.calculate_net_flow"><code>calculate_net_flow</code></a> into bikes gained (<code>inflow</code> = Σ positive Δ) and lost
 (<code>outflow</code> = Σ |negative Δ|), with <code>balance = outflow / inflow</code>: <code>&gt;1</code> ⇒ a net
 <em>source</em> (more departures than arrivals, a morning residential origin), <code>&lt;1</code> ⇒ a net
 <em>sink</em> (destination). Like turnover, these are lower bounds (intra-interval trips cancel).</p>
@@ -6048,7 +6078,7 @@
 <span class="normal"><a href="#__codelineno-0-395">395</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-365"><a id="__codelineno-0-365" name="__codelineno-0-365"></a><span class="k">def</span><span class="w"> </span><span class="nf">flow_balance</span><span class="p">(</span><span class="n">panel</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
 </span><span id="__span-0-366"><a id="__codelineno-0-366" name="__codelineno-0-366"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Per-station inflow / outflow split and source↔sink balance.</span>
 </span><span id="__span-0-367"><a id="__codelineno-0-367" name="__codelineno-0-367"></a>
-</span><span id="__span-0-368"><a id="__codelineno-0-368" name="__codelineno-0-368"></a><span class="sd">    Splits :func:`calculate_net_flow` into bikes gained (``inflow`` = Σ positive Δ) and lost</span>
+</span><span id="__span-0-368"><a id="__codelineno-0-368" name="__codelineno-0-368"></a><span class="sd">    Splits [`calculate_net_flow`][gbfs_toolkit.calculate_net_flow] into bikes gained (``inflow`` = Σ positive Δ) and lost</span>
 </span><span id="__span-0-369"><a id="__codelineno-0-369" name="__codelineno-0-369"></a><span class="sd">    (``outflow`` = Σ |negative Δ|), with ``balance = outflow / inflow``: ``&gt;1`` ⇒ a net</span>
 </span><span id="__span-0-370"><a id="__codelineno-0-370" name="__codelineno-0-370"></a><span class="sd">    *source* (more departures than arrivals, a morning residential origin), ``&lt;1`` ⇒ a net</span>
 </span><span id="__span-0-371"><a id="__codelineno-0-371" name="__codelineno-0-371"></a><span class="sd">    *sink* (destination). Like turnover, these are lower bounds (intra-interval trips cancel).</span>

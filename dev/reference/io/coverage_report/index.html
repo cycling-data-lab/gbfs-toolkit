@@ -1070,6 +1070,8 @@
       
         
       
+        
+      
     
     
     
@@ -1357,6 +1359,34 @@
     
   
     models
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../core/require_columns/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    require_columns
   
 
     
@@ -6006,7 +6036,7 @@ yield.</p>
             </td>
             <td>
               <div class="doc-md-description">
-                <p>A panel from :func:<code>build_availability_panel</code> (MultiIndexed) or a flat frame with
+                <p>A panel from <a class="autorefs autorefs-internal" title="&lt;code class=&quot;doc-symbol doc-symbol-heading doc-symbol-function&quot;&gt;&lt;/code&gt;            &lt;span class=&quot;doc doc-object-name doc-function-name&quot;&gt;build_availability_panel&lt;/span&gt;" href="../build_availability_panel/#gbfs_toolkit.build_availability_panel"><code>build_availability_panel</code></a> (MultiIndexed) or a flat frame with
 <code>system_id, station_id, fetched_at</code>.</p>
               </div>
             </td>
@@ -6235,7 +6265,7 @@ station_hours_yield_pct</code>.</p>
 </span><span id="__span-0-524"><a id="__codelineno-0-524" name="__codelineno-0-524"></a><span class="sd">    Parameters</span>
 </span><span id="__span-0-525"><a id="__codelineno-0-525" name="__codelineno-0-525"></a><span class="sd">    ----------</span>
 </span><span id="__span-0-526"><a id="__codelineno-0-526" name="__codelineno-0-526"></a><span class="sd">    panel : pandas.DataFrame</span>
-</span><span id="__span-0-527"><a id="__codelineno-0-527" name="__codelineno-0-527"></a><span class="sd">        A panel from :func:`build_availability_panel` (MultiIndexed) or a flat frame with</span>
+</span><span id="__span-0-527"><a id="__codelineno-0-527" name="__codelineno-0-527"></a><span class="sd">        A panel from [`build_availability_panel`][gbfs_toolkit.build_availability_panel] (MultiIndexed) or a flat frame with</span>
 </span><span id="__span-0-528"><a id="__codelineno-0-528" name="__codelineno-0-528"></a><span class="sd">        ``system_id, station_id, fetched_at``.</span>
 </span><span id="__span-0-529"><a id="__codelineno-0-529" name="__codelineno-0-529"></a><span class="sd">    expected_freq : str, default &quot;5min&quot;</span>
 </span><span id="__span-0-530"><a id="__codelineno-0-530" name="__codelineno-0-530"></a><span class="sd">        Your intended polling cadence (a pandas offset alias).</span>
@@ -6270,7 +6300,7 @@ station_hours_yield_pct</code>.</p>
 </span><span id="__span-0-559"><a id="__codelineno-0-559" name="__codelineno-0-559"></a><span class="sd">    &quot;&quot;&quot;</span>
 </span><span id="__span-0-560"><a id="__codelineno-0-560" name="__codelineno-0-560"></a>    <span class="k">if</span> <span class="n">level</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;station&quot;</span><span class="p">,</span> <span class="s2">&quot;system&quot;</span><span class="p">):</span>
 </span><span id="__span-0-561"><a id="__codelineno-0-561" name="__codelineno-0-561"></a>        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;level must be &#39;station&#39; or &#39;system&#39;, got </span><span class="si">{</span><span class="n">level</span><span class="si">!r}</span><span class="s2">&quot;</span><span class="p">)</span>
-</span><span id="__span-0-562"><a id="__codelineno-0-562" name="__codelineno-0-562"></a>    <span class="n">df</span> <span class="o">=</span> <span class="n">panel</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">panel</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">MultiIndex</span><span class="p">)</span> <span class="k">else</span> <span class="n">panel</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+</span><span id="__span-0-562"><a id="__codelineno-0-562" name="__codelineno-0-562"></a>    <span class="n">df</span> <span class="o">=</span> <span class="n">panel_frame</span><span class="p">(</span><span class="n">panel</span><span class="p">)</span>
 </span><span id="__span-0-563"><a id="__codelineno-0-563" name="__codelineno-0-563"></a>    <span class="n">require_columns</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;system_id&quot;</span><span class="p">,</span> <span class="s2">&quot;station_id&quot;</span><span class="p">,</span> <span class="s2">&quot;fetched_at&quot;</span><span class="p">],</span> <span class="n">what</span><span class="o">=</span><span class="s2">&quot;coverage_report&quot;</span><span class="p">)</span>
 </span><span id="__span-0-564"><a id="__codelineno-0-564" name="__codelineno-0-564"></a>    <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[[</span><span class="s2">&quot;system_id&quot;</span><span class="p">,</span> <span class="s2">&quot;station_id&quot;</span><span class="p">,</span> <span class="s2">&quot;fetched_at&quot;</span><span class="p">]]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
 </span><span id="__span-0-565"><a id="__codelineno-0-565" name="__codelineno-0-565"></a>    <span class="n">df</span><span class="p">[</span><span class="s2">&quot;fetched_at&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;fetched_at&quot;</span><span class="p">])</span>

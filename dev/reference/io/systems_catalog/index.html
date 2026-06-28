@@ -1070,6 +1070,8 @@
       
         
       
+        
+      
     
     
     
@@ -1357,6 +1359,34 @@
     
   
     models
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../core/require_columns/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    require_columns
   
 
     
@@ -5980,7 +6010,7 @@
         <p>Load the MobilityData systems catalogue, cached in-process and on disk.</p>
 <p>The parsed catalogue is memoised for the life of the process, so resolving many systems in
 a loop hits the network once. On a successful download it is also cached to
-:data:<code>CACHE_PATH</code>; if a later download fails (network down, registry outage) the disk copy
+<code>CACHE_PATH</code>; if a later download fails (network down, registry outage) the disk copy
 is used with a warning, so a long-running study never breaks on a transient outage. A fresh
 copy is returned each call (safe to mutate).</p>
 
@@ -6005,7 +6035,7 @@ copy is returned each call (safe to mutate).</p>
             </td>
             <td>
               <div class="doc-md-description">
-                <p>URL or local path to a <code>systems.csv</code>. Defaults to :data:<code>DEFAULT_CATALOG_URL</code>
+                <p>URL or local path to a <code>systems.csv</code>. Defaults to <code>DEFAULT_CATALOG_URL</code>
 (requires the optional <code>[fetch]</code> extra).</p>
               </div>
             </td>
@@ -6152,14 +6182,14 @@ copy is returned each call (safe to mutate).</p>
 </span><span id="__span-0-89"><a id="__codelineno-0-89" name="__codelineno-0-89"></a>
 </span><span id="__span-0-90"><a id="__codelineno-0-90" name="__codelineno-0-90"></a><span class="sd">    The parsed catalogue is memoised for the life of the process, so resolving many systems in</span>
 </span><span id="__span-0-91"><a id="__codelineno-0-91" name="__codelineno-0-91"></a><span class="sd">    a loop hits the network once. On a successful download it is also cached to</span>
-</span><span id="__span-0-92"><a id="__codelineno-0-92" name="__codelineno-0-92"></a><span class="sd">    :data:`CACHE_PATH`; if a later download fails (network down, registry outage) the disk copy</span>
+</span><span id="__span-0-92"><a id="__codelineno-0-92" name="__codelineno-0-92"></a><span class="sd">    `CACHE_PATH`; if a later download fails (network down, registry outage) the disk copy</span>
 </span><span id="__span-0-93"><a id="__codelineno-0-93" name="__codelineno-0-93"></a><span class="sd">    is used with a warning, so a long-running study never breaks on a transient outage. A fresh</span>
 </span><span id="__span-0-94"><a id="__codelineno-0-94" name="__codelineno-0-94"></a><span class="sd">    copy is returned each call (safe to mutate).</span>
 </span><span id="__span-0-95"><a id="__codelineno-0-95" name="__codelineno-0-95"></a>
 </span><span id="__span-0-96"><a id="__codelineno-0-96" name="__codelineno-0-96"></a><span class="sd">    Parameters</span>
 </span><span id="__span-0-97"><a id="__codelineno-0-97" name="__codelineno-0-97"></a><span class="sd">    ----------</span>
 </span><span id="__span-0-98"><a id="__codelineno-0-98" name="__codelineno-0-98"></a><span class="sd">    source : str, optional</span>
-</span><span id="__span-0-99"><a id="__codelineno-0-99" name="__codelineno-0-99"></a><span class="sd">        URL or local path to a ``systems.csv``. Defaults to :data:`DEFAULT_CATALOG_URL`</span>
+</span><span id="__span-0-99"><a id="__codelineno-0-99" name="__codelineno-0-99"></a><span class="sd">        URL or local path to a ``systems.csv``. Defaults to `DEFAULT_CATALOG_URL`</span>
 </span><span id="__span-0-100"><a id="__codelineno-0-100" name="__codelineno-0-100"></a><span class="sd">        (requires the optional ``[fetch]`` extra).</span>
 </span><span id="__span-0-101"><a id="__codelineno-0-101" name="__codelineno-0-101"></a><span class="sd">    timeout : int, default 30</span>
 </span><span id="__span-0-102"><a id="__codelineno-0-102" name="__codelineno-0-102"></a><span class="sd">        HTTP timeout in seconds (only when fetching a URL).</span>

@@ -1072,6 +1072,8 @@
       
         
       
+        
+      
     
     
     
@@ -1359,6 +1361,34 @@
     
   
     models
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../require_columns/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    require_columns
   
 
     
@@ -5979,8 +6009,13 @@
 
         <p>Assert a frame still obeys a canonical schema, then return it (for chaining).</p>
 <p>Use after slicing/grouping/mutating a canonical frame (e.g. before appending to the
-Parquet lake) to fail fast with a clear :class:<code>SchemaError</code> instead of corrupting the
-dataset. <code>schema</code> is one of :data:<code>SCHEMAS</code> (<code>"station_status"</code>, <code>"vehicle_status"</code>…).</p>
+Parquet lake) to fail fast with a clear <a class="autorefs autorefs-internal" title="&lt;code class=&quot;doc-symbol doc-symbol-heading doc-symbol-class&quot;&gt;&lt;/code&gt;            &lt;span class=&quot;doc doc-object-name doc-class-name&quot;&gt;SchemaError&lt;/span&gt;" href="../SchemaError/#gbfs_toolkit.SchemaError"><code>SchemaError</code></a> instead of corrupting the
+dataset. <code>schema</code> is one of <a class="autorefs autorefs-internal" title="&lt;code class=&quot;doc-symbol doc-symbol-heading doc-symbol-attribute&quot;&gt;&lt;/code&gt;            &lt;span class=&quot;doc doc-object-name doc-attribute-name&quot;&gt;SCHEMAS&lt;/span&gt;
+
+
+  &lt;span class=&quot;doc doc-labels&quot;&gt;
+      &lt;small class=&quot;doc doc-label doc-label-module-attribute&quot;&gt;&lt;code&gt;module-attribute&lt;/code&gt;&lt;/small&gt;
+  &lt;/span&gt;" href="../SCHEMAS/#gbfs_toolkit.SCHEMAS"><code>SCHEMAS</code></a> (<code>"station_status"</code>, <code>"vehicle_status"</code>…).</p>
 
 
 <details class="see-also" open>
@@ -5991,8 +6026,7 @@ dataset. <code>schema</code> is one of :data:<code>SCHEMAS</code> (<code>"statio
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/gbfs_toolkit/core/models.py</code></summary>
-              <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-288">288</a></span>
-<span class="normal"><a href="#__codelineno-0-289">289</a></span>
+              <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-289">289</a></span>
 <span class="normal"><a href="#__codelineno-0-290">290</a></span>
 <span class="normal"><a href="#__codelineno-0-291">291</a></span>
 <span class="normal"><a href="#__codelineno-0-292">292</a></span>
@@ -6004,20 +6038,21 @@ dataset. <code>schema</code> is one of :data:<code>SCHEMAS</code> (<code>"statio
 <span class="normal"><a href="#__codelineno-0-298">298</a></span>
 <span class="normal"><a href="#__codelineno-0-299">299</a></span>
 <span class="normal"><a href="#__codelineno-0-300">300</a></span>
-<span class="normal"><a href="#__codelineno-0-301">301</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-288"><a id="__codelineno-0-288" name="__codelineno-0-288"></a><span class="k">def</span><span class="w"> </span><span class="nf">validate_schema</span><span class="p">(</span><span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">schema</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
-</span><span id="__span-0-289"><a id="__codelineno-0-289" name="__codelineno-0-289"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Assert a frame still obeys a canonical schema, then return it (for chaining).</span>
-</span><span id="__span-0-290"><a id="__codelineno-0-290" name="__codelineno-0-290"></a>
-</span><span id="__span-0-291"><a id="__codelineno-0-291" name="__codelineno-0-291"></a><span class="sd">    Use after slicing/grouping/mutating a canonical frame (e.g. before appending to the</span>
-</span><span id="__span-0-292"><a id="__codelineno-0-292" name="__codelineno-0-292"></a><span class="sd">    Parquet lake) to fail fast with a clear :class:`SchemaError` instead of corrupting the</span>
-</span><span id="__span-0-293"><a id="__codelineno-0-293" name="__codelineno-0-293"></a><span class="sd">    dataset. ``schema`` is one of :data:`SCHEMAS` (``&quot;station_status&quot;``, ``&quot;vehicle_status&quot;``…).</span>
-</span><span id="__span-0-294"><a id="__codelineno-0-294" name="__codelineno-0-294"></a>
-</span><span id="__span-0-295"><a id="__codelineno-0-295" name="__codelineno-0-295"></a><span class="sd">    See Also</span>
-</span><span id="__span-0-296"><a id="__codelineno-0-296" name="__codelineno-0-296"></a><span class="sd">    --------</span>
-</span><span id="__span-0-297"><a id="__codelineno-0-297" name="__codelineno-0-297"></a><span class="sd">    [`coerce_schema`][gbfs_toolkit.coerce_schema] : Coerce to the schema instead.</span>
-</span><span id="__span-0-298"><a id="__codelineno-0-298" name="__codelineno-0-298"></a><span class="sd">    [`SchemaError`][gbfs_toolkit.SchemaError] : Raised on validation failure.</span>
-</span><span id="__span-0-299"><a id="__codelineno-0-299" name="__codelineno-0-299"></a><span class="sd">    &quot;&quot;&quot;</span>
-</span><span id="__span-0-300"><a id="__codelineno-0-300" name="__codelineno-0-300"></a>    <span class="n">require_columns</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">_schema_columns</span><span class="p">(</span><span class="n">schema</span><span class="p">),</span> <span class="n">what</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;validate_schema(</span><span class="si">{</span><span class="n">schema</span><span class="si">!r}</span><span class="s2">)&quot;</span><span class="p">)</span>
-</span><span id="__span-0-301"><a id="__codelineno-0-301" name="__codelineno-0-301"></a>    <span class="k">return</span> <span class="n">df</span>
+<span class="normal"><a href="#__codelineno-0-301">301</a></span>
+<span class="normal"><a href="#__codelineno-0-302">302</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-289"><a id="__codelineno-0-289" name="__codelineno-0-289"></a><span class="k">def</span><span class="w"> </span><span class="nf">validate_schema</span><span class="p">(</span><span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">schema</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+</span><span id="__span-0-290"><a id="__codelineno-0-290" name="__codelineno-0-290"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Assert a frame still obeys a canonical schema, then return it (for chaining).</span>
+</span><span id="__span-0-291"><a id="__codelineno-0-291" name="__codelineno-0-291"></a>
+</span><span id="__span-0-292"><a id="__codelineno-0-292" name="__codelineno-0-292"></a><span class="sd">    Use after slicing/grouping/mutating a canonical frame (e.g. before appending to the</span>
+</span><span id="__span-0-293"><a id="__codelineno-0-293" name="__codelineno-0-293"></a><span class="sd">    Parquet lake) to fail fast with a clear [`SchemaError`][gbfs_toolkit.SchemaError] instead of corrupting the</span>
+</span><span id="__span-0-294"><a id="__codelineno-0-294" name="__codelineno-0-294"></a><span class="sd">    dataset. ``schema`` is one of [`SCHEMAS`][gbfs_toolkit.SCHEMAS] (``&quot;station_status&quot;``, ``&quot;vehicle_status&quot;``…).</span>
+</span><span id="__span-0-295"><a id="__codelineno-0-295" name="__codelineno-0-295"></a>
+</span><span id="__span-0-296"><a id="__codelineno-0-296" name="__codelineno-0-296"></a><span class="sd">    See Also</span>
+</span><span id="__span-0-297"><a id="__codelineno-0-297" name="__codelineno-0-297"></a><span class="sd">    --------</span>
+</span><span id="__span-0-298"><a id="__codelineno-0-298" name="__codelineno-0-298"></a><span class="sd">    [`coerce_schema`][gbfs_toolkit.coerce_schema] : Coerce to the schema instead.</span>
+</span><span id="__span-0-299"><a id="__codelineno-0-299" name="__codelineno-0-299"></a><span class="sd">    [`SchemaError`][gbfs_toolkit.SchemaError] : Raised on validation failure.</span>
+</span><span id="__span-0-300"><a id="__codelineno-0-300" name="__codelineno-0-300"></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="__span-0-301"><a id="__codelineno-0-301" name="__codelineno-0-301"></a>    <span class="n">require_columns</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">_schema_columns</span><span class="p">(</span><span class="n">schema</span><span class="p">),</span> <span class="n">what</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;validate_schema(</span><span class="si">{</span><span class="n">schema</span><span class="si">!r}</span><span class="s2">)&quot;</span><span class="p">)</span>
+</span><span id="__span-0-302"><a id="__codelineno-0-302" name="__codelineno-0-302"></a>    <span class="k">return</span> <span class="n">df</span>
 </span></code></pre></div></td></tr></table></div>
             </details>
     </div>

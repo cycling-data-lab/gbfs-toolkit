@@ -12,13 +12,13 @@
         <meta name="author" content="Rohan Fossé, Gaël Pallares">
       
       
-        <link rel="canonical" href="https://cycling-data-lab.github.io/gbfs-toolkit/dev/reference/analytics/ebikes/">
+        <link rel="canonical" href="https://cycling-data-lab.github.io/gbfs-toolkit/dev/reference/core/require_columns/">
       
       
-        <link rel="prev" href="../dynamic_gini_index/">
+        <link rel="prev" href="../models/">
       
       
-        <link rel="next" href="../effective_sample_size/">
+        <link rel="next" href="../RULES/">
       
       
         
@@ -29,7 +29,7 @@
     
     
       
-        <title>ebikes - gbfs-toolkit</title>
+        <title>require_columns - gbfs-toolkit</title>
       
     
     
@@ -84,7 +84,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#ebikes" class="md-skip">
+        <a href="#require_columns" class="md-skip">
           Skip to content
         </a>
       
@@ -124,7 +124,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              ebikes
+              require_columns
             
           </span>
         </div>
@@ -1039,6 +1039,8 @@
                 
   
   
+    
+  
   
   
     
@@ -1084,11 +1086,11 @@
       
     
     
-    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_3" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_3" checked>
         
           
           <label class="md-nav__link" for="__nav_4_3" id="__nav_4_3_label" tabindex="">
@@ -1109,7 +1111,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_3_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_3_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_4_3">
             <span class="md-nav__icon md-icon"></span>
             
@@ -1127,7 +1129,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../core/__version__/" class="md-nav__link">
+      <a href="../__version__/" class="md-nav__link">
         
   
   
@@ -1155,7 +1157,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../core/AUDIT_FLAGS/" class="md-nav__link">
+      <a href="../AUDIT_FLAGS/" class="md-nav__link">
         
   
   
@@ -1183,7 +1185,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../core/coerce_schema/" class="md-nav__link">
+      <a href="../coerce_schema/" class="md-nav__link">
         
   
   
@@ -1211,7 +1213,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../core/GBFSDiscoveryError/" class="md-nav__link">
+      <a href="../GBFSDiscoveryError/" class="md-nav__link">
         
   
   
@@ -1239,7 +1241,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../core/GBFSError/" class="md-nav__link">
+      <a href="../GBFSError/" class="md-nav__link">
         
   
   
@@ -1267,7 +1269,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../core/GBFSFetchError/" class="md-nav__link">
+      <a href="../GBFSFetchError/" class="md-nav__link">
         
   
   
@@ -1295,7 +1297,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../core/GBFSNotModified/" class="md-nav__link">
+      <a href="../GBFSNotModified/" class="md-nav__link">
         
   
   
@@ -1323,7 +1325,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../core/GBFSValidationError/" class="md-nav__link">
+      <a href="../GBFSValidationError/" class="md-nav__link">
         
   
   
@@ -1351,7 +1353,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../core/models/" class="md-nav__link">
+      <a href="../models/" class="md-nav__link">
         
   
   
@@ -1376,10 +1378,37 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../../core/require_columns/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    require_columns
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -1395,6 +1424,37 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#gbfs_toolkit.require_columns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;require_columns
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -1407,7 +1467,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../core/RULES/" class="md-nav__link">
+      <a href="../RULES/" class="md-nav__link">
         
   
   
@@ -1435,7 +1495,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../core/SchemaError/" class="md-nav__link">
+      <a href="../SchemaError/" class="md-nav__link">
         
   
   
@@ -1463,7 +1523,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../core/SCHEMAS/" class="md-nav__link">
+      <a href="../SCHEMAS/" class="md-nav__link">
         
   
   
@@ -1491,7 +1551,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../core/validate_schema/" class="md-nav__link">
+      <a href="../validate_schema/" class="md-nav__link">
         
   
   
@@ -2639,8 +2699,6 @@
                 
   
   
-    
-  
   
   
     
@@ -2758,11 +2816,11 @@
       
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_5" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_5" >
         
           
           <label class="md-nav__link" for="__nav_4_5" id="__nav_4_5_label" tabindex="">
@@ -2783,7 +2841,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_5_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_5_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_4_5">
             <span class="md-nav__icon md-icon"></span>
             
@@ -2801,7 +2859,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../aliasing_vulnerability/" class="md-nav__link">
+      <a href="../../analytics/aliasing_vulnerability/" class="md-nav__link">
         
   
   
@@ -2829,7 +2887,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../availability_stats/" class="md-nav__link">
+      <a href="../../analytics/availability_stats/" class="md-nav__link">
         
   
   
@@ -2857,7 +2915,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../availability_synchrony/" class="md-nav__link">
+      <a href="../../analytics/availability_synchrony/" class="md-nav__link">
         
   
   
@@ -2885,7 +2943,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../block_bootstrap_ci/" class="md-nav__link">
+      <a href="../../analytics/block_bootstrap_ci/" class="md-nav__link">
         
   
   
@@ -2913,7 +2971,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../boundary_stress/" class="md-nav__link">
+      <a href="../../analytics/boundary_stress/" class="md-nav__link">
         
   
   
@@ -2941,7 +2999,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../capacity_utilization/" class="md-nav__link">
+      <a href="../../analytics/capacity_utilization/" class="md-nav__link">
         
   
   
@@ -2969,7 +3027,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../censored_time_ratio/" class="md-nav__link">
+      <a href="../../analytics/censored_time_ratio/" class="md-nav__link">
         
   
   
@@ -2997,7 +3055,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../cluster_diurnal_profiles/" class="md-nav__link">
+      <a href="../../analytics/cluster_diurnal_profiles/" class="md-nav__link">
         
   
   
@@ -3025,7 +3083,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../cluster_spatial/" class="md-nav__link">
+      <a href="../../analytics/cluster_spatial/" class="md-nav__link">
         
   
   
@@ -3053,7 +3111,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../cluster_spectral/" class="md-nav__link">
+      <a href="../../analytics/cluster_spectral/" class="md-nav__link">
         
   
   
@@ -3081,7 +3139,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../cohen_kappa/" class="md-nav__link">
+      <a href="../../analytics/cohen_kappa/" class="md-nav__link">
         
   
   
@@ -3109,7 +3167,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../compare_systems/" class="md-nav__link">
+      <a href="../../analytics/compare_systems/" class="md-nav__link">
         
   
   
@@ -3137,7 +3195,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../concentration_metrics/" class="md-nav__link">
+      <a href="../../analytics/concentration_metrics/" class="md-nav__link">
         
   
   
@@ -3165,7 +3223,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../cumulative_imbalance/" class="md-nav__link">
+      <a href="../../analytics/cumulative_imbalance/" class="md-nav__link">
         
   
   
@@ -3193,7 +3251,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../cyclical_time_features/" class="md-nav__link">
+      <a href="../../analytics/cyclical_time_features/" class="md-nav__link">
         
   
   
@@ -3221,7 +3279,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../detect_ghost_vehicles/" class="md-nav__link">
+      <a href="../../analytics/detect_ghost_vehicles/" class="md-nav__link">
         
   
   
@@ -3249,7 +3307,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../diurnal_bimodality/" class="md-nav__link">
+      <a href="../../analytics/diurnal_bimodality/" class="md-nav__link">
         
   
   
@@ -3277,7 +3335,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../diurnal_profiles/" class="md-nav__link">
+      <a href="../../analytics/diurnal_profiles/" class="md-nav__link">
         
   
   
@@ -3305,7 +3363,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../diurnal_summary_stats/" class="md-nav__link">
+      <a href="../../analytics/diurnal_summary_stats/" class="md-nav__link">
         
   
   
@@ -3333,7 +3391,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../docking_pressure/" class="md-nav__link">
+      <a href="../../analytics/docking_pressure/" class="md-nav__link">
         
   
   
@@ -3361,7 +3419,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../dynamic_gini_index/" class="md-nav__link">
+      <a href="../../analytics/dynamic_gini_index/" class="md-nav__link">
         
   
   
@@ -3386,37 +3444,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    ebikes
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../../analytics/ebikes/" class="md-nav__link">
         
   
   
@@ -3432,37 +3463,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#gbfs_toolkit.ebikes" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;ebikes
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -3475,7 +3475,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../effective_sample_size/" class="md-nav__link">
+      <a href="../../analytics/effective_sample_size/" class="md-nav__link">
         
   
   
@@ -3503,7 +3503,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../filter_vehicles/" class="md-nav__link">
+      <a href="../../analytics/filter_vehicles/" class="md-nav__link">
         
   
   
@@ -3531,7 +3531,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../fleet_turnover_proxy/" class="md-nav__link">
+      <a href="../../analytics/fleet_turnover_proxy/" class="md-nav__link">
         
   
   
@@ -3559,7 +3559,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../flow_asymmetry_ratio/" class="md-nav__link">
+      <a href="../../analytics/flow_asymmetry_ratio/" class="md-nav__link">
         
   
   
@@ -3587,7 +3587,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../format_paper_summary/" class="md-nav__link">
+      <a href="../../analytics/format_paper_summary/" class="md-nav__link">
         
   
   
@@ -3615,7 +3615,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../join_availability/" class="md-nav__link">
+      <a href="../../analytics/join_availability/" class="md-nav__link">
         
   
   
@@ -3643,7 +3643,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../join_exogenous_timeseries/" class="md-nav__link">
+      <a href="../../analytics/join_exogenous_timeseries/" class="md-nav__link">
         
   
   
@@ -3671,7 +3671,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../join_pricing/" class="md-nav__link">
+      <a href="../../analytics/join_pricing/" class="md-nav__link">
         
   
   
@@ -3699,7 +3699,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../join_vehicle_types/" class="md-nav__link">
+      <a href="../../analytics/join_vehicle_types/" class="md-nav__link">
         
   
   
@@ -3727,7 +3727,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../krippendorff_alpha/" class="md-nav__link">
+      <a href="../../analytics/krippendorff_alpha/" class="md-nav__link">
         
   
   
@@ -3755,7 +3755,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../label_diurnal_typology/" class="md-nav__link">
+      <a href="../../analytics/label_diurnal_typology/" class="md-nav__link">
         
   
   
@@ -3783,7 +3783,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../lorenz_curve/" class="md-nav__link">
+      <a href="../../analytics/lorenz_curve/" class="md-nav__link">
         
   
   
@@ -3811,7 +3811,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../network_changes/" class="md-nav__link">
+      <a href="../../analytics/network_changes/" class="md-nav__link">
         
   
   
@@ -3839,7 +3839,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../occupancy/" class="md-nav__link">
+      <a href="../../analytics/occupancy/" class="md-nav__link">
         
   
   
@@ -3867,7 +3867,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../outage_survival/" class="md-nav__link">
+      <a href="../../analytics/outage_survival/" class="md-nav__link">
         
   
   
@@ -3895,7 +3895,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../palma_ratio/" class="md-nav__link">
+      <a href="../../analytics/palma_ratio/" class="md-nav__link">
         
   
   
@@ -3923,7 +3923,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../rebalancing_tension/" class="md-nav__link">
+      <a href="../../analytics/rebalancing_tension/" class="md-nav__link">
         
   
   
@@ -3951,7 +3951,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../reconcile_fleet_state/" class="md-nav__link">
+      <a href="../../analytics/reconcile_fleet_state/" class="md-nav__link">
         
   
   
@@ -3979,7 +3979,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../service_reliability_index/" class="md-nav__link">
+      <a href="../../analytics/service_reliability_index/" class="md-nav__link">
         
   
   
@@ -4007,7 +4007,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../station_outage_rates/" class="md-nav__link">
+      <a href="../../analytics/station_outage_rates/" class="md-nav__link">
         
   
   
@@ -4035,7 +4035,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../station_state/" class="md-nav__link">
+      <a href="../../analytics/station_state/" class="md-nav__link">
         
   
   
@@ -4063,7 +4063,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../system_profile/" class="md-nav__link">
+      <a href="../../analytics/system_profile/" class="md-nav__link">
         
   
   
@@ -4091,7 +4091,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../temporal_autocorrelation/" class="md-nav__link">
+      <a href="../../analytics/temporal_autocorrelation/" class="md-nav__link">
         
   
   
@@ -4119,7 +4119,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../temporal_concentration/" class="md-nav__link">
+      <a href="../../analytics/temporal_concentration/" class="md-nav__link">
         
   
   
@@ -4147,7 +4147,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../temporal_context_features/" class="md-nav__link">
+      <a href="../../analytics/temporal_context_features/" class="md-nav__link">
         
   
   
@@ -4175,7 +4175,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../theil_index/" class="md-nav__link">
+      <a href="../../analytics/theil_index/" class="md-nav__link">
         
   
   
@@ -4203,7 +4203,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../vehicle_idle_time/" class="md-nav__link">
+      <a href="../../analytics/vehicle_idle_time/" class="md-nav__link">
         
   
   
@@ -4231,7 +4231,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../wilson_interval/" class="md-nav__link">
+      <a href="../../analytics/wilson_interval/" class="md-nav__link">
         
   
   
@@ -5961,10 +5961,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#gbfs_toolkit.ebikes" class="md-nav__link">
+  <a href="#gbfs_toolkit.require_columns" class="md-nav__link">
     <span class="md-ellipsis">
       
-        <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;ebikes
+        <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;require_columns
       
     </span>
   </a>
@@ -5991,81 +5991,69 @@
   
 
 
-<h1 id="ebikes">ebikes<a class="headerlink" href="#ebikes" title="Permanent link">&para;</a></h1>
+<h1 id="require_columns">require_columns<a class="headerlink" href="#require_columns" title="Permanent link">&para;</a></h1>
 
 
 <div class="doc doc-object doc-function">
 
 
-<h2 id="gbfs_toolkit.ebikes" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <span class="doc doc-object-name doc-function-name">ebikes</span>
+<h2 id="gbfs_toolkit.require_columns" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <span class="doc doc-object-name doc-function-name">require_columns</span>
 
 
-<a href="#gbfs_toolkit.ebikes" class="headerlink" title="Permanent link">&para;</a></h2>
-<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">ebikes</span><span class="p">(</span><span class="n">vehicles</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-external" title="&lt;code&gt;pandas.DataFrame&lt;/code&gt;" href="https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.html#pandas.DataFrame">DataFrame</a></span><span class="p">,</span> <span class="n">vehicle_types</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-external" title="&lt;code&gt;pandas.DataFrame&lt;/code&gt;" href="https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.html#pandas.DataFrame">DataFrame</a></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n"><a class="autorefs autorefs-external" title="&lt;code&gt;pandas.DataFrame&lt;/code&gt;" href="https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.html#pandas.DataFrame">DataFrame</a></span>
+<a href="#gbfs_toolkit.require_columns" class="headerlink" title="Permanent link">&para;</a></h2>
+<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">require_columns</span><span class="p">(</span><span class="n">df</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-external" title="&lt;code&gt;pandas.DataFrame&lt;/code&gt;" href="https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.html#pandas.DataFrame">DataFrame</a></span><span class="p">,</span> <span class="n">columns</span><span class="p">:</span> <span class="n"><span title="list">list</span></span><span class="p">[</span><span class="n"><span title="str">str</span></span><span class="p">],</span> <span class="o">*</span><span class="p">,</span> <span class="n">what</span><span class="p">:</span> <span class="n"><span title="str">str</span></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </span></code></pre></div>
 
     <div class="doc doc-contents first">
 
-        <p>Electric vehicles only (any <code>electric*</code> propulsion), with their type attributes joined.</p>
-
-
-<details class="see-also" open>
-  <summary>See Also</summary>
-  <p><a class="autorefs autorefs-internal" title="&lt;code class=&quot;doc-symbol doc-symbol-heading doc-symbol-function&quot;&gt;&lt;/code&gt;            &lt;span class=&quot;doc doc-object-name doc-function-name&quot;&gt;filter_vehicles&lt;/span&gt;" href="../filter_vehicles/#gbfs_toolkit.filter_vehicles"><code>filter_vehicles</code></a> : The general type/propulsion filter.
-<a class="autorefs autorefs-internal" title="&lt;code class=&quot;doc-symbol doc-symbol-heading doc-symbol-function&quot;&gt;&lt;/code&gt;            &lt;span class=&quot;doc doc-object-name doc-function-name&quot;&gt;join_vehicle_types&lt;/span&gt;" href="../join_vehicle_types/#gbfs_toolkit.join_vehicle_types"><code>join_vehicle_types</code></a> : Resolve the attributes behind the filter.</p>
-</details>
-
-<p><span class="doc-section-title">Examples:</span></p>
-    <div class="language-pycon highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="gp">&gt;&gt;&gt; </span><span class="n">vehicles</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s2">&quot;bike_id&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;v1&quot;</span><span class="p">,</span> <span class="s2">&quot;v2&quot;</span><span class="p">],</span> <span class="s2">&quot;vehicle_type_id&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;t1&quot;</span><span class="p">,</span> <span class="s2">&quot;t2&quot;</span><span class="p">]})</span>
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="gp">&gt;&gt;&gt; </span><span class="n">types</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
-</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="gp">... </span>    <span class="s2">&quot;vehicle_type_id&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;t1&quot;</span><span class="p">,</span> <span class="s2">&quot;t2&quot;</span><span class="p">],</span> <span class="s2">&quot;form_factor&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;bicycle&quot;</span><span class="p">,</span> <span class="s2">&quot;bicycle&quot;</span><span class="p">],</span>
-</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="gp">... </span>    <span class="s2">&quot;propulsion_type&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;human&quot;</span><span class="p">,</span> <span class="s2">&quot;electric_assist&quot;</span><span class="p">]})</span>
-</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="gp">&gt;&gt;&gt; </span><span class="n">ebikes</span><span class="p">(</span><span class="n">vehicles</span><span class="p">,</span> <span class="n">types</span><span class="p">)[</span><span class="s2">&quot;bike_id&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
-</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="go">[&#39;v2&#39;]</span>
-</span></code></pre></div>
+        <p>Raise a didactic <a class="autorefs autorefs-internal" title="&lt;code class=&quot;doc-symbol doc-symbol-heading doc-symbol-class&quot;&gt;&lt;/code&gt;            &lt;span class=&quot;doc doc-object-name doc-class-name&quot;&gt;SchemaError&lt;/span&gt;" href="../SchemaError/#gbfs_toolkit.SchemaError"><code>SchemaError</code></a> if <code>df</code> is missing any of <code>columns</code>.</p>
+<p>The message names the missing columns, lists the columns that were present, gives the
+likely cause, and points to a concrete fix, so the most common user error (passing a
+frame that did not come from a <code>to_canonical_*</code> normaliser) explains itself.</p>
 
 
             <details class="mkdocstrings-source">
-              <summary>Source code in <code>src/gbfs_toolkit/analytics/frames.py</code></summary>
-              <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-131">131</a></span>
-<span class="normal"><a href="#__codelineno-0-132">132</a></span>
-<span class="normal"><a href="#__codelineno-0-133">133</a></span>
-<span class="normal"><a href="#__codelineno-0-134">134</a></span>
-<span class="normal"><a href="#__codelineno-0-135">135</a></span>
-<span class="normal"><a href="#__codelineno-0-136">136</a></span>
-<span class="normal"><a href="#__codelineno-0-137">137</a></span>
-<span class="normal"><a href="#__codelineno-0-138">138</a></span>
-<span class="normal"><a href="#__codelineno-0-139">139</a></span>
-<span class="normal"><a href="#__codelineno-0-140">140</a></span>
-<span class="normal"><a href="#__codelineno-0-141">141</a></span>
-<span class="normal"><a href="#__codelineno-0-142">142</a></span>
-<span class="normal"><a href="#__codelineno-0-143">143</a></span>
-<span class="normal"><a href="#__codelineno-0-144">144</a></span>
-<span class="normal"><a href="#__codelineno-0-145">145</a></span>
-<span class="normal"><a href="#__codelineno-0-146">146</a></span>
-<span class="normal"><a href="#__codelineno-0-147">147</a></span>
-<span class="normal"><a href="#__codelineno-0-148">148</a></span>
-<span class="normal"><a href="#__codelineno-0-149">149</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-131"><a id="__codelineno-0-131" name="__codelineno-0-131"></a><span class="k">def</span><span class="w"> </span><span class="nf">ebikes</span><span class="p">(</span><span class="n">vehicles</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">vehicle_types</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
-</span><span id="__span-0-132"><a id="__codelineno-0-132" name="__codelineno-0-132"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Electric vehicles only (any ``electric*`` propulsion), with their type attributes joined.</span>
-</span><span id="__span-0-133"><a id="__codelineno-0-133" name="__codelineno-0-133"></a>
-</span><span id="__span-0-134"><a id="__codelineno-0-134" name="__codelineno-0-134"></a><span class="sd">    See Also</span>
-</span><span id="__span-0-135"><a id="__codelineno-0-135" name="__codelineno-0-135"></a><span class="sd">    --------</span>
-</span><span id="__span-0-136"><a id="__codelineno-0-136" name="__codelineno-0-136"></a><span class="sd">    [`filter_vehicles`][gbfs_toolkit.filter_vehicles] : The general type/propulsion filter.</span>
-</span><span id="__span-0-137"><a id="__codelineno-0-137" name="__codelineno-0-137"></a><span class="sd">    [`join_vehicle_types`][gbfs_toolkit.join_vehicle_types] : Resolve the attributes behind the filter.</span>
-</span><span id="__span-0-138"><a id="__codelineno-0-138" name="__codelineno-0-138"></a>
-</span><span id="__span-0-139"><a id="__codelineno-0-139" name="__codelineno-0-139"></a><span class="sd">    Examples</span>
-</span><span id="__span-0-140"><a id="__codelineno-0-140" name="__codelineno-0-140"></a><span class="sd">    --------</span>
-</span><span id="__span-0-141"><a id="__codelineno-0-141" name="__codelineno-0-141"></a><span class="sd">    &gt;&gt;&gt; import pandas as pd</span>
-</span><span id="__span-0-142"><a id="__codelineno-0-142" name="__codelineno-0-142"></a><span class="sd">    &gt;&gt;&gt; vehicles = pd.DataFrame({&quot;bike_id&quot;: [&quot;v1&quot;, &quot;v2&quot;], &quot;vehicle_type_id&quot;: [&quot;t1&quot;, &quot;t2&quot;]})</span>
-</span><span id="__span-0-143"><a id="__codelineno-0-143" name="__codelineno-0-143"></a><span class="sd">    &gt;&gt;&gt; types = pd.DataFrame({</span>
-</span><span id="__span-0-144"><a id="__codelineno-0-144" name="__codelineno-0-144"></a><span class="sd">    ...     &quot;vehicle_type_id&quot;: [&quot;t1&quot;, &quot;t2&quot;], &quot;form_factor&quot;: [&quot;bicycle&quot;, &quot;bicycle&quot;],</span>
-</span><span id="__span-0-145"><a id="__codelineno-0-145" name="__codelineno-0-145"></a><span class="sd">    ...     &quot;propulsion_type&quot;: [&quot;human&quot;, &quot;electric_assist&quot;]})</span>
-</span><span id="__span-0-146"><a id="__codelineno-0-146" name="__codelineno-0-146"></a><span class="sd">    &gt;&gt;&gt; ebikes(vehicles, types)[&quot;bike_id&quot;].tolist()</span>
-</span><span id="__span-0-147"><a id="__codelineno-0-147" name="__codelineno-0-147"></a><span class="sd">    [&#39;v2&#39;]</span>
-</span><span id="__span-0-148"><a id="__codelineno-0-148" name="__codelineno-0-148"></a><span class="sd">    &quot;&quot;&quot;</span>
-</span><span id="__span-0-149"><a id="__codelineno-0-149" name="__codelineno-0-149"></a>    <span class="k">return</span> <span class="n">filter_vehicles</span><span class="p">(</span><span class="n">vehicles</span><span class="p">,</span> <span class="n">vehicle_types</span><span class="p">,</span> <span class="n">propulsion</span><span class="o">=</span><span class="s2">&quot;electric&quot;</span><span class="p">)</span>
+              <summary>Source code in <code>src/gbfs_toolkit/core/models.py</code></summary>
+              <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-223">223</a></span>
+<span class="normal"><a href="#__codelineno-0-224">224</a></span>
+<span class="normal"><a href="#__codelineno-0-225">225</a></span>
+<span class="normal"><a href="#__codelineno-0-226">226</a></span>
+<span class="normal"><a href="#__codelineno-0-227">227</a></span>
+<span class="normal"><a href="#__codelineno-0-228">228</a></span>
+<span class="normal"><a href="#__codelineno-0-229">229</a></span>
+<span class="normal"><a href="#__codelineno-0-230">230</a></span>
+<span class="normal"><a href="#__codelineno-0-231">231</a></span>
+<span class="normal"><a href="#__codelineno-0-232">232</a></span>
+<span class="normal"><a href="#__codelineno-0-233">233</a></span>
+<span class="normal"><a href="#__codelineno-0-234">234</a></span>
+<span class="normal"><a href="#__codelineno-0-235">235</a></span>
+<span class="normal"><a href="#__codelineno-0-236">236</a></span>
+<span class="normal"><a href="#__codelineno-0-237">237</a></span>
+<span class="normal"><a href="#__codelineno-0-238">238</a></span>
+<span class="normal"><a href="#__codelineno-0-239">239</a></span>
+<span class="normal"><a href="#__codelineno-0-240">240</a></span>
+<span class="normal"><a href="#__codelineno-0-241">241</a></span>
+<span class="normal"><a href="#__codelineno-0-242">242</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-223"><a id="__codelineno-0-223" name="__codelineno-0-223"></a><span class="k">def</span><span class="w"> </span><span class="nf">require_columns</span><span class="p">(</span><span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">columns</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="o">*</span><span class="p">,</span> <span class="n">what</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="__span-0-224"><a id="__codelineno-0-224" name="__codelineno-0-224"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Raise a didactic [`SchemaError`][gbfs_toolkit.SchemaError] if ``df`` is missing any of ``columns``.</span>
+</span><span id="__span-0-225"><a id="__codelineno-0-225" name="__codelineno-0-225"></a>
+</span><span id="__span-0-226"><a id="__codelineno-0-226" name="__codelineno-0-226"></a><span class="sd">    The message names the missing columns, lists the columns that were present, gives the</span>
+</span><span id="__span-0-227"><a id="__codelineno-0-227" name="__codelineno-0-227"></a><span class="sd">    likely cause, and points to a concrete fix, so the most common user error (passing a</span>
+</span><span id="__span-0-228"><a id="__codelineno-0-228" name="__codelineno-0-228"></a><span class="sd">    frame that did not come from a ``to_canonical_*`` normaliser) explains itself.</span>
+</span><span id="__span-0-229"><a id="__codelineno-0-229" name="__codelineno-0-229"></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="__span-0-230"><a id="__codelineno-0-230" name="__codelineno-0-230"></a>    <span class="n">missing</span> <span class="o">=</span> <span class="p">[</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">columns</span> <span class="k">if</span> <span class="n">c</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">]</span>
+</span><span id="__span-0-231"><a id="__codelineno-0-231" name="__codelineno-0-231"></a>    <span class="k">if</span> <span class="ow">not</span> <span class="n">missing</span><span class="p">:</span>
+</span><span id="__span-0-232"><a id="__codelineno-0-232" name="__codelineno-0-232"></a>        <span class="k">return</span>
+</span><span id="__span-0-233"><a id="__codelineno-0-233" name="__codelineno-0-233"></a>    <span class="n">present</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
+</span><span id="__span-0-234"><a id="__codelineno-0-234" name="__codelineno-0-234"></a>    <span class="n">message</span> <span class="o">=</span> <span class="p">(</span>
+</span><span id="__span-0-235"><a id="__codelineno-0-235" name="__codelineno-0-235"></a>        <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">what</span><span class="si">}</span><span class="s2">: missing required column(s) </span><span class="si">{</span><span class="n">missing</span><span class="si">}</span><span class="s2">.</span><span class="se">\n</span><span class="s2">&quot;</span>
+</span><span id="__span-0-236"><a id="__codelineno-0-236" name="__codelineno-0-236"></a>        <span class="sa">f</span><span class="s2">&quot;  present columns: </span><span class="si">{</span><span class="n">present</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
+</span><span id="__span-0-237"><a id="__codelineno-0-237" name="__codelineno-0-237"></a>        <span class="sa">f</span><span class="s2">&quot;  likely cause: this frame did not come from a to_canonical_* normaliser, or an &quot;</span>
+</span><span id="__span-0-238"><a id="__codelineno-0-238" name="__codelineno-0-238"></a>        <span class="sa">f</span><span class="s2">&quot;optional GBFS field is absent for this system.</span><span class="se">\n</span><span class="s2">&quot;</span>
+</span><span id="__span-0-239"><a id="__codelineno-0-239" name="__codelineno-0-239"></a>        <span class="sa">f</span><span class="s2">&quot;  fix: normalise the raw feed with the matching to_canonical_* function, or add the &quot;</span>
+</span><span id="__span-0-240"><a id="__codelineno-0-240" name="__codelineno-0-240"></a>        <span class="sa">f</span><span class="s2">&quot;column(s) before calling. Canonical schema: </span><span class="si">{</span><span class="n">_DATA_MODEL_URL</span><span class="si">}</span><span class="s2">&quot;</span>
+</span><span id="__span-0-241"><a id="__codelineno-0-241" name="__codelineno-0-241"></a>    <span class="p">)</span>
+</span><span id="__span-0-242"><a id="__codelineno-0-242" name="__codelineno-0-242"></a>    <span class="k">raise</span> <span class="n">SchemaError</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="n">missing</span><span class="o">=</span><span class="n">missing</span><span class="p">,</span> <span class="n">present</span><span class="o">=</span><span class="n">present</span><span class="p">,</span> <span class="n">what</span><span class="o">=</span><span class="n">what</span><span class="p">)</span>
 </span></code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -6106,7 +6094,7 @@
       <nav class="md-footer__inner md-grid" aria-label="Footer" >
         
           
-          <a href="../dynamic_gini_index/" class="md-footer__link md-footer__link--prev" aria-label="Previous: dynamic_gini_index">
+          <a href="../models/" class="md-footer__link md-footer__link--prev" aria-label="Previous: models">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
@@ -6116,20 +6104,20 @@
                 Previous
               </span>
               <div class="md-ellipsis">
-                dynamic_gini_index
+                models
               </div>
             </div>
           </a>
         
         
           
-          <a href="../effective_sample_size/" class="md-footer__link md-footer__link--next" aria-label="Next: effective_sample_size">
+          <a href="../RULES/" class="md-footer__link md-footer__link--next" aria-label="Next: RULES">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                effective_sample_size
+                RULES
               </div>
             </div>
             <div class="md-footer__button md-icon">

@@ -1070,6 +1070,8 @@
       
         
       
+        
+      
     
     
     
@@ -1357,6 +1359,34 @@
     
   
     models
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../core/require_columns/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    require_columns
   
 
     
@@ -5992,7 +6022,7 @@ explicitly-stated heuristic downstream rather than trusting a built-in label.</p
    rented and returned to the same station between snapshots yields Δ=0. Treat the summed
    absolute flow as a <strong>lower bound</strong> on true activity, and poll well below the timescale
    of the dynamics you want to measure.</p>
-<p>Accepts a panel from :func:<code>build_availability_panel</code> (MultiIndexed) or a flat frame;
+<p>Accepts a panel from <a class="autorefs autorefs-internal" title="&lt;code class=&quot;doc-symbol doc-symbol-heading doc-symbol-function&quot;&gt;&lt;/code&gt;            &lt;span class=&quot;doc doc-object-name doc-function-name&quot;&gt;build_availability_panel&lt;/span&gt;" href="../build_availability_panel/#gbfs_toolkit.build_availability_panel"><code>build_availability_panel</code></a> (MultiIndexed) or a flat frame;
 returns a flat frame with <code>system_id, station_id, fetched_at</code> columns.</p>
 
 
@@ -6067,7 +6097,7 @@ returns a flat frame with <code>system_id, station_id, fetched_at</code> columns
 </span><span id="__span-0-209"><a id="__codelineno-0-209" name="__codelineno-0-209"></a><span class="sd">       absolute flow as a **lower bound** on true activity, and poll well below the timescale</span>
 </span><span id="__span-0-210"><a id="__codelineno-0-210" name="__codelineno-0-210"></a><span class="sd">       of the dynamics you want to measure.</span>
 </span><span id="__span-0-211"><a id="__codelineno-0-211" name="__codelineno-0-211"></a>
-</span><span id="__span-0-212"><a id="__codelineno-0-212" name="__codelineno-0-212"></a><span class="sd">    Accepts a panel from :func:`build_availability_panel` (MultiIndexed) or a flat frame;</span>
+</span><span id="__span-0-212"><a id="__codelineno-0-212" name="__codelineno-0-212"></a><span class="sd">    Accepts a panel from [`build_availability_panel`][gbfs_toolkit.build_availability_panel] (MultiIndexed) or a flat frame;</span>
 </span><span id="__span-0-213"><a id="__codelineno-0-213" name="__codelineno-0-213"></a><span class="sd">    returns a flat frame with ``system_id, station_id, fetched_at`` columns.</span>
 </span><span id="__span-0-214"><a id="__codelineno-0-214" name="__codelineno-0-214"></a>
 </span><span id="__span-0-215"><a id="__codelineno-0-215" name="__codelineno-0-215"></a><span class="sd">    See Also</span>
@@ -6076,7 +6106,7 @@ returns a flat frame with <code>system_id, station_id, fetched_at</code> columns
 </span><span id="__span-0-218"><a id="__codelineno-0-218" name="__codelineno-0-218"></a><span class="sd">    [`turnover`][gbfs_toolkit.turnover] : Aggregate absolute flow.</span>
 </span><span id="__span-0-219"><a id="__codelineno-0-219" name="__codelineno-0-219"></a><span class="sd">    [`flow_balance`][gbfs_toolkit.flow_balance] : Net source/sink balance.</span>
 </span><span id="__span-0-220"><a id="__codelineno-0-220" name="__codelineno-0-220"></a><span class="sd">    &quot;&quot;&quot;</span>
-</span><span id="__span-0-221"><a id="__codelineno-0-221" name="__codelineno-0-221"></a>    <span class="n">df</span> <span class="o">=</span> <span class="n">panel</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">panel</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">MultiIndex</span><span class="p">)</span> <span class="k">else</span> <span class="n">panel</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+</span><span id="__span-0-221"><a id="__codelineno-0-221" name="__codelineno-0-221"></a>    <span class="n">df</span> <span class="o">=</span> <span class="n">panel_frame</span><span class="p">(</span><span class="n">panel</span><span class="p">)</span>
 </span><span id="__span-0-222"><a id="__codelineno-0-222" name="__codelineno-0-222"></a>    <span class="n">require_columns</span><span class="p">(</span>
 </span><span id="__span-0-223"><a id="__codelineno-0-223" name="__codelineno-0-223"></a>        <span class="n">df</span><span class="p">,</span>
 </span><span id="__span-0-224"><a id="__codelineno-0-224" name="__codelineno-0-224"></a>        <span class="p">[</span><span class="s2">&quot;system_id&quot;</span><span class="p">,</span> <span class="s2">&quot;station_id&quot;</span><span class="p">,</span> <span class="s2">&quot;fetched_at&quot;</span><span class="p">,</span> <span class="s2">&quot;num_bikes_available&quot;</span><span class="p">],</span>

@@ -1070,6 +1070,8 @@
       
         
       
+        
+      
     
     
     
@@ -1357,6 +1359,34 @@
     
   
     models
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../core/require_columns/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    require_columns
   
 
     
@@ -5972,15 +6002,15 @@
 
 
 <a href="#gbfs_toolkit.reclassify_overcapacity" class="headerlink" title="Permanent link">&para;</a></h2>
-<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">reclassify_overcapacity</span><span class="p">(</span><span class="n">info</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-external" title="&lt;code&gt;pandas.DataFrame&lt;/code&gt;" href="https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.html#pandas.DataFrame">DataFrame</a></span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">a3_ratio</span><span class="p">:</span> <span class="n"><span title="float">float</span></span> <span class="o">=</span> <span class="n"><span title="gbfs_toolkit.audit.static.A3_RATIO_THRESHOLD">A3_RATIO_THRESHOLD</span></span><span class="p">,</span> <span class="n">n_min</span><span class="p">:</span> <span class="n"><span title="int">int</span></span> <span class="o">=</span> <span class="mi">20</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n"><a class="autorefs autorefs-external" title="&lt;code&gt;pandas.DataFrame&lt;/code&gt;" href="https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.html#pandas.DataFrame">DataFrame</a></span>
+<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">reclassify_overcapacity</span><span class="p">(</span><span class="n">info</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-external" title="&lt;code&gt;pandas.DataFrame&lt;/code&gt;" href="https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.html#pandas.DataFrame">DataFrame</a></span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">a3_ratio</span><span class="p">:</span> <span class="n"><span title="float">float</span></span> <span class="o">=</span> <span class="n"><span title="gbfs_toolkit.core.models.A3_RATIO_THRESHOLD">A3_RATIO_THRESHOLD</span></span><span class="p">,</span> <span class="n">n_min</span><span class="p">:</span> <span class="n"><span title="int">int</span></span> <span class="o">=</span> <span class="mi">20</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n"><a class="autorefs autorefs-external" title="&lt;code&gt;pandas.DataFrame&lt;/code&gt;" href="https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.html#pandas.DataFrame">DataFrame</a></span>
 </span></code></pre></div>
 
     <div class="doc doc-contents first">
 
         <p>Relabel over-capacity systems as <code>free_floating</code> (the audit protocol's S3 step).</p>
 <p>Sets <code>station_type = "free_floating"</code> on every station of a system whose
-:func:<code>overcapacity_ratio</code> exceeds <code>a3_ratio</code>, so a subsequent
-:func:<code>audit_static</code> flags A3 by the over-capacity mechanism rather than by
+<a class="autorefs autorefs-internal" title="&lt;code class=&quot;doc-symbol doc-symbol-heading doc-symbol-function&quot;&gt;&lt;/code&gt;            &lt;span class=&quot;doc doc-object-name doc-function-name&quot;&gt;overcapacity_ratio&lt;/span&gt;" href="../overcapacity_ratio/#gbfs_toolkit.overcapacity_ratio"><code>overcapacity_ratio</code></a> exceeds <code>a3_ratio</code>, so a subsequent
+<a class="autorefs autorefs-internal" title="&lt;code class=&quot;doc-symbol doc-symbol-heading doc-symbol-function&quot;&gt;&lt;/code&gt;            &lt;span class=&quot;doc doc-object-name doc-function-name&quot;&gt;audit_static&lt;/span&gt;" href="../audit_static/#gbfs_toolkit.audit_static"><code>audit_static</code></a> flags A3 by the over-capacity mechanism rather than by
 the type a feed happens to declare. Returns a copy; the input is unchanged.</p>
 
 
@@ -6042,8 +6072,8 @@ the type a feed happens to declare. Returns a copy; the input is unchanged.</p>
 </span><span id="__span-0-107"><a id="__codelineno-0-107" name="__codelineno-0-107"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Relabel over-capacity systems as ``free_floating`` (the audit protocol&#39;s S3 step).</span>
 </span><span id="__span-0-108"><a id="__codelineno-0-108" name="__codelineno-0-108"></a>
 </span><span id="__span-0-109"><a id="__codelineno-0-109" name="__codelineno-0-109"></a><span class="sd">    Sets ``station_type = &quot;free_floating&quot;`` on every station of a system whose</span>
-</span><span id="__span-0-110"><a id="__codelineno-0-110" name="__codelineno-0-110"></a><span class="sd">    :func:`overcapacity_ratio` exceeds ``a3_ratio``, so a subsequent</span>
-</span><span id="__span-0-111"><a id="__codelineno-0-111" name="__codelineno-0-111"></a><span class="sd">    :func:`audit_static` flags A3 by the over-capacity mechanism rather than by</span>
+</span><span id="__span-0-110"><a id="__codelineno-0-110" name="__codelineno-0-110"></a><span class="sd">    [`overcapacity_ratio`][gbfs_toolkit.overcapacity_ratio] exceeds ``a3_ratio``, so a subsequent</span>
+</span><span id="__span-0-111"><a id="__codelineno-0-111" name="__codelineno-0-111"></a><span class="sd">    [`audit_static`][gbfs_toolkit.audit_static] flags A3 by the over-capacity mechanism rather than by</span>
 </span><span id="__span-0-112"><a id="__codelineno-0-112" name="__codelineno-0-112"></a><span class="sd">    the type a feed happens to declare. Returns a copy; the input is unchanged.</span>
 </span><span id="__span-0-113"><a id="__codelineno-0-113" name="__codelineno-0-113"></a>
 </span><span id="__span-0-114"><a id="__codelineno-0-114" name="__codelineno-0-114"></a><span class="sd">    See Also</span>

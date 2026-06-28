@@ -706,10 +706,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#workflow" class="md-nav__link">
+  <a href="#core-workflow" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Workflow
+        Core workflow
       
     </span>
   </a>
@@ -1139,6 +1139,8 @@
       
         
       
+        
+      
     
     
     
@@ -1423,6 +1425,34 @@
     
   
     models
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reference/core/require_columns/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    require_columns
   
 
     
@@ -5922,10 +5952,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#workflow" class="md-nav__link">
+  <a href="#core-workflow" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Workflow
+        Core workflow
       
     </span>
   </a>
@@ -5964,11 +5994,13 @@
 
 
 <h1 id="examples">Examples<a class="headerlink" href="#examples" title="Permanent link">&para;</a></h1>
-<p>Four worked, end-to-end scripts, in the order you would actually meet them: audit an unknown
-feed, collect snapshots into a data lake, analyse the resulting history, then measure network
-equity. Each has its own page with a step-by-step walkthrough, the command to run it, and the full
-source.</p>
-<h2 id="workflow">Workflow<a class="headerlink" href="#workflow" title="Permanent link">&para;</a></h2>
+<p>A set of worked, end-to-end scripts. The four core stages below are the path you would actually
+meet them in: audit an unknown feed, collect snapshots into a data lake, analyse the resulting
+history, then measure network equity. Further pages build on that base (robustness and equity,
+free-floating and ghost fleets, service reliability, transit and weather context, macro-scale
+comparison). Each has its own page with a step-by-step walkthrough, the command to run it, and the
+full source.</p>
+<h2 id="core-workflow">Core workflow<a class="headerlink" href="#core-workflow" title="Permanent link">&para;</a></h2>
 <pre class="mermaid"><code>flowchart LR
     A["1. Audit a feed"] --&gt;|trustworthy stations| B["2. Collect a snapshot"]
     B --&gt;|repeat every few minutes| B
@@ -5976,7 +6008,7 @@ source.</p>
     A --&gt; D["4. Equity and coverage"]</code></pre>
 <p>Auditing comes first, because every later step should run on the trustworthy subset of stations.
 Collection is repeated on a schedule to build a panel; analysis and the equity report then read
-from what was collected.</p>
+from what was collected. The remaining how-to pages extend this core path.</p>
 <table>
 <thead>
 <tr>
