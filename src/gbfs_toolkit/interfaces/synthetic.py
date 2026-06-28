@@ -23,6 +23,7 @@ for origin-destination identifiability and rebalancing studies.
 
 This is fabricated data. Never present it as an observed feed.
 """
+
 from __future__ import annotations
 
 import numpy as np
@@ -38,7 +39,7 @@ _DEFAULT_MIX = (0.45, 0.30, 0.08, 0.17)
 
 def _bump(h: np.ndarray, mu: float, s: float) -> np.ndarray:
     """Gaussian bump in hour-of-day."""
-    return np.exp(-((h - mu) ** 2) / (2 * s ** 2))
+    return np.exp(-((h - mu) ** 2) / (2 * s**2))
 
 
 def _pairwise_haversine_km(lat, lon):
@@ -51,8 +52,23 @@ def _pairwise_haversine_km(lat, lon):
     return 6371.0 * 2 * np.arcsin(np.sqrt(np.clip(a, 0, 1)))
 
 
-def _od_occupancy(lat, lon, capacity, centrality, use_idx, activity, hod, steps, rng, *,
-                  trip_rate, dist_scale_km, rebalancing, rebalancing_hour, rebalancing_strength):
+def _od_occupancy(
+    lat,
+    lon,
+    capacity,
+    centrality,
+    use_idx,
+    activity,
+    hod,
+    steps,
+    rng,
+    *,
+    trip_rate,
+    dist_scale_km,
+    rebalancing,
+    rebalancing_hour,
+    rebalancing_strength,
+):
     """Mass-conserving occupancy from a gravity origin-destination flow of coupled queues.
 
     Bikes leave a station as a Poisson draw and arrive at destinations drawn from a
@@ -64,24 +80,24 @@ def _od_occupancy(lat, lon, capacity, centrality, use_idx, activity, hod, steps,
     n = len(lat)
     transit = use_idx == _LAND_USES.index("transit")
     D = _pairwise_haversine_km(lat, lon)
-    attract = 0.5 + centrality                                  # central stations pull harder
-    P0 = attract[None, :] * np.exp(-(D / dist_scale_km) ** 2)
+    attract = 0.5 + centrality  # central stations pull harder
+    P0 = attract[None, :] * np.exp(-((D / dist_scale_km) ** 2))
     np.fill_diagonal(P0, 0.0)
     job = centrality.copy()
     job[transit] += 0.5
     res = 1.0 - centrality
-    morning = np.exp(-((hod - 8.0) ** 2) / (2 * 2.5 ** 2))
-    evening = np.exp(-((hod - 18.0) ** 2) / (2 * 2.5 ** 2))
+    morning = np.exp(-((hod - 8.0) ** 2) / (2 * 2.5**2))
+    evening = np.exp(-((hod - 18.0) ** 2) / (2 * 2.5**2))
     morning /= morning.max()
     evening /= evening.max()
 
     bikes = 0.5 * capacity
     occ_m = np.empty((steps, n))
     for t in range(steps):
-        pull = morning[t] * job + evening[t] * res + 0.1        # where bikes want to go now
+        pull = morning[t] * job + evening[t] * res + 0.1  # where bikes want to go now
         Pt = P0 * pull[None, :]
         Pt /= Pt.sum(axis=1, keepdims=True) + 1e-12
-        out_pressure = morning[t] * res + evening[t] * job + 0.05   # who emits now
+        out_pressure = morning[t] * res + evening[t] * job + 0.05  # who emits now
         lam = trip_rate * activity * out_pressure
         dep = np.minimum(rng.poisson(np.maximum(lam, 0)), bikes)
         bikes = np.clip(bikes - dep + Pt.T @ dep, 0.0, capacity)
@@ -93,9 +109,9 @@ def _od_occupancy(lat, lon, capacity, centrality, use_idx, activity, hod, steps,
 
 def _land_use_profiles(hod: np.ndarray) -> dict[str, np.ndarray]:
     """Diurnal occupancy deviation in roughly [-1, 1] for each land use."""
-    resid = np.cos(2 * np.pi * (hod - 3) / 24)                  # full at night, drains by day
-    work = np.cos(2 * np.pi * (hod - 13) / 24)                  # fills through the workday
-    transit = _bump(hod, 8, 1.0) - _bump(hod, 18, 1.0)         # sharp two-sided commuter spikes
+    resid = np.cos(2 * np.pi * (hod - 3) / 24)  # full at night, drains by day
+    work = np.cos(2 * np.pi * (hod - 13) / 24)  # fills through the workday
+    transit = _bump(hod, 8, 1.0) - _bump(hod, 18, 1.0)  # sharp two-sided commuter spikes
     transit = transit / (np.abs(transit).max() + 1e-9)
     leisure = _bump(hod, 14, 2.5)
     leisure = leisure / (leisure.max() + 1e-9)
@@ -222,7 +238,7 @@ def simulate_city(
     inherit = rng.random(n_stations) < 0.7
     rand_use = rng.choice(len(_LAND_USES), size=n_stations, p=mix)
     use_idx = np.where(inherit, cluster_use[member], rand_use)
-    n_extra_hubs = max(1, int(round(0.03 * n_stations)))        # high-frequency spikes anywhere
+    n_extra_hubs = max(1, int(round(0.03 * n_stations)))  # high-frequency spikes anywhere
     use_idx[rng.choice(n_stations, size=n_extra_hubs, replace=False)] = _LAND_USES.index("transit")
     use_name = np.array(_LAND_USES)[use_idx]
 
@@ -236,45 +252,55 @@ def simulate_city(
     # size distribution is heavy-tailed (Zipf: many small stations, few hubs). Sample a discrete
     # catalogue a priori; transit hubs draw from the large end.
     _CATALOG = np.array([10, 15, 20, 25, 30, 35, 40, 50, 60, 80])
-    bulk = _CATALOG[(_CATALOG >= lo) & (_CATALOG <= hi)]
+    bulk = _CATALOG[(lo <= _CATALOG) & (hi >= _CATALOG)]
     if bulk.size < 2:
         bulk = np.array([lo, hi])
     w = 1.0 / np.arange(1, bulk.size + 1) ** 1.2
     capacity = rng.choice(bulk, size=n_stations, p=w / w.sum()).astype(int)
     is_transit = use_idx == _LAND_USES.index("transit")
-    big = _CATALOG[_CATALOG >= hi]
+    big = _CATALOG[hi <= _CATALOG]
     if big.size and is_transit.any():
         capacity[is_transit] = rng.choice(big, size=int(is_transit.sum()))
 
     activity = np.exp(rng.normal(0, activity_tail, n_stations))
     activity /= activity.mean()
-    type_offset = np.array([0.10, -0.10, 0.0, 0.0])             # residential rests fuller
-    base_occ = np.clip(base_occupancy + type_offset[use_idx] - elevation * z
-                       + rng.normal(0, 0.03, n_stations), 0.15, 0.85)
-    shock_load = rng.normal(1.0, 0.3, n_stations)               # heterogeneous shock exposure
+    type_offset = np.array([0.10, -0.10, 0.0, 0.0])  # residential rests fuller
+    base_occ = np.clip(
+        base_occupancy + type_offset[use_idx] - elevation * z + rng.normal(0, 0.03, n_stations),
+        0.15,
+        0.85,
+    )
+    shock_load = rng.normal(1.0, 0.3, n_stations)  # heterogeneous shock exposure
     station_id = np.array([f"S{idx:04d}" for idx in range(n_stations)])
 
     # ---- time grid and per-land-use diurnal shapes
     steps = int(round(days * 24 * (pd.Timedelta("1h") / pd.Timedelta(freq))))
     grid = pd.date_range(start=start, periods=steps, freq=freq, tz="UTC")
     hod = grid.hour.to_numpy() + grid.minute.to_numpy() / 60.0
-    is_we = (grid.dayofweek.to_numpy() >= 5)
+    is_we = grid.dayofweek.to_numpy() >= 5
     profiles = _land_use_profiles(hod)
-    prof = np.vstack([profiles[name] for name in _LAND_USES])   # (4, steps)
-    is_leisure = (use_idx == _LAND_USES.index("leisure"))
+    prof = np.vstack([profiles[name] for name in _LAND_USES])  # (4, steps)
+    is_leisure = use_idx == _LAND_USES.index("leisure")
     we_scale_commute = np.where(is_we, weekend_factor, 1.0)
     we_scale_leisure = np.where(is_we, 1.0, 0.3)
 
     # ---- experimental knob: a spatial field with a controlled low/high frequency mix
     controlled = spatial_lowfreq is not None
     if controlled:
-        from gbfs_toolkit.spatial.graph import band_limited_signal, knn_adjacency, normalized_laplacian
+        from gbfs_toolkit.spatial.graph import (
+            band_limited_signal,
+            knn_adjacency,
+            normalized_laplacian,
+        )
+
         Lz = normalized_laplacian(knn_adjacency(lat, lon, k=min(10, n_stations - 1)))
         spatial_weight = band_limited_signal(
-            Lz, r2_target=float(spatial_lowfreq),
-            n_low=min(spatial_modes, n_stations - 2), seed=seed,
+            Lz,
+            r2_target=float(spatial_lowfreq),
+            n_low=min(spatial_modes, n_stations - 2),
+            seed=seed,
         )
-        diurnal_shape = profiles["transit"]                     # one bidirectional shape
+        diurnal_shape = profiles["transit"]  # one bidirectional shape
 
     if weather_days > 0:
         all_dates = np.array(sorted(set(grid.date)))
@@ -302,22 +328,40 @@ def simulate_city(
     if od_driven:
         _cd = np.sqrt((lat - lat.mean()) ** 2 + (lon - lon.mean()) ** 2)
         centrality = 1.0 - (_cd - _cd.min()) / (np.ptp(_cd) + 1e-9)
-        occ_m = _od_occupancy(lat, lon, capacity.astype(float), centrality, use_idx, activity,
-                          hod, steps, rng, trip_rate=od_trip_rate, dist_scale_km=od_dist_scale_km,
-                          rebalancing=rebalancing, rebalancing_hour=rebalancing_hour,
-                          rebalancing_strength=rebalancing_strength)
+        occ_m = _od_occupancy(
+            lat,
+            lon,
+            capacity.astype(float),
+            centrality,
+            use_idx,
+            activity,
+            hod,
+            steps,
+            rng,
+            trip_rate=od_trip_rate,
+            dist_scale_km=od_dist_scale_km,
+            rebalancing=rebalancing,
+            rebalancing_hour=rebalancing_hour,
+            rebalancing_strength=rebalancing_strength,
+        )
     else:
         occ_m = np.empty((steps, n_stations))
         eps = np.zeros(n_stations)
         shock = 0.0
-        innov_sd = noise * np.sqrt(1 - autocorr ** 2)
+        innov_sd = noise * np.sqrt(1 - autocorr**2)
         for t in range(steps):
             eps = autocorr * eps + rng.normal(0, innov_sd, n_stations)
-            shock = autocorr * shock + rng.normal(0, np.sqrt(1 - autocorr ** 2))
+            shock = autocorr * shock + rng.normal(0, np.sqrt(1 - autocorr**2))
             if controlled:
                 # clean knob: the spatial spectrum is exactly the band-limited field
-                det = base_occ + commute_amplitude * spatial_weight * diurnal_shape[t] \
-                    * we_scale_commute[t] * weather[t]
+                det = (
+                    base_occ
+                    + commute_amplitude
+                    * spatial_weight
+                    * diurnal_shape[t]
+                    * we_scale_commute[t]
+                    * weather[t]
+                )
             else:
                 sig = SIG[t] if SIG is not None else prof[use_idx, t]
                 wk = np.where(is_leisure, we_scale_leisure[t], we_scale_commute[t])

@@ -9,6 +9,7 @@ the low-frequency subspace is the quantity the bounds turn on. The null models
 generator are what let a spectral result be tested against a null and calibrated, rather
 than merely asserted.
 """
+
 from __future__ import annotations
 
 import numpy as np
@@ -36,12 +37,12 @@ def knn_adjacency(lat, lon, *, k: int = 10, gaussian: bool = True) -> np.ndarray
     lon = np.asarray(lon, float)
     n = lat.size
     tree = GeoKDTree(lat, lon)
-    dist, idx = tree.query(lat, lon, k=k + 1)                # self in column 0
+    dist, idx = tree.query(lat, lon, k=k + 1)  # self in column 0
     sigma = float(np.median(dist[:, 1:])) or 1.0
     W = np.zeros((n, n))
     for i in range(n):
         for d, j in zip(dist[i, 1:], idx[i, 1:], strict=False):
-            w = np.exp(-(d ** 2) / (2 * sigma ** 2)) if gaussian else 1.0
+            w = np.exp(-(d**2) / (2 * sigma**2)) if gaussian else 1.0
             W[i, j] = max(W[i, j], w)
     return np.maximum(W, W.T)
 
@@ -58,7 +59,7 @@ def low_freq_basis(L: np.ndarray, d: int) -> np.ndarray:
     w, V = eigh(L)
     order = np.argsort(w)
     d = int(min(d, L.shape[0] - 1))
-    return V[:, order[1:d + 1]]
+    return V[:, order[1 : d + 1]]
 
 
 def spectral_projection_r2(y, basis: np.ndarray) -> float:
@@ -73,8 +74,9 @@ def spectral_projection_r2(y, basis: np.ndarray) -> float:
     return float(c @ c) / denom
 
 
-def degree_preserving_rewire(W: np.ndarray, *, n_swaps: int | None = None,
-                             seed: int = 42) -> np.ndarray:
+def degree_preserving_rewire(
+    W: np.ndarray, *, n_swaps: int | None = None, seed: int = 42
+) -> np.ndarray:
     """Maslov-Sneppen double-edge swap: shuffle topology, keep the degree sequence.
 
     Operates on the binary structure of ``W`` (an edge exists where ``W > 0``). Returns a
@@ -122,8 +124,9 @@ def permute_signal(y, *, seed: int = 42) -> np.ndarray:
     return y[rng.permutation(y.size)]
 
 
-def band_limited_signal(L: np.ndarray, *, r2_target: float = 0.8, n_low: int = 16,
-                        seed: int = 42) -> np.ndarray:
+def band_limited_signal(
+    L: np.ndarray, *, r2_target: float = 0.8, n_low: int = 16, seed: int = 42
+) -> np.ndarray:
     """Synthesise a unit-variance signal whose bottom-``n_low`` spectral share is ``r2_target``.
 
     Mixes a low-frequency component (bottom ``n_low`` non-trivial eigenvectors) with a
@@ -137,8 +140,8 @@ def band_limited_signal(L: np.ndarray, *, r2_target: float = 0.8, n_low: int = 1
     V = V[:, order]
     n = L.shape[0]
     n_low = int(min(n_low, n - 1))
-    low = V[:, 1:n_low + 1] @ rng.normal(0, 1, n_low)
-    high = V[:, n_low + 1:] @ rng.normal(0, 1, max(n - n_low - 1, 1))
+    low = V[:, 1 : n_low + 1] @ rng.normal(0, 1, n_low)
+    high = V[:, n_low + 1 :] @ rng.normal(0, 1, max(n - n_low - 1, 1))
     low /= np.linalg.norm(low) + 1e-12
     high /= np.linalg.norm(high) + 1e-12
     r = float(np.clip(r2_target, 0.0, 1.0))

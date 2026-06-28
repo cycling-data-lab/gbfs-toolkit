@@ -16,17 +16,17 @@ def test_adjacency_symmetric_and_laplacian_psd():
     assert np.allclose(W, W.T)
     L = gb.normalized_laplacian(W)
     evals = np.linalg.eigvalsh(L)
-    assert evals.min() > -1e-8           # PSD
-    assert evals.max() < 2 + 1e-6        # normalised Laplacian spectrum in [0, 2]
+    assert evals.min() > -1e-8  # PSD
+    assert evals.max() < 2 + 1e-6  # normalised Laplacian spectrum in [0, 2]
 
 
 def test_rewire_preserves_degree():
     _, W = _city_graph()
     A = (W > 0).astype(int)
     R = gb.degree_preserving_rewire(W, seed=1)
-    assert np.array_equal(A.sum(axis=1), R.sum(axis=1))   # degree sequence preserved
+    assert np.array_equal(A.sum(axis=1), R.sum(axis=1))  # degree sequence preserved
     assert np.allclose(R, R.T)
-    assert not np.array_equal(A, R)                        # something actually moved
+    assert not np.array_equal(A, R)  # something actually moved
 
 
 def test_permute_signal_is_a_permutation():

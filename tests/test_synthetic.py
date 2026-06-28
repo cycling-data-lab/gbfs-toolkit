@@ -56,7 +56,9 @@ def test_od_driven_lowers_synchrony():
 
     # the mass-conserving flow decorrelates stations (one empties as another fills)
     assert synchrony(True) < synchrony(False)
-    validate_schema(gb.simulate_city(n_stations=40, days=2, od_driven=True, seed=0)[1], "station_status")
+    validate_schema(
+        gb.simulate_city(n_stations=40, days=2, od_driven=True, seed=0)[1], "station_status"
+    )
 
 
 def test_spatial_lowfreq_knob_controls_spectrum():
@@ -71,7 +73,9 @@ def test_spatial_lowfreq_knob_controls_spectrum():
         M = wide.to_numpy(float)
         m = M.mean(axis=0)
         # the demand deviation field (where the spatial knob lives) over time
-        return float(np.mean([gb.spectral_projection_r2(M[t] - m, basis) for t in range(M.shape[0])]))
+        return float(
+            np.mean([gb.spectral_projection_r2(M[t] - m, basis) for t in range(M.shape[0])])
+        )
 
     # a smooth (low-frequency) city concentrates more deviation energy in the bottom modes
     assert lowfreq_share(0.9) > lowfreq_share(0.1) + 0.1
