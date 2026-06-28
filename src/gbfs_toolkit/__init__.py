@@ -32,13 +32,16 @@ from gbfs_toolkit.analytics.distribution import (
     concentration_metrics,
     dynamic_gini_index,
     lorenz_curve,
+    palma_ratio,
     system_profile,
+    theil_index,
 )
 from gbfs_toolkit.analytics.dynamics import (
     aliasing_vulnerability,
     cumulative_imbalance,
     fleet_turnover_proxy,
     flow_asymmetry_ratio,
+    rebalancing_tension,
 )
 from gbfs_toolkit.analytics.fleet import (
     detect_ghost_vehicles,
@@ -55,8 +58,10 @@ from gbfs_toolkit.analytics.frames import (
     occupancy,
     station_state,
 )
+from gbfs_toolkit.analytics.resampling import block_bootstrap_ci, effective_sample_size
 from gbfs_toolkit.analytics.service import (
     capacity_utilization,
+    censored_time_ratio,
     docking_pressure,
     outage_survival,
     service_reliability_index,
@@ -144,6 +149,7 @@ from gbfs_toolkit.io.timeseries import (
 )
 from gbfs_toolkit.spatial.analytics import (
     coverage_stats,
+    fdr_adjust,
     local_morans_i,
     morans_i,
     ripley_k,
@@ -302,6 +308,14 @@ __all__ = [
     "diurnal_bimodality",
     "outage_survival",
     "temporal_concentration",
+    # research algorithms (1.5.0): FDR, equity, accessibility, rebalancing, resampling
+    "fdr_adjust",
+    "theil_index",
+    "palma_ratio",
+    "rebalancing_tension",
+    "block_bootstrap_ci",
+    "effective_sample_size",
+    "censored_time_ratio",
     # meta
     "models",
     "RULES",

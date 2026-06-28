@@ -81,11 +81,77 @@ def compare_systems(frames: dict[str, pd.DataFrame]) -> pd.DataFrame:
 
 def _theil(x: np.ndarray) -> float:
     """Theil T index of a positive array (0 = equal; decomposable alternative to Gini)."""
+    x = x[np.isfinite(x) & (x > 0)]
+    if x.size == 0:
+        return float("nan")
     mu = x.mean()
     if mu == 0:
         return float("nan")
     r = x / mu
     return float(np.mean(r * np.log(r)))
+
+
+def theil_index(values, *, groups=None):
+    """Theil's T inequality index, optionally decomposed between and within groups.
+
+    Theil, unlike the Gini, is additively decomposable: with a group label per value
+    it splits total inequality into a *between-group* term (e.g. centre versus
+    periphery) and a *within-group* term, so a researcher can attribute service
+    inequality to the right spatial scale. Bring your own group column (BYOD).
+
+    Parameters
+    ----------
+    values : array-like
+        Non-negative quantities (capacity, available bikes, ...); non-positive
+        entries are dropped (``ln`` is undefined at 0).
+    groups : array-like, optional
+        Group label per value. When given, returns the decomposition.
+
+    Returns
+    -------
+    float or pandas.Series
+        The scalar Theil T, or a Series ``{total, between, within}`` (``total ==
+        between + within``).
+    """
+    x = np.asarray(values, dtype="float64")
+    if groups is None:
+        return _theil(x)
+    g = np.asarray(groups)
+    mask = np.isfinite(x) & (x > 0)
+    x, g = x[mask], g[mask]
+    if x.size == 0:
+        return pd.Series({"total": float("nan"), "between": float("nan"), "within": float("nan")})
+    n = x.size
+    grand = x.sum()
+    between = 0.0
+    within = 0.0
+    for grp in pd.unique(g):
+        xs = x[g == grp]
+        s = xs.sum() / grand  # share of total quantity
+        p = xs.size / n  # share of population
+        if s > 0 and p > 0:
+            between += s * np.log(s / p)
+        within += s * _theil(xs)
+    return pd.Series({"total": between + within, "between": between, "within": within})
+
+
+def palma_ratio(values) -> float:
+    """Palma ratio: the top-10% share over the bottom-40% share.
+
+    The modern measure of *extreme* inequality, more sensitive than the Gini to the
+    tails: the total quantity held by the best-served 10% of stations divided by
+    that of the least-served 40%.
+    """
+    x = np.sort(np.asarray(values, dtype="float64"))
+    x = x[np.isfinite(x)]
+    n = x.size
+    if n == 0 or x.sum() == 0:
+        return float("nan")
+    bottom40 = x[: int(np.floor(0.4 * n))].sum()
+    top10 = x[int(np.ceil(0.9 * n)) :].sum()
+    if bottom40 <= 0:
+        return float("inf")
+    return float(top10 / bottom40)
 
 
 def concentration_metrics(info: pd.DataFrame, *, value_col: str = "capacity") -> pd.Series:

@@ -10,8 +10,46 @@ import numpy as np
 import pandas as pd
 
 from gbfs_toolkit.core.models import require_columns
-from gbfs_toolkit.core.utils import panel_frame
+from gbfs_toolkit.core.utils import num, panel_frame
 from gbfs_toolkit.io.timeseries import calculate_net_flow
+
+
+def censored_time_ratio(
+    panel: pd.DataFrame,
+    *,
+    bikes_col: str = "num_bikes_available",
+    docks_col: str = "num_docks_available",
+) -> pd.Series:
+    """Fraction of station-time at a saturation boundary, where demand is unobservable.
+
+    When a station is empty (0 bikes) a would-be rider leaves no trace; when it is
+    full (0 docks) a would-be returner leaves no trace. This reports the share of
+    station-time in each censored state, and their union, as a measure of how much of
+    the system's demand signal is *lost to observation*. It is strictly descriptive:
+    it quantifies the observability gap and never infers the missing flows (that would
+    be latent-demand imputation, out of scope).
+
+    Returns
+    -------
+    pandas.Series
+        ``{empty_ratio, full_ratio, censored_ratio}`` where ``censored_ratio`` is the
+        union (empty or full).
+    """
+    require_columns(panel, [bikes_col, docks_col], what="censored_time_ratio")
+    bikes = num(panel, bikes_col)
+    docks = num(panel, docks_col)
+    valid = bikes.notna() & docks.notna()
+    if not valid.any():
+        return pd.Series({"empty_ratio": float("nan"), "full_ratio": float("nan"), "censored_ratio": float("nan")})
+    empty = (bikes[valid] <= 0)
+    full = (docks[valid] <= 0)
+    return pd.Series(
+        {
+            "empty_ratio": float(empty.mean()),
+            "full_ratio": float(full.mean()),
+            "censored_ratio": float((empty | full).mean()),
+        }
+    )
 
 
 def service_reliability_index(

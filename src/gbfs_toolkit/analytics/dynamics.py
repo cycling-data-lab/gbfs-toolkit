@@ -10,7 +10,87 @@ import numpy as np
 import pandas as pd
 
 from gbfs_toolkit.core.models import require_columns
+from gbfs_toolkit.core.utils import project_meters
 from gbfs_toolkit.io.timeseries import calculate_net_flow
+
+
+def rebalancing_tension(
+    panel: pd.DataFrame,
+    *,
+    time_col: str = "fetched_at",
+    value_col: str = "num_bikes_available",
+    target: object = "historical_mean",
+) -> pd.Series:
+    """Minimum-work spatial rebalancing tension per timestamp, in bike-kilometres.
+
+    At each timestamp, the Wasserstein-1 (earth-mover) distance between the spatial
+    distribution of available bikes and a target distribution, scaled by the fleet
+    size: the minimal bikes x kilometres of relocation that would bring the system
+    to its target. A single scalar of *instantaneous spatial fragmentation*, purely
+    descriptive: no trip, OD or movement is inferred, only the optimal-transport
+    lower bound on the work an operator would need.
+
+    Parameters
+    ----------
+    panel : pandas.DataFrame
+        Availability panel with ``station_id, lat, lon``, ``time_col`` and
+        ``value_col`` (available bikes).
+    time_col, value_col : str
+        Timestamp and the per-station available-bike column.
+    target : "historical_mean" or pandas.Series
+        Reference state. ``"historical_mean"`` (default) uses each station's mean
+        stock over the panel, so tension is the departure from the system's usual
+        spatial configuration. Pass a Series indexed by ``station_id`` to supply your
+        own target stock (BYOD), e.g. a 50%-occupancy target.
+
+    Returns
+    -------
+    pandas.Series
+        Tension in bike-kilometres indexed by timestamp (``NaN`` where the fleet is
+        empty at that timestamp).
+
+    References
+    ----------
+    Rubner, Tomasi & Guibas (2000). The Earth Mover's Distance. *IJCV*, 40(2).
+    """
+    from scipy.stats import wasserstein_distance_nd
+
+    require_columns(
+        panel, ["station_id", "lat", "lon", time_col, value_col], what="rebalancing_tension"
+    )
+    coords = panel.groupby("station_id")[["lat", "lon"]].first()
+    finite = np.isfinite(coords["lat"].to_numpy()) & np.isfinite(coords["lon"].to_numpy())
+    coords = coords[finite]
+    if len(coords) < 2:
+        return pd.Series(dtype="float64", name="rebalancing_tension_bike_km")
+    proj = project_meters(coords["lat"].to_numpy(), coords["lon"].to_numpy())
+
+    if isinstance(target, str):
+        if target != "historical_mean":
+            raise ValueError("target must be 'historical_mean' or a Series")
+        tgt = panel.groupby("station_id")[value_col].mean()
+    else:
+        tgt = pd.Series(target)
+    tgt = pd.to_numeric(tgt.reindex(coords.index), errors="coerce").fillna(0.0).to_numpy()
+    if tgt.sum() <= 0:
+        return pd.Series(dtype="float64", name="rebalancing_tension_bike_km")
+    tgt_w = tgt / tgt.sum()
+
+    result: dict = {}
+    for ts, group in panel.groupby(time_col):
+        cur = (
+            pd.to_numeric(group.groupby("station_id")[value_col].sum(), errors="coerce")
+            .reindex(coords.index)
+            .fillna(0.0)
+            .to_numpy()
+        )
+        total = cur.sum()
+        if total <= 0:
+            result[ts] = float("nan")
+            continue
+        w1_m = wasserstein_distance_nd(proj, proj, cur / total, tgt_w)
+        result[ts] = float(w1_m) * float(total) / 1000.0  # bike-kilometres
+    return pd.Series(result, name="rebalancing_tension_bike_km")
 
 
 def cumulative_imbalance(panel: pd.DataFrame, *, reset: str | None = "1D") -> pd.DataFrame:

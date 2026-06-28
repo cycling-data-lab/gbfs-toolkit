@@ -322,6 +322,38 @@ def spatial_center_of_mass(
     return out
 
 
+def fdr_adjust(pvalues, *, method: str = "bh") -> np.ndarray:
+    """Multiple-testing correction of a vector of p-values (Benjamini-Hochberg).
+
+    LISA and per-station tests run one hypothesis per station; at thousands of
+    stations the uncorrected count of "significant" hot/cold spots is dominated by
+    false positives. This returns FDR-adjusted p-values (NaNs preserved), so a
+    study can threshold on a controlled false-discovery rate instead of a raw
+    per-test alpha.
+
+    Parameters
+    ----------
+    pvalues : array-like
+        Raw p-values (may contain NaN for untested units).
+    method : {"bh", "by"}, default "bh"
+        Benjamini-Hochberg (independent/positively-dependent) or
+        Benjamini-Yekutieli (arbitrary dependence).
+
+    References
+    ----------
+    Benjamini, Y. & Hochberg, Y. (1995). Controlling the false discovery rate.
+    *JRSS B*, 57(1), 289-300.
+    """
+    from scipy.stats import false_discovery_control
+
+    p = np.asarray(pvalues, dtype="float64")
+    out = np.full(p.shape, np.nan)
+    finite = np.isfinite(p)
+    if finite.any():
+        out[finite] = false_discovery_control(p[finite], method=method)
+    return out
+
+
 def local_morans_i(
     info: pd.DataFrame,
     value_col: str,
@@ -329,6 +361,7 @@ def local_morans_i(
     k: int = 8,
     permutations: int = 999,
     seed: int = 0,
+    fdr: bool = False,
 ) -> pd.DataFrame:
     """Local Moran's I (LISA): per-station spatial-autocorrelation hotspots and cold spots.
 
@@ -421,7 +454,10 @@ def local_morans_i(
     std_perm = np.sqrt(np.maximum(s2 / permutations - mean_perm**2, 1e-12))
     zscore = (local_i - mean_perm) / std_perm
 
-    sig = p <= 0.05
+    # Benjamini-Hochberg correction across stations before labelling, so the cluster
+    # set controls the false-discovery rate rather than a raw per-station alpha.
+    p_sig = fdr_adjust(p) if fdr else p
+    sig = p_sig <= 0.05
     hi_z, hi_lag = z > 0, lag > 0
     ctype = np.full(n, "ns", dtype=object)
     ctype[sig & hi_z & hi_lag] = "HH"
@@ -432,6 +468,9 @@ def local_morans_i(
     out.loc[pos, "local_i"] = local_i
     out.loc[pos, "z_score"] = zscore
     out.loc[pos, "p_value"] = p
+    if fdr:
+        out["fdr_p"] = np.nan
+        out.loc[pos, "fdr_p"] = p_sig
     out.loc[pos, "cluster_type"] = ctype
     return out
 
@@ -445,7 +484,12 @@ def _decay_weights(d: np.ndarray, d_max: float, decay: str) -> np.ndarray:
     if decay == "gaussian":
         sigma = d_max / 3.0  # the catchment edge sits at ~3 sigma
         return np.exp(-0.5 * (d / sigma) ** 2)
-    raise ValueError(f"decay must be 'gaussian', 'linear' or 'none', got {decay!r}")
+    if decay == "exponential":
+        # Gravity-style exponential decay; ~5% weight remains at the catchment edge.
+        return np.exp(-3.0 * d / d_max)
+    raise ValueError(
+        f"decay must be 'gaussian', 'exponential', 'linear' or 'none', got {decay!r}"
+    )
 
 
 def _point_latlon(frame: pd.DataFrame) -> tuple[np.ndarray, np.ndarray]:
