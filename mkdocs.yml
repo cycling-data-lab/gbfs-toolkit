@@ -145,6 +145,8 @@ nav:
           - Collect a snapshot: examples/02-collect-a-snapshot.md
           - Analyse history: examples/03-analyze-history.md
           - Equity and coverage: examples/04-equity-and-coverage.md
+          - Rigorous audit (robustness, CIs, FDR): examples/05-rigorous-audit.md
+          - Equity, accessibility & rebalancing: examples/06-equity-rebalancing.md
   - Explanation:
       - Methodology: methodology.md
       - Glossary: glossary.md

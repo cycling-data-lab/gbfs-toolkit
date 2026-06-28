@@ -149,6 +149,28 @@ plus system profiles and comparisons.
       show_root_toc_entry: false
       heading_level: 3
 
+## Resampling and effective sample size
+
+Honest uncertainty for autocorrelated availability series: the moving-block bootstrap
+and the autocorrelation-adjusted effective sample size.
+
+::: gbfs_toolkit.analytics.resampling
+    options:
+      show_root_heading: false
+      show_root_toc_entry: false
+      heading_level: 3
+
+## Inter-rater agreement
+
+Coefficients for human-validation studies: Krippendorff's nominal alpha, Cohen's kappa
+and the Wilson score interval. Pure, no I/O.
+
+::: gbfs_toolkit.analytics.agreement
+    options:
+      show_root_heading: false
+      show_root_toc_entry: false
+      heading_level: 3
+
 ## Spatial statistics
 
 Standard spatial algorithms (Moran's I global and local, Ripley's K and L, Clark–Evans,
