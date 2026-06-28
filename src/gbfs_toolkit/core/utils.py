@@ -56,7 +56,8 @@ def gini(values) -> float:
     if n == 0 or v.sum() == 0:
         return float("nan")
     cum = np.cumsum(v)
-    return float((n + 1 - 2 * np.sum(cum) / cum[-1]) / n)
+    g = (n + 1 - 2 * np.sum(cum) / cum[-1]) / n
+    return float(max(0.0, g))  # guard a -0/-eps from float roundoff on all-equal inputs
 
 
 def offset_minutes(freq: str) -> float:

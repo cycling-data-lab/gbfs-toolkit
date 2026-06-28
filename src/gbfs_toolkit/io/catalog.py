@@ -173,10 +173,13 @@ def resolve(system_id: str, catalog: pd.DataFrame) -> dict:
     ``auto_discovery_url`` (the ``gbfs.json``). Raises ``KeyError`` if not found.
     """
     id_col = "system_id" if "system_id" in catalog.columns else catalog.columns[0]
+    # Prefer the GBFS auto-discovery endpoint; only fall back to a bare ``url``
+    # column. The MobilityData export ships both an operator-website ``url`` and
+    # an ``auto-discovery_url``; resolving to the website fetches the homepage
+    # instead of ``gbfs.json``, so auto-discovery must win regardless of order.
     url_col = next(
-        (c for c in catalog.columns if ("auto" in c and "discovery" in c) or c == "url"),
-        None,
-    )
+        (c for c in catalog.columns if "auto" in c and "discovery" in c), None
+    ) or next((c for c in catalog.columns if c == "url"), None)
     hit = catalog[catalog[id_col].astype(str).str.lower() == str(system_id).lower()]
     if hit.empty:
         raise KeyError(f"system_id {system_id!r} not found in catalogue")

@@ -68,7 +68,14 @@ from gbfs_toolkit.analytics.temporal import (
     temporal_concentration,
     temporal_context_features,
 )
-from gbfs_toolkit.audit import audit_dynamic, audit_frames, audit_static, drop_flagged
+from gbfs_toolkit.audit import (
+    audit_dynamic,
+    audit_frames,
+    audit_sensitivity,
+    audit_static,
+    drop_flagged,
+    flag_rate_ci,
+)
 from gbfs_toolkit.core import models
 from gbfs_toolkit.core.errors import (
     GBFSDiscoveryError,
@@ -154,6 +161,8 @@ __version__ = "1.4.0"
 __all__ = [
     # audit (the flagship)
     "audit_static",
+    "audit_sensitivity",
+    "flag_rate_ci",
     "audit_dynamic",
     "audit_frames",
     "audit_feed",

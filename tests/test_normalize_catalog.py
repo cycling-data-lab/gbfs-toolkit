@@ -65,3 +65,19 @@ def test_resolve_from_catalog():
     assert info["system_id"] == "velib"
     assert info["auto_discovery_url"] == "https://velib/gbfs.json"
     assert info["country_code"] == "FR"
+
+
+def test_resolve_prefers_auto_discovery_over_website_url():
+    # The MobilityData export ships a website ``url`` BEFORE the auto-discovery
+    # column; the resolver must pick the gbfs.json, not the homepage.
+    cat = pd.DataFrame(
+        {
+            "System ID": ["velib"],
+            "Name": ["Vélib"],
+            "URL": ["https://velib.example/"],  # operator website, listed first
+            "Auto-Discovery URL": ["https://velib/gbfs.json"],
+        }
+    )
+    cat.columns = [c.strip().lower().replace(" ", "_") for c in cat.columns]
+    info = resolve("velib", cat)
+    assert info["auto_discovery_url"] == "https://velib/gbfs.json"
