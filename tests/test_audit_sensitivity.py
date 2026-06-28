@@ -53,6 +53,37 @@ def test_audit_sensitivity_shape_and_baseline_overlap():
     assert a7.loc[0.90, "systems_flagged"] <= a7.loc[0.50, "systems_flagged"]
 
 
+def test_overcapacity_ratio_matches_definition():
+    # X: 10 caps=20, 10 caps=0 -> profile 20, actual 10, ratio 2.
+    # Y: 1 cap=12, 19 caps=0  -> profile 12, actual 0.6, ratio 20 (over-capacity).
+    def mk(sid, caps):
+        return pd.DataFrame(
+            {"system_id": sid, "station_id": [f"{sid}{i}" for i in range(len(caps))], "capacity": caps}
+        )
+    df = pd.concat([mk("X", [20.0] * 10 + [0.0] * 10), mk("Y", [12.0] + [0.0] * 19)], ignore_index=True)
+    r = gb.overcapacity_ratio(df)
+    assert abs(r["X"] - 2.0) < 1e-9
+    assert abs(r["Y"] - 20.0) < 1e-9
+
+
+def test_reclassify_overcapacity_relabels_and_is_pure():
+    df = pd.DataFrame(
+        {
+            "system_id": "Y",
+            "station_id": [f"Y{i}" for i in range(20)],
+            "station_type": "docked_bike",
+            "capacity": [12.0] + [0.0] * 19,
+            "lat": 48.85,
+            "lon": 2.35,
+        }
+    )
+    before = df.copy(deep=True)
+    out = gb.reclassify_overcapacity(df, a3_ratio=5.0)
+    assert (out["station_type"] == "free_floating").all()  # ratio 20 > 5
+    pd.testing.assert_frame_equal(df, before)  # input unchanged
+    assert (gb.reclassify_overcapacity(df, a3_ratio=50.0)["station_type"] == "docked_bike").all()
+
+
 def test_flag_rate_ci_is_reproducible_and_bracketing():
     df = pd.concat(
         [_system(f"s{i}", 20, 12 if i % 2 else 0, lat0=48 + 0.1 * i) for i in range(8)],

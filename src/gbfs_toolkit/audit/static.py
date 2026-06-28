@@ -33,6 +33,70 @@ from gbfs_toolkit.core.models import (
 from gbfs_toolkit.core.utils import EARTH_RADIUS_M, project_meters
 
 _REQUIRED = ["system_id", "station_id", "station_type", "capacity", "lat", "lon"]
+A3_RATIO_THRESHOLD = 5.0
+
+
+def overcapacity_ratio(info: pd.DataFrame, *, n_min: int = 20) -> pd.Series:
+    """Per-system A3 over-capacity ratio from declared station capacity.
+
+    A free-floating fleet that advertises virtual stations reports a capacity
+    profile by *conditional averaging* over currently-occupied anchors, which
+    overstates the physical dock count. The signature (Fossé & Pallares) compares
+    that conditional mean to the unconditional mean::
+
+        ratio = mean(c_i : c_i > 0) / (sum(c_i, NaN as 0) / N)
+
+    A genuine docked network sits near ``1``; a conditionally-averaged
+    free-floating fleet trips ``ratio >> 1``. Computed from
+    ``station_information`` alone (no realised-capacity status needed).
+
+    Parameters
+    ----------
+    info : pandas.DataFrame
+        Canonical station information; requires ``system_id`` and ``capacity``.
+    n_min : int, default 20
+        Systems with fewer than ``n_min`` stations return ``NaN`` (ratio not
+        meaningful on a tiny inventory).
+
+    Returns
+    -------
+    pandas.Series
+        The ratio indexed by ``system_id`` (``NaN`` where undefined).
+    """
+    require_columns(info, ["system_id", "capacity"], what="overcapacity_ratio")
+
+    def _ratio(cap: pd.Series) -> float:
+        c = cap.to_numpy(dtype="float64")
+        n = c.size
+        if n < n_min:
+            return float("nan")
+        positive = c[np.isfinite(c) & (c > 0)]
+        if positive.size == 0:
+            return float("nan")
+        c_profile = float(positive.mean())
+        c_actual = float(np.where(np.isnan(c), 0.0, c).sum() / n)
+        if c_actual <= 0:
+            return float("nan")
+        return c_profile / c_actual
+
+    return info.groupby("system_id")["capacity"].apply(_ratio)
+
+
+def reclassify_overcapacity(
+    info: pd.DataFrame, *, a3_ratio: float = A3_RATIO_THRESHOLD, n_min: int = 20
+) -> pd.DataFrame:
+    """Relabel over-capacity systems as ``free_floating`` (the audit protocol's S3 step).
+
+    Sets ``station_type = "free_floating"`` on every station of a system whose
+    :func:`overcapacity_ratio` exceeds ``a3_ratio``, so a subsequent
+    :func:`audit_static` flags A3 by the over-capacity mechanism rather than by
+    the type a feed happens to declare. Returns a copy; the input is unchanged.
+    """
+    ratio = overcapacity_ratio(info, n_min=n_min)
+    over = set(ratio.index[ratio > a3_ratio])
+    out = info.copy()
+    out.loc[out["system_id"].isin(over), "station_type"] = "free_floating"
+    return out
 
 
 def _docked_mask(df: pd.DataFrame) -> pd.Series:

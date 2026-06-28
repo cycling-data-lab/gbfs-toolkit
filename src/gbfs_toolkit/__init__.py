@@ -75,6 +75,8 @@ from gbfs_toolkit.audit import (
     audit_static,
     drop_flagged,
     flag_rate_ci,
+    overcapacity_ratio,
+    reclassify_overcapacity,
 )
 from gbfs_toolkit.core import models
 from gbfs_toolkit.core.errors import (
@@ -163,6 +165,8 @@ __all__ = [
     "audit_static",
     "audit_sensitivity",
     "flag_rate_ci",
+    "overcapacity_ratio",
+    "reclassify_overcapacity",
     "audit_dynamic",
     "audit_frames",
     "audit_feed",
