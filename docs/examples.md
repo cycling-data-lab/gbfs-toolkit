@@ -28,6 +28,9 @@ from what was collected.
 | [Rigorous audit](examples/05-rigorous-audit.md) | Verdict + threshold robustness + bootstrap CIs + FDR-controlled hotspots | none (bundled data) |
 | [Equity, accessibility & rebalancing](examples/06-equity-rebalancing.md) | Theil/Palma, E2SFCA, Wasserstein rebalancing tension, observability loss | `[geo]` |
 | [Free-floating & ghost fleets](examples/07-free-floating-fleets.md) | Reconcile docked + free-floating, ghost vehicles, spatial-entropy collapse | none (synthetic) |
+| [Service reliability](examples/08-service-reliability.md) | Stockout episodes, Kaplan–Meier outage survival, sampling vulnerability | none (synthetic) |
+| [Contextualize with transit & weather](examples/09-contextualize.md) | Transit feeders, leak-free exogenous join, autocorrelation | none (synthetic) |
+| [Macro-scale comparative audit](examples/10-macro-scale-audit.md) | Filter the world catalogue and audit N feeds in one call | `[fetch]` (live) |
 
 The last two scenarios use the bundled `load_example()` dataset and small synthetic
 frames, so they run with no network and are executed in CI.

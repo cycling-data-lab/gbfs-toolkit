@@ -27,3 +27,19 @@ Full source:
 ```python
 --8<-- "examples/02_collect_snapshot.py"
 ```
+
+## Freezing a citable snapshot
+
+When a study deposits the lake it collected, record its provenance so reviewers can
+verify the data were frozen as described.
+[`generate_manifest`][gbfs_toolkit.generate_manifest] writes a cryptographic
+manifest — a SHA-256 per Parquet partition plus a system/date summary — that you
+archive alongside the data (e.g. on Zenodo):
+
+```python
+import gbfs_toolkit as gb
+
+manifest = gb.generate_manifest("velib_lake/")  # {sha256 per partition, totals, dates}
+```
+
+It hashes what was written; it never alters the lake.

@@ -160,6 +160,9 @@ nav:
           - Rigorous audit (robustness, CIs, FDR): examples/05-rigorous-audit.md
           - Equity, accessibility & rebalancing: examples/06-equity-rebalancing.md
           - Free-floating & ghost fleets (signature): examples/07-free-floating-fleets.md
+          - Service reliability & outage survival: examples/08-service-reliability.md
+          - Contextualize with transit & weather: examples/09-contextualize.md
+          - Macro-scale comparative audit (live): examples/10-macro-scale-audit.md
   - Explanation:
       - Methodology: methodology.md
       - Glossary: glossary.md

@@ -15,7 +15,14 @@ EXAMPLES = Path(__file__).resolve().parent.parent / "examples"
 
 @pytest.mark.parametrize(
     "script",
-    ["05_rigorous_audit.py", "06_equity_rebalancing.py", "07_free_floating_fleets.py"],
+    [
+        "05_rigorous_audit.py",
+        "06_equity_rebalancing.py",
+        "07_free_floating_fleets.py",
+        "08_service_reliability.py",
+        "09_contextualize.py",
+        # 10_macro_scale_audit.py is live (network) and intentionally not smoke-tested.
+    ],
 )
 def test_example_scenario_runs(script):
     runpy.run_path(str(EXAMPLES / script), run_name="__main__")
