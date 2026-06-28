@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import pandas as pd
 
+from gbfs_toolkit.audit.catalogue import audit_catalogue
 from gbfs_toolkit.audit.dynamic import audit_dynamic
 from gbfs_toolkit.audit.static import (
     audit_sensitivity,
@@ -55,6 +56,7 @@ def drop_flagged(stations: pd.DataFrame) -> pd.DataFrame:
 
 __all__ = [
     "audit_static",
+    "audit_catalogue",
     "audit_sensitivity",
     "flag_rate_ci",
     "overcapacity_ratio",

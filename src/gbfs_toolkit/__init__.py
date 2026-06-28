@@ -15,6 +15,11 @@ Quick start
     >>> clean = stations[~verdict["flagged"].to_numpy()]
 """
 
+from gbfs_toolkit.analytics.agreement import (
+    cohen_kappa,
+    krippendorff_alpha,
+    wilson_interval,
+)
 from gbfs_toolkit.analytics.clustering import (
     cluster_diurnal_profiles,
     cluster_spatial,
@@ -69,6 +74,7 @@ from gbfs_toolkit.analytics.temporal import (
     temporal_context_features,
 )
 from gbfs_toolkit.audit import (
+    audit_catalogue,
     audit_dynamic,
     audit_frames,
     audit_sensitivity,
@@ -163,10 +169,14 @@ __version__ = "1.4.0"
 __all__ = [
     # audit (the flagship)
     "audit_static",
+    "audit_catalogue",
     "audit_sensitivity",
     "flag_rate_ci",
     "overcapacity_ratio",
     "reclassify_overcapacity",
+    "cohen_kappa",
+    "krippendorff_alpha",
+    "wilson_interval",
     "audit_dynamic",
     "audit_frames",
     "audit_feed",
