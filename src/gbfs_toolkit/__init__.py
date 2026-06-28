@@ -184,7 +184,7 @@ from gbfs_toolkit.spatial.geometry import (
 from gbfs_toolkit.spatial.multimodal import link_transit_stops
 from gbfs_toolkit.spatial.osm import enrich_with_osm, station_surroundings
 
-__version__ = "1.6.0"
+__version__ = "1.6.1"
 
 __all__ = [
     # audit (the flagship)

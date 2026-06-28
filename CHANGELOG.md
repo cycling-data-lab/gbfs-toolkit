@@ -3,6 +3,14 @@
 All notable changes are documented here ([Keep a Changelog](https://keepachangelog.com),
 [SemVer](https://semver.org)).
 
+## [1.6.1] - patch
+
+### Fixed
+- `format_paper_summary(fmt="latex")` now generates the LaTeX table directly instead of
+  delegating to `DataFrame.to_latex`, which on some pandas builds routes through the
+  Styler and raises `ImportError` when `jinja2` is not installed. The function is now
+  dependency-free for both Markdown and LaTeX output.
+
 ## [1.6.0] - feed governance, service stress, panel ergonomics
 
 ### Added

@@ -383,19 +383,40 @@ def format_paper_summary(
         raise ValueError(f"fmt must be 'markdown' or 'latex', got {fmt!r}")
     obj = profile.to_frame(name="value") if isinstance(profile, pd.Series) else profile.copy()
     obj = obj.round(decimals)
-    if fmt == "latex":
-        return obj.to_latex()
 
     def _cell(v: object) -> str:
         if isinstance(v, (int, float, np.floating)) and pd.notna(v):
             return f"{v:,.{decimals}f}"
         return str(v)
 
-    header = [str(obj.index.name or "")] + [str(c) for c in obj.columns]
+    header = [str(obj.index.name or ""), *[str(c) for c in obj.columns]]
+    body = [[str(idx), *[_cell(v) for v in row]] for idx, row in obj.iterrows()]
+
+    if fmt == "markdown":
+        lines = [
+            "| " + " | ".join(header) + " |",
+            "| " + " | ".join("---" for _ in header) + " |",
+            *["| " + " | ".join(r) + " |" for r in body],
+        ]
+        return "\n".join(lines)
+
+    # LaTeX booktabs table, generated directly so no jinja2 / Styler dependency is needed.
+    def _tex(s: str) -> str:
+        return (
+            s.replace("\\", "\\textbackslash{}")
+            .replace("_", r"\_")
+            .replace("%", r"\%")
+            .replace("&", r"\&")
+        )
+
+    align = "l" + "r" * len(obj.columns)
     lines = [
-        "| " + " | ".join(header) + " |",
-        "| " + " | ".join("---" for _ in header) + " |",
+        rf"\begin{{tabular}}{{{align}}}",
+        r"\toprule",
+        " & ".join(_tex(h) for h in header) + r" \\",
+        r"\midrule",
+        *[" & ".join(_tex(c) for c in r) + r" \\" for r in body],
+        r"\bottomrule",
+        r"\end{tabular}",
     ]
-    for idx, row in obj.iterrows():
-        lines.append("| " + " | ".join([str(idx), *[_cell(v) for v in row]]) + " |")
     return "\n".join(lines)
