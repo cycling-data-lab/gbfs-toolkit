@@ -40,7 +40,7 @@ def knn_adjacency(lat, lon, *, k: int = 10, gaussian: bool = True) -> np.ndarray
     sigma = float(np.median(dist[:, 1:])) or 1.0
     W = np.zeros((n, n))
     for i in range(n):
-        for d, j in zip(dist[i, 1:], idx[i, 1:]):
+        for d, j in zip(dist[i, 1:], idx[i, 1:], strict=False):
             w = np.exp(-(d ** 2) / (2 * sigma ** 2)) if gaussian else 1.0
             W[i, j] = max(W[i, j], w)
     return np.maximum(W, W.T)
@@ -84,7 +84,7 @@ def degree_preserving_rewire(W: np.ndarray, *, n_swaps: int | None = None,
     rng = np.random.default_rng(seed)
     A = (np.asarray(W) > 0).astype(int)
     np.fill_diagonal(A, 0)
-    edges = [(i, j) for i, j in zip(*np.triu(A, 1).nonzero())]
+    edges = [(i, j) for i, j in zip(*np.triu(A, 1).nonzero(), strict=False)]
     m = len(edges)
     if m < 2:
         return A

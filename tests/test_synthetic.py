@@ -12,7 +12,7 @@ def test_returns_canonical_frames():
     validate_schema(info, "station_info")
     validate_schema(status, "station_status")
     assert info.shape[0] == 40
-    assert set(["lat", "lon", "capacity"]).issubset(info.columns)
+    assert {"lat", "lon", "capacity"}.issubset(info.columns)
     assert {"num_bikes_available", "fetched_at", "station_id"}.issubset(status.columns)
 
 

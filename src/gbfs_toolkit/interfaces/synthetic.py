@@ -29,7 +29,6 @@ import numpy as np
 import pandas as pd
 
 from gbfs_toolkit.core.models import coerce_schema, validate_schema
-from gbfs_toolkit.spatial.geometry import haversine_m
 
 __all__ = ["simulate_city"]
 
@@ -44,7 +43,8 @@ def _bump(h: np.ndarray, mu: float, s: float) -> np.ndarray:
 
 def _pairwise_haversine_km(lat, lon):
     """Great-circle distance matrix (km) between all stations."""
-    la = np.radians(lat); lo = np.radians(lon)
+    la = np.radians(lat)
+    lo = np.radians(lon)
     dla = la[:, None] - la[None, :]
     dlo = lo[:, None] - lo[None, :]
     a = np.sin(dla / 2) ** 2 + np.cos(la)[:, None] * np.cos(la)[None, :] * np.sin(dlo / 2) ** 2
@@ -67,14 +67,16 @@ def _od_occupancy(lat, lon, capacity, centrality, use_idx, activity, hod, steps,
     attract = 0.5 + centrality                                  # central stations pull harder
     P0 = attract[None, :] * np.exp(-(D / dist_scale_km) ** 2)
     np.fill_diagonal(P0, 0.0)
-    job = centrality.copy(); job[transit] += 0.5
+    job = centrality.copy()
+    job[transit] += 0.5
     res = 1.0 - centrality
     morning = np.exp(-((hod - 8.0) ** 2) / (2 * 2.5 ** 2))
     evening = np.exp(-((hod - 18.0) ** 2) / (2 * 2.5 ** 2))
-    morning /= morning.max(); evening /= evening.max()
+    morning /= morning.max()
+    evening /= evening.max()
 
     bikes = 0.5 * capacity
-    O = np.empty((steps, n))
+    occ_m = np.empty((steps, n))
     for t in range(steps):
         pull = morning[t] * job + evening[t] * res + 0.1        # where bikes want to go now
         Pt = P0 * pull[None, :]
@@ -85,8 +87,8 @@ def _od_occupancy(lat, lon, capacity, centrality, use_idx, activity, hod, steps,
         bikes = np.clip(bikes - dep + Pt.T @ dep, 0.0, capacity)
         if rebalancing and int(round(hod[t])) == rebalancing_hour:
             bikes = bikes + rebalancing_strength * (0.5 * capacity - bikes)
-        O[t] = bikes / np.maximum(capacity, 1e-9)
-    return O
+        occ_m[t] = bikes / np.maximum(capacity, 1e-9)
+    return occ_m
 
 
 def _land_use_profiles(hod: np.ndarray) -> dict[str, np.ndarray]:
@@ -266,9 +268,7 @@ def simulate_city(
     # ---- experimental knob: a spatial field with a controlled low/high frequency mix
     controlled = spatial_lowfreq is not None
     if controlled:
-        from gbfs_toolkit.spatial.graph import (
-            band_limited_signal, knn_adjacency, normalized_laplacian,
-        )
+        from gbfs_toolkit.spatial.graph import band_limited_signal, knn_adjacency, normalized_laplacian
         Lz = normalized_laplacian(knn_adjacency(lat, lon, k=min(10, n_stations - 1)))
         spatial_weight = band_limited_signal(
             Lz, r2_target=float(spatial_lowfreq),
@@ -302,12 +302,12 @@ def simulate_city(
     if od_driven:
         _cd = np.sqrt((lat - lat.mean()) ** 2 + (lon - lon.mean()) ** 2)
         centrality = 1.0 - (_cd - _cd.min()) / (np.ptp(_cd) + 1e-9)
-        O = _od_occupancy(lat, lon, capacity.astype(float), centrality, use_idx, activity,
+        occ_m = _od_occupancy(lat, lon, capacity.astype(float), centrality, use_idx, activity,
                           hod, steps, rng, trip_rate=od_trip_rate, dist_scale_km=od_dist_scale_km,
                           rebalancing=rebalancing, rebalancing_hour=rebalancing_hour,
                           rebalancing_strength=rebalancing_strength)
     else:
-        O = np.empty((steps, n_stations))
+        occ_m = np.empty((steps, n_stations))
         eps = np.zeros(n_stations)
         shock = 0.0
         innov_sd = noise * np.sqrt(1 - autocorr ** 2)
@@ -325,9 +325,9 @@ def simulate_city(
             o = det + eps + common_shock * shock_load * shock
             if rebalancing and int(round(hod[t])) == rebalancing_hour:
                 o = o + rebalancing_strength * (0.5 - o)
-            O[t] = np.clip(o, 0.0, 1.0)
+            occ_m[t] = np.clip(o, 0.0, 1.0)
 
-    bikes = np.clip(np.rint(O * capacity[None, :]).astype(int), 0, capacity[None, :])
+    bikes = np.clip(np.rint(occ_m * capacity[None, :]).astype(int), 0, capacity[None, :])
     docks = capacity[None, :] - bikes
 
     # ---- assemble canonical frames (row index t*N + s)
