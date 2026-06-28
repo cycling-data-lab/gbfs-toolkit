@@ -30,7 +30,7 @@ TIME_BLOCKS = ["night", "am_peak", "midday", "pm_peak", "evening"]
 
 
 def cyclical_time_features(
-    timestamps: object, *, fields: tuple[str, ...] = ("hour", "dayofweek", "month")
+    timestamps: Any, *, fields: tuple[str, ...] = ("hour", "dayofweek", "month")
 ) -> pd.DataFrame:
     """Encode calendar fields as (sin, cos) pairs: the one everyone re-implements.
 
@@ -451,7 +451,7 @@ def _time_values(df: pd.DataFrame, time_col: str) -> pd.DatetimeIndex:
 
 
 def temporal_context_features(
-    panel: pd.DataFrame, *, time_col: str = "fetched_at", holidays: object = None
+    panel: pd.DataFrame, *, time_col: str = "fetched_at", holidays: Any = None
 ) -> pd.DataFrame:
     """Add standard calendar context columns for descriptive temporal analysis.
 

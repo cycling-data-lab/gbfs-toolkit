@@ -15,6 +15,7 @@ Workflow
 
 from __future__ import annotations
 
+import functools
 import hashlib
 import uuid
 from pathlib import Path
@@ -459,6 +460,7 @@ def detect_frozen_stations(
         if i == 0:
             primary = rs
 
+    assert primary is not None and frozen is not None  # at least one column is always processed
     out = pd.DataFrame(
         {
             "n_obs": span["n_obs"].astype(int),
@@ -545,7 +547,7 @@ def generate_manifest(lake_dir: str | Path, *, chunk_size: int = 1 << 20) -> dic
     for p in sorted(base.rglob("*.parquet")):
         h = hashlib.sha256()
         with p.open("rb") as fh:
-            for block in iter(lambda fh=fh: fh.read(chunk_size), b""):
+            for block in iter(functools.partial(fh.read, chunk_size), b""):
                 h.update(block)
         files.append(
             {"path": str(p.relative_to(base)), "sha256": h.hexdigest(), "bytes": p.stat().st_size}

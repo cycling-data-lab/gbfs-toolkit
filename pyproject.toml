@@ -64,6 +64,7 @@ dev = [
     "esda>=2.5",  # numerical cross-validation of Moran's I / LISA
     "libpysal>=4.9",  # spatial weights for the esda cross-checks
     "lifelines>=0.27",  # numerical cross-validation of outage survival vs Kaplan-Meier
+    "mypy>=1.8",  # static type checking in CI
 ]
 
 [project.scripts]
@@ -78,6 +79,14 @@ gbfs_toolkit = ["py.typed"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+
+[tool.mypy]
+files = ["src/gbfs_toolkit"]
+python_version = "3.10"
+ignore_missing_imports = true   # optional extras (geopandas, sklearn, esda, ...) ship no stubs
+check_untyped_defs = true
+warn_redundant_casts = true
+warn_unused_ignores = true
 
 [tool.ruff]
 line-length = 100
