@@ -1,8 +1,10 @@
 # gbfs-toolkit
 
 [![CI](https://github.com/cycling-data-lab/gbfs-toolkit/actions/workflows/ci.yml/badge.svg)](https://github.com/cycling-data-lab/gbfs-toolkit/actions/workflows/ci.yml)
+[![PyPI](https://img.shields.io/pypi/v/gbfs-toolkit.svg)](https://pypi.org/project/gbfs-toolkit/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/cycling-data-lab/gbfs-toolkit/blob/main/LICENSE)
 [![Python 3.10+](https://img.shields.io/badge/Python-3.10+-blue.svg)](https://www.python.org/)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.20992153.svg)](https://doi.org/10.5281/zenodo.20992153)
 
 **Research-grade ingestion and *semantic* quality audit for GBFS bike-share feeds.**
 

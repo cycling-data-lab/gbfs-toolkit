@@ -3,7 +3,15 @@ message: "If you use this software, please cite it (and the accompanying dataset
 title: "gbfs-toolkit: research-grade ingestion and semantic quality audit for GBFS feeds"
 type: software
 version: "1.4.0"
-date-released: "2026-06-27"
+date-released: "2026-06-28"
+doi: "10.5281/zenodo.20992153"
+identifiers:
+  - type: doi
+    value: "10.5281/zenodo.20992153"
+    description: "Concept DOI (always resolves to the latest version)"
+  - type: doi
+    value: "10.5281/zenodo.20992154"
+    description: "Version DOI for v1.4.0"
 authors:
   - family-names: "Fossé"
     given-names: "Rohan"

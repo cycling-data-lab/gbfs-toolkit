@@ -16,7 +16,8 @@ GitHub renders as a "Cite this repository" panel and which reference managers ca
   title     = {{gbfs-toolkit: research-grade ingestion and semantic
                quality audit for GBFS feeds}},
   year      = {2026},
-  version   = {1.1.0},
+  version   = {1.4.0},
+  doi       = {10.5281/zenodo.20992153},
   license   = {MIT},
   url       = {https://github.com/cycling-data-lab/gbfs-toolkit},
   note      = {ORCID: 0009-0002-2195-0198, 0009-0002-8680-604X}
@@ -53,12 +54,17 @@ rules rest on a verifiable corpus rather than on assertion.
 
 ## Archival DOI
 
-A versioned DOI through Zenodo, minted automatically from each tagged GitHub release, is planned.
-Once available it will be listed here so that a study can cite the precise archived snapshot of the
-code. Until then, cite the released version and, where exact reproducibility is required, the Git
-commit hash. A [`.zenodo.json`](https://github.com/cycling-data-lab/gbfs-toolkit/blob/main/.zenodo.json)
-metadata file is included in the repository, so that once the GitHub and Zenodo integration is
-enabled each release is archived with the correct authorship, ORCID identifiers, and licence.
+Each tagged GitHub release is archived on Zenodo with a citable DOI, minted automatically from the
+[`.zenodo.json`](https://github.com/cycling-data-lab/gbfs-toolkit/blob/main/.zenodo.json) metadata
+(authorship, ORCID identifiers, licence).
+
+- **Concept DOI** (resolves to the latest version, use this in a paper):
+  [10.5281/zenodo.20992153](https://doi.org/10.5281/zenodo.20992153)
+- **Version DOI** for v1.4.0 (the exact archived snapshot):
+  [10.5281/zenodo.20992154](https://doi.org/10.5281/zenodo.20992154)
+
+Cite the concept DOI for the software in general, or the version DOI when exact reproducibility
+requires the precise archived release.
 
 ## Provenance for derived datasets
 
