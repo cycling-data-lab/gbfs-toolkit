@@ -108,6 +108,30 @@ def test_classify_from_vehicle_types_is_feed_intrinsic():
     assert gb.classify_from_vehicle_types(info, None).equals(info)  # no vehicle_types -> unchanged
 
 
+def test_classify_from_virtual_station():
+    info = pd.DataFrame(
+        {
+            "system_id": "s",
+            "station_id": ["a", "b", "c"],
+            "station_type": ["docked_bike"] * 3,
+            "is_virtual_station": [True, False, None],
+        }
+    )
+    out = gb.classify_from_virtual_station(info)
+    assert list(out["station_type"]) == ["free_floating", "docked_bike", "docked_bike"]
+    # No is_virtual_station column -> unchanged.
+    plain = info.drop(columns=["is_virtual_station"])
+    pd.testing.assert_frame_equal(gb.classify_from_virtual_station(plain), plain)
+
+
+def test_flag_sentinel_coordinates():
+    info = pd.DataFrame(
+        {"station_id": ["ok", "null_island", "near0"], "lat": [48.85, 0.0, 1e-9], "lon": [2.35, 0.0, 0.0]}
+    )
+    mask = gb.flag_sentinel_coordinates(info)
+    assert list(mask) == [False, True, True]
+
+
 def test_flag_rate_ci_is_reproducible_and_bracketing():
     df = pd.concat(
         [_system(f"s{i}", 20, 12 if i % 2 else 0, lat0=48 + 0.1 * i) for i in range(8)],

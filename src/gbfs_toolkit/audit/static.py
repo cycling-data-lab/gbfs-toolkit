@@ -146,6 +146,51 @@ def classify_from_vehicle_types(
     return out
 
 
+def classify_from_virtual_station(info: pd.DataFrame) -> pd.DataFrame:
+    """Feed-intrinsic free-floating tagging from GBFS v3 ``is_virtual_station``.
+
+    A station flagged ``is_virtual_station = true`` is a virtual free-floating
+    anchor, not a physical dock; this sets its ``station_type`` to
+    ``"free_floating"`` directly from the feed, the spec-defined signal that the
+    over-capacity ratio only approximates. If the field is absent the frame is
+    returned unchanged. Returns a copy; the input is not mutated.
+    """
+    require_columns(info, ["station_type"], what="classify_from_virtual_station")
+    out = info.copy()
+    if "is_virtual_station" not in out.columns:
+        return out
+    virtual = out["is_virtual_station"].fillna(False).astype(bool)
+    out.loc[virtual, "station_type"] = "free_floating"
+    return out
+
+
+def flag_sentinel_coordinates(info: pd.DataFrame, *, tol: float = 1e-6) -> pd.Series:
+    """Boolean mask of stations sitting on the ``(0, 0)`` null-island sentinel.
+
+    Operators sometimes publish ``lat = lon = 0`` as a placeholder for a station
+    whose geolocation is pending. A single such point inflates a system's
+    bounding-box area by orders of magnitude (the A5/A4 coupling behind the Sevici
+    case), so it should be filtered before any geospatial rule. Use the mask to
+    drop or quarantine these rows.
+
+    Parameters
+    ----------
+    info : pandas.DataFrame
+        Requires ``lat`` and ``lon``.
+    tol : float, default 1e-6
+        Degrees within which a coordinate counts as the ``(0, 0)`` sentinel.
+
+    Returns
+    -------
+    pandas.Series
+        Boolean mask aligned to ``info`` (``True`` where a station is on the sentinel).
+    """
+    require_columns(info, ["lat", "lon"], what="flag_sentinel_coordinates")
+    lat = info["lat"].astype("float64")
+    lon = info["lon"].astype("float64")
+    return (lat.abs() < tol) & (lon.abs() < tol)
+
+
 def _docked_mask(df: pd.DataFrame) -> pd.Series:
     """Physical docked stations only; excludes free-floating *and* virtual anchors.
 
