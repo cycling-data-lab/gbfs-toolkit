@@ -82,7 +82,7 @@ testpaths = ["tests"]
 
 [tool.mypy]
 files = ["src/gbfs_toolkit"]
-python_version = "3.10"
+python_version = "3.12"   # 3.12+ so numpy's PEP 695 stubs parse; our code targets 3.10+
 ignore_missing_imports = true   # optional extras (geopandas, sklearn, esda, ...) ship no stubs
 check_untyped_defs = true
 warn_redundant_casts = true

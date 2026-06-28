@@ -37,7 +37,7 @@ jobs:
       - name: Doctests
         run: pytest -q --doctest-modules src/gbfs_toolkit/interfaces/datasets.py src/gbfs_toolkit/analytics/frames.py src/gbfs_toolkit/analytics/temporal.py
       - name: Type check (mypy)
-        if: runner.os == 'Linux'
+        if: runner.os == 'Linux' && matrix.python-version == '3.12'
         run: mypy
 
   build:
