@@ -59,7 +59,7 @@
 
     Every public function, grouped by module and generated from the source docstrings.
 
-    [:octicons-arrow-right-24: Reference](api.md)
+    [:octicons-arrow-right-24: Reference](reference/index.md)
 
 -   :material-format-quote-close:{ .lg .middle } __Cite this work__
 

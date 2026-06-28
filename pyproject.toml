@@ -50,6 +50,9 @@ docs = [
     "mkdocs-material>=9.5",
     "mkdocstrings[python]>=0.25",
     "mkdocs-include-markdown-plugin>=6.0",
+    "mkdocs-gen-files>=0.5",  # generate the per-function reference pages
+    "mkdocs-literate-nav>=0.6",  # SUMMARY.md drives the reference nav
+    "mkdocs-section-index>=0.3",  # clickable section landing pages
 ]
 dev = [
     "pytest>=8.0",

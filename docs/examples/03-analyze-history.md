@@ -92,7 +92,7 @@ station_id
 
 ## Related
 
-- API: `build_availability_panel`, `coverage_report`, `cluster_diurnal_profiles`, `label_diurnal_typology`, `calculate_net_flow` ([Data lake](../api.md#longitudinal-data-lake), [Clustering](../api.md#station-clustering)).
+- API: `build_availability_panel`, `coverage_report`, `cluster_diurnal_profiles`, `label_diurnal_typology`, `calculate_net_flow` ([Data lake](../reference/index.md), [Clustering](../reference/index.md)).
 - Concepts: [aliasing](../glossary.md#methodological-concepts) and the local-time caveat in the [Methodology](../methodology.md).
 
 ## Full script

@@ -84,7 +84,7 @@ occupancy Moran's I 0.27 (clustered, p=0.001)
 
 ## Related
 
-- API: `concentration_metrics`, `lorenz_curve` ([Inequality](../api.md#inequality-and-system-profiles)); `coverage_stats`, `morans_i` ([Spatial statistics](../api.md#spatial-statistics)).
+- API: `concentration_metrics`, `lorenz_curve` ([Inequality](../reference/index.md)); `coverage_stats`, `morans_i` ([Spatial statistics](../reference/index.md)).
 - Concepts: the [spatial-statistics limits](../methodology.md) and the [equity metrics](../glossary.md#computed-metrics).
 
 ## Full script

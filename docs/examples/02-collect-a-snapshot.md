@@ -96,7 +96,7 @@ A run that hits HTTP 304 prints nothing and exits, leaving the lake unchanged.
 
 ## Related
 
-- API: `append_to_parquet`, `build_session`, `fetch_feed_json`, `GBFSNotModified` ([Fetching](../api.md#fetching-and-polite-networking), [Data lake](../api.md#longitudinal-data-lake)).
+- API: `append_to_parquet`, `build_session`, `fetch_feed_json`, `GBFSNotModified` ([Fetching](../reference/index.md), [Data lake](../reference/index.md)).
 - Concepts: the [StationStatus contract](../data-model.md#stationstatus).
 
 ## Full script

@@ -7,7 +7,7 @@ on the raw GBFS JSON, so a study written against the model keeps working across 
 3.x and across feed-provider quirks.
 
 The schema definitions live in `gbfs_toolkit.core.models.SCHEMAS`. The full, authoritative column
-lists are rendered in the [API reference](api.md#canonical-data-model). This page states the
+lists are rendered in the [API reference](reference/index.md). This page states the
 contract and the guarantees a researcher needs before performing joins or merges.
 
 ## Dtype guarantees

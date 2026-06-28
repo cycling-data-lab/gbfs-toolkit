@@ -95,7 +95,7 @@ A6 zero-capacity dock        9
 
 ## Related
 
-- API: `audit_static`, `audit_dynamic`, `drop_flagged` ([Static audit](../api.md#static-semantic-audit-a1a7), [Dynamic audit](../api.md#dynamic-audit-d1d3)).
+- API: `audit_static`, `audit_dynamic`, `drop_flagged` ([Static audit](../reference/index.md), [Dynamic audit](../reference/index.md)).
 - Concepts: the [A1–A7 thresholds](../methodology.md) and the [AuditVerdict contract](../data-model.md#auditverdict).
 
 ## Full script

@@ -74,13 +74,23 @@ extra_javascript:
 plugins:
   - search
   - include-markdown
+  - gen-files:
+      scripts:
+        - scripts/gen_ref_pages.py
+  - literate-nav:
+      nav_file: SUMMARY.md
+  - section-index
   - mkdocstrings:
       handlers:
         python:
+          inventories:
+            - https://pandas.pydata.org/docs/objects.inv
+            - https://numpy.org/doc/stable/objects.inv
+            - https://docs.scipy.org/doc/scipy/objects.inv
           options:
             docstring_style: numpy
             docstring_section_style: table
-            show_source: false
+            show_source: true
             show_root_heading: true
             show_root_full_path: false
             show_symbol_type_heading: true
@@ -150,9 +160,8 @@ nav:
   - Explanation:
       - Methodology: methodology.md
       - Glossary: glossary.md
-  - Reference:
-      - API reference: api.md
       - Data model: data-model.md
+  - Reference: reference/
   - Project:
       - Citing this work: citing.md
       - Contributing: contributing.md
