@@ -19,13 +19,3 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
-
-----------------------------------------------------------------------
-
-This MIT licence applies to the source code in this repository
-(`audit_pipeline/`, `app/`, `notebooks/`, `paper/`).
-
-The data files under `catalogue/`, the Zenodo deposit and the Hugging
-Face dataset mirror are distributed under the Open Data Commons Open
-Database License (ODbL) v1.0; see LICENSE-DATA for the full text and
-attribution requirements.
