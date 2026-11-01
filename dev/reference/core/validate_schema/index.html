@@ -25,7 +25,7 @@
       
       
       <link rel="icon" href="../../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-ProperDocs 1.6.7, mkdocs-material-9.7.6">
+      <meta name="generator" content="mkdocs-ProperDocs 1.6.7, mkdocs-material-9.8.0">
     
     
       
@@ -33,10 +33,10 @@
       
     
     
-      <link rel="stylesheet" href="../../../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.57a0d79d.min.css">
       
         
-        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.fb2fffe2.min.css">
       
       
 
@@ -1148,7 +1148,7 @@
   <span class="md-ellipsis">
     
   
-    __version__
+    _version_
   
 
     
@@ -6446,33 +6446,33 @@ dataset. <code>schema</code> is one of <a class="autorefs autorefs-internal" tit
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/gbfs_toolkit/core/models.py</code></summary>
-              <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-289">289</a></span>
-<span class="normal"><a href="#__codelineno-0-290">290</a></span>
-<span class="normal"><a href="#__codelineno-0-291">291</a></span>
-<span class="normal"><a href="#__codelineno-0-292">292</a></span>
-<span class="normal"><a href="#__codelineno-0-293">293</a></span>
-<span class="normal"><a href="#__codelineno-0-294">294</a></span>
-<span class="normal"><a href="#__codelineno-0-295">295</a></span>
-<span class="normal"><a href="#__codelineno-0-296">296</a></span>
-<span class="normal"><a href="#__codelineno-0-297">297</a></span>
-<span class="normal"><a href="#__codelineno-0-298">298</a></span>
-<span class="normal"><a href="#__codelineno-0-299">299</a></span>
-<span class="normal"><a href="#__codelineno-0-300">300</a></span>
-<span class="normal"><a href="#__codelineno-0-301">301</a></span>
-<span class="normal"><a href="#__codelineno-0-302">302</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-289"><a id="__codelineno-0-289" name="__codelineno-0-289"></a><span class="k">def</span><span class="w"> </span><span class="nf">validate_schema</span><span class="p">(</span><span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">schema</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
-</span><span id="__span-0-290"><a id="__codelineno-0-290" name="__codelineno-0-290"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Assert a frame still obeys a canonical schema, then return it (for chaining).</span>
-</span><span id="__span-0-291"><a id="__codelineno-0-291" name="__codelineno-0-291"></a>
-</span><span id="__span-0-292"><a id="__codelineno-0-292" name="__codelineno-0-292"></a><span class="sd">    Use after slicing/grouping/mutating a canonical frame (e.g. before appending to the</span>
-</span><span id="__span-0-293"><a id="__codelineno-0-293" name="__codelineno-0-293"></a><span class="sd">    Parquet lake) to fail fast with a clear [`SchemaError`][gbfs_toolkit.SchemaError] instead of corrupting the</span>
-</span><span id="__span-0-294"><a id="__codelineno-0-294" name="__codelineno-0-294"></a><span class="sd">    dataset. ``schema`` is one of [`SCHEMAS`][gbfs_toolkit.SCHEMAS] (``&quot;station_status&quot;``, ``&quot;vehicle_status&quot;``…).</span>
-</span><span id="__span-0-295"><a id="__codelineno-0-295" name="__codelineno-0-295"></a>
-</span><span id="__span-0-296"><a id="__codelineno-0-296" name="__codelineno-0-296"></a><span class="sd">    See Also</span>
-</span><span id="__span-0-297"><a id="__codelineno-0-297" name="__codelineno-0-297"></a><span class="sd">    --------</span>
-</span><span id="__span-0-298"><a id="__codelineno-0-298" name="__codelineno-0-298"></a><span class="sd">    [`coerce_schema`][gbfs_toolkit.coerce_schema] : Coerce to the schema instead.</span>
-</span><span id="__span-0-299"><a id="__codelineno-0-299" name="__codelineno-0-299"></a><span class="sd">    [`SchemaError`][gbfs_toolkit.SchemaError] : Raised on validation failure.</span>
-</span><span id="__span-0-300"><a id="__codelineno-0-300" name="__codelineno-0-300"></a><span class="sd">    &quot;&quot;&quot;</span>
-</span><span id="__span-0-301"><a id="__codelineno-0-301" name="__codelineno-0-301"></a>    <span class="n">require_columns</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">_schema_columns</span><span class="p">(</span><span class="n">schema</span><span class="p">),</span> <span class="n">what</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;validate_schema(</span><span class="si">{</span><span class="n">schema</span><span class="si">!r}</span><span class="s2">)&quot;</span><span class="p">)</span>
-</span><span id="__span-0-302"><a id="__codelineno-0-302" name="__codelineno-0-302"></a>    <span class="k">return</span> <span class="n">df</span>
+              <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#gbfs_toolkit.validate_schema--source--__codelineno-0-289">289</a></span>
+<span class="normal"><a href="#gbfs_toolkit.validate_schema--source--__codelineno-0-290">290</a></span>
+<span class="normal"><a href="#gbfs_toolkit.validate_schema--source--__codelineno-0-291">291</a></span>
+<span class="normal"><a href="#gbfs_toolkit.validate_schema--source--__codelineno-0-292">292</a></span>
+<span class="normal"><a href="#gbfs_toolkit.validate_schema--source--__codelineno-0-293">293</a></span>
+<span class="normal"><a href="#gbfs_toolkit.validate_schema--source--__codelineno-0-294">294</a></span>
+<span class="normal"><a href="#gbfs_toolkit.validate_schema--source--__codelineno-0-295">295</a></span>
+<span class="normal"><a href="#gbfs_toolkit.validate_schema--source--__codelineno-0-296">296</a></span>
+<span class="normal"><a href="#gbfs_toolkit.validate_schema--source--__codelineno-0-297">297</a></span>
+<span class="normal"><a href="#gbfs_toolkit.validate_schema--source--__codelineno-0-298">298</a></span>
+<span class="normal"><a href="#gbfs_toolkit.validate_schema--source--__codelineno-0-299">299</a></span>
+<span class="normal"><a href="#gbfs_toolkit.validate_schema--source--__codelineno-0-300">300</a></span>
+<span class="normal"><a href="#gbfs_toolkit.validate_schema--source--__codelineno-0-301">301</a></span>
+<span class="normal"><a href="#gbfs_toolkit.validate_schema--source--__codelineno-0-302">302</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="gbfs_toolkit.validate_schema--source--__span-0-289"><a id="gbfs_toolkit.validate_schema--source--__codelineno-0-289" name="gbfs_toolkit.validate_schema--source--__codelineno-0-289"></a><span class="k">def</span><span class="w"> </span><span class="nf">validate_schema</span><span class="p">(</span><span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">schema</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+</span><span id="gbfs_toolkit.validate_schema--source--__span-0-290"><a id="gbfs_toolkit.validate_schema--source--__codelineno-0-290" name="gbfs_toolkit.validate_schema--source--__codelineno-0-290"></a><span class="w">    </span><span class="sd">"""Assert a frame still obeys a canonical schema, then return it (for chaining).</span>
+</span><span id="gbfs_toolkit.validate_schema--source--__span-0-291"><a id="gbfs_toolkit.validate_schema--source--__codelineno-0-291" name="gbfs_toolkit.validate_schema--source--__codelineno-0-291"></a>
+</span><span id="gbfs_toolkit.validate_schema--source--__span-0-292"><a id="gbfs_toolkit.validate_schema--source--__codelineno-0-292" name="gbfs_toolkit.validate_schema--source--__codelineno-0-292"></a><span class="sd">    Use after slicing/grouping/mutating a canonical frame (e.g. before appending to the</span>
+</span><span id="gbfs_toolkit.validate_schema--source--__span-0-293"><a id="gbfs_toolkit.validate_schema--source--__codelineno-0-293" name="gbfs_toolkit.validate_schema--source--__codelineno-0-293"></a><span class="sd">    Parquet lake) to fail fast with a clear [`SchemaError`][gbfs_toolkit.SchemaError] instead of corrupting the</span>
+</span><span id="gbfs_toolkit.validate_schema--source--__span-0-294"><a id="gbfs_toolkit.validate_schema--source--__codelineno-0-294" name="gbfs_toolkit.validate_schema--source--__codelineno-0-294"></a><span class="sd">    dataset. ``schema`` is one of [`SCHEMAS`][gbfs_toolkit.SCHEMAS] (``"station_status"``, ``"vehicle_status"``…).</span>
+</span><span id="gbfs_toolkit.validate_schema--source--__span-0-295"><a id="gbfs_toolkit.validate_schema--source--__codelineno-0-295" name="gbfs_toolkit.validate_schema--source--__codelineno-0-295"></a>
+</span><span id="gbfs_toolkit.validate_schema--source--__span-0-296"><a id="gbfs_toolkit.validate_schema--source--__codelineno-0-296" name="gbfs_toolkit.validate_schema--source--__codelineno-0-296"></a><span class="sd">    See Also</span>
+</span><span id="gbfs_toolkit.validate_schema--source--__span-0-297"><a id="gbfs_toolkit.validate_schema--source--__codelineno-0-297" name="gbfs_toolkit.validate_schema--source--__codelineno-0-297"></a><span class="sd">    --------</span>
+</span><span id="gbfs_toolkit.validate_schema--source--__span-0-298"><a id="gbfs_toolkit.validate_schema--source--__codelineno-0-298" name="gbfs_toolkit.validate_schema--source--__codelineno-0-298"></a><span class="sd">    [`coerce_schema`][gbfs_toolkit.coerce_schema] : Coerce to the schema instead.</span>
+</span><span id="gbfs_toolkit.validate_schema--source--__span-0-299"><a id="gbfs_toolkit.validate_schema--source--__codelineno-0-299" name="gbfs_toolkit.validate_schema--source--__codelineno-0-299"></a><span class="sd">    [`SchemaError`][gbfs_toolkit.SchemaError] : Raised on validation failure.</span>
+</span><span id="gbfs_toolkit.validate_schema--source--__span-0-300"><a id="gbfs_toolkit.validate_schema--source--__codelineno-0-300" name="gbfs_toolkit.validate_schema--source--__codelineno-0-300"></a><span class="sd">    """</span>
+</span><span id="gbfs_toolkit.validate_schema--source--__span-0-301"><a id="gbfs_toolkit.validate_schema--source--__codelineno-0-301" name="gbfs_toolkit.validate_schema--source--__codelineno-0-301"></a>    <span class="n">require_columns</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">_schema_columns</span><span class="p">(</span><span class="n">schema</span><span class="p">),</span> <span class="n">what</span><span class="o">=</span><span class="sa">f</span><span class="s2">"validate_schema(</span><span class="si">{</span><span class="n">schema</span><span class="si">!r}</span><span class="s2">)"</span><span class="p">)</span>
+</span><span id="gbfs_toolkit.validate_schema--source--__span-0-302"><a id="gbfs_toolkit.validate_schema--source--__codelineno-0-302" name="gbfs_toolkit.validate_schema--source--__codelineno-0-302"></a>    <span class="k">return</span> <span class="n">df</span>
 </span></code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -6603,10 +6603,10 @@ dataset. <code>schema</code> is one of <a class="autorefs autorefs-internal" tit
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.instant", "navigation.instant.progress", "navigation.tracking", "navigation.sections", "navigation.tabs", "navigation.tabs.sticky", "navigation.top", "navigation.indexes", "navigation.footer", "toc.follow", "search.suggest", "search.highlight", "search.share", "content.code.copy", "content.code.annotate", "content.tooltips"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.instant", "navigation.instant.progress", "navigation.tracking", "navigation.sections", "navigation.tabs", "navigation.tabs.sticky", "navigation.top", "navigation.indexes", "navigation.footer", "toc.follow", "search.suggest", "search.highlight", "search.share", "content.code.copy", "content.code.annotate", "content.tooltips"], "search": "../../../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
     
     
-      <script src="../../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../../../assets/javascripts/bundle.c21346df.min.js"></script>
       
         <script src="../../../javascripts/mathjax.js"></script>
       

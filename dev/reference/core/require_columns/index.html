@@ -25,7 +25,7 @@
       
       
       <link rel="icon" href="../../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-ProperDocs 1.6.7, mkdocs-material-9.7.6">
+      <meta name="generator" content="mkdocs-ProperDocs 1.6.7, mkdocs-material-9.8.0">
     
     
       
@@ -33,10 +33,10 @@
       
     
     
-      <link rel="stylesheet" href="../../../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.57a0d79d.min.css">
       
         
-        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.fb2fffe2.min.css">
       
       
 
@@ -1148,7 +1148,7 @@
   <span class="md-ellipsis">
     
   
-    __version__
+    _version_
   
 
     
@@ -6435,45 +6435,45 @@ frame that did not come from a <code>to_canonical_*</code> normaliser) explains 
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/gbfs_toolkit/core/models.py</code></summary>
-              <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-223">223</a></span>
-<span class="normal"><a href="#__codelineno-0-224">224</a></span>
-<span class="normal"><a href="#__codelineno-0-225">225</a></span>
-<span class="normal"><a href="#__codelineno-0-226">226</a></span>
-<span class="normal"><a href="#__codelineno-0-227">227</a></span>
-<span class="normal"><a href="#__codelineno-0-228">228</a></span>
-<span class="normal"><a href="#__codelineno-0-229">229</a></span>
-<span class="normal"><a href="#__codelineno-0-230">230</a></span>
-<span class="normal"><a href="#__codelineno-0-231">231</a></span>
-<span class="normal"><a href="#__codelineno-0-232">232</a></span>
-<span class="normal"><a href="#__codelineno-0-233">233</a></span>
-<span class="normal"><a href="#__codelineno-0-234">234</a></span>
-<span class="normal"><a href="#__codelineno-0-235">235</a></span>
-<span class="normal"><a href="#__codelineno-0-236">236</a></span>
-<span class="normal"><a href="#__codelineno-0-237">237</a></span>
-<span class="normal"><a href="#__codelineno-0-238">238</a></span>
-<span class="normal"><a href="#__codelineno-0-239">239</a></span>
-<span class="normal"><a href="#__codelineno-0-240">240</a></span>
-<span class="normal"><a href="#__codelineno-0-241">241</a></span>
-<span class="normal"><a href="#__codelineno-0-242">242</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-223"><a id="__codelineno-0-223" name="__codelineno-0-223"></a><span class="k">def</span><span class="w"> </span><span class="nf">require_columns</span><span class="p">(</span><span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">columns</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="o">*</span><span class="p">,</span> <span class="n">what</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span id="__span-0-224"><a id="__codelineno-0-224" name="__codelineno-0-224"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Raise a didactic [`SchemaError`][gbfs_toolkit.SchemaError] if ``df`` is missing any of ``columns``.</span>
-</span><span id="__span-0-225"><a id="__codelineno-0-225" name="__codelineno-0-225"></a>
-</span><span id="__span-0-226"><a id="__codelineno-0-226" name="__codelineno-0-226"></a><span class="sd">    The message names the missing columns, lists the columns that were present, gives the</span>
-</span><span id="__span-0-227"><a id="__codelineno-0-227" name="__codelineno-0-227"></a><span class="sd">    likely cause, and points to a concrete fix, so the most common user error (passing a</span>
-</span><span id="__span-0-228"><a id="__codelineno-0-228" name="__codelineno-0-228"></a><span class="sd">    frame that did not come from a ``to_canonical_*`` normaliser) explains itself.</span>
-</span><span id="__span-0-229"><a id="__codelineno-0-229" name="__codelineno-0-229"></a><span class="sd">    &quot;&quot;&quot;</span>
-</span><span id="__span-0-230"><a id="__codelineno-0-230" name="__codelineno-0-230"></a>    <span class="n">missing</span> <span class="o">=</span> <span class="p">[</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">columns</span> <span class="k">if</span> <span class="n">c</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">]</span>
-</span><span id="__span-0-231"><a id="__codelineno-0-231" name="__codelineno-0-231"></a>    <span class="k">if</span> <span class="ow">not</span> <span class="n">missing</span><span class="p">:</span>
-</span><span id="__span-0-232"><a id="__codelineno-0-232" name="__codelineno-0-232"></a>        <span class="k">return</span>
-</span><span id="__span-0-233"><a id="__codelineno-0-233" name="__codelineno-0-233"></a>    <span class="n">present</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
-</span><span id="__span-0-234"><a id="__codelineno-0-234" name="__codelineno-0-234"></a>    <span class="n">message</span> <span class="o">=</span> <span class="p">(</span>
-</span><span id="__span-0-235"><a id="__codelineno-0-235" name="__codelineno-0-235"></a>        <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">what</span><span class="si">}</span><span class="s2">: missing required column(s) </span><span class="si">{</span><span class="n">missing</span><span class="si">}</span><span class="s2">.</span><span class="se">\n</span><span class="s2">&quot;</span>
-</span><span id="__span-0-236"><a id="__codelineno-0-236" name="__codelineno-0-236"></a>        <span class="sa">f</span><span class="s2">&quot;  present columns: </span><span class="si">{</span><span class="n">present</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
-</span><span id="__span-0-237"><a id="__codelineno-0-237" name="__codelineno-0-237"></a>        <span class="sa">f</span><span class="s2">&quot;  likely cause: this frame did not come from a to_canonical_* normaliser, or an &quot;</span>
-</span><span id="__span-0-238"><a id="__codelineno-0-238" name="__codelineno-0-238"></a>        <span class="sa">f</span><span class="s2">&quot;optional GBFS field is absent for this system.</span><span class="se">\n</span><span class="s2">&quot;</span>
-</span><span id="__span-0-239"><a id="__codelineno-0-239" name="__codelineno-0-239"></a>        <span class="sa">f</span><span class="s2">&quot;  fix: normalise the raw feed with the matching to_canonical_* function, or add the &quot;</span>
-</span><span id="__span-0-240"><a id="__codelineno-0-240" name="__codelineno-0-240"></a>        <span class="sa">f</span><span class="s2">&quot;column(s) before calling. Canonical schema: </span><span class="si">{</span><span class="n">_DATA_MODEL_URL</span><span class="si">}</span><span class="s2">&quot;</span>
-</span><span id="__span-0-241"><a id="__codelineno-0-241" name="__codelineno-0-241"></a>    <span class="p">)</span>
-</span><span id="__span-0-242"><a id="__codelineno-0-242" name="__codelineno-0-242"></a>    <span class="k">raise</span> <span class="n">SchemaError</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="n">missing</span><span class="o">=</span><span class="n">missing</span><span class="p">,</span> <span class="n">present</span><span class="o">=</span><span class="n">present</span><span class="p">,</span> <span class="n">what</span><span class="o">=</span><span class="n">what</span><span class="p">)</span>
+              <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#gbfs_toolkit.require_columns--source--__codelineno-0-223">223</a></span>
+<span class="normal"><a href="#gbfs_toolkit.require_columns--source--__codelineno-0-224">224</a></span>
+<span class="normal"><a href="#gbfs_toolkit.require_columns--source--__codelineno-0-225">225</a></span>
+<span class="normal"><a href="#gbfs_toolkit.require_columns--source--__codelineno-0-226">226</a></span>
+<span class="normal"><a href="#gbfs_toolkit.require_columns--source--__codelineno-0-227">227</a></span>
+<span class="normal"><a href="#gbfs_toolkit.require_columns--source--__codelineno-0-228">228</a></span>
+<span class="normal"><a href="#gbfs_toolkit.require_columns--source--__codelineno-0-229">229</a></span>
+<span class="normal"><a href="#gbfs_toolkit.require_columns--source--__codelineno-0-230">230</a></span>
+<span class="normal"><a href="#gbfs_toolkit.require_columns--source--__codelineno-0-231">231</a></span>
+<span class="normal"><a href="#gbfs_toolkit.require_columns--source--__codelineno-0-232">232</a></span>
+<span class="normal"><a href="#gbfs_toolkit.require_columns--source--__codelineno-0-233">233</a></span>
+<span class="normal"><a href="#gbfs_toolkit.require_columns--source--__codelineno-0-234">234</a></span>
+<span class="normal"><a href="#gbfs_toolkit.require_columns--source--__codelineno-0-235">235</a></span>
+<span class="normal"><a href="#gbfs_toolkit.require_columns--source--__codelineno-0-236">236</a></span>
+<span class="normal"><a href="#gbfs_toolkit.require_columns--source--__codelineno-0-237">237</a></span>
+<span class="normal"><a href="#gbfs_toolkit.require_columns--source--__codelineno-0-238">238</a></span>
+<span class="normal"><a href="#gbfs_toolkit.require_columns--source--__codelineno-0-239">239</a></span>
+<span class="normal"><a href="#gbfs_toolkit.require_columns--source--__codelineno-0-240">240</a></span>
+<span class="normal"><a href="#gbfs_toolkit.require_columns--source--__codelineno-0-241">241</a></span>
+<span class="normal"><a href="#gbfs_toolkit.require_columns--source--__codelineno-0-242">242</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="gbfs_toolkit.require_columns--source--__span-0-223"><a id="gbfs_toolkit.require_columns--source--__codelineno-0-223" name="gbfs_toolkit.require_columns--source--__codelineno-0-223"></a><span class="k">def</span><span class="w"> </span><span class="nf">require_columns</span><span class="p">(</span><span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">columns</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="o">*</span><span class="p">,</span> <span class="n">what</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="gbfs_toolkit.require_columns--source--__span-0-224"><a id="gbfs_toolkit.require_columns--source--__codelineno-0-224" name="gbfs_toolkit.require_columns--source--__codelineno-0-224"></a><span class="w">    </span><span class="sd">"""Raise a didactic [`SchemaError`][gbfs_toolkit.SchemaError] if ``df`` is missing any of ``columns``.</span>
+</span><span id="gbfs_toolkit.require_columns--source--__span-0-225"><a id="gbfs_toolkit.require_columns--source--__codelineno-0-225" name="gbfs_toolkit.require_columns--source--__codelineno-0-225"></a>
+</span><span id="gbfs_toolkit.require_columns--source--__span-0-226"><a id="gbfs_toolkit.require_columns--source--__codelineno-0-226" name="gbfs_toolkit.require_columns--source--__codelineno-0-226"></a><span class="sd">    The message names the missing columns, lists the columns that were present, gives the</span>
+</span><span id="gbfs_toolkit.require_columns--source--__span-0-227"><a id="gbfs_toolkit.require_columns--source--__codelineno-0-227" name="gbfs_toolkit.require_columns--source--__codelineno-0-227"></a><span class="sd">    likely cause, and points to a concrete fix, so the most common user error (passing a</span>
+</span><span id="gbfs_toolkit.require_columns--source--__span-0-228"><a id="gbfs_toolkit.require_columns--source--__codelineno-0-228" name="gbfs_toolkit.require_columns--source--__codelineno-0-228"></a><span class="sd">    frame that did not come from a ``to_canonical_*`` normaliser) explains itself.</span>
+</span><span id="gbfs_toolkit.require_columns--source--__span-0-229"><a id="gbfs_toolkit.require_columns--source--__codelineno-0-229" name="gbfs_toolkit.require_columns--source--__codelineno-0-229"></a><span class="sd">    """</span>
+</span><span id="gbfs_toolkit.require_columns--source--__span-0-230"><a id="gbfs_toolkit.require_columns--source--__codelineno-0-230" name="gbfs_toolkit.require_columns--source--__codelineno-0-230"></a>    <span class="n">missing</span> <span class="o">=</span> <span class="p">[</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">columns</span> <span class="k">if</span> <span class="n">c</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">]</span>
+</span><span id="gbfs_toolkit.require_columns--source--__span-0-231"><a id="gbfs_toolkit.require_columns--source--__codelineno-0-231" name="gbfs_toolkit.require_columns--source--__codelineno-0-231"></a>    <span class="k">if</span> <span class="ow">not</span> <span class="n">missing</span><span class="p">:</span>
+</span><span id="gbfs_toolkit.require_columns--source--__span-0-232"><a id="gbfs_toolkit.require_columns--source--__codelineno-0-232" name="gbfs_toolkit.require_columns--source--__codelineno-0-232"></a>        <span class="k">return</span>
+</span><span id="gbfs_toolkit.require_columns--source--__span-0-233"><a id="gbfs_toolkit.require_columns--source--__codelineno-0-233" name="gbfs_toolkit.require_columns--source--__codelineno-0-233"></a>    <span class="n">present</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
+</span><span id="gbfs_toolkit.require_columns--source--__span-0-234"><a id="gbfs_toolkit.require_columns--source--__codelineno-0-234" name="gbfs_toolkit.require_columns--source--__codelineno-0-234"></a>    <span class="n">message</span> <span class="o">=</span> <span class="p">(</span>
+</span><span id="gbfs_toolkit.require_columns--source--__span-0-235"><a id="gbfs_toolkit.require_columns--source--__codelineno-0-235" name="gbfs_toolkit.require_columns--source--__codelineno-0-235"></a>        <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">what</span><span class="si">}</span><span class="s2">: missing required column(s) </span><span class="si">{</span><span class="n">missing</span><span class="si">}</span><span class="s2">.</span><span class="se">\n</span><span class="s2">"</span>
+</span><span id="gbfs_toolkit.require_columns--source--__span-0-236"><a id="gbfs_toolkit.require_columns--source--__codelineno-0-236" name="gbfs_toolkit.require_columns--source--__codelineno-0-236"></a>        <span class="sa">f</span><span class="s2">"  present columns: </span><span class="si">{</span><span class="n">present</span><span class="si">}</span><span class="se">\n</span><span class="s2">"</span>
+</span><span id="gbfs_toolkit.require_columns--source--__span-0-237"><a id="gbfs_toolkit.require_columns--source--__codelineno-0-237" name="gbfs_toolkit.require_columns--source--__codelineno-0-237"></a>        <span class="sa">f</span><span class="s2">"  likely cause: this frame did not come from a to_canonical_* normaliser, or an "</span>
+</span><span id="gbfs_toolkit.require_columns--source--__span-0-238"><a id="gbfs_toolkit.require_columns--source--__codelineno-0-238" name="gbfs_toolkit.require_columns--source--__codelineno-0-238"></a>        <span class="sa">f</span><span class="s2">"optional GBFS field is absent for this system.</span><span class="se">\n</span><span class="s2">"</span>
+</span><span id="gbfs_toolkit.require_columns--source--__span-0-239"><a id="gbfs_toolkit.require_columns--source--__codelineno-0-239" name="gbfs_toolkit.require_columns--source--__codelineno-0-239"></a>        <span class="sa">f</span><span class="s2">"  fix: normalise the raw feed with the matching to_canonical_* function, or add the "</span>
+</span><span id="gbfs_toolkit.require_columns--source--__span-0-240"><a id="gbfs_toolkit.require_columns--source--__codelineno-0-240" name="gbfs_toolkit.require_columns--source--__codelineno-0-240"></a>        <span class="sa">f</span><span class="s2">"column(s) before calling. Canonical schema: </span><span class="si">{</span><span class="n">_DATA_MODEL_URL</span><span class="si">}</span><span class="s2">"</span>
+</span><span id="gbfs_toolkit.require_columns--source--__span-0-241"><a id="gbfs_toolkit.require_columns--source--__codelineno-0-241" name="gbfs_toolkit.require_columns--source--__codelineno-0-241"></a>    <span class="p">)</span>
+</span><span id="gbfs_toolkit.require_columns--source--__span-0-242"><a id="gbfs_toolkit.require_columns--source--__codelineno-0-242" name="gbfs_toolkit.require_columns--source--__codelineno-0-242"></a>    <span class="k">raise</span> <span class="n">SchemaError</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="n">missing</span><span class="o">=</span><span class="n">missing</span><span class="p">,</span> <span class="n">present</span><span class="o">=</span><span class="n">present</span><span class="p">,</span> <span class="n">what</span><span class="o">=</span><span class="n">what</span><span class="p">)</span>
 </span></code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -6604,10 +6604,10 @@ frame that did not come from a <code>to_canonical_*</code> normaliser) explains 
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.instant", "navigation.instant.progress", "navigation.tracking", "navigation.sections", "navigation.tabs", "navigation.tabs.sticky", "navigation.top", "navigation.indexes", "navigation.footer", "toc.follow", "search.suggest", "search.highlight", "search.share", "content.code.copy", "content.code.annotate", "content.tooltips"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.instant", "navigation.instant.progress", "navigation.tracking", "navigation.sections", "navigation.tabs", "navigation.tabs.sticky", "navigation.top", "navigation.indexes", "navigation.footer", "toc.follow", "search.suggest", "search.highlight", "search.share", "content.code.copy", "content.code.annotate", "content.tooltips"], "search": "../../../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
     
     
-      <script src="../../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../../../assets/javascripts/bundle.c21346df.min.js"></script>
       
         <script src="../../../javascripts/mathjax.js"></script>
       

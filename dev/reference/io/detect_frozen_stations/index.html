@@ -25,7 +25,7 @@
       
       
       <link rel="icon" href="../../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-ProperDocs 1.6.7, mkdocs-material-9.7.6">
+      <meta name="generator" content="mkdocs-ProperDocs 1.6.7, mkdocs-material-9.8.0">
     
     
       
@@ -33,10 +33,10 @@
       
     
     
-      <link rel="stylesheet" href="../../../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.57a0d79d.min.css">
       
         
-        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.fb2fffe2.min.css">
       
       
 
@@ -1146,7 +1146,7 @@
   <span class="md-ellipsis">
     
   
-    __version__
+    _version_
   
 
     
@@ -6422,7 +6422,7 @@
 
 
 <a href="#gbfs_toolkit.detect_frozen_stations" class="headerlink" title="Permanent link">&para;</a></h2>
-<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">detect_frozen_stations</span><span class="p">(</span><span class="n">panel</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-external" title="&lt;code&gt;pandas.DataFrame&lt;/code&gt;" href="https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.html#pandas.DataFrame">DataFrame</a></span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">value_col</span><span class="p">:</span> <span class="n"><span title="str">str</span></span> <span class="o">=</span> <span class="s1">&#39;num_bikes_available&#39;</span><span class="p">,</span> <span class="n">columns</span><span class="p">:</span> <span class="n"><span title="tuple">tuple</span></span><span class="p">[</span><span class="n"><span title="str">str</span></span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">min_run_hours</span><span class="p">:</span> <span class="n"><span title="float">float</span></span> <span class="o">=</span> <span class="mf">6.0</span><span class="p">,</span> <span class="n">active_hours</span><span class="p">:</span> <span class="n"><span title="tuple">tuple</span></span><span class="p">[</span><span class="n"><span title="int">int</span></span><span class="p">,</span> <span class="n"><span title="int">int</span></span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">22</span><span class="p">),</span> <span class="n">strict</span><span class="p">:</span> <span class="n"><span title="bool">bool</span></span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n"><a class="autorefs autorefs-external" title="&lt;code&gt;pandas.DataFrame&lt;/code&gt;" href="https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.html#pandas.DataFrame">DataFrame</a></span>
+<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">detect_frozen_stations</span><span class="p">(</span><span class="n">panel</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-external" title="&lt;code&gt;pandas.DataFrame&lt;/code&gt;" href="https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.html#pandas.DataFrame">DataFrame</a></span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">value_col</span><span class="p">:</span> <span class="n"><span title="str">str</span></span> <span class="o">=</span> <span class="s1">'num_bikes_available'</span><span class="p">,</span> <span class="n">columns</span><span class="p">:</span> <span class="n"><span title="tuple">tuple</span></span><span class="p">[</span><span class="n"><span title="str">str</span></span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">min_run_hours</span><span class="p">:</span> <span class="n"><span title="float">float</span></span> <span class="o">=</span> <span class="mf">6.0</span><span class="p">,</span> <span class="n">active_hours</span><span class="p">:</span> <span class="n"><span title="tuple">tuple</span></span><span class="p">[</span><span class="n"><span title="int">int</span></span><span class="p">,</span> <span class="n"><span title="int">int</span></span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">22</span><span class="p">),</span> <span class="n">strict</span><span class="p">:</span> <span class="n"><span title="bool">bool</span></span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n"><a class="autorefs autorefs-external" title="&lt;code&gt;pandas.DataFrame&lt;/code&gt;" href="https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.html#pandas.DataFrame">DataFrame</a></span>
 </span></code></pre></div>
 
     <div class="doc doc-contents first">
@@ -6566,177 +6566,177 @@ matches a "never-moved" zombie definition; the default (<code>False</code>) is t
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/gbfs_toolkit/io/timeseries.py</code></summary>
-              <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-424">424</a></span>
-<span class="normal"><a href="#__codelineno-0-425">425</a></span>
-<span class="normal"><a href="#__codelineno-0-426">426</a></span>
-<span class="normal"><a href="#__codelineno-0-427">427</a></span>
-<span class="normal"><a href="#__codelineno-0-428">428</a></span>
-<span class="normal"><a href="#__codelineno-0-429">429</a></span>
-<span class="normal"><a href="#__codelineno-0-430">430</a></span>
-<span class="normal"><a href="#__codelineno-0-431">431</a></span>
-<span class="normal"><a href="#__codelineno-0-432">432</a></span>
-<span class="normal"><a href="#__codelineno-0-433">433</a></span>
-<span class="normal"><a href="#__codelineno-0-434">434</a></span>
-<span class="normal"><a href="#__codelineno-0-435">435</a></span>
-<span class="normal"><a href="#__codelineno-0-436">436</a></span>
-<span class="normal"><a href="#__codelineno-0-437">437</a></span>
-<span class="normal"><a href="#__codelineno-0-438">438</a></span>
-<span class="normal"><a href="#__codelineno-0-439">439</a></span>
-<span class="normal"><a href="#__codelineno-0-440">440</a></span>
-<span class="normal"><a href="#__codelineno-0-441">441</a></span>
-<span class="normal"><a href="#__codelineno-0-442">442</a></span>
-<span class="normal"><a href="#__codelineno-0-443">443</a></span>
-<span class="normal"><a href="#__codelineno-0-444">444</a></span>
-<span class="normal"><a href="#__codelineno-0-445">445</a></span>
-<span class="normal"><a href="#__codelineno-0-446">446</a></span>
-<span class="normal"><a href="#__codelineno-0-447">447</a></span>
-<span class="normal"><a href="#__codelineno-0-448">448</a></span>
-<span class="normal"><a href="#__codelineno-0-449">449</a></span>
-<span class="normal"><a href="#__codelineno-0-450">450</a></span>
-<span class="normal"><a href="#__codelineno-0-451">451</a></span>
-<span class="normal"><a href="#__codelineno-0-452">452</a></span>
-<span class="normal"><a href="#__codelineno-0-453">453</a></span>
-<span class="normal"><a href="#__codelineno-0-454">454</a></span>
-<span class="normal"><a href="#__codelineno-0-455">455</a></span>
-<span class="normal"><a href="#__codelineno-0-456">456</a></span>
-<span class="normal"><a href="#__codelineno-0-457">457</a></span>
-<span class="normal"><a href="#__codelineno-0-458">458</a></span>
-<span class="normal"><a href="#__codelineno-0-459">459</a></span>
-<span class="normal"><a href="#__codelineno-0-460">460</a></span>
-<span class="normal"><a href="#__codelineno-0-461">461</a></span>
-<span class="normal"><a href="#__codelineno-0-462">462</a></span>
-<span class="normal"><a href="#__codelineno-0-463">463</a></span>
-<span class="normal"><a href="#__codelineno-0-464">464</a></span>
-<span class="normal"><a href="#__codelineno-0-465">465</a></span>
-<span class="normal"><a href="#__codelineno-0-466">466</a></span>
-<span class="normal"><a href="#__codelineno-0-467">467</a></span>
-<span class="normal"><a href="#__codelineno-0-468">468</a></span>
-<span class="normal"><a href="#__codelineno-0-469">469</a></span>
-<span class="normal"><a href="#__codelineno-0-470">470</a></span>
-<span class="normal"><a href="#__codelineno-0-471">471</a></span>
-<span class="normal"><a href="#__codelineno-0-472">472</a></span>
-<span class="normal"><a href="#__codelineno-0-473">473</a></span>
-<span class="normal"><a href="#__codelineno-0-474">474</a></span>
-<span class="normal"><a href="#__codelineno-0-475">475</a></span>
-<span class="normal"><a href="#__codelineno-0-476">476</a></span>
-<span class="normal"><a href="#__codelineno-0-477">477</a></span>
-<span class="normal"><a href="#__codelineno-0-478">478</a></span>
-<span class="normal"><a href="#__codelineno-0-479">479</a></span>
-<span class="normal"><a href="#__codelineno-0-480">480</a></span>
-<span class="normal"><a href="#__codelineno-0-481">481</a></span>
-<span class="normal"><a href="#__codelineno-0-482">482</a></span>
-<span class="normal"><a href="#__codelineno-0-483">483</a></span>
-<span class="normal"><a href="#__codelineno-0-484">484</a></span>
-<span class="normal"><a href="#__codelineno-0-485">485</a></span>
-<span class="normal"><a href="#__codelineno-0-486">486</a></span>
-<span class="normal"><a href="#__codelineno-0-487">487</a></span>
-<span class="normal"><a href="#__codelineno-0-488">488</a></span>
-<span class="normal"><a href="#__codelineno-0-489">489</a></span>
-<span class="normal"><a href="#__codelineno-0-490">490</a></span>
-<span class="normal"><a href="#__codelineno-0-491">491</a></span>
-<span class="normal"><a href="#__codelineno-0-492">492</a></span>
-<span class="normal"><a href="#__codelineno-0-493">493</a></span>
-<span class="normal"><a href="#__codelineno-0-494">494</a></span>
-<span class="normal"><a href="#__codelineno-0-495">495</a></span>
-<span class="normal"><a href="#__codelineno-0-496">496</a></span>
-<span class="normal"><a href="#__codelineno-0-497">497</a></span>
-<span class="normal"><a href="#__codelineno-0-498">498</a></span>
-<span class="normal"><a href="#__codelineno-0-499">499</a></span>
-<span class="normal"><a href="#__codelineno-0-500">500</a></span>
-<span class="normal"><a href="#__codelineno-0-501">501</a></span>
-<span class="normal"><a href="#__codelineno-0-502">502</a></span>
-<span class="normal"><a href="#__codelineno-0-503">503</a></span>
-<span class="normal"><a href="#__codelineno-0-504">504</a></span>
-<span class="normal"><a href="#__codelineno-0-505">505</a></span>
-<span class="normal"><a href="#__codelineno-0-506">506</a></span>
-<span class="normal"><a href="#__codelineno-0-507">507</a></span>
-<span class="normal"><a href="#__codelineno-0-508">508</a></span>
-<span class="normal"><a href="#__codelineno-0-509">509</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-424"><a id="__codelineno-0-424" name="__codelineno-0-424"></a><span class="k">def</span><span class="w"> </span><span class="nf">detect_frozen_stations</span><span class="p">(</span>
-</span><span id="__span-0-425"><a id="__codelineno-0-425" name="__codelineno-0-425"></a>    <span class="n">panel</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
-</span><span id="__span-0-426"><a id="__codelineno-0-426" name="__codelineno-0-426"></a>    <span class="o">*</span><span class="p">,</span>
-</span><span id="__span-0-427"><a id="__codelineno-0-427" name="__codelineno-0-427"></a>    <span class="n">value_col</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;num_bikes_available&quot;</span><span class="p">,</span>
-</span><span id="__span-0-428"><a id="__codelineno-0-428" name="__codelineno-0-428"></a>    <span class="n">columns</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-</span><span id="__span-0-429"><a id="__codelineno-0-429" name="__codelineno-0-429"></a>    <span class="n">min_run_hours</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">6.0</span><span class="p">,</span>
-</span><span id="__span-0-430"><a id="__codelineno-0-430" name="__codelineno-0-430"></a>    <span class="n">active_hours</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">22</span><span class="p">),</span>
-</span><span id="__span-0-431"><a id="__codelineno-0-431" name="__codelineno-0-431"></a>    <span class="n">strict</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
-</span><span id="__span-0-432"><a id="__codelineno-0-432" name="__codelineno-0-432"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
-</span><span id="__span-0-433"><a id="__codelineno-0-433" name="__codelineno-0-433"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Flag &quot;frozen&quot; stations: a value stuck unchanged while the feed keeps updating.</span>
-</span><span id="__span-0-434"><a id="__codelineno-0-434" name="__codelineno-0-434"></a>
-</span><span id="__span-0-435"><a id="__codelineno-0-435" name="__codelineno-0-435"></a><span class="sd">    Distinct from staleness (D3, where ``last_reported`` itself goes stale) and from a genuine</span>
-</span><span id="__span-0-436"><a id="__codelineno-0-436" name="__codelineno-0-436"></a><span class="sd">    stockout: here the feed is fresh but the value never moves, the signature of a dead sensor</span>
-</span><span id="__span-0-437"><a id="__codelineno-0-437" name="__codelineno-0-437"></a><span class="sd">    or a station the operator forgot. Restricting to ``active_hours`` (local hour of</span>
-</span><span id="__span-0-438"><a id="__codelineno-0-438" name="__codelineno-0-438"></a><span class="sd">    ``fetched_at`` as stored) avoids flagging the legitimate overnight flatline.</span>
-</span><span id="__span-0-439"><a id="__codelineno-0-439" name="__codelineno-0-439"></a>
-</span><span id="__span-0-440"><a id="__codelineno-0-440" name="__codelineno-0-440"></a><span class="sd">    Parameters</span>
-</span><span id="__span-0-441"><a id="__codelineno-0-441" name="__codelineno-0-441"></a><span class="sd">    ----------</span>
-</span><span id="__span-0-442"><a id="__codelineno-0-442" name="__codelineno-0-442"></a><span class="sd">    value_col : str, default &quot;num_bikes_available&quot;</span>
-</span><span id="__span-0-443"><a id="__codelineno-0-443" name="__codelineno-0-443"></a><span class="sd">        The column expected to vary (used when ``columns`` is not given).</span>
-</span><span id="__span-0-444"><a id="__codelineno-0-444" name="__codelineno-0-444"></a><span class="sd">    columns : tuple of str, optional</span>
-</span><span id="__span-0-445"><a id="__codelineno-0-445" name="__codelineno-0-445"></a><span class="sd">        Require *all* these columns to be frozen, e.g. ``(&quot;num_bikes_available&quot;,</span>
-</span><span id="__span-0-446"><a id="__codelineno-0-446" name="__codelineno-0-446"></a><span class="sd">        &quot;num_docks_available&quot;)``: a stricter, both-counters-stuck signal. Defaults to</span>
-</span><span id="__span-0-447"><a id="__codelineno-0-447" name="__codelineno-0-447"></a><span class="sd">        ``(value_col,)``.</span>
-</span><span id="__span-0-448"><a id="__codelineno-0-448" name="__codelineno-0-448"></a><span class="sd">    min_run_hours : float, default 6</span>
-</span><span id="__span-0-449"><a id="__codelineno-0-449" name="__codelineno-0-449"></a><span class="sd">        Minimum span (of an unchanged run, or of the whole series in ``strict`` mode) to call a</span>
-</span><span id="__span-0-450"><a id="__codelineno-0-450" name="__codelineno-0-450"></a><span class="sd">        station frozen.</span>
-</span><span id="__span-0-451"><a id="__codelineno-0-451" name="__codelineno-0-451"></a><span class="sd">    active_hours : (int, int) or None, default (6, 22)</span>
-</span><span id="__span-0-452"><a id="__codelineno-0-452" name="__codelineno-0-452"></a><span class="sd">        Keep only observations in ``[lo, hi)`` local hours; ``None`` to use all.</span>
-</span><span id="__span-0-453"><a id="__codelineno-0-453" name="__codelineno-0-453"></a><span class="sd">    strict : bool, default False</span>
-</span><span id="__span-0-454"><a id="__codelineno-0-454" name="__codelineno-0-454"></a><span class="sd">        If ``True``, a column counts as frozen only when it **never changes** across the entire</span>
-</span><span id="__span-0-455"><a id="__codelineno-0-455" name="__codelineno-0-455"></a><span class="sd">        observed window (span ≥ ``min_run_hours``), not merely a long constant *run*. This</span>
-</span><span id="__span-0-456"><a id="__codelineno-0-456" name="__codelineno-0-456"></a><span class="sd">        matches a &quot;never-moved&quot; zombie definition; the default (``False``) is the broader</span>
-</span><span id="__span-0-457"><a id="__codelineno-0-457" name="__codelineno-0-457"></a><span class="sd">        &quot;stuck for ≥ ``min_run_hours`` at some point&quot;.</span>
-</span><span id="__span-0-458"><a id="__codelineno-0-458" name="__codelineno-0-458"></a>
-</span><span id="__span-0-459"><a id="__codelineno-0-459" name="__codelineno-0-459"></a><span class="sd">    Returns</span>
-</span><span id="__span-0-460"><a id="__codelineno-0-460" name="__codelineno-0-460"></a><span class="sd">    -------</span>
-</span><span id="__span-0-461"><a id="__codelineno-0-461" name="__codelineno-0-461"></a><span class="sd">    pandas.DataFrame</span>
-</span><span id="__span-0-462"><a id="__codelineno-0-462" name="__codelineno-0-462"></a><span class="sd">        Indexed by ``(system_id, station_id)``: ``n_obs``, ``longest_const_run_hours``,</span>
-</span><span id="__span-0-463"><a id="__codelineno-0-463" name="__codelineno-0-463"></a><span class="sd">        ``frozen_value`` (for the first column), ``is_frozen``.</span>
-</span><span id="__span-0-464"><a id="__codelineno-0-464" name="__codelineno-0-464"></a>
-</span><span id="__span-0-465"><a id="__codelineno-0-465" name="__codelineno-0-465"></a><span class="sd">    See Also</span>
-</span><span id="__span-0-466"><a id="__codelineno-0-466" name="__codelineno-0-466"></a><span class="sd">    --------</span>
-</span><span id="__span-0-467"><a id="__codelineno-0-467" name="__codelineno-0-467"></a><span class="sd">    [`stockout_episodes`][gbfs_toolkit.stockout_episodes] : Genuine outage episodes.</span>
-</span><span id="__span-0-468"><a id="__codelineno-0-468" name="__codelineno-0-468"></a><span class="sd">    &quot;&quot;&quot;</span>
-</span><span id="__span-0-469"><a id="__codelineno-0-469" name="__codelineno-0-469"></a>    <span class="n">cols</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">columns</span><span class="p">)</span> <span class="k">if</span> <span class="n">columns</span> <span class="k">else</span> <span class="p">[</span><span class="n">value_col</span><span class="p">]</span>
-</span><span id="__span-0-470"><a id="__codelineno-0-470" name="__codelineno-0-470"></a>    <span class="n">df</span> <span class="o">=</span> <span class="n">panel_frame</span><span class="p">(</span><span class="n">panel</span><span class="p">)</span>
-</span><span id="__span-0-471"><a id="__codelineno-0-471" name="__codelineno-0-471"></a>    <span class="n">require_columns</span><span class="p">(</span>
-</span><span id="__span-0-472"><a id="__codelineno-0-472" name="__codelineno-0-472"></a>        <span class="n">df</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;system_id&quot;</span><span class="p">,</span> <span class="s2">&quot;station_id&quot;</span><span class="p">,</span> <span class="s2">&quot;fetched_at&quot;</span><span class="p">,</span> <span class="o">*</span><span class="n">cols</span><span class="p">],</span> <span class="n">what</span><span class="o">=</span><span class="s2">&quot;detect_frozen_stations&quot;</span>
-</span><span id="__span-0-473"><a id="__codelineno-0-473" name="__codelineno-0-473"></a>    <span class="p">)</span>
-</span><span id="__span-0-474"><a id="__codelineno-0-474" name="__codelineno-0-474"></a>    <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[[</span><span class="s2">&quot;system_id&quot;</span><span class="p">,</span> <span class="s2">&quot;station_id&quot;</span><span class="p">,</span> <span class="s2">&quot;fetched_at&quot;</span><span class="p">,</span> <span class="o">*</span><span class="n">cols</span><span class="p">]]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-</span><span id="__span-0-475"><a id="__codelineno-0-475" name="__codelineno-0-475"></a>    <span class="n">df</span><span class="p">[</span><span class="s2">&quot;fetched_at&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;fetched_at&quot;</span><span class="p">])</span>
-</span><span id="__span-0-476"><a id="__codelineno-0-476" name="__codelineno-0-476"></a>    <span class="k">if</span> <span class="n">active_hours</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-</span><span id="__span-0-477"><a id="__codelineno-0-477" name="__codelineno-0-477"></a>        <span class="n">lo</span><span class="p">,</span> <span class="n">hi</span> <span class="o">=</span> <span class="n">active_hours</span>
-</span><span id="__span-0-478"><a id="__codelineno-0-478" name="__codelineno-0-478"></a>        <span class="n">hour</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;fetched_at&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">dt</span><span class="o">.</span><span class="n">hour</span>
-</span><span id="__span-0-479"><a id="__codelineno-0-479" name="__codelineno-0-479"></a>        <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[(</span><span class="n">hour</span> <span class="o">&gt;=</span> <span class="n">lo</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">hour</span> <span class="o">&lt;</span> <span class="n">hi</span><span class="p">)]</span>
-</span><span id="__span-0-480"><a id="__codelineno-0-480" name="__codelineno-0-480"></a>    <span class="n">keys</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;system_id&quot;</span><span class="p">,</span> <span class="s2">&quot;station_id&quot;</span><span class="p">]</span>
-</span><span id="__span-0-481"><a id="__codelineno-0-481" name="__codelineno-0-481"></a>    <span class="k">if</span> <span class="n">df</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
-</span><span id="__span-0-482"><a id="__codelineno-0-482" name="__codelineno-0-482"></a>        <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="n">_FROZEN_COLUMNS</span><span class="p">)</span><span class="o">.</span><span class="n">rename_axis</span><span class="p">(</span><span class="n">keys</span><span class="p">)</span>
-</span><span id="__span-0-483"><a id="__codelineno-0-483" name="__codelineno-0-483"></a>    <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">sort_values</span><span class="p">([</span><span class="o">*</span><span class="n">keys</span><span class="p">,</span> <span class="s2">&quot;fetched_at&quot;</span><span class="p">])</span>
-</span><span id="__span-0-484"><a id="__codelineno-0-484" name="__codelineno-0-484"></a>
-</span><span id="__span-0-485"><a id="__codelineno-0-485" name="__codelineno-0-485"></a>    <span class="n">span</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="n">keys</span><span class="p">)[</span><span class="s2">&quot;fetched_at&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">agg</span><span class="p">(</span><span class="n">first</span><span class="o">=</span><span class="s2">&quot;min&quot;</span><span class="p">,</span> <span class="n">last</span><span class="o">=</span><span class="s2">&quot;max&quot;</span><span class="p">,</span> <span class="n">n_obs</span><span class="o">=</span><span class="s2">&quot;size&quot;</span><span class="p">)</span>
-</span><span id="__span-0-486"><a id="__codelineno-0-486" name="__codelineno-0-486"></a>    <span class="n">span_hours</span> <span class="o">=</span> <span class="p">(</span><span class="n">span</span><span class="p">[</span><span class="s2">&quot;last&quot;</span><span class="p">]</span> <span class="o">-</span> <span class="n">span</span><span class="p">[</span><span class="s2">&quot;first&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">dt</span><span class="o">.</span><span class="n">total_seconds</span><span class="p">()</span> <span class="o">/</span> <span class="mi">3600</span>
-</span><span id="__span-0-487"><a id="__codelineno-0-487" name="__codelineno-0-487"></a>
-</span><span id="__span-0-488"><a id="__codelineno-0-488" name="__codelineno-0-488"></a>    <span class="n">frozen</span> <span class="o">=</span> <span class="kc">None</span>
-</span><span id="__span-0-489"><a id="__codelineno-0-489" name="__codelineno-0-489"></a>    <span class="n">primary</span> <span class="o">=</span> <span class="kc">None</span>
-</span><span id="__span-0-490"><a id="__codelineno-0-490" name="__codelineno-0-490"></a>    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">col</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">cols</span><span class="p">):</span>
-</span><span id="__span-0-491"><a id="__codelineno-0-491" name="__codelineno-0-491"></a>        <span class="n">rs</span> <span class="o">=</span> <span class="n">_run_stats</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">keys</span><span class="p">,</span> <span class="n">col</span><span class="p">)</span>
-</span><span id="__span-0-492"><a id="__codelineno-0-492" name="__codelineno-0-492"></a>        <span class="k">if</span> <span class="n">strict</span><span class="p">:</span>
-</span><span id="__span-0-493"><a id="__codelineno-0-493" name="__codelineno-0-493"></a>            <span class="n">col_frozen</span> <span class="o">=</span> <span class="n">rs</span><span class="p">[</span><span class="s2">&quot;constant&quot;</span><span class="p">]</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">span_hours</span> <span class="o">&gt;=</span> <span class="n">min_run_hours</span><span class="p">)</span>
-</span><span id="__span-0-494"><a id="__codelineno-0-494" name="__codelineno-0-494"></a>        <span class="k">else</span><span class="p">:</span>
-</span><span id="__span-0-495"><a id="__codelineno-0-495" name="__codelineno-0-495"></a>            <span class="n">col_frozen</span> <span class="o">=</span> <span class="n">rs</span><span class="p">[</span><span class="s2">&quot;longest_run_hours&quot;</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">min_run_hours</span>
-</span><span id="__span-0-496"><a id="__codelineno-0-496" name="__codelineno-0-496"></a>        <span class="n">frozen</span> <span class="o">=</span> <span class="n">col_frozen</span> <span class="k">if</span> <span class="n">frozen</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="p">(</span><span class="n">frozen</span> <span class="o">&amp;</span> <span class="n">col_frozen</span><span class="p">)</span>
-</span><span id="__span-0-497"><a id="__codelineno-0-497" name="__codelineno-0-497"></a>        <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-</span><span id="__span-0-498"><a id="__codelineno-0-498" name="__codelineno-0-498"></a>            <span class="n">primary</span> <span class="o">=</span> <span class="n">rs</span>
-</span><span id="__span-0-499"><a id="__codelineno-0-499" name="__codelineno-0-499"></a>
-</span><span id="__span-0-500"><a id="__codelineno-0-500" name="__codelineno-0-500"></a>    <span class="k">assert</span> <span class="n">primary</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">frozen</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>  <span class="c1"># at least one column is always processed</span>
-</span><span id="__span-0-501"><a id="__codelineno-0-501" name="__codelineno-0-501"></a>    <span class="n">out</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
-</span><span id="__span-0-502"><a id="__codelineno-0-502" name="__codelineno-0-502"></a>        <span class="p">{</span>
-</span><span id="__span-0-503"><a id="__codelineno-0-503" name="__codelineno-0-503"></a>            <span class="s2">&quot;n_obs&quot;</span><span class="p">:</span> <span class="n">span</span><span class="p">[</span><span class="s2">&quot;n_obs&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">),</span>
-</span><span id="__span-0-504"><a id="__codelineno-0-504" name="__codelineno-0-504"></a>            <span class="s2">&quot;longest_const_run_hours&quot;</span><span class="p">:</span> <span class="n">primary</span><span class="p">[</span><span class="s2">&quot;longest_run_hours&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span>
-</span><span id="__span-0-505"><a id="__codelineno-0-505" name="__codelineno-0-505"></a>            <span class="s2">&quot;frozen_value&quot;</span><span class="p">:</span> <span class="n">primary</span><span class="p">[</span><span class="s2">&quot;run_value&quot;</span><span class="p">],</span>
-</span><span id="__span-0-506"><a id="__codelineno-0-506" name="__codelineno-0-506"></a>            <span class="s2">&quot;is_frozen&quot;</span><span class="p">:</span> <span class="n">frozen</span><span class="o">.</span><span class="n">reindex</span><span class="p">(</span><span class="n">span</span><span class="o">.</span><span class="n">index</span><span class="p">)</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="kc">False</span><span class="p">),</span>
-</span><span id="__span-0-507"><a id="__codelineno-0-507" name="__codelineno-0-507"></a>        <span class="p">}</span>
-</span><span id="__span-0-508"><a id="__codelineno-0-508" name="__codelineno-0-508"></a>    <span class="p">)</span>
-</span><span id="__span-0-509"><a id="__codelineno-0-509" name="__codelineno-0-509"></a>    <span class="k">return</span> <span class="n">out</span><span class="p">[</span><span class="n">_FROZEN_COLUMNS</span><span class="p">]</span>
+              <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-424">424</a></span>
+<span class="normal"><a href="#gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-425">425</a></span>
+<span class="normal"><a href="#gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-426">426</a></span>
+<span class="normal"><a href="#gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-427">427</a></span>
+<span class="normal"><a href="#gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-428">428</a></span>
+<span class="normal"><a href="#gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-429">429</a></span>
+<span class="normal"><a href="#gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-430">430</a></span>
+<span class="normal"><a href="#gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-431">431</a></span>
+<span class="normal"><a href="#gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-432">432</a></span>
+<span class="normal"><a href="#gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-433">433</a></span>
+<span class="normal"><a href="#gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-434">434</a></span>
+<span class="normal"><a href="#gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-435">435</a></span>
+<span class="normal"><a href="#gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-436">436</a></span>
+<span class="normal"><a href="#gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-437">437</a></span>
+<span class="normal"><a href="#gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-438">438</a></span>
+<span class="normal"><a href="#gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-439">439</a></span>
+<span class="normal"><a href="#gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-440">440</a></span>
+<span class="normal"><a href="#gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-441">441</a></span>
+<span class="normal"><a href="#gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-442">442</a></span>
+<span class="normal"><a href="#gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-443">443</a></span>
+<span class="normal"><a href="#gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-444">444</a></span>
+<span class="normal"><a href="#gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-445">445</a></span>
+<span class="normal"><a href="#gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-446">446</a></span>
+<span class="normal"><a href="#gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-447">447</a></span>
+<span class="normal"><a href="#gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-448">448</a></span>
+<span class="normal"><a href="#gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-449">449</a></span>
+<span class="normal"><a href="#gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-450">450</a></span>
+<span class="normal"><a href="#gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-451">451</a></span>
+<span class="normal"><a href="#gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-452">452</a></span>
+<span class="normal"><a href="#gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-453">453</a></span>
+<span class="normal"><a href="#gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-454">454</a></span>
+<span class="normal"><a href="#gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-455">455</a></span>
+<span class="normal"><a href="#gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-456">456</a></span>
+<span class="normal"><a href="#gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-457">457</a></span>
+<span class="normal"><a href="#gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-458">458</a></span>
+<span class="normal"><a href="#gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-459">459</a></span>
+<span class="normal"><a href="#gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-460">460</a></span>
+<span class="normal"><a href="#gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-461">461</a></span>
+<span class="normal"><a href="#gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-462">462</a></span>
+<span class="normal"><a href="#gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-463">463</a></span>
+<span class="normal"><a href="#gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-464">464</a></span>
+<span class="normal"><a href="#gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-465">465</a></span>
+<span class="normal"><a href="#gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-466">466</a></span>
+<span class="normal"><a href="#gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-467">467</a></span>
+<span class="normal"><a href="#gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-468">468</a></span>
+<span class="normal"><a href="#gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-469">469</a></span>
+<span class="normal"><a href="#gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-470">470</a></span>
+<span class="normal"><a href="#gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-471">471</a></span>
+<span class="normal"><a href="#gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-472">472</a></span>
+<span class="normal"><a href="#gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-473">473</a></span>
+<span class="normal"><a href="#gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-474">474</a></span>
+<span class="normal"><a href="#gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-475">475</a></span>
+<span class="normal"><a href="#gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-476">476</a></span>
+<span class="normal"><a href="#gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-477">477</a></span>
+<span class="normal"><a href="#gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-478">478</a></span>
+<span class="normal"><a href="#gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-479">479</a></span>
+<span class="normal"><a href="#gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-480">480</a></span>
+<span class="normal"><a href="#gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-481">481</a></span>
+<span class="normal"><a href="#gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-482">482</a></span>
+<span class="normal"><a href="#gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-483">483</a></span>
+<span class="normal"><a href="#gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-484">484</a></span>
+<span class="normal"><a href="#gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-485">485</a></span>
+<span class="normal"><a href="#gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-486">486</a></span>
+<span class="normal"><a href="#gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-487">487</a></span>
+<span class="normal"><a href="#gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-488">488</a></span>
+<span class="normal"><a href="#gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-489">489</a></span>
+<span class="normal"><a href="#gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-490">490</a></span>
+<span class="normal"><a href="#gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-491">491</a></span>
+<span class="normal"><a href="#gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-492">492</a></span>
+<span class="normal"><a href="#gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-493">493</a></span>
+<span class="normal"><a href="#gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-494">494</a></span>
+<span class="normal"><a href="#gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-495">495</a></span>
+<span class="normal"><a href="#gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-496">496</a></span>
+<span class="normal"><a href="#gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-497">497</a></span>
+<span class="normal"><a href="#gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-498">498</a></span>
+<span class="normal"><a href="#gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-499">499</a></span>
+<span class="normal"><a href="#gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-500">500</a></span>
+<span class="normal"><a href="#gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-501">501</a></span>
+<span class="normal"><a href="#gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-502">502</a></span>
+<span class="normal"><a href="#gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-503">503</a></span>
+<span class="normal"><a href="#gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-504">504</a></span>
+<span class="normal"><a href="#gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-505">505</a></span>
+<span class="normal"><a href="#gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-506">506</a></span>
+<span class="normal"><a href="#gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-507">507</a></span>
+<span class="normal"><a href="#gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-508">508</a></span>
+<span class="normal"><a href="#gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-509">509</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="gbfs_toolkit.detect_frozen_stations--source--__span-0-424"><a id="gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-424" name="gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-424"></a><span class="k">def</span><span class="w"> </span><span class="nf">detect_frozen_stations</span><span class="p">(</span>
+</span><span id="gbfs_toolkit.detect_frozen_stations--source--__span-0-425"><a id="gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-425" name="gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-425"></a>    <span class="n">panel</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+</span><span id="gbfs_toolkit.detect_frozen_stations--source--__span-0-426"><a id="gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-426" name="gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-426"></a>    <span class="o">*</span><span class="p">,</span>
+</span><span id="gbfs_toolkit.detect_frozen_stations--source--__span-0-427"><a id="gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-427" name="gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-427"></a>    <span class="n">value_col</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"num_bikes_available"</span><span class="p">,</span>
+</span><span id="gbfs_toolkit.detect_frozen_stations--source--__span-0-428"><a id="gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-428" name="gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-428"></a>    <span class="n">columns</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+</span><span id="gbfs_toolkit.detect_frozen_stations--source--__span-0-429"><a id="gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-429" name="gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-429"></a>    <span class="n">min_run_hours</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">6.0</span><span class="p">,</span>
+</span><span id="gbfs_toolkit.detect_frozen_stations--source--__span-0-430"><a id="gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-430" name="gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-430"></a>    <span class="n">active_hours</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">22</span><span class="p">),</span>
+</span><span id="gbfs_toolkit.detect_frozen_stations--source--__span-0-431"><a id="gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-431" name="gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-431"></a>    <span class="n">strict</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+</span><span id="gbfs_toolkit.detect_frozen_stations--source--__span-0-432"><a id="gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-432" name="gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-432"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+</span><span id="gbfs_toolkit.detect_frozen_stations--source--__span-0-433"><a id="gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-433" name="gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-433"></a><span class="w">    </span><span class="sd">"""Flag "frozen" stations: a value stuck unchanged while the feed keeps updating.</span>
+</span><span id="gbfs_toolkit.detect_frozen_stations--source--__span-0-434"><a id="gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-434" name="gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-434"></a>
+</span><span id="gbfs_toolkit.detect_frozen_stations--source--__span-0-435"><a id="gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-435" name="gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-435"></a><span class="sd">    Distinct from staleness (D3, where ``last_reported`` itself goes stale) and from a genuine</span>
+</span><span id="gbfs_toolkit.detect_frozen_stations--source--__span-0-436"><a id="gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-436" name="gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-436"></a><span class="sd">    stockout: here the feed is fresh but the value never moves, the signature of a dead sensor</span>
+</span><span id="gbfs_toolkit.detect_frozen_stations--source--__span-0-437"><a id="gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-437" name="gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-437"></a><span class="sd">    or a station the operator forgot. Restricting to ``active_hours`` (local hour of</span>
+</span><span id="gbfs_toolkit.detect_frozen_stations--source--__span-0-438"><a id="gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-438" name="gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-438"></a><span class="sd">    ``fetched_at`` as stored) avoids flagging the legitimate overnight flatline.</span>
+</span><span id="gbfs_toolkit.detect_frozen_stations--source--__span-0-439"><a id="gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-439" name="gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-439"></a>
+</span><span id="gbfs_toolkit.detect_frozen_stations--source--__span-0-440"><a id="gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-440" name="gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-440"></a><span class="sd">    Parameters</span>
+</span><span id="gbfs_toolkit.detect_frozen_stations--source--__span-0-441"><a id="gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-441" name="gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-441"></a><span class="sd">    ----------</span>
+</span><span id="gbfs_toolkit.detect_frozen_stations--source--__span-0-442"><a id="gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-442" name="gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-442"></a><span class="sd">    value_col : str, default "num_bikes_available"</span>
+</span><span id="gbfs_toolkit.detect_frozen_stations--source--__span-0-443"><a id="gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-443" name="gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-443"></a><span class="sd">        The column expected to vary (used when ``columns`` is not given).</span>
+</span><span id="gbfs_toolkit.detect_frozen_stations--source--__span-0-444"><a id="gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-444" name="gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-444"></a><span class="sd">    columns : tuple of str, optional</span>
+</span><span id="gbfs_toolkit.detect_frozen_stations--source--__span-0-445"><a id="gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-445" name="gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-445"></a><span class="sd">        Require *all* these columns to be frozen, e.g. ``("num_bikes_available",</span>
+</span><span id="gbfs_toolkit.detect_frozen_stations--source--__span-0-446"><a id="gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-446" name="gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-446"></a><span class="sd">        "num_docks_available")``: a stricter, both-counters-stuck signal. Defaults to</span>
+</span><span id="gbfs_toolkit.detect_frozen_stations--source--__span-0-447"><a id="gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-447" name="gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-447"></a><span class="sd">        ``(value_col,)``.</span>
+</span><span id="gbfs_toolkit.detect_frozen_stations--source--__span-0-448"><a id="gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-448" name="gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-448"></a><span class="sd">    min_run_hours : float, default 6</span>
+</span><span id="gbfs_toolkit.detect_frozen_stations--source--__span-0-449"><a id="gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-449" name="gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-449"></a><span class="sd">        Minimum span (of an unchanged run, or of the whole series in ``strict`` mode) to call a</span>
+</span><span id="gbfs_toolkit.detect_frozen_stations--source--__span-0-450"><a id="gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-450" name="gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-450"></a><span class="sd">        station frozen.</span>
+</span><span id="gbfs_toolkit.detect_frozen_stations--source--__span-0-451"><a id="gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-451" name="gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-451"></a><span class="sd">    active_hours : (int, int) or None, default (6, 22)</span>
+</span><span id="gbfs_toolkit.detect_frozen_stations--source--__span-0-452"><a id="gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-452" name="gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-452"></a><span class="sd">        Keep only observations in ``[lo, hi)`` local hours; ``None`` to use all.</span>
+</span><span id="gbfs_toolkit.detect_frozen_stations--source--__span-0-453"><a id="gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-453" name="gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-453"></a><span class="sd">    strict : bool, default False</span>
+</span><span id="gbfs_toolkit.detect_frozen_stations--source--__span-0-454"><a id="gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-454" name="gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-454"></a><span class="sd">        If ``True``, a column counts as frozen only when it **never changes** across the entire</span>
+</span><span id="gbfs_toolkit.detect_frozen_stations--source--__span-0-455"><a id="gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-455" name="gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-455"></a><span class="sd">        observed window (span ≥ ``min_run_hours``), not merely a long constant *run*. This</span>
+</span><span id="gbfs_toolkit.detect_frozen_stations--source--__span-0-456"><a id="gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-456" name="gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-456"></a><span class="sd">        matches a "never-moved" zombie definition; the default (``False``) is the broader</span>
+</span><span id="gbfs_toolkit.detect_frozen_stations--source--__span-0-457"><a id="gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-457" name="gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-457"></a><span class="sd">        "stuck for ≥ ``min_run_hours`` at some point".</span>
+</span><span id="gbfs_toolkit.detect_frozen_stations--source--__span-0-458"><a id="gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-458" name="gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-458"></a>
+</span><span id="gbfs_toolkit.detect_frozen_stations--source--__span-0-459"><a id="gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-459" name="gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-459"></a><span class="sd">    Returns</span>
+</span><span id="gbfs_toolkit.detect_frozen_stations--source--__span-0-460"><a id="gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-460" name="gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-460"></a><span class="sd">    -------</span>
+</span><span id="gbfs_toolkit.detect_frozen_stations--source--__span-0-461"><a id="gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-461" name="gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-461"></a><span class="sd">    pandas.DataFrame</span>
+</span><span id="gbfs_toolkit.detect_frozen_stations--source--__span-0-462"><a id="gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-462" name="gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-462"></a><span class="sd">        Indexed by ``(system_id, station_id)``: ``n_obs``, ``longest_const_run_hours``,</span>
+</span><span id="gbfs_toolkit.detect_frozen_stations--source--__span-0-463"><a id="gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-463" name="gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-463"></a><span class="sd">        ``frozen_value`` (for the first column), ``is_frozen``.</span>
+</span><span id="gbfs_toolkit.detect_frozen_stations--source--__span-0-464"><a id="gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-464" name="gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-464"></a>
+</span><span id="gbfs_toolkit.detect_frozen_stations--source--__span-0-465"><a id="gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-465" name="gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-465"></a><span class="sd">    See Also</span>
+</span><span id="gbfs_toolkit.detect_frozen_stations--source--__span-0-466"><a id="gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-466" name="gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-466"></a><span class="sd">    --------</span>
+</span><span id="gbfs_toolkit.detect_frozen_stations--source--__span-0-467"><a id="gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-467" name="gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-467"></a><span class="sd">    [`stockout_episodes`][gbfs_toolkit.stockout_episodes] : Genuine outage episodes.</span>
+</span><span id="gbfs_toolkit.detect_frozen_stations--source--__span-0-468"><a id="gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-468" name="gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-468"></a><span class="sd">    """</span>
+</span><span id="gbfs_toolkit.detect_frozen_stations--source--__span-0-469"><a id="gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-469" name="gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-469"></a>    <span class="n">cols</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">columns</span><span class="p">)</span> <span class="k">if</span> <span class="n">columns</span> <span class="k">else</span> <span class="p">[</span><span class="n">value_col</span><span class="p">]</span>
+</span><span id="gbfs_toolkit.detect_frozen_stations--source--__span-0-470"><a id="gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-470" name="gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-470"></a>    <span class="n">df</span> <span class="o">=</span> <span class="n">panel_frame</span><span class="p">(</span><span class="n">panel</span><span class="p">)</span>
+</span><span id="gbfs_toolkit.detect_frozen_stations--source--__span-0-471"><a id="gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-471" name="gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-471"></a>    <span class="n">require_columns</span><span class="p">(</span>
+</span><span id="gbfs_toolkit.detect_frozen_stations--source--__span-0-472"><a id="gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-472" name="gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-472"></a>        <span class="n">df</span><span class="p">,</span> <span class="p">[</span><span class="s2">"system_id"</span><span class="p">,</span> <span class="s2">"station_id"</span><span class="p">,</span> <span class="s2">"fetched_at"</span><span class="p">,</span> <span class="o">*</span><span class="n">cols</span><span class="p">],</span> <span class="n">what</span><span class="o">=</span><span class="s2">"detect_frozen_stations"</span>
+</span><span id="gbfs_toolkit.detect_frozen_stations--source--__span-0-473"><a id="gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-473" name="gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-473"></a>    <span class="p">)</span>
+</span><span id="gbfs_toolkit.detect_frozen_stations--source--__span-0-474"><a id="gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-474" name="gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-474"></a>    <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[[</span><span class="s2">"system_id"</span><span class="p">,</span> <span class="s2">"station_id"</span><span class="p">,</span> <span class="s2">"fetched_at"</span><span class="p">,</span> <span class="o">*</span><span class="n">cols</span><span class="p">]]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+</span><span id="gbfs_toolkit.detect_frozen_stations--source--__span-0-475"><a id="gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-475" name="gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-475"></a>    <span class="n">df</span><span class="p">[</span><span class="s2">"fetched_at"</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">"fetched_at"</span><span class="p">])</span>
+</span><span id="gbfs_toolkit.detect_frozen_stations--source--__span-0-476"><a id="gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-476" name="gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-476"></a>    <span class="k">if</span> <span class="n">active_hours</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="gbfs_toolkit.detect_frozen_stations--source--__span-0-477"><a id="gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-477" name="gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-477"></a>        <span class="n">lo</span><span class="p">,</span> <span class="n">hi</span> <span class="o">=</span> <span class="n">active_hours</span>
+</span><span id="gbfs_toolkit.detect_frozen_stations--source--__span-0-478"><a id="gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-478" name="gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-478"></a>        <span class="n">hour</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">"fetched_at"</span><span class="p">]</span><span class="o">.</span><span class="n">dt</span><span class="o">.</span><span class="n">hour</span>
+</span><span id="gbfs_toolkit.detect_frozen_stations--source--__span-0-479"><a id="gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-479" name="gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-479"></a>        <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[(</span><span class="n">hour</span> <span class="o">&gt;=</span> <span class="n">lo</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">hour</span> <span class="o">&lt;</span> <span class="n">hi</span><span class="p">)]</span>
+</span><span id="gbfs_toolkit.detect_frozen_stations--source--__span-0-480"><a id="gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-480" name="gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-480"></a>    <span class="n">keys</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"system_id"</span><span class="p">,</span> <span class="s2">"station_id"</span><span class="p">]</span>
+</span><span id="gbfs_toolkit.detect_frozen_stations--source--__span-0-481"><a id="gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-481" name="gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-481"></a>    <span class="k">if</span> <span class="n">df</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
+</span><span id="gbfs_toolkit.detect_frozen_stations--source--__span-0-482"><a id="gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-482" name="gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-482"></a>        <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="n">_FROZEN_COLUMNS</span><span class="p">)</span><span class="o">.</span><span class="n">rename_axis</span><span class="p">(</span><span class="n">keys</span><span class="p">)</span>
+</span><span id="gbfs_toolkit.detect_frozen_stations--source--__span-0-483"><a id="gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-483" name="gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-483"></a>    <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">sort_values</span><span class="p">([</span><span class="o">*</span><span class="n">keys</span><span class="p">,</span> <span class="s2">"fetched_at"</span><span class="p">])</span>
+</span><span id="gbfs_toolkit.detect_frozen_stations--source--__span-0-484"><a id="gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-484" name="gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-484"></a>
+</span><span id="gbfs_toolkit.detect_frozen_stations--source--__span-0-485"><a id="gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-485" name="gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-485"></a>    <span class="n">span</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="n">keys</span><span class="p">)[</span><span class="s2">"fetched_at"</span><span class="p">]</span><span class="o">.</span><span class="n">agg</span><span class="p">(</span><span class="n">first</span><span class="o">=</span><span class="s2">"min"</span><span class="p">,</span> <span class="n">last</span><span class="o">=</span><span class="s2">"max"</span><span class="p">,</span> <span class="n">n_obs</span><span class="o">=</span><span class="s2">"size"</span><span class="p">)</span>
+</span><span id="gbfs_toolkit.detect_frozen_stations--source--__span-0-486"><a id="gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-486" name="gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-486"></a>    <span class="n">span_hours</span> <span class="o">=</span> <span class="p">(</span><span class="n">span</span><span class="p">[</span><span class="s2">"last"</span><span class="p">]</span> <span class="o">-</span> <span class="n">span</span><span class="p">[</span><span class="s2">"first"</span><span class="p">])</span><span class="o">.</span><span class="n">dt</span><span class="o">.</span><span class="n">total_seconds</span><span class="p">()</span> <span class="o">/</span> <span class="mi">3600</span>
+</span><span id="gbfs_toolkit.detect_frozen_stations--source--__span-0-487"><a id="gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-487" name="gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-487"></a>
+</span><span id="gbfs_toolkit.detect_frozen_stations--source--__span-0-488"><a id="gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-488" name="gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-488"></a>    <span class="n">frozen</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span id="gbfs_toolkit.detect_frozen_stations--source--__span-0-489"><a id="gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-489" name="gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-489"></a>    <span class="n">primary</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span id="gbfs_toolkit.detect_frozen_stations--source--__span-0-490"><a id="gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-490" name="gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-490"></a>    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">col</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">cols</span><span class="p">):</span>
+</span><span id="gbfs_toolkit.detect_frozen_stations--source--__span-0-491"><a id="gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-491" name="gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-491"></a>        <span class="n">rs</span> <span class="o">=</span> <span class="n">_run_stats</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">keys</span><span class="p">,</span> <span class="n">col</span><span class="p">)</span>
+</span><span id="gbfs_toolkit.detect_frozen_stations--source--__span-0-492"><a id="gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-492" name="gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-492"></a>        <span class="k">if</span> <span class="n">strict</span><span class="p">:</span>
+</span><span id="gbfs_toolkit.detect_frozen_stations--source--__span-0-493"><a id="gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-493" name="gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-493"></a>            <span class="n">col_frozen</span> <span class="o">=</span> <span class="n">rs</span><span class="p">[</span><span class="s2">"constant"</span><span class="p">]</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">span_hours</span> <span class="o">&gt;=</span> <span class="n">min_run_hours</span><span class="p">)</span>
+</span><span id="gbfs_toolkit.detect_frozen_stations--source--__span-0-494"><a id="gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-494" name="gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-494"></a>        <span class="k">else</span><span class="p">:</span>
+</span><span id="gbfs_toolkit.detect_frozen_stations--source--__span-0-495"><a id="gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-495" name="gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-495"></a>            <span class="n">col_frozen</span> <span class="o">=</span> <span class="n">rs</span><span class="p">[</span><span class="s2">"longest_run_hours"</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">min_run_hours</span>
+</span><span id="gbfs_toolkit.detect_frozen_stations--source--__span-0-496"><a id="gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-496" name="gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-496"></a>        <span class="n">frozen</span> <span class="o">=</span> <span class="n">col_frozen</span> <span class="k">if</span> <span class="n">frozen</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="p">(</span><span class="n">frozen</span> <span class="o">&amp;</span> <span class="n">col_frozen</span><span class="p">)</span>
+</span><span id="gbfs_toolkit.detect_frozen_stations--source--__span-0-497"><a id="gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-497" name="gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-497"></a>        <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+</span><span id="gbfs_toolkit.detect_frozen_stations--source--__span-0-498"><a id="gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-498" name="gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-498"></a>            <span class="n">primary</span> <span class="o">=</span> <span class="n">rs</span>
+</span><span id="gbfs_toolkit.detect_frozen_stations--source--__span-0-499"><a id="gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-499" name="gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-499"></a>
+</span><span id="gbfs_toolkit.detect_frozen_stations--source--__span-0-500"><a id="gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-500" name="gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-500"></a>    <span class="k">assert</span> <span class="n">primary</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">frozen</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>  <span class="c1"># at least one column is always processed</span>
+</span><span id="gbfs_toolkit.detect_frozen_stations--source--__span-0-501"><a id="gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-501" name="gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-501"></a>    <span class="n">out</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+</span><span id="gbfs_toolkit.detect_frozen_stations--source--__span-0-502"><a id="gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-502" name="gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-502"></a>        <span class="p">{</span>
+</span><span id="gbfs_toolkit.detect_frozen_stations--source--__span-0-503"><a id="gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-503" name="gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-503"></a>            <span class="s2">"n_obs"</span><span class="p">:</span> <span class="n">span</span><span class="p">[</span><span class="s2">"n_obs"</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">),</span>
+</span><span id="gbfs_toolkit.detect_frozen_stations--source--__span-0-504"><a id="gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-504" name="gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-504"></a>            <span class="s2">"longest_const_run_hours"</span><span class="p">:</span> <span class="n">primary</span><span class="p">[</span><span class="s2">"longest_run_hours"</span><span class="p">]</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span>
+</span><span id="gbfs_toolkit.detect_frozen_stations--source--__span-0-505"><a id="gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-505" name="gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-505"></a>            <span class="s2">"frozen_value"</span><span class="p">:</span> <span class="n">primary</span><span class="p">[</span><span class="s2">"run_value"</span><span class="p">],</span>
+</span><span id="gbfs_toolkit.detect_frozen_stations--source--__span-0-506"><a id="gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-506" name="gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-506"></a>            <span class="s2">"is_frozen"</span><span class="p">:</span> <span class="n">frozen</span><span class="o">.</span><span class="n">reindex</span><span class="p">(</span><span class="n">span</span><span class="o">.</span><span class="n">index</span><span class="p">)</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="kc">False</span><span class="p">),</span>
+</span><span id="gbfs_toolkit.detect_frozen_stations--source--__span-0-507"><a id="gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-507" name="gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-507"></a>        <span class="p">}</span>
+</span><span id="gbfs_toolkit.detect_frozen_stations--source--__span-0-508"><a id="gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-508" name="gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-508"></a>    <span class="p">)</span>
+</span><span id="gbfs_toolkit.detect_frozen_stations--source--__span-0-509"><a id="gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-509" name="gbfs_toolkit.detect_frozen_stations--source--__codelineno-0-509"></a>    <span class="k">return</span> <span class="n">out</span><span class="p">[</span><span class="n">_FROZEN_COLUMNS</span><span class="p">]</span>
 </span></code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -6867,10 +6867,10 @@ matches a "never-moved" zombie definition; the default (<code>False</code>) is t
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.instant", "navigation.instant.progress", "navigation.tracking", "navigation.sections", "navigation.tabs", "navigation.tabs.sticky", "navigation.top", "navigation.indexes", "navigation.footer", "toc.follow", "search.suggest", "search.highlight", "search.share", "content.code.copy", "content.code.annotate", "content.tooltips"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.instant", "navigation.instant.progress", "navigation.tracking", "navigation.sections", "navigation.tabs", "navigation.tabs.sticky", "navigation.top", "navigation.indexes", "navigation.footer", "toc.follow", "search.suggest", "search.highlight", "search.share", "content.code.copy", "content.code.annotate", "content.tooltips"], "search": "../../../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
     
     
-      <script src="../../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../../../assets/javascripts/bundle.c21346df.min.js"></script>
       
         <script src="../../../javascripts/mathjax.js"></script>
       

@@ -25,7 +25,7 @@
       
       
       <link rel="icon" href="../../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-ProperDocs 1.6.7, mkdocs-material-9.7.6">
+      <meta name="generator" content="mkdocs-ProperDocs 1.6.7, mkdocs-material-9.8.0">
     
     
       
@@ -33,10 +33,10 @@
       
     
     
-      <link rel="stylesheet" href="../../../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.57a0d79d.min.css">
       
         
-        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.fb2fffe2.min.css">
       
       
 
@@ -1148,7 +1148,7 @@
   <span class="md-ellipsis">
     
   
-    __version__
+    _version_
   
 
     
@@ -6440,83 +6440,83 @@ Counts are downcast to nullable <code>Int16</code> and <code>station_id</code> t
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/gbfs_toolkit/sim/export.py</code></summary>
-              <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-20">20</a></span>
-<span class="normal"><a href="#__codelineno-0-21">21</a></span>
-<span class="normal"><a href="#__codelineno-0-22">22</a></span>
-<span class="normal"><a href="#__codelineno-0-23">23</a></span>
-<span class="normal"><a href="#__codelineno-0-24">24</a></span>
-<span class="normal"><a href="#__codelineno-0-25">25</a></span>
-<span class="normal"><a href="#__codelineno-0-26">26</a></span>
-<span class="normal"><a href="#__codelineno-0-27">27</a></span>
-<span class="normal"><a href="#__codelineno-0-28">28</a></span>
-<span class="normal"><a href="#__codelineno-0-29">29</a></span>
-<span class="normal"><a href="#__codelineno-0-30">30</a></span>
-<span class="normal"><a href="#__codelineno-0-31">31</a></span>
-<span class="normal"><a href="#__codelineno-0-32">32</a></span>
-<span class="normal"><a href="#__codelineno-0-33">33</a></span>
-<span class="normal"><a href="#__codelineno-0-34">34</a></span>
-<span class="normal"><a href="#__codelineno-0-35">35</a></span>
-<span class="normal"><a href="#__codelineno-0-36">36</a></span>
-<span class="normal"><a href="#__codelineno-0-37">37</a></span>
-<span class="normal"><a href="#__codelineno-0-38">38</a></span>
-<span class="normal"><a href="#__codelineno-0-39">39</a></span>
-<span class="normal"><a href="#__codelineno-0-40">40</a></span>
-<span class="normal"><a href="#__codelineno-0-41">41</a></span>
-<span class="normal"><a href="#__codelineno-0-42">42</a></span>
-<span class="normal"><a href="#__codelineno-0-43">43</a></span>
-<span class="normal"><a href="#__codelineno-0-44">44</a></span>
-<span class="normal"><a href="#__codelineno-0-45">45</a></span>
-<span class="normal"><a href="#__codelineno-0-46">46</a></span>
-<span class="normal"><a href="#__codelineno-0-47">47</a></span>
-<span class="normal"><a href="#__codelineno-0-48">48</a></span>
-<span class="normal"><a href="#__codelineno-0-49">49</a></span>
-<span class="normal"><a href="#__codelineno-0-50">50</a></span>
-<span class="normal"><a href="#__codelineno-0-51">51</a></span>
-<span class="normal"><a href="#__codelineno-0-52">52</a></span>
-<span class="normal"><a href="#__codelineno-0-53">53</a></span>
-<span class="normal"><a href="#__codelineno-0-54">54</a></span>
-<span class="normal"><a href="#__codelineno-0-55">55</a></span>
-<span class="normal"><a href="#__codelineno-0-56">56</a></span>
-<span class="normal"><a href="#__codelineno-0-57">57</a></span>
-<span class="normal"><a href="#__codelineno-0-58">58</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-20"><a id="__codelineno-0-20" name="__codelineno-0-20"></a><span class="k">def</span><span class="w"> </span><span class="nf">generate_gbfs_parquet</span><span class="p">(</span><span class="n">cfg</span><span class="p">:</span> <span class="n">SimConfig</span><span class="p">,</span> <span class="n">filepath</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
-</span><span id="__span-0-21"><a id="__codelineno-0-21" name="__codelineno-0-21"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Run the simulation and export a compressed, canonical GBFS ``station_status`` Parquet.</span>
-</span><span id="__span-0-22"><a id="__codelineno-0-22" name="__codelineno-0-22"></a>
-</span><span id="__span-0-23"><a id="__codelineno-0-23" name="__codelineno-0-23"></a><span class="sd">    Ghost bikes are split into ``num_bikes_disabled`` (rentable count goes to</span>
-</span><span id="__span-0-24"><a id="__codelineno-0-24" name="__codelineno-0-24"></a><span class="sd">    ``num_bikes_available``); a scraper failure drops the snapshot (a real gap), not a null value.</span>
-</span><span id="__span-0-25"><a id="__codelineno-0-25" name="__codelineno-0-25"></a><span class="sd">    Counts are downcast to nullable ``Int16`` and ``station_id`` to ``category``.</span>
-</span><span id="__span-0-26"><a id="__codelineno-0-26" name="__codelineno-0-26"></a><span class="sd">    &quot;&quot;&quot;</span>
-</span><span id="__span-0-27"><a id="__codelineno-0-27" name="__codelineno-0-27"></a>    <span class="n">info</span><span class="p">,</span> <span class="n">status</span> <span class="o">=</span> <span class="n">simulate_city_flows</span><span class="p">(</span><span class="n">cfg</span><span class="p">)</span>
-</span><span id="__span-0-28"><a id="__codelineno-0-28" name="__codelineno-0-28"></a>    <span class="n">ghost</span> <span class="o">=</span> <span class="n">info</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s2">&quot;station_id&quot;</span><span class="p">)[</span><span class="s2">&quot;ghost_bikes&quot;</span><span class="p">]</span>
-</span><span id="__span-0-29"><a id="__codelineno-0-29" name="__codelineno-0-29"></a>    <span class="n">df</span> <span class="o">=</span> <span class="n">status</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-</span><span id="__span-0-30"><a id="__codelineno-0-30" name="__codelineno-0-30"></a>    <span class="n">g</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;station_id&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">ghost</span><span class="p">)</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
-</span><span id="__span-0-31"><a id="__codelineno-0-31" name="__codelineno-0-31"></a>    <span class="n">total</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;num_bikes_available&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">(</span>
-</span><span id="__span-0-32"><a id="__codelineno-0-32" name="__codelineno-0-32"></a>        <span class="n">dtype</span><span class="o">=</span><span class="s2">&quot;float64&quot;</span>
-</span><span id="__span-0-33"><a id="__codelineno-0-33" name="__codelineno-0-33"></a>    <span class="p">)</span>  <span class="c1"># physical (incl. ghost), may be NaN</span>
-</span><span id="__span-0-34"><a id="__codelineno-0-34" name="__codelineno-0-34"></a>    <span class="n">capv</span> <span class="o">=</span> <span class="n">info</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s2">&quot;station_id&quot;</span><span class="p">)[</span><span class="s2">&quot;capacity&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">reindex</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;station_id&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
-</span><span id="__span-0-35"><a id="__codelineno-0-35" name="__codelineno-0-35"></a>    <span class="n">df</span><span class="p">[</span><span class="s2">&quot;num_bikes_available&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">total</span> <span class="o">-</span> <span class="n">g</span>  <span class="c1"># rentable</span>
-</span><span id="__span-0-36"><a id="__codelineno-0-36" name="__codelineno-0-36"></a>    <span class="n">df</span><span class="p">[</span><span class="s2">&quot;num_bikes_disabled&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">g</span>
-</span><span id="__span-0-37"><a id="__codelineno-0-37" name="__codelineno-0-37"></a>    <span class="n">df</span><span class="p">[</span><span class="s2">&quot;num_docks_available&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">capv</span> <span class="o">-</span> <span class="n">total</span>
-</span><span id="__span-0-38"><a id="__codelineno-0-38" name="__codelineno-0-38"></a>    <span class="n">df</span><span class="p">[</span><span class="s2">&quot;fetched_at&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;fetched_at&quot;</span><span class="p">],</span> <span class="n">utc</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-</span><span id="__span-0-39"><a id="__codelineno-0-39" name="__codelineno-0-39"></a>    <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;num_bikes_available&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">notna</span><span class="p">()]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>  <span class="c1"># scraper failure = missing snapshot</span>
-</span><span id="__span-0-40"><a id="__codelineno-0-40" name="__codelineno-0-40"></a>    <span class="n">df</span><span class="p">[</span><span class="s2">&quot;station_id&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;station_id&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s2">&quot;category&quot;</span><span class="p">)</span>
-</span><span id="__span-0-41"><a id="__codelineno-0-41" name="__codelineno-0-41"></a>    <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;num_bikes_available&quot;</span><span class="p">,</span> <span class="s2">&quot;num_bikes_disabled&quot;</span><span class="p">,</span> <span class="s2">&quot;num_docks_available&quot;</span><span class="p">):</span>
-</span><span id="__span-0-42"><a id="__codelineno-0-42" name="__codelineno-0-42"></a>        <span class="n">df</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">round</span><span class="p">()</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s2">&quot;Int16&quot;</span><span class="p">)</span>
-</span><span id="__span-0-43"><a id="__codelineno-0-43" name="__codelineno-0-43"></a>    <span class="n">keep</span> <span class="o">=</span> <span class="p">[</span>
-</span><span id="__span-0-44"><a id="__codelineno-0-44" name="__codelineno-0-44"></a>        <span class="s2">&quot;system_id&quot;</span><span class="p">,</span>
-</span><span id="__span-0-45"><a id="__codelineno-0-45" name="__codelineno-0-45"></a>        <span class="s2">&quot;station_id&quot;</span><span class="p">,</span>
-</span><span id="__span-0-46"><a id="__codelineno-0-46" name="__codelineno-0-46"></a>        <span class="s2">&quot;fetched_at&quot;</span><span class="p">,</span>
-</span><span id="__span-0-47"><a id="__codelineno-0-47" name="__codelineno-0-47"></a>        <span class="s2">&quot;num_bikes_available&quot;</span><span class="p">,</span>
-</span><span id="__span-0-48"><a id="__codelineno-0-48" name="__codelineno-0-48"></a>        <span class="s2">&quot;num_bikes_disabled&quot;</span><span class="p">,</span>
-</span><span id="__span-0-49"><a id="__codelineno-0-49" name="__codelineno-0-49"></a>        <span class="s2">&quot;num_docks_available&quot;</span><span class="p">,</span>
-</span><span id="__span-0-50"><a id="__codelineno-0-50" name="__codelineno-0-50"></a>        <span class="s2">&quot;is_renting&quot;</span><span class="p">,</span>
-</span><span id="__span-0-51"><a id="__codelineno-0-51" name="__codelineno-0-51"></a>        <span class="s2">&quot;is_returning&quot;</span><span class="p">,</span>
-</span><span id="__span-0-52"><a id="__codelineno-0-52" name="__codelineno-0-52"></a>        <span class="s2">&quot;is_installed&quot;</span><span class="p">,</span>
-</span><span id="__span-0-53"><a id="__codelineno-0-53" name="__codelineno-0-53"></a>        <span class="s2">&quot;last_reported&quot;</span><span class="p">,</span>
-</span><span id="__span-0-54"><a id="__codelineno-0-54" name="__codelineno-0-54"></a>        <span class="s2">&quot;gbfs_version&quot;</span><span class="p">,</span>
-</span><span id="__span-0-55"><a id="__codelineno-0-55" name="__codelineno-0-55"></a>    <span class="p">]</span>
-</span><span id="__span-0-56"><a id="__codelineno-0-56" name="__codelineno-0-56"></a>    <span class="n">df</span><span class="p">[</span><span class="n">keep</span><span class="p">]</span><span class="o">.</span><span class="n">to_parquet</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="n">engine</span><span class="o">=</span><span class="s2">&quot;pyarrow&quot;</span><span class="p">,</span> <span class="n">compression</span><span class="o">=</span><span class="s2">&quot;snappy&quot;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-</span><span id="__span-0-57"><a id="__codelineno-0-57" name="__codelineno-0-57"></a>    <span class="n">info</span><span class="o">.</span><span class="n">to_parquet</span><span class="p">(</span><span class="n">filepath</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;.parquet&quot;</span><span class="p">,</span> <span class="s2">&quot;_meta.parquet&quot;</span><span class="p">),</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-</span><span id="__span-0-58"><a id="__codelineno-0-58" name="__codelineno-0-58"></a>    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;rows&quot;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">),</span> <span class="s2">&quot;bytes&quot;</span><span class="p">:</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">getsize</span><span class="p">(</span><span class="n">filepath</span><span class="p">)}</span>
+              <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-20">20</a></span>
+<span class="normal"><a href="#gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-21">21</a></span>
+<span class="normal"><a href="#gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-22">22</a></span>
+<span class="normal"><a href="#gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-23">23</a></span>
+<span class="normal"><a href="#gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-24">24</a></span>
+<span class="normal"><a href="#gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-25">25</a></span>
+<span class="normal"><a href="#gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-26">26</a></span>
+<span class="normal"><a href="#gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-27">27</a></span>
+<span class="normal"><a href="#gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-28">28</a></span>
+<span class="normal"><a href="#gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-29">29</a></span>
+<span class="normal"><a href="#gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-30">30</a></span>
+<span class="normal"><a href="#gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-31">31</a></span>
+<span class="normal"><a href="#gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-32">32</a></span>
+<span class="normal"><a href="#gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-33">33</a></span>
+<span class="normal"><a href="#gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-34">34</a></span>
+<span class="normal"><a href="#gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-35">35</a></span>
+<span class="normal"><a href="#gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-36">36</a></span>
+<span class="normal"><a href="#gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-37">37</a></span>
+<span class="normal"><a href="#gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-38">38</a></span>
+<span class="normal"><a href="#gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-39">39</a></span>
+<span class="normal"><a href="#gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-40">40</a></span>
+<span class="normal"><a href="#gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-41">41</a></span>
+<span class="normal"><a href="#gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-42">42</a></span>
+<span class="normal"><a href="#gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-43">43</a></span>
+<span class="normal"><a href="#gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-44">44</a></span>
+<span class="normal"><a href="#gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-45">45</a></span>
+<span class="normal"><a href="#gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-46">46</a></span>
+<span class="normal"><a href="#gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-47">47</a></span>
+<span class="normal"><a href="#gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-48">48</a></span>
+<span class="normal"><a href="#gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-49">49</a></span>
+<span class="normal"><a href="#gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-50">50</a></span>
+<span class="normal"><a href="#gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-51">51</a></span>
+<span class="normal"><a href="#gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-52">52</a></span>
+<span class="normal"><a href="#gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-53">53</a></span>
+<span class="normal"><a href="#gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-54">54</a></span>
+<span class="normal"><a href="#gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-55">55</a></span>
+<span class="normal"><a href="#gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-56">56</a></span>
+<span class="normal"><a href="#gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-57">57</a></span>
+<span class="normal"><a href="#gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-58">58</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="gbfs_toolkit.generate_gbfs_parquet--source--__span-0-20"><a id="gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-20" name="gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-20"></a><span class="k">def</span><span class="w"> </span><span class="nf">generate_gbfs_parquet</span><span class="p">(</span><span class="n">cfg</span><span class="p">:</span> <span class="n">SimConfig</span><span class="p">,</span> <span class="n">filepath</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+</span><span id="gbfs_toolkit.generate_gbfs_parquet--source--__span-0-21"><a id="gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-21" name="gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-21"></a><span class="w">    </span><span class="sd">"""Run the simulation and export a compressed, canonical GBFS ``station_status`` Parquet.</span>
+</span><span id="gbfs_toolkit.generate_gbfs_parquet--source--__span-0-22"><a id="gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-22" name="gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-22"></a>
+</span><span id="gbfs_toolkit.generate_gbfs_parquet--source--__span-0-23"><a id="gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-23" name="gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-23"></a><span class="sd">    Ghost bikes are split into ``num_bikes_disabled`` (rentable count goes to</span>
+</span><span id="gbfs_toolkit.generate_gbfs_parquet--source--__span-0-24"><a id="gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-24" name="gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-24"></a><span class="sd">    ``num_bikes_available``); a scraper failure drops the snapshot (a real gap), not a null value.</span>
+</span><span id="gbfs_toolkit.generate_gbfs_parquet--source--__span-0-25"><a id="gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-25" name="gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-25"></a><span class="sd">    Counts are downcast to nullable ``Int16`` and ``station_id`` to ``category``.</span>
+</span><span id="gbfs_toolkit.generate_gbfs_parquet--source--__span-0-26"><a id="gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-26" name="gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-26"></a><span class="sd">    """</span>
+</span><span id="gbfs_toolkit.generate_gbfs_parquet--source--__span-0-27"><a id="gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-27" name="gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-27"></a>    <span class="n">info</span><span class="p">,</span> <span class="n">status</span> <span class="o">=</span> <span class="n">simulate_city_flows</span><span class="p">(</span><span class="n">cfg</span><span class="p">)</span>
+</span><span id="gbfs_toolkit.generate_gbfs_parquet--source--__span-0-28"><a id="gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-28" name="gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-28"></a>    <span class="n">ghost</span> <span class="o">=</span> <span class="n">info</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s2">"station_id"</span><span class="p">)[</span><span class="s2">"ghost_bikes"</span><span class="p">]</span>
+</span><span id="gbfs_toolkit.generate_gbfs_parquet--source--__span-0-29"><a id="gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-29" name="gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-29"></a>    <span class="n">df</span> <span class="o">=</span> <span class="n">status</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+</span><span id="gbfs_toolkit.generate_gbfs_parquet--source--__span-0-30"><a id="gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-30" name="gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-30"></a>    <span class="n">g</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">"station_id"</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">ghost</span><span class="p">)</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
+</span><span id="gbfs_toolkit.generate_gbfs_parquet--source--__span-0-31"><a id="gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-31" name="gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-31"></a>    <span class="n">total</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">"num_bikes_available"</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">(</span>
+</span><span id="gbfs_toolkit.generate_gbfs_parquet--source--__span-0-32"><a id="gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-32" name="gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-32"></a>        <span class="n">dtype</span><span class="o">=</span><span class="s2">"float64"</span>
+</span><span id="gbfs_toolkit.generate_gbfs_parquet--source--__span-0-33"><a id="gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-33" name="gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-33"></a>    <span class="p">)</span>  <span class="c1"># physical (incl. ghost), may be NaN</span>
+</span><span id="gbfs_toolkit.generate_gbfs_parquet--source--__span-0-34"><a id="gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-34" name="gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-34"></a>    <span class="n">capv</span> <span class="o">=</span> <span class="n">info</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s2">"station_id"</span><span class="p">)[</span><span class="s2">"capacity"</span><span class="p">]</span><span class="o">.</span><span class="n">reindex</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">"station_id"</span><span class="p">])</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
+</span><span id="gbfs_toolkit.generate_gbfs_parquet--source--__span-0-35"><a id="gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-35" name="gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-35"></a>    <span class="n">df</span><span class="p">[</span><span class="s2">"num_bikes_available"</span><span class="p">]</span> <span class="o">=</span> <span class="n">total</span> <span class="o">-</span> <span class="n">g</span>  <span class="c1"># rentable</span>
+</span><span id="gbfs_toolkit.generate_gbfs_parquet--source--__span-0-36"><a id="gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-36" name="gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-36"></a>    <span class="n">df</span><span class="p">[</span><span class="s2">"num_bikes_disabled"</span><span class="p">]</span> <span class="o">=</span> <span class="n">g</span>
+</span><span id="gbfs_toolkit.generate_gbfs_parquet--source--__span-0-37"><a id="gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-37" name="gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-37"></a>    <span class="n">df</span><span class="p">[</span><span class="s2">"num_docks_available"</span><span class="p">]</span> <span class="o">=</span> <span class="n">capv</span> <span class="o">-</span> <span class="n">total</span>
+</span><span id="gbfs_toolkit.generate_gbfs_parquet--source--__span-0-38"><a id="gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-38" name="gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-38"></a>    <span class="n">df</span><span class="p">[</span><span class="s2">"fetched_at"</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">"fetched_at"</span><span class="p">],</span> <span class="n">utc</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span><span id="gbfs_toolkit.generate_gbfs_parquet--source--__span-0-39"><a id="gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-39" name="gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-39"></a>    <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s2">"num_bikes_available"</span><span class="p">]</span><span class="o">.</span><span class="n">notna</span><span class="p">()]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>  <span class="c1"># scraper failure = missing snapshot</span>
+</span><span id="gbfs_toolkit.generate_gbfs_parquet--source--__span-0-40"><a id="gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-40" name="gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-40"></a>    <span class="n">df</span><span class="p">[</span><span class="s2">"station_id"</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">"station_id"</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s2">"category"</span><span class="p">)</span>
+</span><span id="gbfs_toolkit.generate_gbfs_parquet--source--__span-0-41"><a id="gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-41" name="gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-41"></a>    <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">"num_bikes_available"</span><span class="p">,</span> <span class="s2">"num_bikes_disabled"</span><span class="p">,</span> <span class="s2">"num_docks_available"</span><span class="p">):</span>
+</span><span id="gbfs_toolkit.generate_gbfs_parquet--source--__span-0-42"><a id="gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-42" name="gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-42"></a>        <span class="n">df</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">round</span><span class="p">()</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s2">"Int16"</span><span class="p">)</span>
+</span><span id="gbfs_toolkit.generate_gbfs_parquet--source--__span-0-43"><a id="gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-43" name="gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-43"></a>    <span class="n">keep</span> <span class="o">=</span> <span class="p">[</span>
+</span><span id="gbfs_toolkit.generate_gbfs_parquet--source--__span-0-44"><a id="gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-44" name="gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-44"></a>        <span class="s2">"system_id"</span><span class="p">,</span>
+</span><span id="gbfs_toolkit.generate_gbfs_parquet--source--__span-0-45"><a id="gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-45" name="gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-45"></a>        <span class="s2">"station_id"</span><span class="p">,</span>
+</span><span id="gbfs_toolkit.generate_gbfs_parquet--source--__span-0-46"><a id="gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-46" name="gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-46"></a>        <span class="s2">"fetched_at"</span><span class="p">,</span>
+</span><span id="gbfs_toolkit.generate_gbfs_parquet--source--__span-0-47"><a id="gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-47" name="gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-47"></a>        <span class="s2">"num_bikes_available"</span><span class="p">,</span>
+</span><span id="gbfs_toolkit.generate_gbfs_parquet--source--__span-0-48"><a id="gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-48" name="gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-48"></a>        <span class="s2">"num_bikes_disabled"</span><span class="p">,</span>
+</span><span id="gbfs_toolkit.generate_gbfs_parquet--source--__span-0-49"><a id="gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-49" name="gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-49"></a>        <span class="s2">"num_docks_available"</span><span class="p">,</span>
+</span><span id="gbfs_toolkit.generate_gbfs_parquet--source--__span-0-50"><a id="gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-50" name="gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-50"></a>        <span class="s2">"is_renting"</span><span class="p">,</span>
+</span><span id="gbfs_toolkit.generate_gbfs_parquet--source--__span-0-51"><a id="gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-51" name="gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-51"></a>        <span class="s2">"is_returning"</span><span class="p">,</span>
+</span><span id="gbfs_toolkit.generate_gbfs_parquet--source--__span-0-52"><a id="gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-52" name="gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-52"></a>        <span class="s2">"is_installed"</span><span class="p">,</span>
+</span><span id="gbfs_toolkit.generate_gbfs_parquet--source--__span-0-53"><a id="gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-53" name="gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-53"></a>        <span class="s2">"last_reported"</span><span class="p">,</span>
+</span><span id="gbfs_toolkit.generate_gbfs_parquet--source--__span-0-54"><a id="gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-54" name="gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-54"></a>        <span class="s2">"gbfs_version"</span><span class="p">,</span>
+</span><span id="gbfs_toolkit.generate_gbfs_parquet--source--__span-0-55"><a id="gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-55" name="gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-55"></a>    <span class="p">]</span>
+</span><span id="gbfs_toolkit.generate_gbfs_parquet--source--__span-0-56"><a id="gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-56" name="gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-56"></a>    <span class="n">df</span><span class="p">[</span><span class="n">keep</span><span class="p">]</span><span class="o">.</span><span class="n">to_parquet</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="n">engine</span><span class="o">=</span><span class="s2">"pyarrow"</span><span class="p">,</span> <span class="n">compression</span><span class="o">=</span><span class="s2">"snappy"</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</span><span id="gbfs_toolkit.generate_gbfs_parquet--source--__span-0-57"><a id="gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-57" name="gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-57"></a>    <span class="n">info</span><span class="o">.</span><span class="n">to_parquet</span><span class="p">(</span><span class="n">filepath</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">".parquet"</span><span class="p">,</span> <span class="s2">"_meta.parquet"</span><span class="p">),</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</span><span id="gbfs_toolkit.generate_gbfs_parquet--source--__span-0-58"><a id="gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-58" name="gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-58"></a>    <span class="k">return</span> <span class="p">{</span><span class="s2">"rows"</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">),</span> <span class="s2">"bytes"</span><span class="p">:</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">getsize</span><span class="p">(</span><span class="n">filepath</span><span class="p">)}</span>
 </span></code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -6647,10 +6647,10 @@ Counts are downcast to nullable <code>Int16</code> and <code>station_id</code> t
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.instant", "navigation.instant.progress", "navigation.tracking", "navigation.sections", "navigation.tabs", "navigation.tabs.sticky", "navigation.top", "navigation.indexes", "navigation.footer", "toc.follow", "search.suggest", "search.highlight", "search.share", "content.code.copy", "content.code.annotate", "content.tooltips"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.instant", "navigation.instant.progress", "navigation.tracking", "navigation.sections", "navigation.tabs", "navigation.tabs.sticky", "navigation.top", "navigation.indexes", "navigation.footer", "toc.follow", "search.suggest", "search.highlight", "search.share", "content.code.copy", "content.code.annotate", "content.tooltips"], "search": "../../../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
     
     
-      <script src="../../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../../../assets/javascripts/bundle.c21346df.min.js"></script>
       
         <script src="../../../javascripts/mathjax.js"></script>
       

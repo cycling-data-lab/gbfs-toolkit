@@ -25,7 +25,7 @@
       
       
       <link rel="icon" href="../../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-ProperDocs 1.6.7, mkdocs-material-9.7.6">
+      <meta name="generator" content="mkdocs-ProperDocs 1.6.7, mkdocs-material-9.8.0">
     
     
       
@@ -33,10 +33,10 @@
       
     
     
-      <link rel="stylesheet" href="../../../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.57a0d79d.min.css">
       
         
-        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.fb2fffe2.min.css">
       
       
 
@@ -1146,7 +1146,7 @@
   <span class="md-ellipsis">
     
   
-    __version__
+    _version_
   
 
     
@@ -6422,7 +6422,7 @@
 
 
 <a href="#gbfs_toolkit.fleet_turnover_proxy" class="headerlink" title="Permanent link">&para;</a></h2>
-<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">fleet_turnover_proxy</span><span class="p">(</span><span class="n">panel</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-external" title="&lt;code&gt;pandas.DataFrame&lt;/code&gt;" href="https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.html#pandas.DataFrame">DataFrame</a></span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">freq</span><span class="p">:</span> <span class="n"><span title="str">str</span></span> <span class="o">=</span> <span class="s1">&#39;1D&#39;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n"><a class="autorefs autorefs-external" title="&lt;code&gt;pandas.DataFrame&lt;/code&gt;" href="https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.html#pandas.DataFrame">DataFrame</a></span>
+<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">fleet_turnover_proxy</span><span class="p">(</span><span class="n">panel</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-external" title="&lt;code&gt;pandas.DataFrame&lt;/code&gt;" href="https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.html#pandas.DataFrame">DataFrame</a></span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">freq</span><span class="p">:</span> <span class="n"><span title="str">str</span></span> <span class="o">=</span> <span class="s1">'1D'</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n"><a class="autorefs autorefs-external" title="&lt;code&gt;pandas.DataFrame&lt;/code&gt;" href="https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.html#pandas.DataFrame">DataFrame</a></span>
 </span></code></pre></div>
 
     <div class="doc doc-contents first">
@@ -6466,103 +6466,103 @@ of usage. It is a strict <strong>lower bound</strong>: by the aliasing argument 
 <p><span class="doc-section-title">Examples:</span></p>
     <div class="language-pycon highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="gp">&gt;&gt;&gt; </span><span class="n">panel</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="gp">... </span>    <span class="s2">&quot;system_id&quot;</span><span class="p">:</span> <span class="s2">&quot;s&quot;</span><span class="p">,</span> <span class="s2">&quot;station_id&quot;</span><span class="p">:</span> <span class="s2">&quot;a&quot;</span><span class="p">,</span>
-</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="gp">... </span>    <span class="s2">&quot;fetched_at&quot;</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span>
-</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="gp">... </span>        <span class="p">[</span><span class="s2">&quot;2026-01-01T08:00Z&quot;</span><span class="p">,</span> <span class="s2">&quot;2026-01-01T09:00Z&quot;</span><span class="p">,</span> <span class="s2">&quot;2026-01-01T10:00Z&quot;</span><span class="p">]),</span>
-</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="gp">... </span>    <span class="s2">&quot;num_bikes_available&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">9</span><span class="p">],</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="gp">... </span>    <span class="s2">"system_id"</span><span class="p">:</span> <span class="s2">"s"</span><span class="p">,</span> <span class="s2">"station_id"</span><span class="p">:</span> <span class="s2">"a"</span><span class="p">,</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="gp">... </span>    <span class="s2">"fetched_at"</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="gp">... </span>        <span class="p">[</span><span class="s2">"2026-01-01T08:00Z"</span><span class="p">,</span> <span class="s2">"2026-01-01T09:00Z"</span><span class="p">,</span> <span class="s2">"2026-01-01T10:00Z"</span><span class="p">]),</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="gp">... </span>    <span class="s2">"num_bikes_available"</span><span class="p">:</span> <span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">9</span><span class="p">],</span>
 </span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="gp">... </span><span class="p">})</span>
-</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="gp">&gt;&gt;&gt; </span><span class="nb">round</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">fleet_turnover_proxy</span><span class="p">(</span><span class="n">panel</span><span class="p">)[</span><span class="s2">&quot;turnover_proxy&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="mi">3</span><span class="p">)</span>
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="gp">&gt;&gt;&gt; </span><span class="nb">round</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">fleet_turnover_proxy</span><span class="p">(</span><span class="n">panel</span><span class="p">)[</span><span class="s2">"turnover_proxy"</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="mi">3</span><span class="p">)</span>
 </span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="go">0.25</span>
 </span></code></pre></div>
 
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/gbfs_toolkit/analytics/dynamics.py</code></summary>
-              <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-252">252</a></span>
-<span class="normal"><a href="#__codelineno-0-253">253</a></span>
-<span class="normal"><a href="#__codelineno-0-254">254</a></span>
-<span class="normal"><a href="#__codelineno-0-255">255</a></span>
-<span class="normal"><a href="#__codelineno-0-256">256</a></span>
-<span class="normal"><a href="#__codelineno-0-257">257</a></span>
-<span class="normal"><a href="#__codelineno-0-258">258</a></span>
-<span class="normal"><a href="#__codelineno-0-259">259</a></span>
-<span class="normal"><a href="#__codelineno-0-260">260</a></span>
-<span class="normal"><a href="#__codelineno-0-261">261</a></span>
-<span class="normal"><a href="#__codelineno-0-262">262</a></span>
-<span class="normal"><a href="#__codelineno-0-263">263</a></span>
-<span class="normal"><a href="#__codelineno-0-264">264</a></span>
-<span class="normal"><a href="#__codelineno-0-265">265</a></span>
-<span class="normal"><a href="#__codelineno-0-266">266</a></span>
-<span class="normal"><a href="#__codelineno-0-267">267</a></span>
-<span class="normal"><a href="#__codelineno-0-268">268</a></span>
-<span class="normal"><a href="#__codelineno-0-269">269</a></span>
-<span class="normal"><a href="#__codelineno-0-270">270</a></span>
-<span class="normal"><a href="#__codelineno-0-271">271</a></span>
-<span class="normal"><a href="#__codelineno-0-272">272</a></span>
-<span class="normal"><a href="#__codelineno-0-273">273</a></span>
-<span class="normal"><a href="#__codelineno-0-274">274</a></span>
-<span class="normal"><a href="#__codelineno-0-275">275</a></span>
-<span class="normal"><a href="#__codelineno-0-276">276</a></span>
-<span class="normal"><a href="#__codelineno-0-277">277</a></span>
-<span class="normal"><a href="#__codelineno-0-278">278</a></span>
-<span class="normal"><a href="#__codelineno-0-279">279</a></span>
-<span class="normal"><a href="#__codelineno-0-280">280</a></span>
-<span class="normal"><a href="#__codelineno-0-281">281</a></span>
-<span class="normal"><a href="#__codelineno-0-282">282</a></span>
-<span class="normal"><a href="#__codelineno-0-283">283</a></span>
-<span class="normal"><a href="#__codelineno-0-284">284</a></span>
-<span class="normal"><a href="#__codelineno-0-285">285</a></span>
-<span class="normal"><a href="#__codelineno-0-286">286</a></span>
-<span class="normal"><a href="#__codelineno-0-287">287</a></span>
-<span class="normal"><a href="#__codelineno-0-288">288</a></span>
-<span class="normal"><a href="#__codelineno-0-289">289</a></span>
-<span class="normal"><a href="#__codelineno-0-290">290</a></span>
-<span class="normal"><a href="#__codelineno-0-291">291</a></span>
-<span class="normal"><a href="#__codelineno-0-292">292</a></span>
-<span class="normal"><a href="#__codelineno-0-293">293</a></span>
-<span class="normal"><a href="#__codelineno-0-294">294</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-252"><a id="__codelineno-0-252" name="__codelineno-0-252"></a><span class="k">def</span><span class="w"> </span><span class="nf">fleet_turnover_proxy</span><span class="p">(</span><span class="n">panel</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">freq</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;1D&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
-</span><span id="__span-0-253"><a id="__codelineno-0-253" name="__codelineno-0-253"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;System-level turnover proxy: half the summed absolute flow per fleet vehicle, per period.</span>
-</span><span id="__span-0-254"><a id="__codelineno-0-254" name="__codelineno-0-254"></a>
-</span><span id="__span-0-255"><a id="__codelineno-0-255" name="__codelineno-0-255"></a><span class="sd">    The headline operational metric, &quot;how many times is a vehicle used per day&quot;. Without trip (OD)</span>
-</span><span id="__span-0-256"><a id="__codelineno-0-256" name="__codelineno-0-256"></a><span class="sd">    data the summed absolute change in station availability is the best mathematical approximation</span>
-</span><span id="__span-0-257"><a id="__codelineno-0-257" name="__codelineno-0-257"></a><span class="sd">    of usage. It is a strict **lower bound**: by the aliasing argument in</span>
-</span><span id="__span-0-258"><a id="__codelineno-0-258" name="__codelineno-0-258"></a><span class="sd">    [`calculate_net_flow`][gbfs_toolkit.calculate_net_flow], trips that cancel within a polling interval are invisible.</span>
-</span><span id="__span-0-259"><a id="__codelineno-0-259" name="__codelineno-0-259"></a>
-</span><span id="__span-0-260"><a id="__codelineno-0-260" name="__codelineno-0-260"></a><span class="sd">    Returns</span>
-</span><span id="__span-0-261"><a id="__codelineno-0-261" name="__codelineno-0-261"></a><span class="sd">    -------</span>
-</span><span id="__span-0-262"><a id="__codelineno-0-262" name="__codelineno-0-262"></a><span class="sd">    pandas.DataFrame</span>
-</span><span id="__span-0-263"><a id="__codelineno-0-263" name="__codelineno-0-263"></a><span class="sd">        ``system_id, period, activity, fleet_size, turnover_proxy`` (one row per system and period).</span>
-</span><span id="__span-0-264"><a id="__codelineno-0-264" name="__codelineno-0-264"></a>
-</span><span id="__span-0-265"><a id="__codelineno-0-265" name="__codelineno-0-265"></a><span class="sd">    See Also</span>
-</span><span id="__span-0-266"><a id="__codelineno-0-266" name="__codelineno-0-266"></a><span class="sd">    --------</span>
-</span><span id="__span-0-267"><a id="__codelineno-0-267" name="__codelineno-0-267"></a><span class="sd">    [`cumulative_imbalance`][gbfs_toolkit.cumulative_imbalance] : Per-station drift behind the activity.</span>
-</span><span id="__span-0-268"><a id="__codelineno-0-268" name="__codelineno-0-268"></a><span class="sd">    [`calculate_net_flow`][gbfs_toolkit.calculate_net_flow] : The observed flow this aggregates.</span>
-</span><span id="__span-0-269"><a id="__codelineno-0-269" name="__codelineno-0-269"></a>
-</span><span id="__span-0-270"><a id="__codelineno-0-270" name="__codelineno-0-270"></a><span class="sd">    Examples</span>
-</span><span id="__span-0-271"><a id="__codelineno-0-271" name="__codelineno-0-271"></a><span class="sd">    --------</span>
-</span><span id="__span-0-272"><a id="__codelineno-0-272" name="__codelineno-0-272"></a><span class="sd">    &gt;&gt;&gt; import pandas as pd</span>
-</span><span id="__span-0-273"><a id="__codelineno-0-273" name="__codelineno-0-273"></a><span class="sd">    &gt;&gt;&gt; panel = pd.DataFrame({</span>
-</span><span id="__span-0-274"><a id="__codelineno-0-274" name="__codelineno-0-274"></a><span class="sd">    ...     &quot;system_id&quot;: &quot;s&quot;, &quot;station_id&quot;: &quot;a&quot;,</span>
-</span><span id="__span-0-275"><a id="__codelineno-0-275" name="__codelineno-0-275"></a><span class="sd">    ...     &quot;fetched_at&quot;: pd.to_datetime(</span>
-</span><span id="__span-0-276"><a id="__codelineno-0-276" name="__codelineno-0-276"></a><span class="sd">    ...         [&quot;2026-01-01T08:00Z&quot;, &quot;2026-01-01T09:00Z&quot;, &quot;2026-01-01T10:00Z&quot;]),</span>
-</span><span id="__span-0-277"><a id="__codelineno-0-277" name="__codelineno-0-277"></a><span class="sd">    ...     &quot;num_bikes_available&quot;: [10, 7, 9],</span>
-</span><span id="__span-0-278"><a id="__codelineno-0-278" name="__codelineno-0-278"></a><span class="sd">    ... })</span>
-</span><span id="__span-0-279"><a id="__codelineno-0-279" name="__codelineno-0-279"></a><span class="sd">    &gt;&gt;&gt; round(float(fleet_turnover_proxy(panel)[&quot;turnover_proxy&quot;].iloc[0]), 3)</span>
-</span><span id="__span-0-280"><a id="__codelineno-0-280" name="__codelineno-0-280"></a><span class="sd">    0.25</span>
-</span><span id="__span-0-281"><a id="__codelineno-0-281" name="__codelineno-0-281"></a><span class="sd">    &quot;&quot;&quot;</span>
-</span><span id="__span-0-282"><a id="__codelineno-0-282" name="__codelineno-0-282"></a>    <span class="n">flow</span> <span class="o">=</span> <span class="n">calculate_net_flow</span><span class="p">(</span><span class="n">panel</span><span class="p">)</span>
-</span><span id="__span-0-283"><a id="__codelineno-0-283" name="__codelineno-0-283"></a>    <span class="n">require_columns</span><span class="p">(</span><span class="n">flow</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;num_bikes_available&quot;</span><span class="p">,</span> <span class="s2">&quot;fetched_at&quot;</span><span class="p">],</span> <span class="n">what</span><span class="o">=</span><span class="s2">&quot;fleet_turnover_proxy&quot;</span><span class="p">)</span>
-</span><span id="__span-0-284"><a id="__codelineno-0-284" name="__codelineno-0-284"></a>    <span class="n">flow</span> <span class="o">=</span> <span class="n">flow</span><span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">period</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">flow</span><span class="p">[</span><span class="s2">&quot;fetched_at&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">dt</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="n">freq</span><span class="p">))</span>
-</span><span id="__span-0-285"><a id="__codelineno-0-285" name="__codelineno-0-285"></a>    <span class="n">activity</span> <span class="o">=</span> <span class="p">(</span>
-</span><span id="__span-0-286"><a id="__codelineno-0-286" name="__codelineno-0-286"></a>        <span class="n">flow</span><span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">_a</span><span class="o">=</span><span class="n">flow</span><span class="p">[</span><span class="s2">&quot;net_flow&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">abs</span><span class="p">())</span><span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="s2">&quot;system_id&quot;</span><span class="p">,</span> <span class="s2">&quot;period&quot;</span><span class="p">])[</span><span class="s2">&quot;_a&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="o">.</span><span class="n">div</span><span class="p">(</span><span class="mf">2.0</span><span class="p">)</span>
-</span><span id="__span-0-287"><a id="__codelineno-0-287" name="__codelineno-0-287"></a>    <span class="p">)</span>
-</span><span id="__span-0-288"><a id="__codelineno-0-288" name="__codelineno-0-288"></a>    <span class="n">bikes_per_snapshot</span> <span class="o">=</span> <span class="n">flow</span><span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="s2">&quot;system_id&quot;</span><span class="p">,</span> <span class="s2">&quot;period&quot;</span><span class="p">,</span> <span class="s2">&quot;fetched_at&quot;</span><span class="p">])[</span>
-</span><span id="__span-0-289"><a id="__codelineno-0-289" name="__codelineno-0-289"></a>        <span class="s2">&quot;num_bikes_available&quot;</span>
-</span><span id="__span-0-290"><a id="__codelineno-0-290" name="__codelineno-0-290"></a>    <span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
-</span><span id="__span-0-291"><a id="__codelineno-0-291" name="__codelineno-0-291"></a>    <span class="n">fleet</span> <span class="o">=</span> <span class="n">bikes_per_snapshot</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;system_id&quot;</span><span class="p">,</span> <span class="s2">&quot;period&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
-</span><span id="__span-0-292"><a id="__codelineno-0-292" name="__codelineno-0-292"></a>    <span class="n">out</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">activity</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="s2">&quot;activity&quot;</span><span class="p">),</span> <span class="n">fleet</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="s2">&quot;fleet_size&quot;</span><span class="p">)],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
-</span><span id="__span-0-293"><a id="__codelineno-0-293" name="__codelineno-0-293"></a>    <span class="n">out</span><span class="p">[</span><span class="s2">&quot;turnover_proxy&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">out</span><span class="p">[</span><span class="s2">&quot;activity&quot;</span><span class="p">]</span> <span class="o">/</span> <span class="n">out</span><span class="p">[</span><span class="s2">&quot;fleet_size&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">out</span><span class="p">[</span><span class="s2">&quot;fleet_size&quot;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span>
-</span><span id="__span-0-294"><a id="__codelineno-0-294" name="__codelineno-0-294"></a>    <span class="k">return</span> <span class="n">out</span>
+              <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#gbfs_toolkit.fleet_turnover_proxy--source--__codelineno-0-252">252</a></span>
+<span class="normal"><a href="#gbfs_toolkit.fleet_turnover_proxy--source--__codelineno-0-253">253</a></span>
+<span class="normal"><a href="#gbfs_toolkit.fleet_turnover_proxy--source--__codelineno-0-254">254</a></span>
+<span class="normal"><a href="#gbfs_toolkit.fleet_turnover_proxy--source--__codelineno-0-255">255</a></span>
+<span class="normal"><a href="#gbfs_toolkit.fleet_turnover_proxy--source--__codelineno-0-256">256</a></span>
+<span class="normal"><a href="#gbfs_toolkit.fleet_turnover_proxy--source--__codelineno-0-257">257</a></span>
+<span class="normal"><a href="#gbfs_toolkit.fleet_turnover_proxy--source--__codelineno-0-258">258</a></span>
+<span class="normal"><a href="#gbfs_toolkit.fleet_turnover_proxy--source--__codelineno-0-259">259</a></span>
+<span class="normal"><a href="#gbfs_toolkit.fleet_turnover_proxy--source--__codelineno-0-260">260</a></span>
+<span class="normal"><a href="#gbfs_toolkit.fleet_turnover_proxy--source--__codelineno-0-261">261</a></span>
+<span class="normal"><a href="#gbfs_toolkit.fleet_turnover_proxy--source--__codelineno-0-262">262</a></span>
+<span class="normal"><a href="#gbfs_toolkit.fleet_turnover_proxy--source--__codelineno-0-263">263</a></span>
+<span class="normal"><a href="#gbfs_toolkit.fleet_turnover_proxy--source--__codelineno-0-264">264</a></span>
+<span class="normal"><a href="#gbfs_toolkit.fleet_turnover_proxy--source--__codelineno-0-265">265</a></span>
+<span class="normal"><a href="#gbfs_toolkit.fleet_turnover_proxy--source--__codelineno-0-266">266</a></span>
+<span class="normal"><a href="#gbfs_toolkit.fleet_turnover_proxy--source--__codelineno-0-267">267</a></span>
+<span class="normal"><a href="#gbfs_toolkit.fleet_turnover_proxy--source--__codelineno-0-268">268</a></span>
+<span class="normal"><a href="#gbfs_toolkit.fleet_turnover_proxy--source--__codelineno-0-269">269</a></span>
+<span class="normal"><a href="#gbfs_toolkit.fleet_turnover_proxy--source--__codelineno-0-270">270</a></span>
+<span class="normal"><a href="#gbfs_toolkit.fleet_turnover_proxy--source--__codelineno-0-271">271</a></span>
+<span class="normal"><a href="#gbfs_toolkit.fleet_turnover_proxy--source--__codelineno-0-272">272</a></span>
+<span class="normal"><a href="#gbfs_toolkit.fleet_turnover_proxy--source--__codelineno-0-273">273</a></span>
+<span class="normal"><a href="#gbfs_toolkit.fleet_turnover_proxy--source--__codelineno-0-274">274</a></span>
+<span class="normal"><a href="#gbfs_toolkit.fleet_turnover_proxy--source--__codelineno-0-275">275</a></span>
+<span class="normal"><a href="#gbfs_toolkit.fleet_turnover_proxy--source--__codelineno-0-276">276</a></span>
+<span class="normal"><a href="#gbfs_toolkit.fleet_turnover_proxy--source--__codelineno-0-277">277</a></span>
+<span class="normal"><a href="#gbfs_toolkit.fleet_turnover_proxy--source--__codelineno-0-278">278</a></span>
+<span class="normal"><a href="#gbfs_toolkit.fleet_turnover_proxy--source--__codelineno-0-279">279</a></span>
+<span class="normal"><a href="#gbfs_toolkit.fleet_turnover_proxy--source--__codelineno-0-280">280</a></span>
+<span class="normal"><a href="#gbfs_toolkit.fleet_turnover_proxy--source--__codelineno-0-281">281</a></span>
+<span class="normal"><a href="#gbfs_toolkit.fleet_turnover_proxy--source--__codelineno-0-282">282</a></span>
+<span class="normal"><a href="#gbfs_toolkit.fleet_turnover_proxy--source--__codelineno-0-283">283</a></span>
+<span class="normal"><a href="#gbfs_toolkit.fleet_turnover_proxy--source--__codelineno-0-284">284</a></span>
+<span class="normal"><a href="#gbfs_toolkit.fleet_turnover_proxy--source--__codelineno-0-285">285</a></span>
+<span class="normal"><a href="#gbfs_toolkit.fleet_turnover_proxy--source--__codelineno-0-286">286</a></span>
+<span class="normal"><a href="#gbfs_toolkit.fleet_turnover_proxy--source--__codelineno-0-287">287</a></span>
+<span class="normal"><a href="#gbfs_toolkit.fleet_turnover_proxy--source--__codelineno-0-288">288</a></span>
+<span class="normal"><a href="#gbfs_toolkit.fleet_turnover_proxy--source--__codelineno-0-289">289</a></span>
+<span class="normal"><a href="#gbfs_toolkit.fleet_turnover_proxy--source--__codelineno-0-290">290</a></span>
+<span class="normal"><a href="#gbfs_toolkit.fleet_turnover_proxy--source--__codelineno-0-291">291</a></span>
+<span class="normal"><a href="#gbfs_toolkit.fleet_turnover_proxy--source--__codelineno-0-292">292</a></span>
+<span class="normal"><a href="#gbfs_toolkit.fleet_turnover_proxy--source--__codelineno-0-293">293</a></span>
+<span class="normal"><a href="#gbfs_toolkit.fleet_turnover_proxy--source--__codelineno-0-294">294</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="gbfs_toolkit.fleet_turnover_proxy--source--__span-0-252"><a id="gbfs_toolkit.fleet_turnover_proxy--source--__codelineno-0-252" name="gbfs_toolkit.fleet_turnover_proxy--source--__codelineno-0-252"></a><span class="k">def</span><span class="w"> </span><span class="nf">fleet_turnover_proxy</span><span class="p">(</span><span class="n">panel</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">freq</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"1D"</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+</span><span id="gbfs_toolkit.fleet_turnover_proxy--source--__span-0-253"><a id="gbfs_toolkit.fleet_turnover_proxy--source--__codelineno-0-253" name="gbfs_toolkit.fleet_turnover_proxy--source--__codelineno-0-253"></a><span class="w">    </span><span class="sd">"""System-level turnover proxy: half the summed absolute flow per fleet vehicle, per period.</span>
+</span><span id="gbfs_toolkit.fleet_turnover_proxy--source--__span-0-254"><a id="gbfs_toolkit.fleet_turnover_proxy--source--__codelineno-0-254" name="gbfs_toolkit.fleet_turnover_proxy--source--__codelineno-0-254"></a>
+</span><span id="gbfs_toolkit.fleet_turnover_proxy--source--__span-0-255"><a id="gbfs_toolkit.fleet_turnover_proxy--source--__codelineno-0-255" name="gbfs_toolkit.fleet_turnover_proxy--source--__codelineno-0-255"></a><span class="sd">    The headline operational metric, "how many times is a vehicle used per day". Without trip (OD)</span>
+</span><span id="gbfs_toolkit.fleet_turnover_proxy--source--__span-0-256"><a id="gbfs_toolkit.fleet_turnover_proxy--source--__codelineno-0-256" name="gbfs_toolkit.fleet_turnover_proxy--source--__codelineno-0-256"></a><span class="sd">    data the summed absolute change in station availability is the best mathematical approximation</span>
+</span><span id="gbfs_toolkit.fleet_turnover_proxy--source--__span-0-257"><a id="gbfs_toolkit.fleet_turnover_proxy--source--__codelineno-0-257" name="gbfs_toolkit.fleet_turnover_proxy--source--__codelineno-0-257"></a><span class="sd">    of usage. It is a strict **lower bound**: by the aliasing argument in</span>
+</span><span id="gbfs_toolkit.fleet_turnover_proxy--source--__span-0-258"><a id="gbfs_toolkit.fleet_turnover_proxy--source--__codelineno-0-258" name="gbfs_toolkit.fleet_turnover_proxy--source--__codelineno-0-258"></a><span class="sd">    [`calculate_net_flow`][gbfs_toolkit.calculate_net_flow], trips that cancel within a polling interval are invisible.</span>
+</span><span id="gbfs_toolkit.fleet_turnover_proxy--source--__span-0-259"><a id="gbfs_toolkit.fleet_turnover_proxy--source--__codelineno-0-259" name="gbfs_toolkit.fleet_turnover_proxy--source--__codelineno-0-259"></a>
+</span><span id="gbfs_toolkit.fleet_turnover_proxy--source--__span-0-260"><a id="gbfs_toolkit.fleet_turnover_proxy--source--__codelineno-0-260" name="gbfs_toolkit.fleet_turnover_proxy--source--__codelineno-0-260"></a><span class="sd">    Returns</span>
+</span><span id="gbfs_toolkit.fleet_turnover_proxy--source--__span-0-261"><a id="gbfs_toolkit.fleet_turnover_proxy--source--__codelineno-0-261" name="gbfs_toolkit.fleet_turnover_proxy--source--__codelineno-0-261"></a><span class="sd">    -------</span>
+</span><span id="gbfs_toolkit.fleet_turnover_proxy--source--__span-0-262"><a id="gbfs_toolkit.fleet_turnover_proxy--source--__codelineno-0-262" name="gbfs_toolkit.fleet_turnover_proxy--source--__codelineno-0-262"></a><span class="sd">    pandas.DataFrame</span>
+</span><span id="gbfs_toolkit.fleet_turnover_proxy--source--__span-0-263"><a id="gbfs_toolkit.fleet_turnover_proxy--source--__codelineno-0-263" name="gbfs_toolkit.fleet_turnover_proxy--source--__codelineno-0-263"></a><span class="sd">        ``system_id, period, activity, fleet_size, turnover_proxy`` (one row per system and period).</span>
+</span><span id="gbfs_toolkit.fleet_turnover_proxy--source--__span-0-264"><a id="gbfs_toolkit.fleet_turnover_proxy--source--__codelineno-0-264" name="gbfs_toolkit.fleet_turnover_proxy--source--__codelineno-0-264"></a>
+</span><span id="gbfs_toolkit.fleet_turnover_proxy--source--__span-0-265"><a id="gbfs_toolkit.fleet_turnover_proxy--source--__codelineno-0-265" name="gbfs_toolkit.fleet_turnover_proxy--source--__codelineno-0-265"></a><span class="sd">    See Also</span>
+</span><span id="gbfs_toolkit.fleet_turnover_proxy--source--__span-0-266"><a id="gbfs_toolkit.fleet_turnover_proxy--source--__codelineno-0-266" name="gbfs_toolkit.fleet_turnover_proxy--source--__codelineno-0-266"></a><span class="sd">    --------</span>
+</span><span id="gbfs_toolkit.fleet_turnover_proxy--source--__span-0-267"><a id="gbfs_toolkit.fleet_turnover_proxy--source--__codelineno-0-267" name="gbfs_toolkit.fleet_turnover_proxy--source--__codelineno-0-267"></a><span class="sd">    [`cumulative_imbalance`][gbfs_toolkit.cumulative_imbalance] : Per-station drift behind the activity.</span>
+</span><span id="gbfs_toolkit.fleet_turnover_proxy--source--__span-0-268"><a id="gbfs_toolkit.fleet_turnover_proxy--source--__codelineno-0-268" name="gbfs_toolkit.fleet_turnover_proxy--source--__codelineno-0-268"></a><span class="sd">    [`calculate_net_flow`][gbfs_toolkit.calculate_net_flow] : The observed flow this aggregates.</span>
+</span><span id="gbfs_toolkit.fleet_turnover_proxy--source--__span-0-269"><a id="gbfs_toolkit.fleet_turnover_proxy--source--__codelineno-0-269" name="gbfs_toolkit.fleet_turnover_proxy--source--__codelineno-0-269"></a>
+</span><span id="gbfs_toolkit.fleet_turnover_proxy--source--__span-0-270"><a id="gbfs_toolkit.fleet_turnover_proxy--source--__codelineno-0-270" name="gbfs_toolkit.fleet_turnover_proxy--source--__codelineno-0-270"></a><span class="sd">    Examples</span>
+</span><span id="gbfs_toolkit.fleet_turnover_proxy--source--__span-0-271"><a id="gbfs_toolkit.fleet_turnover_proxy--source--__codelineno-0-271" name="gbfs_toolkit.fleet_turnover_proxy--source--__codelineno-0-271"></a><span class="sd">    --------</span>
+</span><span id="gbfs_toolkit.fleet_turnover_proxy--source--__span-0-272"><a id="gbfs_toolkit.fleet_turnover_proxy--source--__codelineno-0-272" name="gbfs_toolkit.fleet_turnover_proxy--source--__codelineno-0-272"></a><span class="sd">    &gt;&gt;&gt; import pandas as pd</span>
+</span><span id="gbfs_toolkit.fleet_turnover_proxy--source--__span-0-273"><a id="gbfs_toolkit.fleet_turnover_proxy--source--__codelineno-0-273" name="gbfs_toolkit.fleet_turnover_proxy--source--__codelineno-0-273"></a><span class="sd">    &gt;&gt;&gt; panel = pd.DataFrame({</span>
+</span><span id="gbfs_toolkit.fleet_turnover_proxy--source--__span-0-274"><a id="gbfs_toolkit.fleet_turnover_proxy--source--__codelineno-0-274" name="gbfs_toolkit.fleet_turnover_proxy--source--__codelineno-0-274"></a><span class="sd">    ...     "system_id": "s", "station_id": "a",</span>
+</span><span id="gbfs_toolkit.fleet_turnover_proxy--source--__span-0-275"><a id="gbfs_toolkit.fleet_turnover_proxy--source--__codelineno-0-275" name="gbfs_toolkit.fleet_turnover_proxy--source--__codelineno-0-275"></a><span class="sd">    ...     "fetched_at": pd.to_datetime(</span>
+</span><span id="gbfs_toolkit.fleet_turnover_proxy--source--__span-0-276"><a id="gbfs_toolkit.fleet_turnover_proxy--source--__codelineno-0-276" name="gbfs_toolkit.fleet_turnover_proxy--source--__codelineno-0-276"></a><span class="sd">    ...         ["2026-01-01T08:00Z", "2026-01-01T09:00Z", "2026-01-01T10:00Z"]),</span>
+</span><span id="gbfs_toolkit.fleet_turnover_proxy--source--__span-0-277"><a id="gbfs_toolkit.fleet_turnover_proxy--source--__codelineno-0-277" name="gbfs_toolkit.fleet_turnover_proxy--source--__codelineno-0-277"></a><span class="sd">    ...     "num_bikes_available": [10, 7, 9],</span>
+</span><span id="gbfs_toolkit.fleet_turnover_proxy--source--__span-0-278"><a id="gbfs_toolkit.fleet_turnover_proxy--source--__codelineno-0-278" name="gbfs_toolkit.fleet_turnover_proxy--source--__codelineno-0-278"></a><span class="sd">    ... })</span>
+</span><span id="gbfs_toolkit.fleet_turnover_proxy--source--__span-0-279"><a id="gbfs_toolkit.fleet_turnover_proxy--source--__codelineno-0-279" name="gbfs_toolkit.fleet_turnover_proxy--source--__codelineno-0-279"></a><span class="sd">    &gt;&gt;&gt; round(float(fleet_turnover_proxy(panel)["turnover_proxy"].iloc[0]), 3)</span>
+</span><span id="gbfs_toolkit.fleet_turnover_proxy--source--__span-0-280"><a id="gbfs_toolkit.fleet_turnover_proxy--source--__codelineno-0-280" name="gbfs_toolkit.fleet_turnover_proxy--source--__codelineno-0-280"></a><span class="sd">    0.25</span>
+</span><span id="gbfs_toolkit.fleet_turnover_proxy--source--__span-0-281"><a id="gbfs_toolkit.fleet_turnover_proxy--source--__codelineno-0-281" name="gbfs_toolkit.fleet_turnover_proxy--source--__codelineno-0-281"></a><span class="sd">    """</span>
+</span><span id="gbfs_toolkit.fleet_turnover_proxy--source--__span-0-282"><a id="gbfs_toolkit.fleet_turnover_proxy--source--__codelineno-0-282" name="gbfs_toolkit.fleet_turnover_proxy--source--__codelineno-0-282"></a>    <span class="n">flow</span> <span class="o">=</span> <span class="n">calculate_net_flow</span><span class="p">(</span><span class="n">panel</span><span class="p">)</span>
+</span><span id="gbfs_toolkit.fleet_turnover_proxy--source--__span-0-283"><a id="gbfs_toolkit.fleet_turnover_proxy--source--__codelineno-0-283" name="gbfs_toolkit.fleet_turnover_proxy--source--__codelineno-0-283"></a>    <span class="n">require_columns</span><span class="p">(</span><span class="n">flow</span><span class="p">,</span> <span class="p">[</span><span class="s2">"num_bikes_available"</span><span class="p">,</span> <span class="s2">"fetched_at"</span><span class="p">],</span> <span class="n">what</span><span class="o">=</span><span class="s2">"fleet_turnover_proxy"</span><span class="p">)</span>
+</span><span id="gbfs_toolkit.fleet_turnover_proxy--source--__span-0-284"><a id="gbfs_toolkit.fleet_turnover_proxy--source--__codelineno-0-284" name="gbfs_toolkit.fleet_turnover_proxy--source--__codelineno-0-284"></a>    <span class="n">flow</span> <span class="o">=</span> <span class="n">flow</span><span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">period</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">flow</span><span class="p">[</span><span class="s2">"fetched_at"</span><span class="p">])</span><span class="o">.</span><span class="n">dt</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="n">freq</span><span class="p">))</span>
+</span><span id="gbfs_toolkit.fleet_turnover_proxy--source--__span-0-285"><a id="gbfs_toolkit.fleet_turnover_proxy--source--__codelineno-0-285" name="gbfs_toolkit.fleet_turnover_proxy--source--__codelineno-0-285"></a>    <span class="n">activity</span> <span class="o">=</span> <span class="p">(</span>
+</span><span id="gbfs_toolkit.fleet_turnover_proxy--source--__span-0-286"><a id="gbfs_toolkit.fleet_turnover_proxy--source--__codelineno-0-286" name="gbfs_toolkit.fleet_turnover_proxy--source--__codelineno-0-286"></a>        <span class="n">flow</span><span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">_a</span><span class="o">=</span><span class="n">flow</span><span class="p">[</span><span class="s2">"net_flow"</span><span class="p">]</span><span class="o">.</span><span class="n">abs</span><span class="p">())</span><span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="s2">"system_id"</span><span class="p">,</span> <span class="s2">"period"</span><span class="p">])[</span><span class="s2">"_a"</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="o">.</span><span class="n">div</span><span class="p">(</span><span class="mf">2.0</span><span class="p">)</span>
+</span><span id="gbfs_toolkit.fleet_turnover_proxy--source--__span-0-287"><a id="gbfs_toolkit.fleet_turnover_proxy--source--__codelineno-0-287" name="gbfs_toolkit.fleet_turnover_proxy--source--__codelineno-0-287"></a>    <span class="p">)</span>
+</span><span id="gbfs_toolkit.fleet_turnover_proxy--source--__span-0-288"><a id="gbfs_toolkit.fleet_turnover_proxy--source--__codelineno-0-288" name="gbfs_toolkit.fleet_turnover_proxy--source--__codelineno-0-288"></a>    <span class="n">bikes_per_snapshot</span> <span class="o">=</span> <span class="n">flow</span><span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="s2">"system_id"</span><span class="p">,</span> <span class="s2">"period"</span><span class="p">,</span> <span class="s2">"fetched_at"</span><span class="p">])[</span>
+</span><span id="gbfs_toolkit.fleet_turnover_proxy--source--__span-0-289"><a id="gbfs_toolkit.fleet_turnover_proxy--source--__codelineno-0-289" name="gbfs_toolkit.fleet_turnover_proxy--source--__codelineno-0-289"></a>        <span class="s2">"num_bikes_available"</span>
+</span><span id="gbfs_toolkit.fleet_turnover_proxy--source--__span-0-290"><a id="gbfs_toolkit.fleet_turnover_proxy--source--__codelineno-0-290" name="gbfs_toolkit.fleet_turnover_proxy--source--__codelineno-0-290"></a>    <span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+</span><span id="gbfs_toolkit.fleet_turnover_proxy--source--__span-0-291"><a id="gbfs_toolkit.fleet_turnover_proxy--source--__codelineno-0-291" name="gbfs_toolkit.fleet_turnover_proxy--source--__codelineno-0-291"></a>    <span class="n">fleet</span> <span class="o">=</span> <span class="n">bikes_per_snapshot</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="p">[</span><span class="s2">"system_id"</span><span class="p">,</span> <span class="s2">"period"</span><span class="p">])</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
+</span><span id="gbfs_toolkit.fleet_turnover_proxy--source--__span-0-292"><a id="gbfs_toolkit.fleet_turnover_proxy--source--__codelineno-0-292" name="gbfs_toolkit.fleet_turnover_proxy--source--__codelineno-0-292"></a>    <span class="n">out</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">activity</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="s2">"activity"</span><span class="p">),</span> <span class="n">fleet</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="s2">"fleet_size"</span><span class="p">)],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+</span><span id="gbfs_toolkit.fleet_turnover_proxy--source--__span-0-293"><a id="gbfs_toolkit.fleet_turnover_proxy--source--__codelineno-0-293" name="gbfs_toolkit.fleet_turnover_proxy--source--__codelineno-0-293"></a>    <span class="n">out</span><span class="p">[</span><span class="s2">"turnover_proxy"</span><span class="p">]</span> <span class="o">=</span> <span class="n">out</span><span class="p">[</span><span class="s2">"activity"</span><span class="p">]</span> <span class="o">/</span> <span class="n">out</span><span class="p">[</span><span class="s2">"fleet_size"</span><span class="p">]</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">out</span><span class="p">[</span><span class="s2">"fleet_size"</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span>
+</span><span id="gbfs_toolkit.fleet_turnover_proxy--source--__span-0-294"><a id="gbfs_toolkit.fleet_turnover_proxy--source--__codelineno-0-294" name="gbfs_toolkit.fleet_turnover_proxy--source--__codelineno-0-294"></a>    <span class="k">return</span> <span class="n">out</span>
 </span></code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -6693,10 +6693,10 @@ of usage. It is a strict <strong>lower bound</strong>: by the aliasing argument 
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.instant", "navigation.instant.progress", "navigation.tracking", "navigation.sections", "navigation.tabs", "navigation.tabs.sticky", "navigation.top", "navigation.indexes", "navigation.footer", "toc.follow", "search.suggest", "search.highlight", "search.share", "content.code.copy", "content.code.annotate", "content.tooltips"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.instant", "navigation.instant.progress", "navigation.tracking", "navigation.sections", "navigation.tabs", "navigation.tabs.sticky", "navigation.top", "navigation.indexes", "navigation.footer", "toc.follow", "search.suggest", "search.highlight", "search.share", "content.code.copy", "content.code.annotate", "content.tooltips"], "search": "../../../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
     
     
-      <script src="../../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../../../assets/javascripts/bundle.c21346df.min.js"></script>
       
         <script src="../../../javascripts/mathjax.js"></script>
       

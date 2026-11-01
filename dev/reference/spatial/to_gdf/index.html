@@ -25,7 +25,7 @@
       
       
       <link rel="icon" href="../../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-ProperDocs 1.6.7, mkdocs-material-9.7.6">
+      <meta name="generator" content="mkdocs-ProperDocs 1.6.7, mkdocs-material-9.8.0">
     
     
       
@@ -33,10 +33,10 @@
       
     
     
-      <link rel="stylesheet" href="../../../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.57a0d79d.min.css">
       
         
-        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.fb2fffe2.min.css">
       
       
 
@@ -1146,7 +1146,7 @@
   <span class="md-ellipsis">
     
   
-    __version__
+    _version_
   
 
     
@@ -6422,7 +6422,7 @@
 
 
 <a href="#gbfs_toolkit.to_gdf" class="headerlink" title="Permanent link">&para;</a></h2>
-<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">to_gdf</span><span class="p">(</span><span class="n">df</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-external" title="&lt;code&gt;pandas.DataFrame&lt;/code&gt;" href="https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.html#pandas.DataFrame">DataFrame</a></span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">lat</span><span class="p">:</span> <span class="n"><span title="str">str</span></span> <span class="o">=</span> <span class="s1">&#39;lat&#39;</span><span class="p">,</span> <span class="n">lon</span><span class="p">:</span> <span class="n"><span title="str">str</span></span> <span class="o">=</span> <span class="s1">&#39;lon&#39;</span><span class="p">,</span> <span class="n">crs</span><span class="p">:</span> <span class="n"><span title="str">str</span></span> <span class="o">=</span> <span class="s1">&#39;EPSG:4326&#39;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n"><span title="geopandas.GeoDataFrame">GeoDataFrame</span></span>
+<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">to_gdf</span><span class="p">(</span><span class="n">df</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-external" title="&lt;code&gt;pandas.DataFrame&lt;/code&gt;" href="https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.html#pandas.DataFrame">DataFrame</a></span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">lat</span><span class="p">:</span> <span class="n"><span title="str">str</span></span> <span class="o">=</span> <span class="s1">'lat'</span><span class="p">,</span> <span class="n">lon</span><span class="p">:</span> <span class="n"><span title="str">str</span></span> <span class="o">=</span> <span class="s1">'lon'</span><span class="p">,</span> <span class="n">crs</span><span class="p">:</span> <span class="n"><span title="str">str</span></span> <span class="o">=</span> <span class="s1">'EPSG:4326'</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n"><span title="geopandas.GeoDataFrame">GeoDataFrame</span></span>
 </span></code></pre></div>
 
     <div class="doc doc-contents first">
@@ -6439,45 +6439,45 @@
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/gbfs_toolkit/spatial/geometry.py</code></summary>
-              <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-262">262</a></span>
-<span class="normal"><a href="#__codelineno-0-263">263</a></span>
-<span class="normal"><a href="#__codelineno-0-264">264</a></span>
-<span class="normal"><a href="#__codelineno-0-265">265</a></span>
-<span class="normal"><a href="#__codelineno-0-266">266</a></span>
-<span class="normal"><a href="#__codelineno-0-267">267</a></span>
-<span class="normal"><a href="#__codelineno-0-268">268</a></span>
-<span class="normal"><a href="#__codelineno-0-269">269</a></span>
-<span class="normal"><a href="#__codelineno-0-270">270</a></span>
-<span class="normal"><a href="#__codelineno-0-271">271</a></span>
-<span class="normal"><a href="#__codelineno-0-272">272</a></span>
-<span class="normal"><a href="#__codelineno-0-273">273</a></span>
-<span class="normal"><a href="#__codelineno-0-274">274</a></span>
-<span class="normal"><a href="#__codelineno-0-275">275</a></span>
-<span class="normal"><a href="#__codelineno-0-276">276</a></span>
-<span class="normal"><a href="#__codelineno-0-277">277</a></span>
-<span class="normal"><a href="#__codelineno-0-278">278</a></span>
-<span class="normal"><a href="#__codelineno-0-279">279</a></span>
-<span class="normal"><a href="#__codelineno-0-280">280</a></span>
-<span class="normal"><a href="#__codelineno-0-281">281</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-262"><a id="__codelineno-0-262" name="__codelineno-0-262"></a><span class="k">def</span><span class="w"> </span><span class="nf">to_gdf</span><span class="p">(</span>
-</span><span id="__span-0-263"><a id="__codelineno-0-263" name="__codelineno-0-263"></a>    <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">lat</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;lat&quot;</span><span class="p">,</span> <span class="n">lon</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;lon&quot;</span><span class="p">,</span> <span class="n">crs</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;EPSG:4326&quot;</span>
-</span><span id="__span-0-264"><a id="__codelineno-0-264" name="__codelineno-0-264"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">gpd</span><span class="o">.</span><span class="n">GeoDataFrame</span><span class="p">:</span>
-</span><span id="__span-0-265"><a id="__codelineno-0-265" name="__codelineno-0-265"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Convert a frame with lat/lon columns to a GeoPandas ``GeoDataFrame`` (lazy import).</span>
-</span><span id="__span-0-266"><a id="__codelineno-0-266" name="__codelineno-0-266"></a>
-</span><span id="__span-0-267"><a id="__codelineno-0-267" name="__codelineno-0-267"></a><span class="sd">    Requires the optional ``[geo]`` extra (``geopandas``).</span>
-</span><span id="__span-0-268"><a id="__codelineno-0-268" name="__codelineno-0-268"></a>
-</span><span id="__span-0-269"><a id="__codelineno-0-269" name="__codelineno-0-269"></a><span class="sd">    See Also</span>
-</span><span id="__span-0-270"><a id="__codelineno-0-270" name="__codelineno-0-270"></a><span class="sd">    --------</span>
-</span><span id="__span-0-271"><a id="__codelineno-0-271" name="__codelineno-0-271"></a><span class="sd">    [`to_geojson`][gbfs_toolkit.to_geojson] : Serialise to GeoJSON instead.</span>
-</span><span id="__span-0-272"><a id="__codelineno-0-272" name="__codelineno-0-272"></a><span class="sd">    [`zones_for_points`][gbfs_toolkit.zones_for_points] : Assign points to zones.</span>
-</span><span id="__span-0-273"><a id="__codelineno-0-273" name="__codelineno-0-273"></a><span class="sd">    &quot;&quot;&quot;</span>
-</span><span id="__span-0-274"><a id="__codelineno-0-274" name="__codelineno-0-274"></a>    <span class="k">try</span><span class="p">:</span>
-</span><span id="__span-0-275"><a id="__codelineno-0-275" name="__codelineno-0-275"></a>        <span class="kn">import</span><span class="w"> </span><span class="nn">geopandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">gpd</span>
-</span><span id="__span-0-276"><a id="__codelineno-0-276" name="__codelineno-0-276"></a>    <span class="k">except</span> <span class="ne">ImportError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>  <span class="c1"># pragma: no cover</span>
-</span><span id="__span-0-277"><a id="__codelineno-0-277" name="__codelineno-0-277"></a>        <span class="k">raise</span> <span class="ne">ImportError</span><span class="p">(</span>
-</span><span id="__span-0-278"><a id="__codelineno-0-278" name="__codelineno-0-278"></a>            <span class="s2">&quot;to_gdf requires geopandas. Install with `pip install gbfs-toolkit[geo]`.&quot;</span>
-</span><span id="__span-0-279"><a id="__codelineno-0-279" name="__codelineno-0-279"></a>        <span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span>
-</span><span id="__span-0-280"><a id="__codelineno-0-280" name="__codelineno-0-280"></a>    <span class="n">geometry</span> <span class="o">=</span> <span class="n">gpd</span><span class="o">.</span><span class="n">points_from_xy</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">lon</span><span class="p">],</span> <span class="n">df</span><span class="p">[</span><span class="n">lat</span><span class="p">])</span>
-</span><span id="__span-0-281"><a id="__codelineno-0-281" name="__codelineno-0-281"></a>    <span class="k">return</span> <span class="n">gpd</span><span class="o">.</span><span class="n">GeoDataFrame</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">copy</span><span class="p">(),</span> <span class="n">geometry</span><span class="o">=</span><span class="n">geometry</span><span class="p">,</span> <span class="n">crs</span><span class="o">=</span><span class="n">crs</span><span class="p">)</span>
+              <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#gbfs_toolkit.to_gdf--source--__codelineno-0-262">262</a></span>
+<span class="normal"><a href="#gbfs_toolkit.to_gdf--source--__codelineno-0-263">263</a></span>
+<span class="normal"><a href="#gbfs_toolkit.to_gdf--source--__codelineno-0-264">264</a></span>
+<span class="normal"><a href="#gbfs_toolkit.to_gdf--source--__codelineno-0-265">265</a></span>
+<span class="normal"><a href="#gbfs_toolkit.to_gdf--source--__codelineno-0-266">266</a></span>
+<span class="normal"><a href="#gbfs_toolkit.to_gdf--source--__codelineno-0-267">267</a></span>
+<span class="normal"><a href="#gbfs_toolkit.to_gdf--source--__codelineno-0-268">268</a></span>
+<span class="normal"><a href="#gbfs_toolkit.to_gdf--source--__codelineno-0-269">269</a></span>
+<span class="normal"><a href="#gbfs_toolkit.to_gdf--source--__codelineno-0-270">270</a></span>
+<span class="normal"><a href="#gbfs_toolkit.to_gdf--source--__codelineno-0-271">271</a></span>
+<span class="normal"><a href="#gbfs_toolkit.to_gdf--source--__codelineno-0-272">272</a></span>
+<span class="normal"><a href="#gbfs_toolkit.to_gdf--source--__codelineno-0-273">273</a></span>
+<span class="normal"><a href="#gbfs_toolkit.to_gdf--source--__codelineno-0-274">274</a></span>
+<span class="normal"><a href="#gbfs_toolkit.to_gdf--source--__codelineno-0-275">275</a></span>
+<span class="normal"><a href="#gbfs_toolkit.to_gdf--source--__codelineno-0-276">276</a></span>
+<span class="normal"><a href="#gbfs_toolkit.to_gdf--source--__codelineno-0-277">277</a></span>
+<span class="normal"><a href="#gbfs_toolkit.to_gdf--source--__codelineno-0-278">278</a></span>
+<span class="normal"><a href="#gbfs_toolkit.to_gdf--source--__codelineno-0-279">279</a></span>
+<span class="normal"><a href="#gbfs_toolkit.to_gdf--source--__codelineno-0-280">280</a></span>
+<span class="normal"><a href="#gbfs_toolkit.to_gdf--source--__codelineno-0-281">281</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="gbfs_toolkit.to_gdf--source--__span-0-262"><a id="gbfs_toolkit.to_gdf--source--__codelineno-0-262" name="gbfs_toolkit.to_gdf--source--__codelineno-0-262"></a><span class="k">def</span><span class="w"> </span><span class="nf">to_gdf</span><span class="p">(</span>
+</span><span id="gbfs_toolkit.to_gdf--source--__span-0-263"><a id="gbfs_toolkit.to_gdf--source--__codelineno-0-263" name="gbfs_toolkit.to_gdf--source--__codelineno-0-263"></a>    <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">lat</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"lat"</span><span class="p">,</span> <span class="n">lon</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"lon"</span><span class="p">,</span> <span class="n">crs</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"EPSG:4326"</span>
+</span><span id="gbfs_toolkit.to_gdf--source--__span-0-264"><a id="gbfs_toolkit.to_gdf--source--__codelineno-0-264" name="gbfs_toolkit.to_gdf--source--__codelineno-0-264"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">gpd</span><span class="o">.</span><span class="n">GeoDataFrame</span><span class="p">:</span>
+</span><span id="gbfs_toolkit.to_gdf--source--__span-0-265"><a id="gbfs_toolkit.to_gdf--source--__codelineno-0-265" name="gbfs_toolkit.to_gdf--source--__codelineno-0-265"></a><span class="w">    </span><span class="sd">"""Convert a frame with lat/lon columns to a GeoPandas ``GeoDataFrame`` (lazy import).</span>
+</span><span id="gbfs_toolkit.to_gdf--source--__span-0-266"><a id="gbfs_toolkit.to_gdf--source--__codelineno-0-266" name="gbfs_toolkit.to_gdf--source--__codelineno-0-266"></a>
+</span><span id="gbfs_toolkit.to_gdf--source--__span-0-267"><a id="gbfs_toolkit.to_gdf--source--__codelineno-0-267" name="gbfs_toolkit.to_gdf--source--__codelineno-0-267"></a><span class="sd">    Requires the optional ``[geo]`` extra (``geopandas``).</span>
+</span><span id="gbfs_toolkit.to_gdf--source--__span-0-268"><a id="gbfs_toolkit.to_gdf--source--__codelineno-0-268" name="gbfs_toolkit.to_gdf--source--__codelineno-0-268"></a>
+</span><span id="gbfs_toolkit.to_gdf--source--__span-0-269"><a id="gbfs_toolkit.to_gdf--source--__codelineno-0-269" name="gbfs_toolkit.to_gdf--source--__codelineno-0-269"></a><span class="sd">    See Also</span>
+</span><span id="gbfs_toolkit.to_gdf--source--__span-0-270"><a id="gbfs_toolkit.to_gdf--source--__codelineno-0-270" name="gbfs_toolkit.to_gdf--source--__codelineno-0-270"></a><span class="sd">    --------</span>
+</span><span id="gbfs_toolkit.to_gdf--source--__span-0-271"><a id="gbfs_toolkit.to_gdf--source--__codelineno-0-271" name="gbfs_toolkit.to_gdf--source--__codelineno-0-271"></a><span class="sd">    [`to_geojson`][gbfs_toolkit.to_geojson] : Serialise to GeoJSON instead.</span>
+</span><span id="gbfs_toolkit.to_gdf--source--__span-0-272"><a id="gbfs_toolkit.to_gdf--source--__codelineno-0-272" name="gbfs_toolkit.to_gdf--source--__codelineno-0-272"></a><span class="sd">    [`zones_for_points`][gbfs_toolkit.zones_for_points] : Assign points to zones.</span>
+</span><span id="gbfs_toolkit.to_gdf--source--__span-0-273"><a id="gbfs_toolkit.to_gdf--source--__codelineno-0-273" name="gbfs_toolkit.to_gdf--source--__codelineno-0-273"></a><span class="sd">    """</span>
+</span><span id="gbfs_toolkit.to_gdf--source--__span-0-274"><a id="gbfs_toolkit.to_gdf--source--__codelineno-0-274" name="gbfs_toolkit.to_gdf--source--__codelineno-0-274"></a>    <span class="k">try</span><span class="p">:</span>
+</span><span id="gbfs_toolkit.to_gdf--source--__span-0-275"><a id="gbfs_toolkit.to_gdf--source--__codelineno-0-275" name="gbfs_toolkit.to_gdf--source--__codelineno-0-275"></a>        <span class="kn">import</span><span class="w"> </span><span class="nn">geopandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">gpd</span>
+</span><span id="gbfs_toolkit.to_gdf--source--__span-0-276"><a id="gbfs_toolkit.to_gdf--source--__codelineno-0-276" name="gbfs_toolkit.to_gdf--source--__codelineno-0-276"></a>    <span class="k">except</span> <span class="ne">ImportError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>  <span class="c1"># pragma: no cover</span>
+</span><span id="gbfs_toolkit.to_gdf--source--__span-0-277"><a id="gbfs_toolkit.to_gdf--source--__codelineno-0-277" name="gbfs_toolkit.to_gdf--source--__codelineno-0-277"></a>        <span class="k">raise</span> <span class="ne">ImportError</span><span class="p">(</span>
+</span><span id="gbfs_toolkit.to_gdf--source--__span-0-278"><a id="gbfs_toolkit.to_gdf--source--__codelineno-0-278" name="gbfs_toolkit.to_gdf--source--__codelineno-0-278"></a>            <span class="s2">"to_gdf requires geopandas. Install with `pip install gbfs-toolkit[geo]`."</span>
+</span><span id="gbfs_toolkit.to_gdf--source--__span-0-279"><a id="gbfs_toolkit.to_gdf--source--__codelineno-0-279" name="gbfs_toolkit.to_gdf--source--__codelineno-0-279"></a>        <span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span>
+</span><span id="gbfs_toolkit.to_gdf--source--__span-0-280"><a id="gbfs_toolkit.to_gdf--source--__codelineno-0-280" name="gbfs_toolkit.to_gdf--source--__codelineno-0-280"></a>    <span class="n">geometry</span> <span class="o">=</span> <span class="n">gpd</span><span class="o">.</span><span class="n">points_from_xy</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">lon</span><span class="p">],</span> <span class="n">df</span><span class="p">[</span><span class="n">lat</span><span class="p">])</span>
+</span><span id="gbfs_toolkit.to_gdf--source--__span-0-281"><a id="gbfs_toolkit.to_gdf--source--__codelineno-0-281" name="gbfs_toolkit.to_gdf--source--__codelineno-0-281"></a>    <span class="k">return</span> <span class="n">gpd</span><span class="o">.</span><span class="n">GeoDataFrame</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">copy</span><span class="p">(),</span> <span class="n">geometry</span><span class="o">=</span><span class="n">geometry</span><span class="p">,</span> <span class="n">crs</span><span class="o">=</span><span class="n">crs</span><span class="p">)</span>
 </span></code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -6608,10 +6608,10 @@
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.instant", "navigation.instant.progress", "navigation.tracking", "navigation.sections", "navigation.tabs", "navigation.tabs.sticky", "navigation.top", "navigation.indexes", "navigation.footer", "toc.follow", "search.suggest", "search.highlight", "search.share", "content.code.copy", "content.code.annotate", "content.tooltips"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.instant", "navigation.instant.progress", "navigation.tracking", "navigation.sections", "navigation.tabs", "navigation.tabs.sticky", "navigation.top", "navigation.indexes", "navigation.footer", "toc.follow", "search.suggest", "search.highlight", "search.share", "content.code.copy", "content.code.annotate", "content.tooltips"], "search": "../../../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
     
     
-      <script src="../../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../../../assets/javascripts/bundle.c21346df.min.js"></script>
       
         <script src="../../../javascripts/mathjax.js"></script>
       

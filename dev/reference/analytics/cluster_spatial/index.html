@@ -25,7 +25,7 @@
       
       
       <link rel="icon" href="../../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-ProperDocs 1.6.7, mkdocs-material-9.7.6">
+      <meta name="generator" content="mkdocs-ProperDocs 1.6.7, mkdocs-material-9.8.0">
     
     
       
@@ -33,10 +33,10 @@
       
     
     
-      <link rel="stylesheet" href="../../../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.57a0d79d.min.css">
       
         
-        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.fb2fffe2.min.css">
       
       
 
@@ -1146,7 +1146,7 @@
   <span class="md-ellipsis">
     
   
-    __version__
+    _version_
   
 
     
@@ -6422,7 +6422,7 @@
 
 
 <a href="#gbfs_toolkit.cluster_spatial" class="headerlink" title="Permanent link">&para;</a></h2>
-<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">cluster_spatial</span><span class="p">(</span><span class="n">info</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-external" title="&lt;code&gt;pandas.DataFrame&lt;/code&gt;" href="https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.html#pandas.DataFrame">DataFrame</a></span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">method</span><span class="p">:</span> <span class="n"><span title="str">str</span></span> <span class="o">=</span> <span class="s1">&#39;hdbscan&#39;</span><span class="p">,</span> <span class="n">min_cluster_size</span><span class="p">:</span> <span class="n"><span title="int">int</span></span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span> <span class="n">eps_m</span><span class="p">:</span> <span class="n"><span title="float">float</span></span> <span class="o">=</span> <span class="mf">300.0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n"><a class="autorefs autorefs-external" title="&lt;code&gt;pandas.DataFrame&lt;/code&gt;" href="https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.html#pandas.DataFrame">DataFrame</a></span>
+<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">cluster_spatial</span><span class="p">(</span><span class="n">info</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-external" title="&lt;code&gt;pandas.DataFrame&lt;/code&gt;" href="https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.html#pandas.DataFrame">DataFrame</a></span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">method</span><span class="p">:</span> <span class="n"><span title="str">str</span></span> <span class="o">=</span> <span class="s1">'hdbscan'</span><span class="p">,</span> <span class="n">min_cluster_size</span><span class="p">:</span> <span class="n"><span title="int">int</span></span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span> <span class="n">eps_m</span><span class="p">:</span> <span class="n"><span title="float">float</span></span> <span class="o">=</span> <span class="mf">300.0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n"><a class="autorefs autorefs-external" title="&lt;code&gt;pandas.DataFrame&lt;/code&gt;" href="https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.html#pandas.DataFrame">DataFrame</a></span>
 </span></code></pre></div>
 
     <div class="doc doc-contents first">
@@ -6504,128 +6504,128 @@
     <p>Two tight groups ~11 km apart resolve into two DBSCAN clusters:</p>
     <div class="language-pycon highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="gp">&gt;&gt;&gt; </span><span class="n">info</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="gp">... </span>    <span class="s2">&quot;station_id&quot;</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="s2">&quot;abcdef&quot;</span><span class="p">),</span>
-</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="gp">... </span>    <span class="s2">&quot;lat&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">48.85</span><span class="p">,</span> <span class="mf">48.8501</span><span class="p">,</span> <span class="mf">48.8502</span><span class="p">,</span> <span class="mf">48.95</span><span class="p">,</span> <span class="mf">48.9501</span><span class="p">,</span> <span class="mf">48.9502</span><span class="p">],</span>
-</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="gp">... </span>    <span class="s2">&quot;lon&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">2.35</span><span class="p">,</span> <span class="mf">2.3501</span><span class="p">,</span> <span class="mf">2.3502</span><span class="p">,</span> <span class="mf">2.45</span><span class="p">,</span> <span class="mf">2.4501</span><span class="p">,</span> <span class="mf">2.4502</span><span class="p">],</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="gp">... </span>    <span class="s2">"station_id"</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="s2">"abcdef"</span><span class="p">),</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="gp">... </span>    <span class="s2">"lat"</span><span class="p">:</span> <span class="p">[</span><span class="mf">48.85</span><span class="p">,</span> <span class="mf">48.8501</span><span class="p">,</span> <span class="mf">48.8502</span><span class="p">,</span> <span class="mf">48.95</span><span class="p">,</span> <span class="mf">48.9501</span><span class="p">,</span> <span class="mf">48.9502</span><span class="p">],</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="gp">... </span>    <span class="s2">"lon"</span><span class="p">:</span> <span class="p">[</span><span class="mf">2.35</span><span class="p">,</span> <span class="mf">2.3501</span><span class="p">,</span> <span class="mf">2.3502</span><span class="p">,</span> <span class="mf">2.45</span><span class="p">,</span> <span class="mf">2.4501</span><span class="p">,</span> <span class="mf">2.4502</span><span class="p">],</span>
 </span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="gp">... </span><span class="p">})</span>
-</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="gp">&gt;&gt;&gt; </span><span class="nb">sorted</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">cluster_spatial</span><span class="p">(</span><span class="n">info</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;dbscan&quot;</span><span class="p">,</span> <span class="n">eps_m</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">min_cluster_size</span><span class="o">=</span><span class="mi">3</span><span class="p">)[</span><span class="s2">&quot;cluster&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">())</span>
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="gp">&gt;&gt;&gt; </span><span class="nb">sorted</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">cluster_spatial</span><span class="p">(</span><span class="n">info</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">"dbscan"</span><span class="p">,</span> <span class="n">eps_m</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">min_cluster_size</span><span class="o">=</span><span class="mi">3</span><span class="p">)[</span><span class="s2">"cluster"</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">())</span>
 </span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="go">[0, 1]</span>
 </span></code></pre></div>
 
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/gbfs_toolkit/analytics/clustering.py</code></summary>
-              <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-39">39</a></span>
-<span class="normal"><a href="#__codelineno-0-40">40</a></span>
-<span class="normal"><a href="#__codelineno-0-41">41</a></span>
-<span class="normal"><a href="#__codelineno-0-42">42</a></span>
-<span class="normal"><a href="#__codelineno-0-43">43</a></span>
-<span class="normal"><a href="#__codelineno-0-44">44</a></span>
-<span class="normal"><a href="#__codelineno-0-45">45</a></span>
-<span class="normal"><a href="#__codelineno-0-46">46</a></span>
-<span class="normal"><a href="#__codelineno-0-47">47</a></span>
-<span class="normal"><a href="#__codelineno-0-48">48</a></span>
-<span class="normal"><a href="#__codelineno-0-49">49</a></span>
-<span class="normal"><a href="#__codelineno-0-50">50</a></span>
-<span class="normal"><a href="#__codelineno-0-51">51</a></span>
-<span class="normal"><a href="#__codelineno-0-52">52</a></span>
-<span class="normal"><a href="#__codelineno-0-53">53</a></span>
-<span class="normal"><a href="#__codelineno-0-54">54</a></span>
-<span class="normal"><a href="#__codelineno-0-55">55</a></span>
-<span class="normal"><a href="#__codelineno-0-56">56</a></span>
-<span class="normal"><a href="#__codelineno-0-57">57</a></span>
-<span class="normal"><a href="#__codelineno-0-58">58</a></span>
-<span class="normal"><a href="#__codelineno-0-59">59</a></span>
-<span class="normal"><a href="#__codelineno-0-60">60</a></span>
-<span class="normal"><a href="#__codelineno-0-61">61</a></span>
-<span class="normal"><a href="#__codelineno-0-62">62</a></span>
-<span class="normal"><a href="#__codelineno-0-63">63</a></span>
-<span class="normal"><a href="#__codelineno-0-64">64</a></span>
-<span class="normal"><a href="#__codelineno-0-65">65</a></span>
-<span class="normal"><a href="#__codelineno-0-66">66</a></span>
-<span class="normal"><a href="#__codelineno-0-67">67</a></span>
-<span class="normal"><a href="#__codelineno-0-68">68</a></span>
-<span class="normal"><a href="#__codelineno-0-69">69</a></span>
-<span class="normal"><a href="#__codelineno-0-70">70</a></span>
-<span class="normal"><a href="#__codelineno-0-71">71</a></span>
-<span class="normal"><a href="#__codelineno-0-72">72</a></span>
-<span class="normal"><a href="#__codelineno-0-73">73</a></span>
-<span class="normal"><a href="#__codelineno-0-74">74</a></span>
-<span class="normal"><a href="#__codelineno-0-75">75</a></span>
-<span class="normal"><a href="#__codelineno-0-76">76</a></span>
-<span class="normal"><a href="#__codelineno-0-77">77</a></span>
-<span class="normal"><a href="#__codelineno-0-78">78</a></span>
-<span class="normal"><a href="#__codelineno-0-79">79</a></span>
-<span class="normal"><a href="#__codelineno-0-80">80</a></span>
-<span class="normal"><a href="#__codelineno-0-81">81</a></span>
-<span class="normal"><a href="#__codelineno-0-82">82</a></span>
-<span class="normal"><a href="#__codelineno-0-83">83</a></span>
-<span class="normal"><a href="#__codelineno-0-84">84</a></span>
-<span class="normal"><a href="#__codelineno-0-85">85</a></span>
-<span class="normal"><a href="#__codelineno-0-86">86</a></span>
-<span class="normal"><a href="#__codelineno-0-87">87</a></span>
-<span class="normal"><a href="#__codelineno-0-88">88</a></span>
-<span class="normal"><a href="#__codelineno-0-89">89</a></span>
-<span class="normal"><a href="#__codelineno-0-90">90</a></span>
-<span class="normal"><a href="#__codelineno-0-91">91</a></span>
-<span class="normal"><a href="#__codelineno-0-92">92</a></span>
-<span class="normal"><a href="#__codelineno-0-93">93</a></span>
-<span class="normal"><a href="#__codelineno-0-94">94</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-39"><a id="__codelineno-0-39" name="__codelineno-0-39"></a><span class="k">def</span><span class="w"> </span><span class="nf">cluster_spatial</span><span class="p">(</span>
-</span><span id="__span-0-40"><a id="__codelineno-0-40" name="__codelineno-0-40"></a>    <span class="n">info</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
-</span><span id="__span-0-41"><a id="__codelineno-0-41" name="__codelineno-0-41"></a>    <span class="o">*</span><span class="p">,</span>
-</span><span id="__span-0-42"><a id="__codelineno-0-42" name="__codelineno-0-42"></a>    <span class="n">method</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;hdbscan&quot;</span><span class="p">,</span>
-</span><span id="__span-0-43"><a id="__codelineno-0-43" name="__codelineno-0-43"></a>    <span class="n">min_cluster_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
-</span><span id="__span-0-44"><a id="__codelineno-0-44" name="__codelineno-0-44"></a>    <span class="n">eps_m</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">300.0</span><span class="p">,</span>
-</span><span id="__span-0-45"><a id="__codelineno-0-45" name="__codelineno-0-45"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
-</span><span id="__span-0-46"><a id="__codelineno-0-46" name="__codelineno-0-46"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Group stations into spatial zones by physical proximity.</span>
-</span><span id="__span-0-47"><a id="__codelineno-0-47" name="__codelineno-0-47"></a>
-</span><span id="__span-0-48"><a id="__codelineno-0-48" name="__codelineno-0-48"></a><span class="sd">    Returns ``info`` with a ``cluster`` column (``-1`` = noise/unclustered).</span>
-</span><span id="__span-0-49"><a id="__codelineno-0-49" name="__codelineno-0-49"></a>
-</span><span id="__span-0-50"><a id="__codelineno-0-50" name="__codelineno-0-50"></a><span class="sd">    Parameters</span>
-</span><span id="__span-0-51"><a id="__codelineno-0-51" name="__codelineno-0-51"></a><span class="sd">    ----------</span>
-</span><span id="__span-0-52"><a id="__codelineno-0-52" name="__codelineno-0-52"></a><span class="sd">    method : {&quot;hdbscan&quot;, &quot;dbscan&quot;}</span>
-</span><span id="__span-0-53"><a id="__codelineno-0-53" name="__codelineno-0-53"></a><span class="sd">        HDBSCAN auto-selects density scales; DBSCAN uses a fixed ``eps_m`` radius.</span>
-</span><span id="__span-0-54"><a id="__codelineno-0-54" name="__codelineno-0-54"></a><span class="sd">    min_cluster_size : int</span>
-</span><span id="__span-0-55"><a id="__codelineno-0-55" name="__codelineno-0-55"></a><span class="sd">        Minimum stations to form a zone.</span>
-</span><span id="__span-0-56"><a id="__codelineno-0-56" name="__codelineno-0-56"></a><span class="sd">    eps_m : float</span>
-</span><span id="__span-0-57"><a id="__codelineno-0-57" name="__codelineno-0-57"></a><span class="sd">        Neighbourhood radius in metres (DBSCAN only).</span>
-</span><span id="__span-0-58"><a id="__codelineno-0-58" name="__codelineno-0-58"></a>
-</span><span id="__span-0-59"><a id="__codelineno-0-59" name="__codelineno-0-59"></a><span class="sd">    See Also</span>
-</span><span id="__span-0-60"><a id="__codelineno-0-60" name="__codelineno-0-60"></a><span class="sd">    --------</span>
-</span><span id="__span-0-61"><a id="__codelineno-0-61" name="__codelineno-0-61"></a><span class="sd">    [`cluster_spectral`][gbfs_toolkit.cluster_spectral] : Topological instead of proximity zones.</span>
-</span><span id="__span-0-62"><a id="__codelineno-0-62" name="__codelineno-0-62"></a><span class="sd">    [`cluster_diurnal_profiles`][gbfs_toolkit.cluster_diurnal_profiles] : Behavioural instead of spatial clusters.</span>
-</span><span id="__span-0-63"><a id="__codelineno-0-63" name="__codelineno-0-63"></a>
-</span><span id="__span-0-64"><a id="__codelineno-0-64" name="__codelineno-0-64"></a><span class="sd">    Examples</span>
-</span><span id="__span-0-65"><a id="__codelineno-0-65" name="__codelineno-0-65"></a><span class="sd">    --------</span>
-</span><span id="__span-0-66"><a id="__codelineno-0-66" name="__codelineno-0-66"></a><span class="sd">    Two tight groups ~11 km apart resolve into two DBSCAN clusters:</span>
-</span><span id="__span-0-67"><a id="__codelineno-0-67" name="__codelineno-0-67"></a>
-</span><span id="__span-0-68"><a id="__codelineno-0-68" name="__codelineno-0-68"></a><span class="sd">    &gt;&gt;&gt; import pandas as pd</span>
-</span><span id="__span-0-69"><a id="__codelineno-0-69" name="__codelineno-0-69"></a><span class="sd">    &gt;&gt;&gt; info = pd.DataFrame({</span>
-</span><span id="__span-0-70"><a id="__codelineno-0-70" name="__codelineno-0-70"></a><span class="sd">    ...     &quot;station_id&quot;: list(&quot;abcdef&quot;),</span>
-</span><span id="__span-0-71"><a id="__codelineno-0-71" name="__codelineno-0-71"></a><span class="sd">    ...     &quot;lat&quot;: [48.85, 48.8501, 48.8502, 48.95, 48.9501, 48.9502],</span>
-</span><span id="__span-0-72"><a id="__codelineno-0-72" name="__codelineno-0-72"></a><span class="sd">    ...     &quot;lon&quot;: [2.35, 2.3501, 2.3502, 2.45, 2.4501, 2.4502],</span>
-</span><span id="__span-0-73"><a id="__codelineno-0-73" name="__codelineno-0-73"></a><span class="sd">    ... })</span>
-</span><span id="__span-0-74"><a id="__codelineno-0-74" name="__codelineno-0-74"></a><span class="sd">    &gt;&gt;&gt; sorted(int(c) for c in cluster_spatial(info, method=&quot;dbscan&quot;, eps_m=100, min_cluster_size=3)[&quot;cluster&quot;].unique())</span>
-</span><span id="__span-0-75"><a id="__codelineno-0-75" name="__codelineno-0-75"></a><span class="sd">    [0, 1]</span>
-</span><span id="__span-0-76"><a id="__codelineno-0-76" name="__codelineno-0-76"></a><span class="sd">    &quot;&quot;&quot;</span>
-</span><span id="__span-0-77"><a id="__codelineno-0-77" name="__codelineno-0-77"></a>    <span class="n">_require_sklearn</span><span class="p">()</span>
-</span><span id="__span-0-78"><a id="__codelineno-0-78" name="__codelineno-0-78"></a>    <span class="n">out</span> <span class="o">=</span> <span class="n">info</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-</span><span id="__span-0-79"><a id="__codelineno-0-79" name="__codelineno-0-79"></a>    <span class="k">if</span> <span class="n">out</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
-</span><span id="__span-0-80"><a id="__codelineno-0-80" name="__codelineno-0-80"></a>        <span class="n">out</span><span class="p">[</span><span class="s2">&quot;cluster&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">dtype</span><span class="o">=</span><span class="s2">&quot;int64&quot;</span><span class="p">)</span>
-</span><span id="__span-0-81"><a id="__codelineno-0-81" name="__codelineno-0-81"></a>        <span class="k">return</span> <span class="n">out</span>
-</span><span id="__span-0-82"><a id="__codelineno-0-82" name="__codelineno-0-82"></a>    <span class="n">xy</span> <span class="o">=</span> <span class="n">_project_xy</span><span class="p">(</span><span class="n">out</span><span class="p">[</span><span class="s2">&quot;lat&quot;</span><span class="p">],</span> <span class="n">out</span><span class="p">[</span><span class="s2">&quot;lon&quot;</span><span class="p">])</span>  <span class="c1"># Euclidean-safe metres, not raw lat/lon</span>
-</span><span id="__span-0-83"><a id="__codelineno-0-83" name="__codelineno-0-83"></a>    <span class="k">if</span> <span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;hdbscan&quot;</span><span class="p">:</span>
-</span><span id="__span-0-84"><a id="__codelineno-0-84" name="__codelineno-0-84"></a>        <span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.cluster</span><span class="w"> </span><span class="kn">import</span> <span class="n">HDBSCAN</span>
-</span><span id="__span-0-85"><a id="__codelineno-0-85" name="__codelineno-0-85"></a>
-</span><span id="__span-0-86"><a id="__codelineno-0-86" name="__codelineno-0-86"></a>        <span class="n">labels</span> <span class="o">=</span> <span class="n">HDBSCAN</span><span class="p">(</span><span class="n">min_cluster_size</span><span class="o">=</span><span class="n">min_cluster_size</span><span class="p">)</span><span class="o">.</span><span class="n">fit_predict</span><span class="p">(</span><span class="n">xy</span><span class="p">)</span>
-</span><span id="__span-0-87"><a id="__codelineno-0-87" name="__codelineno-0-87"></a>    <span class="k">elif</span> <span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;dbscan&quot;</span><span class="p">:</span>
-</span><span id="__span-0-88"><a id="__codelineno-0-88" name="__codelineno-0-88"></a>        <span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.cluster</span><span class="w"> </span><span class="kn">import</span> <span class="n">DBSCAN</span>
-</span><span id="__span-0-89"><a id="__codelineno-0-89" name="__codelineno-0-89"></a>
-</span><span id="__span-0-90"><a id="__codelineno-0-90" name="__codelineno-0-90"></a>        <span class="n">labels</span> <span class="o">=</span> <span class="n">DBSCAN</span><span class="p">(</span><span class="n">eps</span><span class="o">=</span><span class="n">eps_m</span><span class="p">,</span> <span class="n">min_samples</span><span class="o">=</span><span class="n">min_cluster_size</span><span class="p">)</span><span class="o">.</span><span class="n">fit_predict</span><span class="p">(</span><span class="n">xy</span><span class="p">)</span>
-</span><span id="__span-0-91"><a id="__codelineno-0-91" name="__codelineno-0-91"></a>    <span class="k">else</span><span class="p">:</span>
-</span><span id="__span-0-92"><a id="__codelineno-0-92" name="__codelineno-0-92"></a>        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;unknown method </span><span class="si">{</span><span class="n">method</span><span class="si">!r}</span><span class="s2">; use &#39;hdbscan&#39; or &#39;dbscan&#39;&quot;</span><span class="p">)</span>
-</span><span id="__span-0-93"><a id="__codelineno-0-93" name="__codelineno-0-93"></a>    <span class="n">out</span><span class="p">[</span><span class="s2">&quot;cluster&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">labels</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s2">&quot;int64&quot;</span><span class="p">)</span>
-</span><span id="__span-0-94"><a id="__codelineno-0-94" name="__codelineno-0-94"></a>    <span class="k">return</span> <span class="n">out</span>
+              <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#gbfs_toolkit.cluster_spatial--source--__codelineno-0-39">39</a></span>
+<span class="normal"><a href="#gbfs_toolkit.cluster_spatial--source--__codelineno-0-40">40</a></span>
+<span class="normal"><a href="#gbfs_toolkit.cluster_spatial--source--__codelineno-0-41">41</a></span>
+<span class="normal"><a href="#gbfs_toolkit.cluster_spatial--source--__codelineno-0-42">42</a></span>
+<span class="normal"><a href="#gbfs_toolkit.cluster_spatial--source--__codelineno-0-43">43</a></span>
+<span class="normal"><a href="#gbfs_toolkit.cluster_spatial--source--__codelineno-0-44">44</a></span>
+<span class="normal"><a href="#gbfs_toolkit.cluster_spatial--source--__codelineno-0-45">45</a></span>
+<span class="normal"><a href="#gbfs_toolkit.cluster_spatial--source--__codelineno-0-46">46</a></span>
+<span class="normal"><a href="#gbfs_toolkit.cluster_spatial--source--__codelineno-0-47">47</a></span>
+<span class="normal"><a href="#gbfs_toolkit.cluster_spatial--source--__codelineno-0-48">48</a></span>
+<span class="normal"><a href="#gbfs_toolkit.cluster_spatial--source--__codelineno-0-49">49</a></span>
+<span class="normal"><a href="#gbfs_toolkit.cluster_spatial--source--__codelineno-0-50">50</a></span>
+<span class="normal"><a href="#gbfs_toolkit.cluster_spatial--source--__codelineno-0-51">51</a></span>
+<span class="normal"><a href="#gbfs_toolkit.cluster_spatial--source--__codelineno-0-52">52</a></span>
+<span class="normal"><a href="#gbfs_toolkit.cluster_spatial--source--__codelineno-0-53">53</a></span>
+<span class="normal"><a href="#gbfs_toolkit.cluster_spatial--source--__codelineno-0-54">54</a></span>
+<span class="normal"><a href="#gbfs_toolkit.cluster_spatial--source--__codelineno-0-55">55</a></span>
+<span class="normal"><a href="#gbfs_toolkit.cluster_spatial--source--__codelineno-0-56">56</a></span>
+<span class="normal"><a href="#gbfs_toolkit.cluster_spatial--source--__codelineno-0-57">57</a></span>
+<span class="normal"><a href="#gbfs_toolkit.cluster_spatial--source--__codelineno-0-58">58</a></span>
+<span class="normal"><a href="#gbfs_toolkit.cluster_spatial--source--__codelineno-0-59">59</a></span>
+<span class="normal"><a href="#gbfs_toolkit.cluster_spatial--source--__codelineno-0-60">60</a></span>
+<span class="normal"><a href="#gbfs_toolkit.cluster_spatial--source--__codelineno-0-61">61</a></span>
+<span class="normal"><a href="#gbfs_toolkit.cluster_spatial--source--__codelineno-0-62">62</a></span>
+<span class="normal"><a href="#gbfs_toolkit.cluster_spatial--source--__codelineno-0-63">63</a></span>
+<span class="normal"><a href="#gbfs_toolkit.cluster_spatial--source--__codelineno-0-64">64</a></span>
+<span class="normal"><a href="#gbfs_toolkit.cluster_spatial--source--__codelineno-0-65">65</a></span>
+<span class="normal"><a href="#gbfs_toolkit.cluster_spatial--source--__codelineno-0-66">66</a></span>
+<span class="normal"><a href="#gbfs_toolkit.cluster_spatial--source--__codelineno-0-67">67</a></span>
+<span class="normal"><a href="#gbfs_toolkit.cluster_spatial--source--__codelineno-0-68">68</a></span>
+<span class="normal"><a href="#gbfs_toolkit.cluster_spatial--source--__codelineno-0-69">69</a></span>
+<span class="normal"><a href="#gbfs_toolkit.cluster_spatial--source--__codelineno-0-70">70</a></span>
+<span class="normal"><a href="#gbfs_toolkit.cluster_spatial--source--__codelineno-0-71">71</a></span>
+<span class="normal"><a href="#gbfs_toolkit.cluster_spatial--source--__codelineno-0-72">72</a></span>
+<span class="normal"><a href="#gbfs_toolkit.cluster_spatial--source--__codelineno-0-73">73</a></span>
+<span class="normal"><a href="#gbfs_toolkit.cluster_spatial--source--__codelineno-0-74">74</a></span>
+<span class="normal"><a href="#gbfs_toolkit.cluster_spatial--source--__codelineno-0-75">75</a></span>
+<span class="normal"><a href="#gbfs_toolkit.cluster_spatial--source--__codelineno-0-76">76</a></span>
+<span class="normal"><a href="#gbfs_toolkit.cluster_spatial--source--__codelineno-0-77">77</a></span>
+<span class="normal"><a href="#gbfs_toolkit.cluster_spatial--source--__codelineno-0-78">78</a></span>
+<span class="normal"><a href="#gbfs_toolkit.cluster_spatial--source--__codelineno-0-79">79</a></span>
+<span class="normal"><a href="#gbfs_toolkit.cluster_spatial--source--__codelineno-0-80">80</a></span>
+<span class="normal"><a href="#gbfs_toolkit.cluster_spatial--source--__codelineno-0-81">81</a></span>
+<span class="normal"><a href="#gbfs_toolkit.cluster_spatial--source--__codelineno-0-82">82</a></span>
+<span class="normal"><a href="#gbfs_toolkit.cluster_spatial--source--__codelineno-0-83">83</a></span>
+<span class="normal"><a href="#gbfs_toolkit.cluster_spatial--source--__codelineno-0-84">84</a></span>
+<span class="normal"><a href="#gbfs_toolkit.cluster_spatial--source--__codelineno-0-85">85</a></span>
+<span class="normal"><a href="#gbfs_toolkit.cluster_spatial--source--__codelineno-0-86">86</a></span>
+<span class="normal"><a href="#gbfs_toolkit.cluster_spatial--source--__codelineno-0-87">87</a></span>
+<span class="normal"><a href="#gbfs_toolkit.cluster_spatial--source--__codelineno-0-88">88</a></span>
+<span class="normal"><a href="#gbfs_toolkit.cluster_spatial--source--__codelineno-0-89">89</a></span>
+<span class="normal"><a href="#gbfs_toolkit.cluster_spatial--source--__codelineno-0-90">90</a></span>
+<span class="normal"><a href="#gbfs_toolkit.cluster_spatial--source--__codelineno-0-91">91</a></span>
+<span class="normal"><a href="#gbfs_toolkit.cluster_spatial--source--__codelineno-0-92">92</a></span>
+<span class="normal"><a href="#gbfs_toolkit.cluster_spatial--source--__codelineno-0-93">93</a></span>
+<span class="normal"><a href="#gbfs_toolkit.cluster_spatial--source--__codelineno-0-94">94</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="gbfs_toolkit.cluster_spatial--source--__span-0-39"><a id="gbfs_toolkit.cluster_spatial--source--__codelineno-0-39" name="gbfs_toolkit.cluster_spatial--source--__codelineno-0-39"></a><span class="k">def</span><span class="w"> </span><span class="nf">cluster_spatial</span><span class="p">(</span>
+</span><span id="gbfs_toolkit.cluster_spatial--source--__span-0-40"><a id="gbfs_toolkit.cluster_spatial--source--__codelineno-0-40" name="gbfs_toolkit.cluster_spatial--source--__codelineno-0-40"></a>    <span class="n">info</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+</span><span id="gbfs_toolkit.cluster_spatial--source--__span-0-41"><a id="gbfs_toolkit.cluster_spatial--source--__codelineno-0-41" name="gbfs_toolkit.cluster_spatial--source--__codelineno-0-41"></a>    <span class="o">*</span><span class="p">,</span>
+</span><span id="gbfs_toolkit.cluster_spatial--source--__span-0-42"><a id="gbfs_toolkit.cluster_spatial--source--__codelineno-0-42" name="gbfs_toolkit.cluster_spatial--source--__codelineno-0-42"></a>    <span class="n">method</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"hdbscan"</span><span class="p">,</span>
+</span><span id="gbfs_toolkit.cluster_spatial--source--__span-0-43"><a id="gbfs_toolkit.cluster_spatial--source--__codelineno-0-43" name="gbfs_toolkit.cluster_spatial--source--__codelineno-0-43"></a>    <span class="n">min_cluster_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
+</span><span id="gbfs_toolkit.cluster_spatial--source--__span-0-44"><a id="gbfs_toolkit.cluster_spatial--source--__codelineno-0-44" name="gbfs_toolkit.cluster_spatial--source--__codelineno-0-44"></a>    <span class="n">eps_m</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">300.0</span><span class="p">,</span>
+</span><span id="gbfs_toolkit.cluster_spatial--source--__span-0-45"><a id="gbfs_toolkit.cluster_spatial--source--__codelineno-0-45" name="gbfs_toolkit.cluster_spatial--source--__codelineno-0-45"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+</span><span id="gbfs_toolkit.cluster_spatial--source--__span-0-46"><a id="gbfs_toolkit.cluster_spatial--source--__codelineno-0-46" name="gbfs_toolkit.cluster_spatial--source--__codelineno-0-46"></a><span class="w">    </span><span class="sd">"""Group stations into spatial zones by physical proximity.</span>
+</span><span id="gbfs_toolkit.cluster_spatial--source--__span-0-47"><a id="gbfs_toolkit.cluster_spatial--source--__codelineno-0-47" name="gbfs_toolkit.cluster_spatial--source--__codelineno-0-47"></a>
+</span><span id="gbfs_toolkit.cluster_spatial--source--__span-0-48"><a id="gbfs_toolkit.cluster_spatial--source--__codelineno-0-48" name="gbfs_toolkit.cluster_spatial--source--__codelineno-0-48"></a><span class="sd">    Returns ``info`` with a ``cluster`` column (``-1`` = noise/unclustered).</span>
+</span><span id="gbfs_toolkit.cluster_spatial--source--__span-0-49"><a id="gbfs_toolkit.cluster_spatial--source--__codelineno-0-49" name="gbfs_toolkit.cluster_spatial--source--__codelineno-0-49"></a>
+</span><span id="gbfs_toolkit.cluster_spatial--source--__span-0-50"><a id="gbfs_toolkit.cluster_spatial--source--__codelineno-0-50" name="gbfs_toolkit.cluster_spatial--source--__codelineno-0-50"></a><span class="sd">    Parameters</span>
+</span><span id="gbfs_toolkit.cluster_spatial--source--__span-0-51"><a id="gbfs_toolkit.cluster_spatial--source--__codelineno-0-51" name="gbfs_toolkit.cluster_spatial--source--__codelineno-0-51"></a><span class="sd">    ----------</span>
+</span><span id="gbfs_toolkit.cluster_spatial--source--__span-0-52"><a id="gbfs_toolkit.cluster_spatial--source--__codelineno-0-52" name="gbfs_toolkit.cluster_spatial--source--__codelineno-0-52"></a><span class="sd">    method : {"hdbscan", "dbscan"}</span>
+</span><span id="gbfs_toolkit.cluster_spatial--source--__span-0-53"><a id="gbfs_toolkit.cluster_spatial--source--__codelineno-0-53" name="gbfs_toolkit.cluster_spatial--source--__codelineno-0-53"></a><span class="sd">        HDBSCAN auto-selects density scales; DBSCAN uses a fixed ``eps_m`` radius.</span>
+</span><span id="gbfs_toolkit.cluster_spatial--source--__span-0-54"><a id="gbfs_toolkit.cluster_spatial--source--__codelineno-0-54" name="gbfs_toolkit.cluster_spatial--source--__codelineno-0-54"></a><span class="sd">    min_cluster_size : int</span>
+</span><span id="gbfs_toolkit.cluster_spatial--source--__span-0-55"><a id="gbfs_toolkit.cluster_spatial--source--__codelineno-0-55" name="gbfs_toolkit.cluster_spatial--source--__codelineno-0-55"></a><span class="sd">        Minimum stations to form a zone.</span>
+</span><span id="gbfs_toolkit.cluster_spatial--source--__span-0-56"><a id="gbfs_toolkit.cluster_spatial--source--__codelineno-0-56" name="gbfs_toolkit.cluster_spatial--source--__codelineno-0-56"></a><span class="sd">    eps_m : float</span>
+</span><span id="gbfs_toolkit.cluster_spatial--source--__span-0-57"><a id="gbfs_toolkit.cluster_spatial--source--__codelineno-0-57" name="gbfs_toolkit.cluster_spatial--source--__codelineno-0-57"></a><span class="sd">        Neighbourhood radius in metres (DBSCAN only).</span>
+</span><span id="gbfs_toolkit.cluster_spatial--source--__span-0-58"><a id="gbfs_toolkit.cluster_spatial--source--__codelineno-0-58" name="gbfs_toolkit.cluster_spatial--source--__codelineno-0-58"></a>
+</span><span id="gbfs_toolkit.cluster_spatial--source--__span-0-59"><a id="gbfs_toolkit.cluster_spatial--source--__codelineno-0-59" name="gbfs_toolkit.cluster_spatial--source--__codelineno-0-59"></a><span class="sd">    See Also</span>
+</span><span id="gbfs_toolkit.cluster_spatial--source--__span-0-60"><a id="gbfs_toolkit.cluster_spatial--source--__codelineno-0-60" name="gbfs_toolkit.cluster_spatial--source--__codelineno-0-60"></a><span class="sd">    --------</span>
+</span><span id="gbfs_toolkit.cluster_spatial--source--__span-0-61"><a id="gbfs_toolkit.cluster_spatial--source--__codelineno-0-61" name="gbfs_toolkit.cluster_spatial--source--__codelineno-0-61"></a><span class="sd">    [`cluster_spectral`][gbfs_toolkit.cluster_spectral] : Topological instead of proximity zones.</span>
+</span><span id="gbfs_toolkit.cluster_spatial--source--__span-0-62"><a id="gbfs_toolkit.cluster_spatial--source--__codelineno-0-62" name="gbfs_toolkit.cluster_spatial--source--__codelineno-0-62"></a><span class="sd">    [`cluster_diurnal_profiles`][gbfs_toolkit.cluster_diurnal_profiles] : Behavioural instead of spatial clusters.</span>
+</span><span id="gbfs_toolkit.cluster_spatial--source--__span-0-63"><a id="gbfs_toolkit.cluster_spatial--source--__codelineno-0-63" name="gbfs_toolkit.cluster_spatial--source--__codelineno-0-63"></a>
+</span><span id="gbfs_toolkit.cluster_spatial--source--__span-0-64"><a id="gbfs_toolkit.cluster_spatial--source--__codelineno-0-64" name="gbfs_toolkit.cluster_spatial--source--__codelineno-0-64"></a><span class="sd">    Examples</span>
+</span><span id="gbfs_toolkit.cluster_spatial--source--__span-0-65"><a id="gbfs_toolkit.cluster_spatial--source--__codelineno-0-65" name="gbfs_toolkit.cluster_spatial--source--__codelineno-0-65"></a><span class="sd">    --------</span>
+</span><span id="gbfs_toolkit.cluster_spatial--source--__span-0-66"><a id="gbfs_toolkit.cluster_spatial--source--__codelineno-0-66" name="gbfs_toolkit.cluster_spatial--source--__codelineno-0-66"></a><span class="sd">    Two tight groups ~11 km apart resolve into two DBSCAN clusters:</span>
+</span><span id="gbfs_toolkit.cluster_spatial--source--__span-0-67"><a id="gbfs_toolkit.cluster_spatial--source--__codelineno-0-67" name="gbfs_toolkit.cluster_spatial--source--__codelineno-0-67"></a>
+</span><span id="gbfs_toolkit.cluster_spatial--source--__span-0-68"><a id="gbfs_toolkit.cluster_spatial--source--__codelineno-0-68" name="gbfs_toolkit.cluster_spatial--source--__codelineno-0-68"></a><span class="sd">    &gt;&gt;&gt; import pandas as pd</span>
+</span><span id="gbfs_toolkit.cluster_spatial--source--__span-0-69"><a id="gbfs_toolkit.cluster_spatial--source--__codelineno-0-69" name="gbfs_toolkit.cluster_spatial--source--__codelineno-0-69"></a><span class="sd">    &gt;&gt;&gt; info = pd.DataFrame({</span>
+</span><span id="gbfs_toolkit.cluster_spatial--source--__span-0-70"><a id="gbfs_toolkit.cluster_spatial--source--__codelineno-0-70" name="gbfs_toolkit.cluster_spatial--source--__codelineno-0-70"></a><span class="sd">    ...     "station_id": list("abcdef"),</span>
+</span><span id="gbfs_toolkit.cluster_spatial--source--__span-0-71"><a id="gbfs_toolkit.cluster_spatial--source--__codelineno-0-71" name="gbfs_toolkit.cluster_spatial--source--__codelineno-0-71"></a><span class="sd">    ...     "lat": [48.85, 48.8501, 48.8502, 48.95, 48.9501, 48.9502],</span>
+</span><span id="gbfs_toolkit.cluster_spatial--source--__span-0-72"><a id="gbfs_toolkit.cluster_spatial--source--__codelineno-0-72" name="gbfs_toolkit.cluster_spatial--source--__codelineno-0-72"></a><span class="sd">    ...     "lon": [2.35, 2.3501, 2.3502, 2.45, 2.4501, 2.4502],</span>
+</span><span id="gbfs_toolkit.cluster_spatial--source--__span-0-73"><a id="gbfs_toolkit.cluster_spatial--source--__codelineno-0-73" name="gbfs_toolkit.cluster_spatial--source--__codelineno-0-73"></a><span class="sd">    ... })</span>
+</span><span id="gbfs_toolkit.cluster_spatial--source--__span-0-74"><a id="gbfs_toolkit.cluster_spatial--source--__codelineno-0-74" name="gbfs_toolkit.cluster_spatial--source--__codelineno-0-74"></a><span class="sd">    &gt;&gt;&gt; sorted(int(c) for c in cluster_spatial(info, method="dbscan", eps_m=100, min_cluster_size=3)["cluster"].unique())</span>
+</span><span id="gbfs_toolkit.cluster_spatial--source--__span-0-75"><a id="gbfs_toolkit.cluster_spatial--source--__codelineno-0-75" name="gbfs_toolkit.cluster_spatial--source--__codelineno-0-75"></a><span class="sd">    [0, 1]</span>
+</span><span id="gbfs_toolkit.cluster_spatial--source--__span-0-76"><a id="gbfs_toolkit.cluster_spatial--source--__codelineno-0-76" name="gbfs_toolkit.cluster_spatial--source--__codelineno-0-76"></a><span class="sd">    """</span>
+</span><span id="gbfs_toolkit.cluster_spatial--source--__span-0-77"><a id="gbfs_toolkit.cluster_spatial--source--__codelineno-0-77" name="gbfs_toolkit.cluster_spatial--source--__codelineno-0-77"></a>    <span class="n">_require_sklearn</span><span class="p">()</span>
+</span><span id="gbfs_toolkit.cluster_spatial--source--__span-0-78"><a id="gbfs_toolkit.cluster_spatial--source--__codelineno-0-78" name="gbfs_toolkit.cluster_spatial--source--__codelineno-0-78"></a>    <span class="n">out</span> <span class="o">=</span> <span class="n">info</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+</span><span id="gbfs_toolkit.cluster_spatial--source--__span-0-79"><a id="gbfs_toolkit.cluster_spatial--source--__codelineno-0-79" name="gbfs_toolkit.cluster_spatial--source--__codelineno-0-79"></a>    <span class="k">if</span> <span class="n">out</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
+</span><span id="gbfs_toolkit.cluster_spatial--source--__span-0-80"><a id="gbfs_toolkit.cluster_spatial--source--__codelineno-0-80" name="gbfs_toolkit.cluster_spatial--source--__codelineno-0-80"></a>        <span class="n">out</span><span class="p">[</span><span class="s2">"cluster"</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">dtype</span><span class="o">=</span><span class="s2">"int64"</span><span class="p">)</span>
+</span><span id="gbfs_toolkit.cluster_spatial--source--__span-0-81"><a id="gbfs_toolkit.cluster_spatial--source--__codelineno-0-81" name="gbfs_toolkit.cluster_spatial--source--__codelineno-0-81"></a>        <span class="k">return</span> <span class="n">out</span>
+</span><span id="gbfs_toolkit.cluster_spatial--source--__span-0-82"><a id="gbfs_toolkit.cluster_spatial--source--__codelineno-0-82" name="gbfs_toolkit.cluster_spatial--source--__codelineno-0-82"></a>    <span class="n">xy</span> <span class="o">=</span> <span class="n">_project_xy</span><span class="p">(</span><span class="n">out</span><span class="p">[</span><span class="s2">"lat"</span><span class="p">],</span> <span class="n">out</span><span class="p">[</span><span class="s2">"lon"</span><span class="p">])</span>  <span class="c1"># Euclidean-safe metres, not raw lat/lon</span>
+</span><span id="gbfs_toolkit.cluster_spatial--source--__span-0-83"><a id="gbfs_toolkit.cluster_spatial--source--__codelineno-0-83" name="gbfs_toolkit.cluster_spatial--source--__codelineno-0-83"></a>    <span class="k">if</span> <span class="n">method</span> <span class="o">==</span> <span class="s2">"hdbscan"</span><span class="p">:</span>
+</span><span id="gbfs_toolkit.cluster_spatial--source--__span-0-84"><a id="gbfs_toolkit.cluster_spatial--source--__codelineno-0-84" name="gbfs_toolkit.cluster_spatial--source--__codelineno-0-84"></a>        <span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.cluster</span><span class="w"> </span><span class="kn">import</span> <span class="n">HDBSCAN</span>
+</span><span id="gbfs_toolkit.cluster_spatial--source--__span-0-85"><a id="gbfs_toolkit.cluster_spatial--source--__codelineno-0-85" name="gbfs_toolkit.cluster_spatial--source--__codelineno-0-85"></a>
+</span><span id="gbfs_toolkit.cluster_spatial--source--__span-0-86"><a id="gbfs_toolkit.cluster_spatial--source--__codelineno-0-86" name="gbfs_toolkit.cluster_spatial--source--__codelineno-0-86"></a>        <span class="n">labels</span> <span class="o">=</span> <span class="n">HDBSCAN</span><span class="p">(</span><span class="n">min_cluster_size</span><span class="o">=</span><span class="n">min_cluster_size</span><span class="p">)</span><span class="o">.</span><span class="n">fit_predict</span><span class="p">(</span><span class="n">xy</span><span class="p">)</span>
+</span><span id="gbfs_toolkit.cluster_spatial--source--__span-0-87"><a id="gbfs_toolkit.cluster_spatial--source--__codelineno-0-87" name="gbfs_toolkit.cluster_spatial--source--__codelineno-0-87"></a>    <span class="k">elif</span> <span class="n">method</span> <span class="o">==</span> <span class="s2">"dbscan"</span><span class="p">:</span>
+</span><span id="gbfs_toolkit.cluster_spatial--source--__span-0-88"><a id="gbfs_toolkit.cluster_spatial--source--__codelineno-0-88" name="gbfs_toolkit.cluster_spatial--source--__codelineno-0-88"></a>        <span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.cluster</span><span class="w"> </span><span class="kn">import</span> <span class="n">DBSCAN</span>
+</span><span id="gbfs_toolkit.cluster_spatial--source--__span-0-89"><a id="gbfs_toolkit.cluster_spatial--source--__codelineno-0-89" name="gbfs_toolkit.cluster_spatial--source--__codelineno-0-89"></a>
+</span><span id="gbfs_toolkit.cluster_spatial--source--__span-0-90"><a id="gbfs_toolkit.cluster_spatial--source--__codelineno-0-90" name="gbfs_toolkit.cluster_spatial--source--__codelineno-0-90"></a>        <span class="n">labels</span> <span class="o">=</span> <span class="n">DBSCAN</span><span class="p">(</span><span class="n">eps</span><span class="o">=</span><span class="n">eps_m</span><span class="p">,</span> <span class="n">min_samples</span><span class="o">=</span><span class="n">min_cluster_size</span><span class="p">)</span><span class="o">.</span><span class="n">fit_predict</span><span class="p">(</span><span class="n">xy</span><span class="p">)</span>
+</span><span id="gbfs_toolkit.cluster_spatial--source--__span-0-91"><a id="gbfs_toolkit.cluster_spatial--source--__codelineno-0-91" name="gbfs_toolkit.cluster_spatial--source--__codelineno-0-91"></a>    <span class="k">else</span><span class="p">:</span>
+</span><span id="gbfs_toolkit.cluster_spatial--source--__span-0-92"><a id="gbfs_toolkit.cluster_spatial--source--__codelineno-0-92" name="gbfs_toolkit.cluster_spatial--source--__codelineno-0-92"></a>        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"unknown method </span><span class="si">{</span><span class="n">method</span><span class="si">!r}</span><span class="s2">; use 'hdbscan' or 'dbscan'"</span><span class="p">)</span>
+</span><span id="gbfs_toolkit.cluster_spatial--source--__span-0-93"><a id="gbfs_toolkit.cluster_spatial--source--__codelineno-0-93" name="gbfs_toolkit.cluster_spatial--source--__codelineno-0-93"></a>    <span class="n">out</span><span class="p">[</span><span class="s2">"cluster"</span><span class="p">]</span> <span class="o">=</span> <span class="n">labels</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s2">"int64"</span><span class="p">)</span>
+</span><span id="gbfs_toolkit.cluster_spatial--source--__span-0-94"><a id="gbfs_toolkit.cluster_spatial--source--__codelineno-0-94" name="gbfs_toolkit.cluster_spatial--source--__codelineno-0-94"></a>    <span class="k">return</span> <span class="n">out</span>
 </span></code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -6756,10 +6756,10 @@
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.instant", "navigation.instant.progress", "navigation.tracking", "navigation.sections", "navigation.tabs", "navigation.tabs.sticky", "navigation.top", "navigation.indexes", "navigation.footer", "toc.follow", "search.suggest", "search.highlight", "search.share", "content.code.copy", "content.code.annotate", "content.tooltips"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.instant", "navigation.instant.progress", "navigation.tracking", "navigation.sections", "navigation.tabs", "navigation.tabs.sticky", "navigation.top", "navigation.indexes", "navigation.footer", "toc.follow", "search.suggest", "search.highlight", "search.share", "content.code.copy", "content.code.annotate", "content.tooltips"], "search": "../../../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
     
     
-      <script src="../../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../../../assets/javascripts/bundle.c21346df.min.js"></script>
       
         <script src="../../../javascripts/mathjax.js"></script>
       

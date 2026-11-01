@@ -25,7 +25,7 @@
       
       
       <link rel="icon" href="../../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-ProperDocs 1.6.7, mkdocs-material-9.7.6">
+      <meta name="generator" content="mkdocs-ProperDocs 1.6.7, mkdocs-material-9.8.0">
     
     
       
@@ -33,10 +33,10 @@
       
     
     
-      <link rel="stylesheet" href="../../../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.57a0d79d.min.css">
       
         
-        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.fb2fffe2.min.css">
       
       
 
@@ -1146,7 +1146,7 @@
   <span class="md-ellipsis">
     
   
-    __version__
+    _version_
   
 
     
@@ -6440,53 +6440,53 @@ networks can be subset or aggregated by region. Returns
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/gbfs_toolkit/io/normalize.py</code></summary>
-              <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-351">351</a></span>
-<span class="normal"><a href="#__codelineno-0-352">352</a></span>
-<span class="normal"><a href="#__codelineno-0-353">353</a></span>
-<span class="normal"><a href="#__codelineno-0-354">354</a></span>
-<span class="normal"><a href="#__codelineno-0-355">355</a></span>
-<span class="normal"><a href="#__codelineno-0-356">356</a></span>
-<span class="normal"><a href="#__codelineno-0-357">357</a></span>
-<span class="normal"><a href="#__codelineno-0-358">358</a></span>
-<span class="normal"><a href="#__codelineno-0-359">359</a></span>
-<span class="normal"><a href="#__codelineno-0-360">360</a></span>
-<span class="normal"><a href="#__codelineno-0-361">361</a></span>
-<span class="normal"><a href="#__codelineno-0-362">362</a></span>
-<span class="normal"><a href="#__codelineno-0-363">363</a></span>
-<span class="normal"><a href="#__codelineno-0-364">364</a></span>
-<span class="normal"><a href="#__codelineno-0-365">365</a></span>
-<span class="normal"><a href="#__codelineno-0-366">366</a></span>
-<span class="normal"><a href="#__codelineno-0-367">367</a></span>
-<span class="normal"><a href="#__codelineno-0-368">368</a></span>
-<span class="normal"><a href="#__codelineno-0-369">369</a></span>
-<span class="normal"><a href="#__codelineno-0-370">370</a></span>
-<span class="normal"><a href="#__codelineno-0-371">371</a></span>
-<span class="normal"><a href="#__codelineno-0-372">372</a></span>
-<span class="normal"><a href="#__codelineno-0-373">373</a></span>
-<span class="normal"><a href="#__codelineno-0-374">374</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-351"><a id="__codelineno-0-351" name="__codelineno-0-351"></a><span class="k">def</span><span class="w"> </span><span class="nf">to_canonical_system_regions</span><span class="p">(</span><span class="n">raw</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">system_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
-</span><span id="__span-0-352"><a id="__codelineno-0-352" name="__codelineno-0-352"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Parse ``system_regions.json`` into a canonical ``region_id → name`` lookup.</span>
-</span><span id="__span-0-353"><a id="__codelineno-0-353" name="__codelineno-0-353"></a>
-</span><span id="__span-0-354"><a id="__codelineno-0-354" name="__codelineno-0-354"></a><span class="sd">    Resolves the ``region_id`` foreign key carried on stations, so large multi-region</span>
-</span><span id="__span-0-355"><a id="__codelineno-0-355" name="__codelineno-0-355"></a><span class="sd">    networks can be subset or aggregated by region. Returns</span>
-</span><span id="__span-0-356"><a id="__codelineno-0-356" name="__codelineno-0-356"></a><span class="sd">    `SYSTEM_REGION_COLUMNS`.</span>
-</span><span id="__span-0-357"><a id="__codelineno-0-357" name="__codelineno-0-357"></a>
-</span><span id="__span-0-358"><a id="__codelineno-0-358" name="__codelineno-0-358"></a><span class="sd">    See Also</span>
-</span><span id="__span-0-359"><a id="__codelineno-0-359" name="__codelineno-0-359"></a><span class="sd">    --------</span>
-</span><span id="__span-0-360"><a id="__codelineno-0-360" name="__codelineno-0-360"></a><span class="sd">    [`to_canonical_system_information`][gbfs_toolkit.to_canonical_system_information] : The matching system-information parser.</span>
-</span><span id="__span-0-361"><a id="__codelineno-0-361" name="__codelineno-0-361"></a><span class="sd">    &quot;&quot;&quot;</span>
-</span><span id="__span-0-362"><a id="__codelineno-0-362" name="__codelineno-0-362"></a>    <span class="n">data</span> <span class="o">=</span> <span class="n">raw</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;data&quot;</span><span class="p">,</span> <span class="n">raw</span><span class="p">)</span>
-</span><span id="__span-0-363"><a id="__codelineno-0-363" name="__codelineno-0-363"></a>    <span class="n">regions</span> <span class="o">=</span> <span class="n">_records</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="s2">&quot;regions&quot;</span><span class="p">)</span>
-</span><span id="__span-0-364"><a id="__codelineno-0-364" name="__codelineno-0-364"></a>    <span class="n">rows</span> <span class="o">=</span> <span class="p">[</span>
-</span><span id="__span-0-365"><a id="__codelineno-0-365" name="__codelineno-0-365"></a>        <span class="p">{</span>
-</span><span id="__span-0-366"><a id="__codelineno-0-366" name="__codelineno-0-366"></a>            <span class="s2">&quot;system_id&quot;</span><span class="p">:</span> <span class="n">system_id</span><span class="p">,</span>
-</span><span id="__span-0-367"><a id="__codelineno-0-367" name="__codelineno-0-367"></a>            <span class="s2">&quot;region_id&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;region_id&quot;</span><span class="p">)),</span>
-</span><span id="__span-0-368"><a id="__codelineno-0-368" name="__codelineno-0-368"></a>            <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">_name</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">)),</span>
-</span><span id="__span-0-369"><a id="__codelineno-0-369" name="__codelineno-0-369"></a>        <span class="p">}</span>
-</span><span id="__span-0-370"><a id="__codelineno-0-370" name="__codelineno-0-370"></a>        <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">regions</span>
-</span><span id="__span-0-371"><a id="__codelineno-0-371" name="__codelineno-0-371"></a>    <span class="p">]</span>
-</span><span id="__span-0-372"><a id="__codelineno-0-372" name="__codelineno-0-372"></a>    <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">rows</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">SYSTEM_REGION_COLUMNS</span><span class="p">)</span>
-</span><span id="__span-0-373"><a id="__codelineno-0-373" name="__codelineno-0-373"></a>    <span class="n">df</span><span class="p">[</span><span class="s2">&quot;region_id&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;region_id&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s2">&quot;string&quot;</span><span class="p">)</span>  <span class="c1"># join key, see to_canonical_station_info</span>
-</span><span id="__span-0-374"><a id="__codelineno-0-374" name="__codelineno-0-374"></a>    <span class="k">return</span> <span class="n">df</span>
+              <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#gbfs_toolkit.to_canonical_system_regions--source--__codelineno-0-351">351</a></span>
+<span class="normal"><a href="#gbfs_toolkit.to_canonical_system_regions--source--__codelineno-0-352">352</a></span>
+<span class="normal"><a href="#gbfs_toolkit.to_canonical_system_regions--source--__codelineno-0-353">353</a></span>
+<span class="normal"><a href="#gbfs_toolkit.to_canonical_system_regions--source--__codelineno-0-354">354</a></span>
+<span class="normal"><a href="#gbfs_toolkit.to_canonical_system_regions--source--__codelineno-0-355">355</a></span>
+<span class="normal"><a href="#gbfs_toolkit.to_canonical_system_regions--source--__codelineno-0-356">356</a></span>
+<span class="normal"><a href="#gbfs_toolkit.to_canonical_system_regions--source--__codelineno-0-357">357</a></span>
+<span class="normal"><a href="#gbfs_toolkit.to_canonical_system_regions--source--__codelineno-0-358">358</a></span>
+<span class="normal"><a href="#gbfs_toolkit.to_canonical_system_regions--source--__codelineno-0-359">359</a></span>
+<span class="normal"><a href="#gbfs_toolkit.to_canonical_system_regions--source--__codelineno-0-360">360</a></span>
+<span class="normal"><a href="#gbfs_toolkit.to_canonical_system_regions--source--__codelineno-0-361">361</a></span>
+<span class="normal"><a href="#gbfs_toolkit.to_canonical_system_regions--source--__codelineno-0-362">362</a></span>
+<span class="normal"><a href="#gbfs_toolkit.to_canonical_system_regions--source--__codelineno-0-363">363</a></span>
+<span class="normal"><a href="#gbfs_toolkit.to_canonical_system_regions--source--__codelineno-0-364">364</a></span>
+<span class="normal"><a href="#gbfs_toolkit.to_canonical_system_regions--source--__codelineno-0-365">365</a></span>
+<span class="normal"><a href="#gbfs_toolkit.to_canonical_system_regions--source--__codelineno-0-366">366</a></span>
+<span class="normal"><a href="#gbfs_toolkit.to_canonical_system_regions--source--__codelineno-0-367">367</a></span>
+<span class="normal"><a href="#gbfs_toolkit.to_canonical_system_regions--source--__codelineno-0-368">368</a></span>
+<span class="normal"><a href="#gbfs_toolkit.to_canonical_system_regions--source--__codelineno-0-369">369</a></span>
+<span class="normal"><a href="#gbfs_toolkit.to_canonical_system_regions--source--__codelineno-0-370">370</a></span>
+<span class="normal"><a href="#gbfs_toolkit.to_canonical_system_regions--source--__codelineno-0-371">371</a></span>
+<span class="normal"><a href="#gbfs_toolkit.to_canonical_system_regions--source--__codelineno-0-372">372</a></span>
+<span class="normal"><a href="#gbfs_toolkit.to_canonical_system_regions--source--__codelineno-0-373">373</a></span>
+<span class="normal"><a href="#gbfs_toolkit.to_canonical_system_regions--source--__codelineno-0-374">374</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="gbfs_toolkit.to_canonical_system_regions--source--__span-0-351"><a id="gbfs_toolkit.to_canonical_system_regions--source--__codelineno-0-351" name="gbfs_toolkit.to_canonical_system_regions--source--__codelineno-0-351"></a><span class="k">def</span><span class="w"> </span><span class="nf">to_canonical_system_regions</span><span class="p">(</span><span class="n">raw</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">system_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+</span><span id="gbfs_toolkit.to_canonical_system_regions--source--__span-0-352"><a id="gbfs_toolkit.to_canonical_system_regions--source--__codelineno-0-352" name="gbfs_toolkit.to_canonical_system_regions--source--__codelineno-0-352"></a><span class="w">    </span><span class="sd">"""Parse ``system_regions.json`` into a canonical ``region_id → name`` lookup.</span>
+</span><span id="gbfs_toolkit.to_canonical_system_regions--source--__span-0-353"><a id="gbfs_toolkit.to_canonical_system_regions--source--__codelineno-0-353" name="gbfs_toolkit.to_canonical_system_regions--source--__codelineno-0-353"></a>
+</span><span id="gbfs_toolkit.to_canonical_system_regions--source--__span-0-354"><a id="gbfs_toolkit.to_canonical_system_regions--source--__codelineno-0-354" name="gbfs_toolkit.to_canonical_system_regions--source--__codelineno-0-354"></a><span class="sd">    Resolves the ``region_id`` foreign key carried on stations, so large multi-region</span>
+</span><span id="gbfs_toolkit.to_canonical_system_regions--source--__span-0-355"><a id="gbfs_toolkit.to_canonical_system_regions--source--__codelineno-0-355" name="gbfs_toolkit.to_canonical_system_regions--source--__codelineno-0-355"></a><span class="sd">    networks can be subset or aggregated by region. Returns</span>
+</span><span id="gbfs_toolkit.to_canonical_system_regions--source--__span-0-356"><a id="gbfs_toolkit.to_canonical_system_regions--source--__codelineno-0-356" name="gbfs_toolkit.to_canonical_system_regions--source--__codelineno-0-356"></a><span class="sd">    `SYSTEM_REGION_COLUMNS`.</span>
+</span><span id="gbfs_toolkit.to_canonical_system_regions--source--__span-0-357"><a id="gbfs_toolkit.to_canonical_system_regions--source--__codelineno-0-357" name="gbfs_toolkit.to_canonical_system_regions--source--__codelineno-0-357"></a>
+</span><span id="gbfs_toolkit.to_canonical_system_regions--source--__span-0-358"><a id="gbfs_toolkit.to_canonical_system_regions--source--__codelineno-0-358" name="gbfs_toolkit.to_canonical_system_regions--source--__codelineno-0-358"></a><span class="sd">    See Also</span>
+</span><span id="gbfs_toolkit.to_canonical_system_regions--source--__span-0-359"><a id="gbfs_toolkit.to_canonical_system_regions--source--__codelineno-0-359" name="gbfs_toolkit.to_canonical_system_regions--source--__codelineno-0-359"></a><span class="sd">    --------</span>
+</span><span id="gbfs_toolkit.to_canonical_system_regions--source--__span-0-360"><a id="gbfs_toolkit.to_canonical_system_regions--source--__codelineno-0-360" name="gbfs_toolkit.to_canonical_system_regions--source--__codelineno-0-360"></a><span class="sd">    [`to_canonical_system_information`][gbfs_toolkit.to_canonical_system_information] : The matching system-information parser.</span>
+</span><span id="gbfs_toolkit.to_canonical_system_regions--source--__span-0-361"><a id="gbfs_toolkit.to_canonical_system_regions--source--__codelineno-0-361" name="gbfs_toolkit.to_canonical_system_regions--source--__codelineno-0-361"></a><span class="sd">    """</span>
+</span><span id="gbfs_toolkit.to_canonical_system_regions--source--__span-0-362"><a id="gbfs_toolkit.to_canonical_system_regions--source--__codelineno-0-362" name="gbfs_toolkit.to_canonical_system_regions--source--__codelineno-0-362"></a>    <span class="n">data</span> <span class="o">=</span> <span class="n">raw</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"data"</span><span class="p">,</span> <span class="n">raw</span><span class="p">)</span>
+</span><span id="gbfs_toolkit.to_canonical_system_regions--source--__span-0-363"><a id="gbfs_toolkit.to_canonical_system_regions--source--__codelineno-0-363" name="gbfs_toolkit.to_canonical_system_regions--source--__codelineno-0-363"></a>    <span class="n">regions</span> <span class="o">=</span> <span class="n">_records</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="s2">"regions"</span><span class="p">)</span>
+</span><span id="gbfs_toolkit.to_canonical_system_regions--source--__span-0-364"><a id="gbfs_toolkit.to_canonical_system_regions--source--__codelineno-0-364" name="gbfs_toolkit.to_canonical_system_regions--source--__codelineno-0-364"></a>    <span class="n">rows</span> <span class="o">=</span> <span class="p">[</span>
+</span><span id="gbfs_toolkit.to_canonical_system_regions--source--__span-0-365"><a id="gbfs_toolkit.to_canonical_system_regions--source--__codelineno-0-365" name="gbfs_toolkit.to_canonical_system_regions--source--__codelineno-0-365"></a>        <span class="p">{</span>
+</span><span id="gbfs_toolkit.to_canonical_system_regions--source--__span-0-366"><a id="gbfs_toolkit.to_canonical_system_regions--source--__codelineno-0-366" name="gbfs_toolkit.to_canonical_system_regions--source--__codelineno-0-366"></a>            <span class="s2">"system_id"</span><span class="p">:</span> <span class="n">system_id</span><span class="p">,</span>
+</span><span id="gbfs_toolkit.to_canonical_system_regions--source--__span-0-367"><a id="gbfs_toolkit.to_canonical_system_regions--source--__codelineno-0-367" name="gbfs_toolkit.to_canonical_system_regions--source--__codelineno-0-367"></a>            <span class="s2">"region_id"</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"region_id"</span><span class="p">)),</span>
+</span><span id="gbfs_toolkit.to_canonical_system_regions--source--__span-0-368"><a id="gbfs_toolkit.to_canonical_system_regions--source--__codelineno-0-368" name="gbfs_toolkit.to_canonical_system_regions--source--__codelineno-0-368"></a>            <span class="s2">"name"</span><span class="p">:</span> <span class="n">_name</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"name"</span><span class="p">)),</span>
+</span><span id="gbfs_toolkit.to_canonical_system_regions--source--__span-0-369"><a id="gbfs_toolkit.to_canonical_system_regions--source--__codelineno-0-369" name="gbfs_toolkit.to_canonical_system_regions--source--__codelineno-0-369"></a>        <span class="p">}</span>
+</span><span id="gbfs_toolkit.to_canonical_system_regions--source--__span-0-370"><a id="gbfs_toolkit.to_canonical_system_regions--source--__codelineno-0-370" name="gbfs_toolkit.to_canonical_system_regions--source--__codelineno-0-370"></a>        <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">regions</span>
+</span><span id="gbfs_toolkit.to_canonical_system_regions--source--__span-0-371"><a id="gbfs_toolkit.to_canonical_system_regions--source--__codelineno-0-371" name="gbfs_toolkit.to_canonical_system_regions--source--__codelineno-0-371"></a>    <span class="p">]</span>
+</span><span id="gbfs_toolkit.to_canonical_system_regions--source--__span-0-372"><a id="gbfs_toolkit.to_canonical_system_regions--source--__codelineno-0-372" name="gbfs_toolkit.to_canonical_system_regions--source--__codelineno-0-372"></a>    <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">rows</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">SYSTEM_REGION_COLUMNS</span><span class="p">)</span>
+</span><span id="gbfs_toolkit.to_canonical_system_regions--source--__span-0-373"><a id="gbfs_toolkit.to_canonical_system_regions--source--__codelineno-0-373" name="gbfs_toolkit.to_canonical_system_regions--source--__codelineno-0-373"></a>    <span class="n">df</span><span class="p">[</span><span class="s2">"region_id"</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">"region_id"</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s2">"string"</span><span class="p">)</span>  <span class="c1"># join key, see to_canonical_station_info</span>
+</span><span id="gbfs_toolkit.to_canonical_system_regions--source--__span-0-374"><a id="gbfs_toolkit.to_canonical_system_regions--source--__codelineno-0-374" name="gbfs_toolkit.to_canonical_system_regions--source--__codelineno-0-374"></a>    <span class="k">return</span> <span class="n">df</span>
 </span></code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -6617,10 +6617,10 @@ networks can be subset or aggregated by region. Returns
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.instant", "navigation.instant.progress", "navigation.tracking", "navigation.sections", "navigation.tabs", "navigation.tabs.sticky", "navigation.top", "navigation.indexes", "navigation.footer", "toc.follow", "search.suggest", "search.highlight", "search.share", "content.code.copy", "content.code.annotate", "content.tooltips"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.instant", "navigation.instant.progress", "navigation.tracking", "navigation.sections", "navigation.tabs", "navigation.tabs.sticky", "navigation.top", "navigation.indexes", "navigation.footer", "toc.follow", "search.suggest", "search.highlight", "search.share", "content.code.copy", "content.code.annotate", "content.tooltips"], "search": "../../../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
     
     
-      <script src="../../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../../../assets/javascripts/bundle.c21346df.min.js"></script>
       
         <script src="../../../javascripts/mathjax.js"></script>
       

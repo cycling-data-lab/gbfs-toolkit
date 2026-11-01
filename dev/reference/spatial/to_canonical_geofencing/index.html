@@ -25,7 +25,7 @@
       
       
       <link rel="icon" href="../../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-ProperDocs 1.6.7, mkdocs-material-9.7.6">
+      <meta name="generator" content="mkdocs-ProperDocs 1.6.7, mkdocs-material-9.8.0">
     
     
       
@@ -33,10 +33,10 @@
       
     
     
-      <link rel="stylesheet" href="../../../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.57a0d79d.min.css">
       
         
-        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.fb2fffe2.min.css">
       
       
 
@@ -1146,7 +1146,7 @@
   <span class="md-ellipsis">
     
   
-    __version__
+    _version_
   
 
     
@@ -6422,7 +6422,7 @@
 
 
 <a href="#gbfs_toolkit.to_canonical_geofencing" class="headerlink" title="Permanent link">&para;</a></h2>
-<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">to_canonical_geofencing</span><span class="p">(</span><span class="n">raw</span><span class="p">:</span> <span class="n"><span title="dict">dict</span></span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">system_id</span><span class="p">:</span> <span class="n"><span title="str">str</span></span><span class="p">,</span> <span class="n">gbfs_version</span><span class="p">:</span> <span class="n"><span title="str">str</span></span> <span class="o">=</span> <span class="s1">&#39;2.x&#39;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n"><span title="geopandas.GeoDataFrame">GeoDataFrame</span></span>
+<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">to_canonical_geofencing</span><span class="p">(</span><span class="n">raw</span><span class="p">:</span> <span class="n"><span title="dict">dict</span></span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">system_id</span><span class="p">:</span> <span class="n"><span title="str">str</span></span><span class="p">,</span> <span class="n">gbfs_version</span><span class="p">:</span> <span class="n"><span title="str">str</span></span> <span class="o">=</span> <span class="s1">'2.x'</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n"><span title="geopandas.GeoDataFrame">GeoDataFrame</span></span>
 </span></code></pre></div>
 
     <div class="doc doc-contents first">
@@ -6488,113 +6488,113 @@ zone's <em>default</em> rule; the full per-vehicle-type <code>rules</code> list 
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/gbfs_toolkit/spatial/geofencing.py</code></summary>
-              <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-64"> 64</a></span>
-<span class="normal"><a href="#__codelineno-0-65"> 65</a></span>
-<span class="normal"><a href="#__codelineno-0-66"> 66</a></span>
-<span class="normal"><a href="#__codelineno-0-67"> 67</a></span>
-<span class="normal"><a href="#__codelineno-0-68"> 68</a></span>
-<span class="normal"><a href="#__codelineno-0-69"> 69</a></span>
-<span class="normal"><a href="#__codelineno-0-70"> 70</a></span>
-<span class="normal"><a href="#__codelineno-0-71"> 71</a></span>
-<span class="normal"><a href="#__codelineno-0-72"> 72</a></span>
-<span class="normal"><a href="#__codelineno-0-73"> 73</a></span>
-<span class="normal"><a href="#__codelineno-0-74"> 74</a></span>
-<span class="normal"><a href="#__codelineno-0-75"> 75</a></span>
-<span class="normal"><a href="#__codelineno-0-76"> 76</a></span>
-<span class="normal"><a href="#__codelineno-0-77"> 77</a></span>
-<span class="normal"><a href="#__codelineno-0-78"> 78</a></span>
-<span class="normal"><a href="#__codelineno-0-79"> 79</a></span>
-<span class="normal"><a href="#__codelineno-0-80"> 80</a></span>
-<span class="normal"><a href="#__codelineno-0-81"> 81</a></span>
-<span class="normal"><a href="#__codelineno-0-82"> 82</a></span>
-<span class="normal"><a href="#__codelineno-0-83"> 83</a></span>
-<span class="normal"><a href="#__codelineno-0-84"> 84</a></span>
-<span class="normal"><a href="#__codelineno-0-85"> 85</a></span>
-<span class="normal"><a href="#__codelineno-0-86"> 86</a></span>
-<span class="normal"><a href="#__codelineno-0-87"> 87</a></span>
-<span class="normal"><a href="#__codelineno-0-88"> 88</a></span>
-<span class="normal"><a href="#__codelineno-0-89"> 89</a></span>
-<span class="normal"><a href="#__codelineno-0-90"> 90</a></span>
-<span class="normal"><a href="#__codelineno-0-91"> 91</a></span>
-<span class="normal"><a href="#__codelineno-0-92"> 92</a></span>
-<span class="normal"><a href="#__codelineno-0-93"> 93</a></span>
-<span class="normal"><a href="#__codelineno-0-94"> 94</a></span>
-<span class="normal"><a href="#__codelineno-0-95"> 95</a></span>
-<span class="normal"><a href="#__codelineno-0-96"> 96</a></span>
-<span class="normal"><a href="#__codelineno-0-97"> 97</a></span>
-<span class="normal"><a href="#__codelineno-0-98"> 98</a></span>
-<span class="normal"><a href="#__codelineno-0-99"> 99</a></span>
-<span class="normal"><a href="#__codelineno-0-100">100</a></span>
-<span class="normal"><a href="#__codelineno-0-101">101</a></span>
-<span class="normal"><a href="#__codelineno-0-102">102</a></span>
-<span class="normal"><a href="#__codelineno-0-103">103</a></span>
-<span class="normal"><a href="#__codelineno-0-104">104</a></span>
-<span class="normal"><a href="#__codelineno-0-105">105</a></span>
-<span class="normal"><a href="#__codelineno-0-106">106</a></span>
-<span class="normal"><a href="#__codelineno-0-107">107</a></span>
-<span class="normal"><a href="#__codelineno-0-108">108</a></span>
-<span class="normal"><a href="#__codelineno-0-109">109</a></span>
-<span class="normal"><a href="#__codelineno-0-110">110</a></span>
-<span class="normal"><a href="#__codelineno-0-111">111</a></span>
-<span class="normal"><a href="#__codelineno-0-112">112</a></span>
-<span class="normal"><a href="#__codelineno-0-113">113</a></span>
-<span class="normal"><a href="#__codelineno-0-114">114</a></span>
-<span class="normal"><a href="#__codelineno-0-115">115</a></span>
-<span class="normal"><a href="#__codelineno-0-116">116</a></span>
-<span class="normal"><a href="#__codelineno-0-117">117</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-64"><a id="__codelineno-0-64" name="__codelineno-0-64"></a><span class="k">def</span><span class="w"> </span><span class="nf">to_canonical_geofencing</span><span class="p">(</span>
-</span><span id="__span-0-65"><a id="__codelineno-0-65" name="__codelineno-0-65"></a>    <span class="n">raw</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">system_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">gbfs_version</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;2.x&quot;</span>
-</span><span id="__span-0-66"><a id="__codelineno-0-66" name="__codelineno-0-66"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">gpd</span><span class="o">.</span><span class="n">GeoDataFrame</span><span class="p">:</span>
-</span><span id="__span-0-67"><a id="__codelineno-0-67" name="__codelineno-0-67"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Parse a ``geofencing_zones.json`` document into a canonical ``GeoDataFrame``.</span>
-</span><span id="__span-0-68"><a id="__codelineno-0-68" name="__codelineno-0-68"></a>
-</span><span id="__span-0-69"><a id="__codelineno-0-69" name="__codelineno-0-69"></a><span class="sd">    Returns one row per zone with a shapely geometry (EPSG:4326) and the columns of</span>
-</span><span id="__span-0-70"><a id="__codelineno-0-70" name="__codelineno-0-70"></a><span class="sd">    `GEOFENCING_COLUMNS`. The boolean/speed fields summarise each</span>
-</span><span id="__span-0-71"><a id="__codelineno-0-71" name="__codelineno-0-71"></a><span class="sd">    zone&#39;s *default* rule; the full per-vehicle-type ``rules`` list is preserved verbatim.</span>
-</span><span id="__span-0-72"><a id="__codelineno-0-72" name="__codelineno-0-72"></a>
-</span><span id="__span-0-73"><a id="__codelineno-0-73" name="__codelineno-0-73"></a><span class="sd">    Parameters</span>
-</span><span id="__span-0-74"><a id="__codelineno-0-74" name="__codelineno-0-74"></a><span class="sd">    ----------</span>
-</span><span id="__span-0-75"><a id="__codelineno-0-75" name="__codelineno-0-75"></a><span class="sd">    raw : dict</span>
-</span><span id="__span-0-76"><a id="__codelineno-0-76" name="__codelineno-0-76"></a><span class="sd">        Parsed ``geofencing_zones`` document (full doc or its ``data`` mapping).</span>
-</span><span id="__span-0-77"><a id="__codelineno-0-77" name="__codelineno-0-77"></a><span class="sd">    system_id : str</span>
-</span><span id="__span-0-78"><a id="__codelineno-0-78" name="__codelineno-0-78"></a><span class="sd">        Identifier stamped on every row.</span>
-</span><span id="__span-0-79"><a id="__codelineno-0-79" name="__codelineno-0-79"></a>
-</span><span id="__span-0-80"><a id="__codelineno-0-80" name="__codelineno-0-80"></a><span class="sd">    See Also</span>
-</span><span id="__span-0-81"><a id="__codelineno-0-81" name="__codelineno-0-81"></a><span class="sd">    --------</span>
-</span><span id="__span-0-82"><a id="__codelineno-0-82" name="__codelineno-0-82"></a><span class="sd">    [`zone_area_km2`][gbfs_toolkit.zone_area_km2] : Area of the parsed zones.</span>
-</span><span id="__span-0-83"><a id="__codelineno-0-83" name="__codelineno-0-83"></a><span class="sd">    [`zones_for_points`][gbfs_toolkit.zones_for_points] : Assign points to the parsed zones.</span>
-</span><span id="__span-0-84"><a id="__codelineno-0-84" name="__codelineno-0-84"></a><span class="sd">    &quot;&quot;&quot;</span>
-</span><span id="__span-0-85"><a id="__codelineno-0-85" name="__codelineno-0-85"></a>    <span class="n">gpd</span><span class="p">,</span> <span class="n">shape</span> <span class="o">=</span> <span class="n">_require_geo</span><span class="p">()</span>
-</span><span id="__span-0-86"><a id="__codelineno-0-86" name="__codelineno-0-86"></a>    <span class="n">data</span> <span class="o">=</span> <span class="n">raw</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;data&quot;</span><span class="p">,</span> <span class="n">raw</span><span class="p">)</span>
-</span><span id="__span-0-87"><a id="__codelineno-0-87" name="__codelineno-0-87"></a>    <span class="n">gz</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;geofencing_zones&quot;</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span> <span class="k">else</span> <span class="p">{}</span>
-</span><span id="__span-0-88"><a id="__codelineno-0-88" name="__codelineno-0-88"></a>    <span class="n">features</span> <span class="o">=</span> <span class="n">gz</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;features&quot;</span><span class="p">,</span> <span class="p">[])</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">gz</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span> <span class="k">else</span> <span class="p">[]</span>
-</span><span id="__span-0-89"><a id="__codelineno-0-89" name="__codelineno-0-89"></a>
-</span><span id="__span-0-90"><a id="__codelineno-0-90" name="__codelineno-0-90"></a>    <span class="n">rows</span><span class="p">,</span> <span class="n">geoms</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[]</span>
-</span><span id="__span-0-91"><a id="__codelineno-0-91" name="__codelineno-0-91"></a>    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">feat</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">features</span><span class="p">):</span>
-</span><span id="__span-0-92"><a id="__codelineno-0-92" name="__codelineno-0-92"></a>        <span class="n">geom</span> <span class="o">=</span> <span class="n">feat</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;geometry&quot;</span><span class="p">)</span>
-</span><span id="__span-0-93"><a id="__codelineno-0-93" name="__codelineno-0-93"></a>        <span class="k">if</span> <span class="ow">not</span> <span class="n">geom</span><span class="p">:</span>
-</span><span id="__span-0-94"><a id="__codelineno-0-94" name="__codelineno-0-94"></a>            <span class="k">continue</span>
-</span><span id="__span-0-95"><a id="__codelineno-0-95" name="__codelineno-0-95"></a>        <span class="n">props</span> <span class="o">=</span> <span class="n">feat</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;properties&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="p">{}</span>
-</span><span id="__span-0-96"><a id="__codelineno-0-96" name="__codelineno-0-96"></a>        <span class="n">rules</span> <span class="o">=</span> <span class="n">props</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;rules&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="p">[]</span>
-</span><span id="__span-0-97"><a id="__codelineno-0-97" name="__codelineno-0-97"></a>        <span class="n">rule</span> <span class="o">=</span> <span class="n">_default_rule</span><span class="p">(</span><span class="n">rules</span><span class="p">)</span>
-</span><span id="__span-0-98"><a id="__codelineno-0-98" name="__codelineno-0-98"></a>        <span class="n">rows</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
-</span><span id="__span-0-99"><a id="__codelineno-0-99" name="__codelineno-0-99"></a>            <span class="p">{</span>
-</span><span id="__span-0-100"><a id="__codelineno-0-100" name="__codelineno-0-100"></a>                <span class="s2">&quot;system_id&quot;</span><span class="p">:</span> <span class="n">system_id</span><span class="p">,</span>
-</span><span id="__span-0-101"><a id="__codelineno-0-101" name="__codelineno-0-101"></a>                <span class="s2">&quot;zone_id&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">props</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">i</span><span class="p">),</span>
-</span><span id="__span-0-102"><a id="__codelineno-0-102" name="__codelineno-0-102"></a>                <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">props</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">),</span>
-</span><span id="__span-0-103"><a id="__codelineno-0-103" name="__codelineno-0-103"></a>                <span class="s2">&quot;ride_allowed&quot;</span><span class="p">:</span> <span class="n">_ride_allowed</span><span class="p">(</span><span class="n">rule</span><span class="p">),</span>
-</span><span id="__span-0-104"><a id="__codelineno-0-104" name="__codelineno-0-104"></a>                <span class="s2">&quot;ride_through_allowed&quot;</span><span class="p">:</span> <span class="n">rule</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;ride_through_allowed&quot;</span><span class="p">),</span>
-</span><span id="__span-0-105"><a id="__codelineno-0-105" name="__codelineno-0-105"></a>                <span class="s2">&quot;maximum_speed_kph&quot;</span><span class="p">:</span> <span class="n">rule</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;maximum_speed_kph&quot;</span><span class="p">),</span>
-</span><span id="__span-0-106"><a id="__codelineno-0-106" name="__codelineno-0-106"></a>                <span class="s2">&quot;station_parking&quot;</span><span class="p">:</span> <span class="n">rule</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;station_parking&quot;</span><span class="p">),</span>
-</span><span id="__span-0-107"><a id="__codelineno-0-107" name="__codelineno-0-107"></a>                <span class="s2">&quot;rules&quot;</span><span class="p">:</span> <span class="n">rules</span><span class="p">,</span>
-</span><span id="__span-0-108"><a id="__codelineno-0-108" name="__codelineno-0-108"></a>            <span class="p">}</span>
-</span><span id="__span-0-109"><a id="__codelineno-0-109" name="__codelineno-0-109"></a>        <span class="p">)</span>
-</span><span id="__span-0-110"><a id="__codelineno-0-110" name="__codelineno-0-110"></a>        <span class="n">geoms</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">shape</span><span class="p">(</span><span class="n">geom</span><span class="p">))</span>
-</span><span id="__span-0-111"><a id="__codelineno-0-111" name="__codelineno-0-111"></a>
-</span><span id="__span-0-112"><a id="__codelineno-0-112" name="__codelineno-0-112"></a>    <span class="k">if</span> <span class="ow">not</span> <span class="n">rows</span><span class="p">:</span>
-</span><span id="__span-0-113"><a id="__codelineno-0-113" name="__codelineno-0-113"></a>        <span class="k">return</span> <span class="n">gpd</span><span class="o">.</span><span class="n">GeoDataFrame</span><span class="p">(</span>
-</span><span id="__span-0-114"><a id="__codelineno-0-114" name="__codelineno-0-114"></a>            <span class="p">{</span><span class="n">c</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">dtype</span><span class="o">=</span><span class="s2">&quot;object&quot;</span><span class="p">)</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">_NON_GEOM</span><span class="p">},</span> <span class="n">geometry</span><span class="o">=</span><span class="p">[],</span> <span class="n">crs</span><span class="o">=</span><span class="s2">&quot;EPSG:4326&quot;</span>
-</span><span id="__span-0-115"><a id="__codelineno-0-115" name="__codelineno-0-115"></a>        <span class="p">)</span>
-</span><span id="__span-0-116"><a id="__codelineno-0-116" name="__codelineno-0-116"></a>    <span class="n">gdf</span> <span class="o">=</span> <span class="n">gpd</span><span class="o">.</span><span class="n">GeoDataFrame</span><span class="p">(</span><span class="n">rows</span><span class="p">,</span> <span class="n">geometry</span><span class="o">=</span><span class="n">geoms</span><span class="p">,</span> <span class="n">crs</span><span class="o">=</span><span class="s2">&quot;EPSG:4326&quot;</span><span class="p">)</span>
-</span><span id="__span-0-117"><a id="__codelineno-0-117" name="__codelineno-0-117"></a>    <span class="k">return</span> <span class="n">gdf</span><span class="p">[[</span><span class="o">*</span><span class="n">_NON_GEOM</span><span class="p">,</span> <span class="s2">&quot;geometry&quot;</span><span class="p">]]</span>
+              <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#gbfs_toolkit.to_canonical_geofencing--source--__codelineno-0-64"> 64</a></span>
+<span class="normal"><a href="#gbfs_toolkit.to_canonical_geofencing--source--__codelineno-0-65"> 65</a></span>
+<span class="normal"><a href="#gbfs_toolkit.to_canonical_geofencing--source--__codelineno-0-66"> 66</a></span>
+<span class="normal"><a href="#gbfs_toolkit.to_canonical_geofencing--source--__codelineno-0-67"> 67</a></span>
+<span class="normal"><a href="#gbfs_toolkit.to_canonical_geofencing--source--__codelineno-0-68"> 68</a></span>
+<span class="normal"><a href="#gbfs_toolkit.to_canonical_geofencing--source--__codelineno-0-69"> 69</a></span>
+<span class="normal"><a href="#gbfs_toolkit.to_canonical_geofencing--source--__codelineno-0-70"> 70</a></span>
+<span class="normal"><a href="#gbfs_toolkit.to_canonical_geofencing--source--__codelineno-0-71"> 71</a></span>
+<span class="normal"><a href="#gbfs_toolkit.to_canonical_geofencing--source--__codelineno-0-72"> 72</a></span>
+<span class="normal"><a href="#gbfs_toolkit.to_canonical_geofencing--source--__codelineno-0-73"> 73</a></span>
+<span class="normal"><a href="#gbfs_toolkit.to_canonical_geofencing--source--__codelineno-0-74"> 74</a></span>
+<span class="normal"><a href="#gbfs_toolkit.to_canonical_geofencing--source--__codelineno-0-75"> 75</a></span>
+<span class="normal"><a href="#gbfs_toolkit.to_canonical_geofencing--source--__codelineno-0-76"> 76</a></span>
+<span class="normal"><a href="#gbfs_toolkit.to_canonical_geofencing--source--__codelineno-0-77"> 77</a></span>
+<span class="normal"><a href="#gbfs_toolkit.to_canonical_geofencing--source--__codelineno-0-78"> 78</a></span>
+<span class="normal"><a href="#gbfs_toolkit.to_canonical_geofencing--source--__codelineno-0-79"> 79</a></span>
+<span class="normal"><a href="#gbfs_toolkit.to_canonical_geofencing--source--__codelineno-0-80"> 80</a></span>
+<span class="normal"><a href="#gbfs_toolkit.to_canonical_geofencing--source--__codelineno-0-81"> 81</a></span>
+<span class="normal"><a href="#gbfs_toolkit.to_canonical_geofencing--source--__codelineno-0-82"> 82</a></span>
+<span class="normal"><a href="#gbfs_toolkit.to_canonical_geofencing--source--__codelineno-0-83"> 83</a></span>
+<span class="normal"><a href="#gbfs_toolkit.to_canonical_geofencing--source--__codelineno-0-84"> 84</a></span>
+<span class="normal"><a href="#gbfs_toolkit.to_canonical_geofencing--source--__codelineno-0-85"> 85</a></span>
+<span class="normal"><a href="#gbfs_toolkit.to_canonical_geofencing--source--__codelineno-0-86"> 86</a></span>
+<span class="normal"><a href="#gbfs_toolkit.to_canonical_geofencing--source--__codelineno-0-87"> 87</a></span>
+<span class="normal"><a href="#gbfs_toolkit.to_canonical_geofencing--source--__codelineno-0-88"> 88</a></span>
+<span class="normal"><a href="#gbfs_toolkit.to_canonical_geofencing--source--__codelineno-0-89"> 89</a></span>
+<span class="normal"><a href="#gbfs_toolkit.to_canonical_geofencing--source--__codelineno-0-90"> 90</a></span>
+<span class="normal"><a href="#gbfs_toolkit.to_canonical_geofencing--source--__codelineno-0-91"> 91</a></span>
+<span class="normal"><a href="#gbfs_toolkit.to_canonical_geofencing--source--__codelineno-0-92"> 92</a></span>
+<span class="normal"><a href="#gbfs_toolkit.to_canonical_geofencing--source--__codelineno-0-93"> 93</a></span>
+<span class="normal"><a href="#gbfs_toolkit.to_canonical_geofencing--source--__codelineno-0-94"> 94</a></span>
+<span class="normal"><a href="#gbfs_toolkit.to_canonical_geofencing--source--__codelineno-0-95"> 95</a></span>
+<span class="normal"><a href="#gbfs_toolkit.to_canonical_geofencing--source--__codelineno-0-96"> 96</a></span>
+<span class="normal"><a href="#gbfs_toolkit.to_canonical_geofencing--source--__codelineno-0-97"> 97</a></span>
+<span class="normal"><a href="#gbfs_toolkit.to_canonical_geofencing--source--__codelineno-0-98"> 98</a></span>
+<span class="normal"><a href="#gbfs_toolkit.to_canonical_geofencing--source--__codelineno-0-99"> 99</a></span>
+<span class="normal"><a href="#gbfs_toolkit.to_canonical_geofencing--source--__codelineno-0-100">100</a></span>
+<span class="normal"><a href="#gbfs_toolkit.to_canonical_geofencing--source--__codelineno-0-101">101</a></span>
+<span class="normal"><a href="#gbfs_toolkit.to_canonical_geofencing--source--__codelineno-0-102">102</a></span>
+<span class="normal"><a href="#gbfs_toolkit.to_canonical_geofencing--source--__codelineno-0-103">103</a></span>
+<span class="normal"><a href="#gbfs_toolkit.to_canonical_geofencing--source--__codelineno-0-104">104</a></span>
+<span class="normal"><a href="#gbfs_toolkit.to_canonical_geofencing--source--__codelineno-0-105">105</a></span>
+<span class="normal"><a href="#gbfs_toolkit.to_canonical_geofencing--source--__codelineno-0-106">106</a></span>
+<span class="normal"><a href="#gbfs_toolkit.to_canonical_geofencing--source--__codelineno-0-107">107</a></span>
+<span class="normal"><a href="#gbfs_toolkit.to_canonical_geofencing--source--__codelineno-0-108">108</a></span>
+<span class="normal"><a href="#gbfs_toolkit.to_canonical_geofencing--source--__codelineno-0-109">109</a></span>
+<span class="normal"><a href="#gbfs_toolkit.to_canonical_geofencing--source--__codelineno-0-110">110</a></span>
+<span class="normal"><a href="#gbfs_toolkit.to_canonical_geofencing--source--__codelineno-0-111">111</a></span>
+<span class="normal"><a href="#gbfs_toolkit.to_canonical_geofencing--source--__codelineno-0-112">112</a></span>
+<span class="normal"><a href="#gbfs_toolkit.to_canonical_geofencing--source--__codelineno-0-113">113</a></span>
+<span class="normal"><a href="#gbfs_toolkit.to_canonical_geofencing--source--__codelineno-0-114">114</a></span>
+<span class="normal"><a href="#gbfs_toolkit.to_canonical_geofencing--source--__codelineno-0-115">115</a></span>
+<span class="normal"><a href="#gbfs_toolkit.to_canonical_geofencing--source--__codelineno-0-116">116</a></span>
+<span class="normal"><a href="#gbfs_toolkit.to_canonical_geofencing--source--__codelineno-0-117">117</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="gbfs_toolkit.to_canonical_geofencing--source--__span-0-64"><a id="gbfs_toolkit.to_canonical_geofencing--source--__codelineno-0-64" name="gbfs_toolkit.to_canonical_geofencing--source--__codelineno-0-64"></a><span class="k">def</span><span class="w"> </span><span class="nf">to_canonical_geofencing</span><span class="p">(</span>
+</span><span id="gbfs_toolkit.to_canonical_geofencing--source--__span-0-65"><a id="gbfs_toolkit.to_canonical_geofencing--source--__codelineno-0-65" name="gbfs_toolkit.to_canonical_geofencing--source--__codelineno-0-65"></a>    <span class="n">raw</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">system_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">gbfs_version</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"2.x"</span>
+</span><span id="gbfs_toolkit.to_canonical_geofencing--source--__span-0-66"><a id="gbfs_toolkit.to_canonical_geofencing--source--__codelineno-0-66" name="gbfs_toolkit.to_canonical_geofencing--source--__codelineno-0-66"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">gpd</span><span class="o">.</span><span class="n">GeoDataFrame</span><span class="p">:</span>
+</span><span id="gbfs_toolkit.to_canonical_geofencing--source--__span-0-67"><a id="gbfs_toolkit.to_canonical_geofencing--source--__codelineno-0-67" name="gbfs_toolkit.to_canonical_geofencing--source--__codelineno-0-67"></a><span class="w">    </span><span class="sd">"""Parse a ``geofencing_zones.json`` document into a canonical ``GeoDataFrame``.</span>
+</span><span id="gbfs_toolkit.to_canonical_geofencing--source--__span-0-68"><a id="gbfs_toolkit.to_canonical_geofencing--source--__codelineno-0-68" name="gbfs_toolkit.to_canonical_geofencing--source--__codelineno-0-68"></a>
+</span><span id="gbfs_toolkit.to_canonical_geofencing--source--__span-0-69"><a id="gbfs_toolkit.to_canonical_geofencing--source--__codelineno-0-69" name="gbfs_toolkit.to_canonical_geofencing--source--__codelineno-0-69"></a><span class="sd">    Returns one row per zone with a shapely geometry (EPSG:4326) and the columns of</span>
+</span><span id="gbfs_toolkit.to_canonical_geofencing--source--__span-0-70"><a id="gbfs_toolkit.to_canonical_geofencing--source--__codelineno-0-70" name="gbfs_toolkit.to_canonical_geofencing--source--__codelineno-0-70"></a><span class="sd">    `GEOFENCING_COLUMNS`. The boolean/speed fields summarise each</span>
+</span><span id="gbfs_toolkit.to_canonical_geofencing--source--__span-0-71"><a id="gbfs_toolkit.to_canonical_geofencing--source--__codelineno-0-71" name="gbfs_toolkit.to_canonical_geofencing--source--__codelineno-0-71"></a><span class="sd">    zone's *default* rule; the full per-vehicle-type ``rules`` list is preserved verbatim.</span>
+</span><span id="gbfs_toolkit.to_canonical_geofencing--source--__span-0-72"><a id="gbfs_toolkit.to_canonical_geofencing--source--__codelineno-0-72" name="gbfs_toolkit.to_canonical_geofencing--source--__codelineno-0-72"></a>
+</span><span id="gbfs_toolkit.to_canonical_geofencing--source--__span-0-73"><a id="gbfs_toolkit.to_canonical_geofencing--source--__codelineno-0-73" name="gbfs_toolkit.to_canonical_geofencing--source--__codelineno-0-73"></a><span class="sd">    Parameters</span>
+</span><span id="gbfs_toolkit.to_canonical_geofencing--source--__span-0-74"><a id="gbfs_toolkit.to_canonical_geofencing--source--__codelineno-0-74" name="gbfs_toolkit.to_canonical_geofencing--source--__codelineno-0-74"></a><span class="sd">    ----------</span>
+</span><span id="gbfs_toolkit.to_canonical_geofencing--source--__span-0-75"><a id="gbfs_toolkit.to_canonical_geofencing--source--__codelineno-0-75" name="gbfs_toolkit.to_canonical_geofencing--source--__codelineno-0-75"></a><span class="sd">    raw : dict</span>
+</span><span id="gbfs_toolkit.to_canonical_geofencing--source--__span-0-76"><a id="gbfs_toolkit.to_canonical_geofencing--source--__codelineno-0-76" name="gbfs_toolkit.to_canonical_geofencing--source--__codelineno-0-76"></a><span class="sd">        Parsed ``geofencing_zones`` document (full doc or its ``data`` mapping).</span>
+</span><span id="gbfs_toolkit.to_canonical_geofencing--source--__span-0-77"><a id="gbfs_toolkit.to_canonical_geofencing--source--__codelineno-0-77" name="gbfs_toolkit.to_canonical_geofencing--source--__codelineno-0-77"></a><span class="sd">    system_id : str</span>
+</span><span id="gbfs_toolkit.to_canonical_geofencing--source--__span-0-78"><a id="gbfs_toolkit.to_canonical_geofencing--source--__codelineno-0-78" name="gbfs_toolkit.to_canonical_geofencing--source--__codelineno-0-78"></a><span class="sd">        Identifier stamped on every row.</span>
+</span><span id="gbfs_toolkit.to_canonical_geofencing--source--__span-0-79"><a id="gbfs_toolkit.to_canonical_geofencing--source--__codelineno-0-79" name="gbfs_toolkit.to_canonical_geofencing--source--__codelineno-0-79"></a>
+</span><span id="gbfs_toolkit.to_canonical_geofencing--source--__span-0-80"><a id="gbfs_toolkit.to_canonical_geofencing--source--__codelineno-0-80" name="gbfs_toolkit.to_canonical_geofencing--source--__codelineno-0-80"></a><span class="sd">    See Also</span>
+</span><span id="gbfs_toolkit.to_canonical_geofencing--source--__span-0-81"><a id="gbfs_toolkit.to_canonical_geofencing--source--__codelineno-0-81" name="gbfs_toolkit.to_canonical_geofencing--source--__codelineno-0-81"></a><span class="sd">    --------</span>
+</span><span id="gbfs_toolkit.to_canonical_geofencing--source--__span-0-82"><a id="gbfs_toolkit.to_canonical_geofencing--source--__codelineno-0-82" name="gbfs_toolkit.to_canonical_geofencing--source--__codelineno-0-82"></a><span class="sd">    [`zone_area_km2`][gbfs_toolkit.zone_area_km2] : Area of the parsed zones.</span>
+</span><span id="gbfs_toolkit.to_canonical_geofencing--source--__span-0-83"><a id="gbfs_toolkit.to_canonical_geofencing--source--__codelineno-0-83" name="gbfs_toolkit.to_canonical_geofencing--source--__codelineno-0-83"></a><span class="sd">    [`zones_for_points`][gbfs_toolkit.zones_for_points] : Assign points to the parsed zones.</span>
+</span><span id="gbfs_toolkit.to_canonical_geofencing--source--__span-0-84"><a id="gbfs_toolkit.to_canonical_geofencing--source--__codelineno-0-84" name="gbfs_toolkit.to_canonical_geofencing--source--__codelineno-0-84"></a><span class="sd">    """</span>
+</span><span id="gbfs_toolkit.to_canonical_geofencing--source--__span-0-85"><a id="gbfs_toolkit.to_canonical_geofencing--source--__codelineno-0-85" name="gbfs_toolkit.to_canonical_geofencing--source--__codelineno-0-85"></a>    <span class="n">gpd</span><span class="p">,</span> <span class="n">shape</span> <span class="o">=</span> <span class="n">_require_geo</span><span class="p">()</span>
+</span><span id="gbfs_toolkit.to_canonical_geofencing--source--__span-0-86"><a id="gbfs_toolkit.to_canonical_geofencing--source--__codelineno-0-86" name="gbfs_toolkit.to_canonical_geofencing--source--__codelineno-0-86"></a>    <span class="n">data</span> <span class="o">=</span> <span class="n">raw</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"data"</span><span class="p">,</span> <span class="n">raw</span><span class="p">)</span>
+</span><span id="gbfs_toolkit.to_canonical_geofencing--source--__span-0-87"><a id="gbfs_toolkit.to_canonical_geofencing--source--__codelineno-0-87" name="gbfs_toolkit.to_canonical_geofencing--source--__codelineno-0-87"></a>    <span class="n">gz</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"geofencing_zones"</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span> <span class="k">else</span> <span class="p">{}</span>
+</span><span id="gbfs_toolkit.to_canonical_geofencing--source--__span-0-88"><a id="gbfs_toolkit.to_canonical_geofencing--source--__codelineno-0-88" name="gbfs_toolkit.to_canonical_geofencing--source--__codelineno-0-88"></a>    <span class="n">features</span> <span class="o">=</span> <span class="n">gz</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"features"</span><span class="p">,</span> <span class="p">[])</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">gz</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span> <span class="k">else</span> <span class="p">[]</span>
+</span><span id="gbfs_toolkit.to_canonical_geofencing--source--__span-0-89"><a id="gbfs_toolkit.to_canonical_geofencing--source--__codelineno-0-89" name="gbfs_toolkit.to_canonical_geofencing--source--__codelineno-0-89"></a>
+</span><span id="gbfs_toolkit.to_canonical_geofencing--source--__span-0-90"><a id="gbfs_toolkit.to_canonical_geofencing--source--__codelineno-0-90" name="gbfs_toolkit.to_canonical_geofencing--source--__codelineno-0-90"></a>    <span class="n">rows</span><span class="p">,</span> <span class="n">geoms</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[]</span>
+</span><span id="gbfs_toolkit.to_canonical_geofencing--source--__span-0-91"><a id="gbfs_toolkit.to_canonical_geofencing--source--__codelineno-0-91" name="gbfs_toolkit.to_canonical_geofencing--source--__codelineno-0-91"></a>    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">feat</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">features</span><span class="p">):</span>
+</span><span id="gbfs_toolkit.to_canonical_geofencing--source--__span-0-92"><a id="gbfs_toolkit.to_canonical_geofencing--source--__codelineno-0-92" name="gbfs_toolkit.to_canonical_geofencing--source--__codelineno-0-92"></a>        <span class="n">geom</span> <span class="o">=</span> <span class="n">feat</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"geometry"</span><span class="p">)</span>
+</span><span id="gbfs_toolkit.to_canonical_geofencing--source--__span-0-93"><a id="gbfs_toolkit.to_canonical_geofencing--source--__codelineno-0-93" name="gbfs_toolkit.to_canonical_geofencing--source--__codelineno-0-93"></a>        <span class="k">if</span> <span class="ow">not</span> <span class="n">geom</span><span class="p">:</span>
+</span><span id="gbfs_toolkit.to_canonical_geofencing--source--__span-0-94"><a id="gbfs_toolkit.to_canonical_geofencing--source--__codelineno-0-94" name="gbfs_toolkit.to_canonical_geofencing--source--__codelineno-0-94"></a>            <span class="k">continue</span>
+</span><span id="gbfs_toolkit.to_canonical_geofencing--source--__span-0-95"><a id="gbfs_toolkit.to_canonical_geofencing--source--__codelineno-0-95" name="gbfs_toolkit.to_canonical_geofencing--source--__codelineno-0-95"></a>        <span class="n">props</span> <span class="o">=</span> <span class="n">feat</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"properties"</span><span class="p">)</span> <span class="ow">or</span> <span class="p">{}</span>
+</span><span id="gbfs_toolkit.to_canonical_geofencing--source--__span-0-96"><a id="gbfs_toolkit.to_canonical_geofencing--source--__codelineno-0-96" name="gbfs_toolkit.to_canonical_geofencing--source--__codelineno-0-96"></a>        <span class="n">rules</span> <span class="o">=</span> <span class="n">props</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"rules"</span><span class="p">)</span> <span class="ow">or</span> <span class="p">[]</span>
+</span><span id="gbfs_toolkit.to_canonical_geofencing--source--__span-0-97"><a id="gbfs_toolkit.to_canonical_geofencing--source--__codelineno-0-97" name="gbfs_toolkit.to_canonical_geofencing--source--__codelineno-0-97"></a>        <span class="n">rule</span> <span class="o">=</span> <span class="n">_default_rule</span><span class="p">(</span><span class="n">rules</span><span class="p">)</span>
+</span><span id="gbfs_toolkit.to_canonical_geofencing--source--__span-0-98"><a id="gbfs_toolkit.to_canonical_geofencing--source--__codelineno-0-98" name="gbfs_toolkit.to_canonical_geofencing--source--__codelineno-0-98"></a>        <span class="n">rows</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+</span><span id="gbfs_toolkit.to_canonical_geofencing--source--__span-0-99"><a id="gbfs_toolkit.to_canonical_geofencing--source--__codelineno-0-99" name="gbfs_toolkit.to_canonical_geofencing--source--__codelineno-0-99"></a>            <span class="p">{</span>
+</span><span id="gbfs_toolkit.to_canonical_geofencing--source--__span-0-100"><a id="gbfs_toolkit.to_canonical_geofencing--source--__codelineno-0-100" name="gbfs_toolkit.to_canonical_geofencing--source--__codelineno-0-100"></a>                <span class="s2">"system_id"</span><span class="p">:</span> <span class="n">system_id</span><span class="p">,</span>
+</span><span id="gbfs_toolkit.to_canonical_geofencing--source--__span-0-101"><a id="gbfs_toolkit.to_canonical_geofencing--source--__codelineno-0-101" name="gbfs_toolkit.to_canonical_geofencing--source--__codelineno-0-101"></a>                <span class="s2">"zone_id"</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">props</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"name"</span><span class="p">)</span> <span class="ow">or</span> <span class="n">i</span><span class="p">),</span>
+</span><span id="gbfs_toolkit.to_canonical_geofencing--source--__span-0-102"><a id="gbfs_toolkit.to_canonical_geofencing--source--__codelineno-0-102" name="gbfs_toolkit.to_canonical_geofencing--source--__codelineno-0-102"></a>                <span class="s2">"name"</span><span class="p">:</span> <span class="n">props</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"name"</span><span class="p">),</span>
+</span><span id="gbfs_toolkit.to_canonical_geofencing--source--__span-0-103"><a id="gbfs_toolkit.to_canonical_geofencing--source--__codelineno-0-103" name="gbfs_toolkit.to_canonical_geofencing--source--__codelineno-0-103"></a>                <span class="s2">"ride_allowed"</span><span class="p">:</span> <span class="n">_ride_allowed</span><span class="p">(</span><span class="n">rule</span><span class="p">),</span>
+</span><span id="gbfs_toolkit.to_canonical_geofencing--source--__span-0-104"><a id="gbfs_toolkit.to_canonical_geofencing--source--__codelineno-0-104" name="gbfs_toolkit.to_canonical_geofencing--source--__codelineno-0-104"></a>                <span class="s2">"ride_through_allowed"</span><span class="p">:</span> <span class="n">rule</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"ride_through_allowed"</span><span class="p">),</span>
+</span><span id="gbfs_toolkit.to_canonical_geofencing--source--__span-0-105"><a id="gbfs_toolkit.to_canonical_geofencing--source--__codelineno-0-105" name="gbfs_toolkit.to_canonical_geofencing--source--__codelineno-0-105"></a>                <span class="s2">"maximum_speed_kph"</span><span class="p">:</span> <span class="n">rule</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"maximum_speed_kph"</span><span class="p">),</span>
+</span><span id="gbfs_toolkit.to_canonical_geofencing--source--__span-0-106"><a id="gbfs_toolkit.to_canonical_geofencing--source--__codelineno-0-106" name="gbfs_toolkit.to_canonical_geofencing--source--__codelineno-0-106"></a>                <span class="s2">"station_parking"</span><span class="p">:</span> <span class="n">rule</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"station_parking"</span><span class="p">),</span>
+</span><span id="gbfs_toolkit.to_canonical_geofencing--source--__span-0-107"><a id="gbfs_toolkit.to_canonical_geofencing--source--__codelineno-0-107" name="gbfs_toolkit.to_canonical_geofencing--source--__codelineno-0-107"></a>                <span class="s2">"rules"</span><span class="p">:</span> <span class="n">rules</span><span class="p">,</span>
+</span><span id="gbfs_toolkit.to_canonical_geofencing--source--__span-0-108"><a id="gbfs_toolkit.to_canonical_geofencing--source--__codelineno-0-108" name="gbfs_toolkit.to_canonical_geofencing--source--__codelineno-0-108"></a>            <span class="p">}</span>
+</span><span id="gbfs_toolkit.to_canonical_geofencing--source--__span-0-109"><a id="gbfs_toolkit.to_canonical_geofencing--source--__codelineno-0-109" name="gbfs_toolkit.to_canonical_geofencing--source--__codelineno-0-109"></a>        <span class="p">)</span>
+</span><span id="gbfs_toolkit.to_canonical_geofencing--source--__span-0-110"><a id="gbfs_toolkit.to_canonical_geofencing--source--__codelineno-0-110" name="gbfs_toolkit.to_canonical_geofencing--source--__codelineno-0-110"></a>        <span class="n">geoms</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">shape</span><span class="p">(</span><span class="n">geom</span><span class="p">))</span>
+</span><span id="gbfs_toolkit.to_canonical_geofencing--source--__span-0-111"><a id="gbfs_toolkit.to_canonical_geofencing--source--__codelineno-0-111" name="gbfs_toolkit.to_canonical_geofencing--source--__codelineno-0-111"></a>
+</span><span id="gbfs_toolkit.to_canonical_geofencing--source--__span-0-112"><a id="gbfs_toolkit.to_canonical_geofencing--source--__codelineno-0-112" name="gbfs_toolkit.to_canonical_geofencing--source--__codelineno-0-112"></a>    <span class="k">if</span> <span class="ow">not</span> <span class="n">rows</span><span class="p">:</span>
+</span><span id="gbfs_toolkit.to_canonical_geofencing--source--__span-0-113"><a id="gbfs_toolkit.to_canonical_geofencing--source--__codelineno-0-113" name="gbfs_toolkit.to_canonical_geofencing--source--__codelineno-0-113"></a>        <span class="k">return</span> <span class="n">gpd</span><span class="o">.</span><span class="n">GeoDataFrame</span><span class="p">(</span>
+</span><span id="gbfs_toolkit.to_canonical_geofencing--source--__span-0-114"><a id="gbfs_toolkit.to_canonical_geofencing--source--__codelineno-0-114" name="gbfs_toolkit.to_canonical_geofencing--source--__codelineno-0-114"></a>            <span class="p">{</span><span class="n">c</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">dtype</span><span class="o">=</span><span class="s2">"object"</span><span class="p">)</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">_NON_GEOM</span><span class="p">},</span> <span class="n">geometry</span><span class="o">=</span><span class="p">[],</span> <span class="n">crs</span><span class="o">=</span><span class="s2">"EPSG:4326"</span>
+</span><span id="gbfs_toolkit.to_canonical_geofencing--source--__span-0-115"><a id="gbfs_toolkit.to_canonical_geofencing--source--__codelineno-0-115" name="gbfs_toolkit.to_canonical_geofencing--source--__codelineno-0-115"></a>        <span class="p">)</span>
+</span><span id="gbfs_toolkit.to_canonical_geofencing--source--__span-0-116"><a id="gbfs_toolkit.to_canonical_geofencing--source--__codelineno-0-116" name="gbfs_toolkit.to_canonical_geofencing--source--__codelineno-0-116"></a>    <span class="n">gdf</span> <span class="o">=</span> <span class="n">gpd</span><span class="o">.</span><span class="n">GeoDataFrame</span><span class="p">(</span><span class="n">rows</span><span class="p">,</span> <span class="n">geometry</span><span class="o">=</span><span class="n">geoms</span><span class="p">,</span> <span class="n">crs</span><span class="o">=</span><span class="s2">"EPSG:4326"</span><span class="p">)</span>
+</span><span id="gbfs_toolkit.to_canonical_geofencing--source--__span-0-117"><a id="gbfs_toolkit.to_canonical_geofencing--source--__codelineno-0-117" name="gbfs_toolkit.to_canonical_geofencing--source--__codelineno-0-117"></a>    <span class="k">return</span> <span class="n">gdf</span><span class="p">[[</span><span class="o">*</span><span class="n">_NON_GEOM</span><span class="p">,</span> <span class="s2">"geometry"</span><span class="p">]]</span>
 </span></code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -6725,10 +6725,10 @@ zone's <em>default</em> rule; the full per-vehicle-type <code>rules</code> list 
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.instant", "navigation.instant.progress", "navigation.tracking", "navigation.sections", "navigation.tabs", "navigation.tabs.sticky", "navigation.top", "navigation.indexes", "navigation.footer", "toc.follow", "search.suggest", "search.highlight", "search.share", "content.code.copy", "content.code.annotate", "content.tooltips"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.instant", "navigation.instant.progress", "navigation.tracking", "navigation.sections", "navigation.tabs", "navigation.tabs.sticky", "navigation.top", "navigation.indexes", "navigation.footer", "toc.follow", "search.suggest", "search.highlight", "search.share", "content.code.copy", "content.code.annotate", "content.tooltips"], "search": "../../../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
     
     
-      <script src="../../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../../../assets/javascripts/bundle.c21346df.min.js"></script>
       
         <script src="../../../javascripts/mathjax.js"></script>
       

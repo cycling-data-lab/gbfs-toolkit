@@ -25,7 +25,7 @@
       
       
       <link rel="icon" href="../../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-ProperDocs 1.6.7, mkdocs-material-9.7.6">
+      <meta name="generator" content="mkdocs-ProperDocs 1.6.7, mkdocs-material-9.8.0">
     
     
       
@@ -33,10 +33,10 @@
       
     
     
-      <link rel="stylesheet" href="../../../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.57a0d79d.min.css">
       
         
-        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.fb2fffe2.min.css">
       
       
 
@@ -1146,7 +1146,7 @@
   <span class="md-ellipsis">
     
   
-    __version__
+    _version_
   
 
     
@@ -6422,7 +6422,7 @@
 
 
 <a href="#gbfs_toolkit.add_local_time" class="headerlink" title="Permanent link">&para;</a></h2>
-<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">add_local_time</span><span class="p">(</span><span class="n">panel</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-external" title="&lt;code&gt;pandas.DataFrame&lt;/code&gt;" href="https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.html#pandas.DataFrame">DataFrame</a></span><span class="p">,</span> <span class="n">tz_name</span><span class="p">:</span> <span class="n"><span title="str">str</span></span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">time_col</span><span class="p">:</span> <span class="n"><span title="str">str</span></span> <span class="o">=</span> <span class="s1">&#39;fetched_at&#39;</span><span class="p">,</span> <span class="n">new_col</span><span class="p">:</span> <span class="n"><span title="str">str</span></span> <span class="o">=</span> <span class="s1">&#39;local_time&#39;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n"><a class="autorefs autorefs-external" title="&lt;code&gt;pandas.DataFrame&lt;/code&gt;" href="https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.html#pandas.DataFrame">DataFrame</a></span>
+<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">add_local_time</span><span class="p">(</span><span class="n">panel</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-external" title="&lt;code&gt;pandas.DataFrame&lt;/code&gt;" href="https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.html#pandas.DataFrame">DataFrame</a></span><span class="p">,</span> <span class="n">tz_name</span><span class="p">:</span> <span class="n"><span title="str">str</span></span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">time_col</span><span class="p">:</span> <span class="n"><span title="str">str</span></span> <span class="o">=</span> <span class="s1">'fetched_at'</span><span class="p">,</span> <span class="n">new_col</span><span class="p">:</span> <span class="n"><span title="str">str</span></span> <span class="o">=</span> <span class="s1">'local_time'</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n"><a class="autorefs autorefs-external" title="&lt;code&gt;pandas.DataFrame&lt;/code&gt;" href="https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.html#pandas.DataFrame">DataFrame</a></span>
 </span></code></pre></div>
 
     <div class="doc doc-contents first">
@@ -6544,95 +6544,95 @@ tz-aware <code>new_col</code> in <code>tz_name</code>, leaving <code>time_col</c
 
 <p><span class="doc-section-title">Examples:</span></p>
     <div class="language-pycon highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s2">&quot;fetched_at&quot;</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">([</span><span class="s2">&quot;2026-01-01T08:00Z&quot;</span><span class="p">])})</span>
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="gp">&gt;&gt;&gt; </span><span class="nb">int</span><span class="p">(</span><span class="n">add_local_time</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="s2">&quot;Europe/Paris&quot;</span><span class="p">)[</span><span class="s2">&quot;local_time&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">dt</span><span class="o">.</span><span class="n">hour</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s2">"fetched_at"</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">([</span><span class="s2">"2026-01-01T08:00Z"</span><span class="p">])})</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="gp">&gt;&gt;&gt; </span><span class="nb">int</span><span class="p">(</span><span class="n">add_local_time</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="s2">"Europe/Paris"</span><span class="p">)[</span><span class="s2">"local_time"</span><span class="p">]</span><span class="o">.</span><span class="n">dt</span><span class="o">.</span><span class="n">hour</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
 </span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="go">9</span>
 </span></code></pre></div>
 
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/gbfs_toolkit/io/timeseries.py</code></summary>
-              <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-694">694</a></span>
-<span class="normal"><a href="#__codelineno-0-695">695</a></span>
-<span class="normal"><a href="#__codelineno-0-696">696</a></span>
-<span class="normal"><a href="#__codelineno-0-697">697</a></span>
-<span class="normal"><a href="#__codelineno-0-698">698</a></span>
-<span class="normal"><a href="#__codelineno-0-699">699</a></span>
-<span class="normal"><a href="#__codelineno-0-700">700</a></span>
-<span class="normal"><a href="#__codelineno-0-701">701</a></span>
-<span class="normal"><a href="#__codelineno-0-702">702</a></span>
-<span class="normal"><a href="#__codelineno-0-703">703</a></span>
-<span class="normal"><a href="#__codelineno-0-704">704</a></span>
-<span class="normal"><a href="#__codelineno-0-705">705</a></span>
-<span class="normal"><a href="#__codelineno-0-706">706</a></span>
-<span class="normal"><a href="#__codelineno-0-707">707</a></span>
-<span class="normal"><a href="#__codelineno-0-708">708</a></span>
-<span class="normal"><a href="#__codelineno-0-709">709</a></span>
-<span class="normal"><a href="#__codelineno-0-710">710</a></span>
-<span class="normal"><a href="#__codelineno-0-711">711</a></span>
-<span class="normal"><a href="#__codelineno-0-712">712</a></span>
-<span class="normal"><a href="#__codelineno-0-713">713</a></span>
-<span class="normal"><a href="#__codelineno-0-714">714</a></span>
-<span class="normal"><a href="#__codelineno-0-715">715</a></span>
-<span class="normal"><a href="#__codelineno-0-716">716</a></span>
-<span class="normal"><a href="#__codelineno-0-717">717</a></span>
-<span class="normal"><a href="#__codelineno-0-718">718</a></span>
-<span class="normal"><a href="#__codelineno-0-719">719</a></span>
-<span class="normal"><a href="#__codelineno-0-720">720</a></span>
-<span class="normal"><a href="#__codelineno-0-721">721</a></span>
-<span class="normal"><a href="#__codelineno-0-722">722</a></span>
-<span class="normal"><a href="#__codelineno-0-723">723</a></span>
-<span class="normal"><a href="#__codelineno-0-724">724</a></span>
-<span class="normal"><a href="#__codelineno-0-725">725</a></span>
-<span class="normal"><a href="#__codelineno-0-726">726</a></span>
-<span class="normal"><a href="#__codelineno-0-727">727</a></span>
-<span class="normal"><a href="#__codelineno-0-728">728</a></span>
-<span class="normal"><a href="#__codelineno-0-729">729</a></span>
-<span class="normal"><a href="#__codelineno-0-730">730</a></span>
-<span class="normal"><a href="#__codelineno-0-731">731</a></span>
-<span class="normal"><a href="#__codelineno-0-732">732</a></span>
-<span class="normal"><a href="#__codelineno-0-733">733</a></span>
-<span class="normal"><a href="#__codelineno-0-734">734</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-694"><a id="__codelineno-0-694" name="__codelineno-0-694"></a><span class="k">def</span><span class="w"> </span><span class="nf">add_local_time</span><span class="p">(</span>
-</span><span id="__span-0-695"><a id="__codelineno-0-695" name="__codelineno-0-695"></a>    <span class="n">panel</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">tz_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">time_col</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;fetched_at&quot;</span><span class="p">,</span> <span class="n">new_col</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;local_time&quot;</span>
-</span><span id="__span-0-696"><a id="__codelineno-0-696" name="__codelineno-0-696"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
-</span><span id="__span-0-697"><a id="__codelineno-0-697" name="__codelineno-0-697"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Add a local-time column to a panel, handling the index correctly.</span>
-</span><span id="__span-0-698"><a id="__codelineno-0-698" name="__codelineno-0-698"></a>
-</span><span id="__span-0-699"><a id="__codelineno-0-699" name="__codelineno-0-699"></a><span class="sd">    Converting a UTC timestamp to local time is the first step of any diurnal analysis,</span>
-</span><span id="__span-0-700"><a id="__codelineno-0-700" name="__codelineno-0-700"></a><span class="sd">    and doing it on a MultiIndexed panel by hand (``reset_index`` then ``tz_convert`` then</span>
-</span><span id="__span-0-701"><a id="__codelineno-0-701" name="__codelineno-0-701"></a><span class="sd">    ``set_index``) is a recurring papercut. This flattens the panel and appends one</span>
-</span><span id="__span-0-702"><a id="__codelineno-0-702" name="__codelineno-0-702"></a><span class="sd">    tz-aware ``new_col`` in ``tz_name``, leaving ``time_col`` (UTC) untouched.</span>
-</span><span id="__span-0-703"><a id="__codelineno-0-703" name="__codelineno-0-703"></a>
-</span><span id="__span-0-704"><a id="__codelineno-0-704" name="__codelineno-0-704"></a><span class="sd">    Parameters</span>
-</span><span id="__span-0-705"><a id="__codelineno-0-705" name="__codelineno-0-705"></a><span class="sd">    ----------</span>
-</span><span id="__span-0-706"><a id="__codelineno-0-706" name="__codelineno-0-706"></a><span class="sd">    panel : pandas.DataFrame</span>
-</span><span id="__span-0-707"><a id="__codelineno-0-707" name="__codelineno-0-707"></a><span class="sd">        Any panel/frame with a tz-aware (or UTC-coercible) ``time_col``.</span>
-</span><span id="__span-0-708"><a id="__codelineno-0-708" name="__codelineno-0-708"></a><span class="sd">    tz_name : str</span>
-</span><span id="__span-0-709"><a id="__codelineno-0-709" name="__codelineno-0-709"></a><span class="sd">        An IANA zone, e.g. ``&quot;Europe/Paris&quot;`` or ``&quot;America/New_York&quot;``.</span>
-</span><span id="__span-0-710"><a id="__codelineno-0-710" name="__codelineno-0-710"></a><span class="sd">    time_col, new_col : str</span>
-</span><span id="__span-0-711"><a id="__codelineno-0-711" name="__codelineno-0-711"></a><span class="sd">        Source UTC column and the local-time column to add.</span>
-</span><span id="__span-0-712"><a id="__codelineno-0-712" name="__codelineno-0-712"></a>
-</span><span id="__span-0-713"><a id="__codelineno-0-713" name="__codelineno-0-713"></a><span class="sd">    Returns</span>
-</span><span id="__span-0-714"><a id="__codelineno-0-714" name="__codelineno-0-714"></a><span class="sd">    -------</span>
-</span><span id="__span-0-715"><a id="__codelineno-0-715" name="__codelineno-0-715"></a><span class="sd">    pandas.DataFrame</span>
-</span><span id="__span-0-716"><a id="__codelineno-0-716" name="__codelineno-0-716"></a><span class="sd">        A flattened copy of ``panel`` with the added ``new_col``.</span>
-</span><span id="__span-0-717"><a id="__codelineno-0-717" name="__codelineno-0-717"></a>
-</span><span id="__span-0-718"><a id="__codelineno-0-718" name="__codelineno-0-718"></a><span class="sd">    See Also</span>
-</span><span id="__span-0-719"><a id="__codelineno-0-719" name="__codelineno-0-719"></a><span class="sd">    --------</span>
-</span><span id="__span-0-720"><a id="__codelineno-0-720" name="__codelineno-0-720"></a><span class="sd">    [`build_availability_panel`][gbfs_toolkit.build_availability_panel] : Build a panel already in local time via ``target_tz``.</span>
-</span><span id="__span-0-721"><a id="__codelineno-0-721" name="__codelineno-0-721"></a><span class="sd">    [`resample_panel`][gbfs_toolkit.resample_panel] : Put the panel on a fixed time grid.</span>
-</span><span id="__span-0-722"><a id="__codelineno-0-722" name="__codelineno-0-722"></a>
-</span><span id="__span-0-723"><a id="__codelineno-0-723" name="__codelineno-0-723"></a><span class="sd">    Examples</span>
-</span><span id="__span-0-724"><a id="__codelineno-0-724" name="__codelineno-0-724"></a><span class="sd">    --------</span>
-</span><span id="__span-0-725"><a id="__codelineno-0-725" name="__codelineno-0-725"></a><span class="sd">    &gt;&gt;&gt; import pandas as pd</span>
-</span><span id="__span-0-726"><a id="__codelineno-0-726" name="__codelineno-0-726"></a><span class="sd">    &gt;&gt;&gt; df = pd.DataFrame({&quot;fetched_at&quot;: pd.to_datetime([&quot;2026-01-01T08:00Z&quot;])})</span>
-</span><span id="__span-0-727"><a id="__codelineno-0-727" name="__codelineno-0-727"></a><span class="sd">    &gt;&gt;&gt; int(add_local_time(df, &quot;Europe/Paris&quot;)[&quot;local_time&quot;].dt.hour.iloc[0])</span>
-</span><span id="__span-0-728"><a id="__codelineno-0-728" name="__codelineno-0-728"></a><span class="sd">    9</span>
-</span><span id="__span-0-729"><a id="__codelineno-0-729" name="__codelineno-0-729"></a><span class="sd">    &quot;&quot;&quot;</span>
-</span><span id="__span-0-730"><a id="__codelineno-0-730" name="__codelineno-0-730"></a>    <span class="n">df</span> <span class="o">=</span> <span class="n">panel_frame</span><span class="p">(</span><span class="n">panel</span><span class="p">)</span>
-</span><span id="__span-0-731"><a id="__codelineno-0-731" name="__codelineno-0-731"></a>    <span class="n">require_columns</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="p">[</span><span class="n">time_col</span><span class="p">],</span> <span class="n">what</span><span class="o">=</span><span class="s2">&quot;add_local_time&quot;</span><span class="p">)</span>
-</span><span id="__span-0-732"><a id="__codelineno-0-732" name="__codelineno-0-732"></a>    <span class="n">out</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-</span><span id="__span-0-733"><a id="__codelineno-0-733" name="__codelineno-0-733"></a>    <span class="n">out</span><span class="p">[</span><span class="n">new_col</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">out</span><span class="p">[</span><span class="n">time_col</span><span class="p">],</span> <span class="n">utc</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">dt</span><span class="o">.</span><span class="n">tz_convert</span><span class="p">(</span><span class="n">tz_name</span><span class="p">)</span>
-</span><span id="__span-0-734"><a id="__codelineno-0-734" name="__codelineno-0-734"></a>    <span class="k">return</span> <span class="n">out</span>
+              <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#gbfs_toolkit.add_local_time--source--__codelineno-0-694">694</a></span>
+<span class="normal"><a href="#gbfs_toolkit.add_local_time--source--__codelineno-0-695">695</a></span>
+<span class="normal"><a href="#gbfs_toolkit.add_local_time--source--__codelineno-0-696">696</a></span>
+<span class="normal"><a href="#gbfs_toolkit.add_local_time--source--__codelineno-0-697">697</a></span>
+<span class="normal"><a href="#gbfs_toolkit.add_local_time--source--__codelineno-0-698">698</a></span>
+<span class="normal"><a href="#gbfs_toolkit.add_local_time--source--__codelineno-0-699">699</a></span>
+<span class="normal"><a href="#gbfs_toolkit.add_local_time--source--__codelineno-0-700">700</a></span>
+<span class="normal"><a href="#gbfs_toolkit.add_local_time--source--__codelineno-0-701">701</a></span>
+<span class="normal"><a href="#gbfs_toolkit.add_local_time--source--__codelineno-0-702">702</a></span>
+<span class="normal"><a href="#gbfs_toolkit.add_local_time--source--__codelineno-0-703">703</a></span>
+<span class="normal"><a href="#gbfs_toolkit.add_local_time--source--__codelineno-0-704">704</a></span>
+<span class="normal"><a href="#gbfs_toolkit.add_local_time--source--__codelineno-0-705">705</a></span>
+<span class="normal"><a href="#gbfs_toolkit.add_local_time--source--__codelineno-0-706">706</a></span>
+<span class="normal"><a href="#gbfs_toolkit.add_local_time--source--__codelineno-0-707">707</a></span>
+<span class="normal"><a href="#gbfs_toolkit.add_local_time--source--__codelineno-0-708">708</a></span>
+<span class="normal"><a href="#gbfs_toolkit.add_local_time--source--__codelineno-0-709">709</a></span>
+<span class="normal"><a href="#gbfs_toolkit.add_local_time--source--__codelineno-0-710">710</a></span>
+<span class="normal"><a href="#gbfs_toolkit.add_local_time--source--__codelineno-0-711">711</a></span>
+<span class="normal"><a href="#gbfs_toolkit.add_local_time--source--__codelineno-0-712">712</a></span>
+<span class="normal"><a href="#gbfs_toolkit.add_local_time--source--__codelineno-0-713">713</a></span>
+<span class="normal"><a href="#gbfs_toolkit.add_local_time--source--__codelineno-0-714">714</a></span>
+<span class="normal"><a href="#gbfs_toolkit.add_local_time--source--__codelineno-0-715">715</a></span>
+<span class="normal"><a href="#gbfs_toolkit.add_local_time--source--__codelineno-0-716">716</a></span>
+<span class="normal"><a href="#gbfs_toolkit.add_local_time--source--__codelineno-0-717">717</a></span>
+<span class="normal"><a href="#gbfs_toolkit.add_local_time--source--__codelineno-0-718">718</a></span>
+<span class="normal"><a href="#gbfs_toolkit.add_local_time--source--__codelineno-0-719">719</a></span>
+<span class="normal"><a href="#gbfs_toolkit.add_local_time--source--__codelineno-0-720">720</a></span>
+<span class="normal"><a href="#gbfs_toolkit.add_local_time--source--__codelineno-0-721">721</a></span>
+<span class="normal"><a href="#gbfs_toolkit.add_local_time--source--__codelineno-0-722">722</a></span>
+<span class="normal"><a href="#gbfs_toolkit.add_local_time--source--__codelineno-0-723">723</a></span>
+<span class="normal"><a href="#gbfs_toolkit.add_local_time--source--__codelineno-0-724">724</a></span>
+<span class="normal"><a href="#gbfs_toolkit.add_local_time--source--__codelineno-0-725">725</a></span>
+<span class="normal"><a href="#gbfs_toolkit.add_local_time--source--__codelineno-0-726">726</a></span>
+<span class="normal"><a href="#gbfs_toolkit.add_local_time--source--__codelineno-0-727">727</a></span>
+<span class="normal"><a href="#gbfs_toolkit.add_local_time--source--__codelineno-0-728">728</a></span>
+<span class="normal"><a href="#gbfs_toolkit.add_local_time--source--__codelineno-0-729">729</a></span>
+<span class="normal"><a href="#gbfs_toolkit.add_local_time--source--__codelineno-0-730">730</a></span>
+<span class="normal"><a href="#gbfs_toolkit.add_local_time--source--__codelineno-0-731">731</a></span>
+<span class="normal"><a href="#gbfs_toolkit.add_local_time--source--__codelineno-0-732">732</a></span>
+<span class="normal"><a href="#gbfs_toolkit.add_local_time--source--__codelineno-0-733">733</a></span>
+<span class="normal"><a href="#gbfs_toolkit.add_local_time--source--__codelineno-0-734">734</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="gbfs_toolkit.add_local_time--source--__span-0-694"><a id="gbfs_toolkit.add_local_time--source--__codelineno-0-694" name="gbfs_toolkit.add_local_time--source--__codelineno-0-694"></a><span class="k">def</span><span class="w"> </span><span class="nf">add_local_time</span><span class="p">(</span>
+</span><span id="gbfs_toolkit.add_local_time--source--__span-0-695"><a id="gbfs_toolkit.add_local_time--source--__codelineno-0-695" name="gbfs_toolkit.add_local_time--source--__codelineno-0-695"></a>    <span class="n">panel</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">tz_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">time_col</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"fetched_at"</span><span class="p">,</span> <span class="n">new_col</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"local_time"</span>
+</span><span id="gbfs_toolkit.add_local_time--source--__span-0-696"><a id="gbfs_toolkit.add_local_time--source--__codelineno-0-696" name="gbfs_toolkit.add_local_time--source--__codelineno-0-696"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+</span><span id="gbfs_toolkit.add_local_time--source--__span-0-697"><a id="gbfs_toolkit.add_local_time--source--__codelineno-0-697" name="gbfs_toolkit.add_local_time--source--__codelineno-0-697"></a><span class="w">    </span><span class="sd">"""Add a local-time column to a panel, handling the index correctly.</span>
+</span><span id="gbfs_toolkit.add_local_time--source--__span-0-698"><a id="gbfs_toolkit.add_local_time--source--__codelineno-0-698" name="gbfs_toolkit.add_local_time--source--__codelineno-0-698"></a>
+</span><span id="gbfs_toolkit.add_local_time--source--__span-0-699"><a id="gbfs_toolkit.add_local_time--source--__codelineno-0-699" name="gbfs_toolkit.add_local_time--source--__codelineno-0-699"></a><span class="sd">    Converting a UTC timestamp to local time is the first step of any diurnal analysis,</span>
+</span><span id="gbfs_toolkit.add_local_time--source--__span-0-700"><a id="gbfs_toolkit.add_local_time--source--__codelineno-0-700" name="gbfs_toolkit.add_local_time--source--__codelineno-0-700"></a><span class="sd">    and doing it on a MultiIndexed panel by hand (``reset_index`` then ``tz_convert`` then</span>
+</span><span id="gbfs_toolkit.add_local_time--source--__span-0-701"><a id="gbfs_toolkit.add_local_time--source--__codelineno-0-701" name="gbfs_toolkit.add_local_time--source--__codelineno-0-701"></a><span class="sd">    ``set_index``) is a recurring papercut. This flattens the panel and appends one</span>
+</span><span id="gbfs_toolkit.add_local_time--source--__span-0-702"><a id="gbfs_toolkit.add_local_time--source--__codelineno-0-702" name="gbfs_toolkit.add_local_time--source--__codelineno-0-702"></a><span class="sd">    tz-aware ``new_col`` in ``tz_name``, leaving ``time_col`` (UTC) untouched.</span>
+</span><span id="gbfs_toolkit.add_local_time--source--__span-0-703"><a id="gbfs_toolkit.add_local_time--source--__codelineno-0-703" name="gbfs_toolkit.add_local_time--source--__codelineno-0-703"></a>
+</span><span id="gbfs_toolkit.add_local_time--source--__span-0-704"><a id="gbfs_toolkit.add_local_time--source--__codelineno-0-704" name="gbfs_toolkit.add_local_time--source--__codelineno-0-704"></a><span class="sd">    Parameters</span>
+</span><span id="gbfs_toolkit.add_local_time--source--__span-0-705"><a id="gbfs_toolkit.add_local_time--source--__codelineno-0-705" name="gbfs_toolkit.add_local_time--source--__codelineno-0-705"></a><span class="sd">    ----------</span>
+</span><span id="gbfs_toolkit.add_local_time--source--__span-0-706"><a id="gbfs_toolkit.add_local_time--source--__codelineno-0-706" name="gbfs_toolkit.add_local_time--source--__codelineno-0-706"></a><span class="sd">    panel : pandas.DataFrame</span>
+</span><span id="gbfs_toolkit.add_local_time--source--__span-0-707"><a id="gbfs_toolkit.add_local_time--source--__codelineno-0-707" name="gbfs_toolkit.add_local_time--source--__codelineno-0-707"></a><span class="sd">        Any panel/frame with a tz-aware (or UTC-coercible) ``time_col``.</span>
+</span><span id="gbfs_toolkit.add_local_time--source--__span-0-708"><a id="gbfs_toolkit.add_local_time--source--__codelineno-0-708" name="gbfs_toolkit.add_local_time--source--__codelineno-0-708"></a><span class="sd">    tz_name : str</span>
+</span><span id="gbfs_toolkit.add_local_time--source--__span-0-709"><a id="gbfs_toolkit.add_local_time--source--__codelineno-0-709" name="gbfs_toolkit.add_local_time--source--__codelineno-0-709"></a><span class="sd">        An IANA zone, e.g. ``"Europe/Paris"`` or ``"America/New_York"``.</span>
+</span><span id="gbfs_toolkit.add_local_time--source--__span-0-710"><a id="gbfs_toolkit.add_local_time--source--__codelineno-0-710" name="gbfs_toolkit.add_local_time--source--__codelineno-0-710"></a><span class="sd">    time_col, new_col : str</span>
+</span><span id="gbfs_toolkit.add_local_time--source--__span-0-711"><a id="gbfs_toolkit.add_local_time--source--__codelineno-0-711" name="gbfs_toolkit.add_local_time--source--__codelineno-0-711"></a><span class="sd">        Source UTC column and the local-time column to add.</span>
+</span><span id="gbfs_toolkit.add_local_time--source--__span-0-712"><a id="gbfs_toolkit.add_local_time--source--__codelineno-0-712" name="gbfs_toolkit.add_local_time--source--__codelineno-0-712"></a>
+</span><span id="gbfs_toolkit.add_local_time--source--__span-0-713"><a id="gbfs_toolkit.add_local_time--source--__codelineno-0-713" name="gbfs_toolkit.add_local_time--source--__codelineno-0-713"></a><span class="sd">    Returns</span>
+</span><span id="gbfs_toolkit.add_local_time--source--__span-0-714"><a id="gbfs_toolkit.add_local_time--source--__codelineno-0-714" name="gbfs_toolkit.add_local_time--source--__codelineno-0-714"></a><span class="sd">    -------</span>
+</span><span id="gbfs_toolkit.add_local_time--source--__span-0-715"><a id="gbfs_toolkit.add_local_time--source--__codelineno-0-715" name="gbfs_toolkit.add_local_time--source--__codelineno-0-715"></a><span class="sd">    pandas.DataFrame</span>
+</span><span id="gbfs_toolkit.add_local_time--source--__span-0-716"><a id="gbfs_toolkit.add_local_time--source--__codelineno-0-716" name="gbfs_toolkit.add_local_time--source--__codelineno-0-716"></a><span class="sd">        A flattened copy of ``panel`` with the added ``new_col``.</span>
+</span><span id="gbfs_toolkit.add_local_time--source--__span-0-717"><a id="gbfs_toolkit.add_local_time--source--__codelineno-0-717" name="gbfs_toolkit.add_local_time--source--__codelineno-0-717"></a>
+</span><span id="gbfs_toolkit.add_local_time--source--__span-0-718"><a id="gbfs_toolkit.add_local_time--source--__codelineno-0-718" name="gbfs_toolkit.add_local_time--source--__codelineno-0-718"></a><span class="sd">    See Also</span>
+</span><span id="gbfs_toolkit.add_local_time--source--__span-0-719"><a id="gbfs_toolkit.add_local_time--source--__codelineno-0-719" name="gbfs_toolkit.add_local_time--source--__codelineno-0-719"></a><span class="sd">    --------</span>
+</span><span id="gbfs_toolkit.add_local_time--source--__span-0-720"><a id="gbfs_toolkit.add_local_time--source--__codelineno-0-720" name="gbfs_toolkit.add_local_time--source--__codelineno-0-720"></a><span class="sd">    [`build_availability_panel`][gbfs_toolkit.build_availability_panel] : Build a panel already in local time via ``target_tz``.</span>
+</span><span id="gbfs_toolkit.add_local_time--source--__span-0-721"><a id="gbfs_toolkit.add_local_time--source--__codelineno-0-721" name="gbfs_toolkit.add_local_time--source--__codelineno-0-721"></a><span class="sd">    [`resample_panel`][gbfs_toolkit.resample_panel] : Put the panel on a fixed time grid.</span>
+</span><span id="gbfs_toolkit.add_local_time--source--__span-0-722"><a id="gbfs_toolkit.add_local_time--source--__codelineno-0-722" name="gbfs_toolkit.add_local_time--source--__codelineno-0-722"></a>
+</span><span id="gbfs_toolkit.add_local_time--source--__span-0-723"><a id="gbfs_toolkit.add_local_time--source--__codelineno-0-723" name="gbfs_toolkit.add_local_time--source--__codelineno-0-723"></a><span class="sd">    Examples</span>
+</span><span id="gbfs_toolkit.add_local_time--source--__span-0-724"><a id="gbfs_toolkit.add_local_time--source--__codelineno-0-724" name="gbfs_toolkit.add_local_time--source--__codelineno-0-724"></a><span class="sd">    --------</span>
+</span><span id="gbfs_toolkit.add_local_time--source--__span-0-725"><a id="gbfs_toolkit.add_local_time--source--__codelineno-0-725" name="gbfs_toolkit.add_local_time--source--__codelineno-0-725"></a><span class="sd">    &gt;&gt;&gt; import pandas as pd</span>
+</span><span id="gbfs_toolkit.add_local_time--source--__span-0-726"><a id="gbfs_toolkit.add_local_time--source--__codelineno-0-726" name="gbfs_toolkit.add_local_time--source--__codelineno-0-726"></a><span class="sd">    &gt;&gt;&gt; df = pd.DataFrame({"fetched_at": pd.to_datetime(["2026-01-01T08:00Z"])})</span>
+</span><span id="gbfs_toolkit.add_local_time--source--__span-0-727"><a id="gbfs_toolkit.add_local_time--source--__codelineno-0-727" name="gbfs_toolkit.add_local_time--source--__codelineno-0-727"></a><span class="sd">    &gt;&gt;&gt; int(add_local_time(df, "Europe/Paris")["local_time"].dt.hour.iloc[0])</span>
+</span><span id="gbfs_toolkit.add_local_time--source--__span-0-728"><a id="gbfs_toolkit.add_local_time--source--__codelineno-0-728" name="gbfs_toolkit.add_local_time--source--__codelineno-0-728"></a><span class="sd">    9</span>
+</span><span id="gbfs_toolkit.add_local_time--source--__span-0-729"><a id="gbfs_toolkit.add_local_time--source--__codelineno-0-729" name="gbfs_toolkit.add_local_time--source--__codelineno-0-729"></a><span class="sd">    """</span>
+</span><span id="gbfs_toolkit.add_local_time--source--__span-0-730"><a id="gbfs_toolkit.add_local_time--source--__codelineno-0-730" name="gbfs_toolkit.add_local_time--source--__codelineno-0-730"></a>    <span class="n">df</span> <span class="o">=</span> <span class="n">panel_frame</span><span class="p">(</span><span class="n">panel</span><span class="p">)</span>
+</span><span id="gbfs_toolkit.add_local_time--source--__span-0-731"><a id="gbfs_toolkit.add_local_time--source--__codelineno-0-731" name="gbfs_toolkit.add_local_time--source--__codelineno-0-731"></a>    <span class="n">require_columns</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="p">[</span><span class="n">time_col</span><span class="p">],</span> <span class="n">what</span><span class="o">=</span><span class="s2">"add_local_time"</span><span class="p">)</span>
+</span><span id="gbfs_toolkit.add_local_time--source--__span-0-732"><a id="gbfs_toolkit.add_local_time--source--__codelineno-0-732" name="gbfs_toolkit.add_local_time--source--__codelineno-0-732"></a>    <span class="n">out</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+</span><span id="gbfs_toolkit.add_local_time--source--__span-0-733"><a id="gbfs_toolkit.add_local_time--source--__codelineno-0-733" name="gbfs_toolkit.add_local_time--source--__codelineno-0-733"></a>    <span class="n">out</span><span class="p">[</span><span class="n">new_col</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">out</span><span class="p">[</span><span class="n">time_col</span><span class="p">],</span> <span class="n">utc</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">dt</span><span class="o">.</span><span class="n">tz_convert</span><span class="p">(</span><span class="n">tz_name</span><span class="p">)</span>
+</span><span id="gbfs_toolkit.add_local_time--source--__span-0-734"><a id="gbfs_toolkit.add_local_time--source--__codelineno-0-734" name="gbfs_toolkit.add_local_time--source--__codelineno-0-734"></a>    <span class="k">return</span> <span class="n">out</span>
 </span></code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -6763,10 +6763,10 @@ tz-aware <code>new_col</code> in <code>tz_name</code>, leaving <code>time_col</c
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.instant", "navigation.instant.progress", "navigation.tracking", "navigation.sections", "navigation.tabs", "navigation.tabs.sticky", "navigation.top", "navigation.indexes", "navigation.footer", "toc.follow", "search.suggest", "search.highlight", "search.share", "content.code.copy", "content.code.annotate", "content.tooltips"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.instant", "navigation.instant.progress", "navigation.tracking", "navigation.sections", "navigation.tabs", "navigation.tabs.sticky", "navigation.top", "navigation.indexes", "navigation.footer", "toc.follow", "search.suggest", "search.highlight", "search.share", "content.code.copy", "content.code.annotate", "content.tooltips"], "search": "../../../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
     
     
-      <script src="../../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../../../assets/javascripts/bundle.c21346df.min.js"></script>
       
         <script src="../../../javascripts/mathjax.js"></script>
       

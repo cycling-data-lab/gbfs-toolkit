@@ -25,7 +25,7 @@
       
       
       <link rel="icon" href="../../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-ProperDocs 1.6.7, mkdocs-material-9.7.6">
+      <meta name="generator" content="mkdocs-ProperDocs 1.6.7, mkdocs-material-9.8.0">
     
     
       
@@ -33,10 +33,10 @@
       
     
     
-      <link rel="stylesheet" href="../../../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.57a0d79d.min.css">
       
         
-        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.fb2fffe2.min.css">
       
       
 
@@ -1146,7 +1146,7 @@
   <span class="md-ellipsis">
     
   
-    __version__
+    _version_
   
 
     
@@ -6539,178 +6539,178 @@ free-floating / zero-capacity stations).</p>
 <p><span class="doc-section-title">Examples:</span></p>
     <div class="language-pycon highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="gp">&gt;&gt;&gt; </span><span class="n">panel</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="gp">... </span>    <span class="s2">&quot;system_id&quot;</span><span class="p">:</span> <span class="s2">&quot;s&quot;</span><span class="p">,</span> <span class="s2">&quot;station_id&quot;</span><span class="p">:</span> <span class="s2">&quot;a&quot;</span><span class="p">,</span>
-</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="gp">... </span>    <span class="s2">&quot;num_bikes_available&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="p">],</span>
-</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="gp">... </span>    <span class="s2">&quot;num_docks_available&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="gp">... </span>    <span class="s2">"system_id"</span><span class="p">:</span> <span class="s2">"s"</span><span class="p">,</span> <span class="s2">"station_id"</span><span class="p">:</span> <span class="s2">"a"</span><span class="p">,</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="gp">... </span>    <span class="s2">"num_bikes_available"</span><span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="p">],</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="gp">... </span>    <span class="s2">"num_docks_available"</span><span class="p">:</span> <span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
 </span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="gp">... </span><span class="p">})</span>
-</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="gp">&gt;&gt;&gt; </span><span class="nb">float</span><span class="p">(</span><span class="n">boundary_stress</span><span class="p">(</span><span class="n">panel</span><span class="p">)[</span><span class="s2">&quot;pickup_stress_ratio&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="gp">&gt;&gt;&gt; </span><span class="nb">float</span><span class="p">(</span><span class="n">boundary_stress</span><span class="p">(</span><span class="n">panel</span><span class="p">)[</span><span class="s2">"pickup_stress_ratio"</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
 </span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="go">0.5</span>
 </span></code></pre></div>
 
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/gbfs_toolkit/analytics/service.py</code></summary>
-              <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-382">382</a></span>
-<span class="normal"><a href="#__codelineno-0-383">383</a></span>
-<span class="normal"><a href="#__codelineno-0-384">384</a></span>
-<span class="normal"><a href="#__codelineno-0-385">385</a></span>
-<span class="normal"><a href="#__codelineno-0-386">386</a></span>
-<span class="normal"><a href="#__codelineno-0-387">387</a></span>
-<span class="normal"><a href="#__codelineno-0-388">388</a></span>
-<span class="normal"><a href="#__codelineno-0-389">389</a></span>
-<span class="normal"><a href="#__codelineno-0-390">390</a></span>
-<span class="normal"><a href="#__codelineno-0-391">391</a></span>
-<span class="normal"><a href="#__codelineno-0-392">392</a></span>
-<span class="normal"><a href="#__codelineno-0-393">393</a></span>
-<span class="normal"><a href="#__codelineno-0-394">394</a></span>
-<span class="normal"><a href="#__codelineno-0-395">395</a></span>
-<span class="normal"><a href="#__codelineno-0-396">396</a></span>
-<span class="normal"><a href="#__codelineno-0-397">397</a></span>
-<span class="normal"><a href="#__codelineno-0-398">398</a></span>
-<span class="normal"><a href="#__codelineno-0-399">399</a></span>
-<span class="normal"><a href="#__codelineno-0-400">400</a></span>
-<span class="normal"><a href="#__codelineno-0-401">401</a></span>
-<span class="normal"><a href="#__codelineno-0-402">402</a></span>
-<span class="normal"><a href="#__codelineno-0-403">403</a></span>
-<span class="normal"><a href="#__codelineno-0-404">404</a></span>
-<span class="normal"><a href="#__codelineno-0-405">405</a></span>
-<span class="normal"><a href="#__codelineno-0-406">406</a></span>
-<span class="normal"><a href="#__codelineno-0-407">407</a></span>
-<span class="normal"><a href="#__codelineno-0-408">408</a></span>
-<span class="normal"><a href="#__codelineno-0-409">409</a></span>
-<span class="normal"><a href="#__codelineno-0-410">410</a></span>
-<span class="normal"><a href="#__codelineno-0-411">411</a></span>
-<span class="normal"><a href="#__codelineno-0-412">412</a></span>
-<span class="normal"><a href="#__codelineno-0-413">413</a></span>
-<span class="normal"><a href="#__codelineno-0-414">414</a></span>
-<span class="normal"><a href="#__codelineno-0-415">415</a></span>
-<span class="normal"><a href="#__codelineno-0-416">416</a></span>
-<span class="normal"><a href="#__codelineno-0-417">417</a></span>
-<span class="normal"><a href="#__codelineno-0-418">418</a></span>
-<span class="normal"><a href="#__codelineno-0-419">419</a></span>
-<span class="normal"><a href="#__codelineno-0-420">420</a></span>
-<span class="normal"><a href="#__codelineno-0-421">421</a></span>
-<span class="normal"><a href="#__codelineno-0-422">422</a></span>
-<span class="normal"><a href="#__codelineno-0-423">423</a></span>
-<span class="normal"><a href="#__codelineno-0-424">424</a></span>
-<span class="normal"><a href="#__codelineno-0-425">425</a></span>
-<span class="normal"><a href="#__codelineno-0-426">426</a></span>
-<span class="normal"><a href="#__codelineno-0-427">427</a></span>
-<span class="normal"><a href="#__codelineno-0-428">428</a></span>
-<span class="normal"><a href="#__codelineno-0-429">429</a></span>
-<span class="normal"><a href="#__codelineno-0-430">430</a></span>
-<span class="normal"><a href="#__codelineno-0-431">431</a></span>
-<span class="normal"><a href="#__codelineno-0-432">432</a></span>
-<span class="normal"><a href="#__codelineno-0-433">433</a></span>
-<span class="normal"><a href="#__codelineno-0-434">434</a></span>
-<span class="normal"><a href="#__codelineno-0-435">435</a></span>
-<span class="normal"><a href="#__codelineno-0-436">436</a></span>
-<span class="normal"><a href="#__codelineno-0-437">437</a></span>
-<span class="normal"><a href="#__codelineno-0-438">438</a></span>
-<span class="normal"><a href="#__codelineno-0-439">439</a></span>
-<span class="normal"><a href="#__codelineno-0-440">440</a></span>
-<span class="normal"><a href="#__codelineno-0-441">441</a></span>
-<span class="normal"><a href="#__codelineno-0-442">442</a></span>
-<span class="normal"><a href="#__codelineno-0-443">443</a></span>
-<span class="normal"><a href="#__codelineno-0-444">444</a></span>
-<span class="normal"><a href="#__codelineno-0-445">445</a></span>
-<span class="normal"><a href="#__codelineno-0-446">446</a></span>
-<span class="normal"><a href="#__codelineno-0-447">447</a></span>
-<span class="normal"><a href="#__codelineno-0-448">448</a></span>
-<span class="normal"><a href="#__codelineno-0-449">449</a></span>
-<span class="normal"><a href="#__codelineno-0-450">450</a></span>
-<span class="normal"><a href="#__codelineno-0-451">451</a></span>
-<span class="normal"><a href="#__codelineno-0-452">452</a></span>
-<span class="normal"><a href="#__codelineno-0-453">453</a></span>
-<span class="normal"><a href="#__codelineno-0-454">454</a></span>
-<span class="normal"><a href="#__codelineno-0-455">455</a></span>
-<span class="normal"><a href="#__codelineno-0-456">456</a></span>
-<span class="normal"><a href="#__codelineno-0-457">457</a></span>
-<span class="normal"><a href="#__codelineno-0-458">458</a></span>
-<span class="normal"><a href="#__codelineno-0-459">459</a></span>
-<span class="normal"><a href="#__codelineno-0-460">460</a></span>
-<span class="normal"><a href="#__codelineno-0-461">461</a></span>
-<span class="normal"><a href="#__codelineno-0-462">462</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-382"><a id="__codelineno-0-382" name="__codelineno-0-382"></a><span class="k">def</span><span class="w"> </span><span class="nf">boundary_stress</span><span class="p">(</span><span class="n">panel</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">bikes_le</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span> <span class="n">docks_le</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">2</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
-</span><span id="__span-0-383"><a id="__codelineno-0-383" name="__codelineno-0-383"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Per-station share of time *near* empty or *near* full, not just at the boundary.</span>
-</span><span id="__span-0-384"><a id="__codelineno-0-384" name="__codelineno-0-384"></a>
-</span><span id="__span-0-385"><a id="__codelineno-0-385" name="__codelineno-0-385"></a><span class="sd">    A user reads a station with two bikes left as unreliable (they may be the broken</span>
-</span><span id="__span-0-386"><a id="__codelineno-0-386" name="__codelineno-0-386"></a><span class="sd">    ones), long before it hits zero; [`station_outage_rates`][gbfs_toolkit.station_outage_rates] (strictly ``== 0``)</span>
-</span><span id="__span-0-387"><a id="__codelineno-0-387" name="__codelineno-0-387"></a><span class="sd">    undercounts that perceived stress. This reports the fraction of observations with</span>
-</span><span id="__span-0-388"><a id="__codelineno-0-388" name="__codelineno-0-388"></a><span class="sd">    at most ``bikes_le`` bikes (pick-up stress) and at most ``docks_le`` docks</span>
-</span><span id="__span-0-389"><a id="__codelineno-0-389" name="__codelineno-0-389"></a><span class="sd">    (drop-off stress), using **absolute** thresholds, since two bikes mean stress at a</span>
-</span><span id="__span-0-390"><a id="__codelineno-0-390" name="__codelineno-0-390"></a><span class="sd">    10-dock station but not at a 40-dock one. Drop-off stress is undefined for</span>
-</span><span id="__span-0-391"><a id="__codelineno-0-391" name="__codelineno-0-391"></a><span class="sd">    free-floating or zero-capacity stations (no physical docks), so it returns ``NA``</span>
-</span><span id="__span-0-392"><a id="__codelineno-0-392" name="__codelineno-0-392"></a><span class="sd">    there rather than a misleading number.</span>
-</span><span id="__span-0-393"><a id="__codelineno-0-393" name="__codelineno-0-393"></a>
-</span><span id="__span-0-394"><a id="__codelineno-0-394" name="__codelineno-0-394"></a><span class="sd">    Parameters</span>
-</span><span id="__span-0-395"><a id="__codelineno-0-395" name="__codelineno-0-395"></a><span class="sd">    ----------</span>
-</span><span id="__span-0-396"><a id="__codelineno-0-396" name="__codelineno-0-396"></a><span class="sd">    panel : pandas.DataFrame</span>
-</span><span id="__span-0-397"><a id="__codelineno-0-397" name="__codelineno-0-397"></a><span class="sd">        Panel or snapshots with ``system_id, station_id, num_bikes_available,</span>
-</span><span id="__span-0-398"><a id="__codelineno-0-398" name="__codelineno-0-398"></a><span class="sd">        num_docks_available``; uses ``capacity`` / ``is_virtual_station`` when present.</span>
-</span><span id="__span-0-399"><a id="__codelineno-0-399" name="__codelineno-0-399"></a><span class="sd">    bikes_le, docks_le : int, default 2</span>
-</span><span id="__span-0-400"><a id="__codelineno-0-400" name="__codelineno-0-400"></a><span class="sd">        A station is under pick-up / drop-off stress when its bikes / docks are at or</span>
-</span><span id="__span-0-401"><a id="__codelineno-0-401" name="__codelineno-0-401"></a><span class="sd">        below this absolute count.</span>
-</span><span id="__span-0-402"><a id="__codelineno-0-402" name="__codelineno-0-402"></a>
-</span><span id="__span-0-403"><a id="__codelineno-0-403" name="__codelineno-0-403"></a><span class="sd">    Returns</span>
-</span><span id="__span-0-404"><a id="__codelineno-0-404" name="__codelineno-0-404"></a><span class="sd">    -------</span>
-</span><span id="__span-0-405"><a id="__codelineno-0-405" name="__codelineno-0-405"></a><span class="sd">    pandas.DataFrame</span>
-</span><span id="__span-0-406"><a id="__codelineno-0-406" name="__codelineno-0-406"></a><span class="sd">        ``system_id, station_id, pickup_stress_ratio, dropoff_stress_ratio, n_obs``</span>
-</span><span id="__span-0-407"><a id="__codelineno-0-407" name="__codelineno-0-407"></a><span class="sd">        (rates in ``[0, 1]``; ``dropoff_stress_ratio`` is nullable ``NA`` for</span>
-</span><span id="__span-0-408"><a id="__codelineno-0-408" name="__codelineno-0-408"></a><span class="sd">        free-floating / zero-capacity stations).</span>
-</span><span id="__span-0-409"><a id="__codelineno-0-409" name="__codelineno-0-409"></a>
-</span><span id="__span-0-410"><a id="__codelineno-0-410" name="__codelineno-0-410"></a><span class="sd">    See Also</span>
-</span><span id="__span-0-411"><a id="__codelineno-0-411" name="__codelineno-0-411"></a><span class="sd">    --------</span>
-</span><span id="__span-0-412"><a id="__codelineno-0-412" name="__codelineno-0-412"></a><span class="sd">    [`station_outage_rates`][gbfs_toolkit.station_outage_rates] : The strict empty/full (``== 0``) rates.</span>
-</span><span id="__span-0-413"><a id="__codelineno-0-413" name="__codelineno-0-413"></a><span class="sd">    [`censored_time_ratio`][gbfs_toolkit.censored_time_ratio] : Share of demand lost at the boundary.</span>
-</span><span id="__span-0-414"><a id="__codelineno-0-414" name="__codelineno-0-414"></a><span class="sd">    [`service_reliability_index`][gbfs_toolkit.service_reliability_index] : Level-of-service probabilities.</span>
-</span><span id="__span-0-415"><a id="__codelineno-0-415" name="__codelineno-0-415"></a>
-</span><span id="__span-0-416"><a id="__codelineno-0-416" name="__codelineno-0-416"></a><span class="sd">    Examples</span>
-</span><span id="__span-0-417"><a id="__codelineno-0-417" name="__codelineno-0-417"></a><span class="sd">    --------</span>
-</span><span id="__span-0-418"><a id="__codelineno-0-418" name="__codelineno-0-418"></a><span class="sd">    &gt;&gt;&gt; import pandas as pd</span>
-</span><span id="__span-0-419"><a id="__codelineno-0-419" name="__codelineno-0-419"></a><span class="sd">    &gt;&gt;&gt; panel = pd.DataFrame({</span>
-</span><span id="__span-0-420"><a id="__codelineno-0-420" name="__codelineno-0-420"></a><span class="sd">    ...     &quot;system_id&quot;: &quot;s&quot;, &quot;station_id&quot;: &quot;a&quot;,</span>
-</span><span id="__span-0-421"><a id="__codelineno-0-421" name="__codelineno-0-421"></a><span class="sd">    ...     &quot;num_bikes_available&quot;: [0, 1, 5, 10],</span>
-</span><span id="__span-0-422"><a id="__codelineno-0-422" name="__codelineno-0-422"></a><span class="sd">    ...     &quot;num_docks_available&quot;: [10, 9, 5, 0],</span>
-</span><span id="__span-0-423"><a id="__codelineno-0-423" name="__codelineno-0-423"></a><span class="sd">    ... })</span>
-</span><span id="__span-0-424"><a id="__codelineno-0-424" name="__codelineno-0-424"></a><span class="sd">    &gt;&gt;&gt; float(boundary_stress(panel)[&quot;pickup_stress_ratio&quot;].iloc[0])</span>
-</span><span id="__span-0-425"><a id="__codelineno-0-425" name="__codelineno-0-425"></a><span class="sd">    0.5</span>
-</span><span id="__span-0-426"><a id="__codelineno-0-426" name="__codelineno-0-426"></a><span class="sd">    &quot;&quot;&quot;</span>
-</span><span id="__span-0-427"><a id="__codelineno-0-427" name="__codelineno-0-427"></a>    <span class="n">df</span> <span class="o">=</span> <span class="n">panel_frame</span><span class="p">(</span><span class="n">panel</span><span class="p">)</span>
-</span><span id="__span-0-428"><a id="__codelineno-0-428" name="__codelineno-0-428"></a>    <span class="n">require_columns</span><span class="p">(</span>
-</span><span id="__span-0-429"><a id="__codelineno-0-429" name="__codelineno-0-429"></a>        <span class="n">df</span><span class="p">,</span>
-</span><span id="__span-0-430"><a id="__codelineno-0-430" name="__codelineno-0-430"></a>        <span class="p">[</span><span class="s2">&quot;system_id&quot;</span><span class="p">,</span> <span class="s2">&quot;station_id&quot;</span><span class="p">,</span> <span class="s2">&quot;num_bikes_available&quot;</span><span class="p">,</span> <span class="s2">&quot;num_docks_available&quot;</span><span class="p">],</span>
-</span><span id="__span-0-431"><a id="__codelineno-0-431" name="__codelineno-0-431"></a>        <span class="n">what</span><span class="o">=</span><span class="s2">&quot;boundary_stress&quot;</span><span class="p">,</span>
-</span><span id="__span-0-432"><a id="__codelineno-0-432" name="__codelineno-0-432"></a>    <span class="p">)</span>
-</span><span id="__span-0-433"><a id="__codelineno-0-433" name="__codelineno-0-433"></a>    <span class="n">bikes</span> <span class="o">=</span> <span class="n">num</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="s2">&quot;num_bikes_available&quot;</span><span class="p">)</span>
-</span><span id="__span-0-434"><a id="__codelineno-0-434" name="__codelineno-0-434"></a>    <span class="n">docks</span> <span class="o">=</span> <span class="n">num</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="s2">&quot;num_docks_available&quot;</span><span class="p">)</span>
-</span><span id="__span-0-435"><a id="__codelineno-0-435" name="__codelineno-0-435"></a>    <span class="n">virtual</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">bool</span><span class="p">)</span>
-</span><span id="__span-0-436"><a id="__codelineno-0-436" name="__codelineno-0-436"></a>    <span class="k">if</span> <span class="s2">&quot;is_virtual_station&quot;</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
-</span><span id="__span-0-437"><a id="__codelineno-0-437" name="__codelineno-0-437"></a>        <span class="n">virtual</span> <span class="o">|=</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;is_virtual_station&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">bool</span><span class="p">)</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
-</span><span id="__span-0-438"><a id="__codelineno-0-438" name="__codelineno-0-438"></a>    <span class="k">if</span> <span class="s2">&quot;capacity&quot;</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
-</span><span id="__span-0-439"><a id="__codelineno-0-439" name="__codelineno-0-439"></a>        <span class="c1"># Only a *finite* non-positive capacity means &quot;no physical docks&quot;; a missing</span>
-</span><span id="__span-0-440"><a id="__codelineno-0-440" name="__codelineno-0-440"></a>        <span class="c1"># (NaN) capacity is unknown, not virtual, so it must not null the dock metric.</span>
-</span><span id="__span-0-441"><a id="__codelineno-0-441" name="__codelineno-0-441"></a>        <span class="n">cap</span> <span class="o">=</span> <span class="n">num</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="s2">&quot;capacity&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
-</span><span id="__span-0-442"><a id="__codelineno-0-442" name="__codelineno-0-442"></a>        <span class="n">virtual</span> <span class="o">|=</span> <span class="n">np</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">cap</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">cap</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">)</span>
-</span><span id="__span-0-443"><a id="__codelineno-0-443" name="__codelineno-0-443"></a>    <span class="n">low_docks</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">virtual</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span> <span class="p">(</span><span class="n">docks</span> <span class="o">&lt;=</span> <span class="n">docks_le</span><span class="p">)</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s2">&quot;float64&quot;</span><span class="p">))</span>
-</span><span id="__span-0-444"><a id="__codelineno-0-444" name="__codelineno-0-444"></a>    <span class="n">work</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
-</span><span id="__span-0-445"><a id="__codelineno-0-445" name="__codelineno-0-445"></a>        <span class="p">{</span>
-</span><span id="__span-0-446"><a id="__codelineno-0-446" name="__codelineno-0-446"></a>            <span class="s2">&quot;system_id&quot;</span><span class="p">:</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;system_id&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">(),</span>
-</span><span id="__span-0-447"><a id="__codelineno-0-447" name="__codelineno-0-447"></a>            <span class="s2">&quot;station_id&quot;</span><span class="p">:</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;station_id&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">(),</span>
-</span><span id="__span-0-448"><a id="__codelineno-0-448" name="__codelineno-0-448"></a>            <span class="s2">&quot;_low_bikes&quot;</span><span class="p">:</span> <span class="p">(</span><span class="n">bikes</span> <span class="o">&lt;=</span> <span class="n">bikes_le</span><span class="p">)</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">(),</span>
-</span><span id="__span-0-449"><a id="__codelineno-0-449" name="__codelineno-0-449"></a>            <span class="s2">&quot;_low_docks&quot;</span><span class="p">:</span> <span class="n">low_docks</span><span class="p">,</span>
-</span><span id="__span-0-450"><a id="__codelineno-0-450" name="__codelineno-0-450"></a>        <span class="p">}</span>
-</span><span id="__span-0-451"><a id="__codelineno-0-451" name="__codelineno-0-451"></a>    <span class="p">)</span>
-</span><span id="__span-0-452"><a id="__codelineno-0-452" name="__codelineno-0-452"></a>    <span class="n">out</span> <span class="o">=</span> <span class="p">(</span>
-</span><span id="__span-0-453"><a id="__codelineno-0-453" name="__codelineno-0-453"></a>        <span class="n">work</span><span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="s2">&quot;system_id&quot;</span><span class="p">,</span> <span class="s2">&quot;station_id&quot;</span><span class="p">],</span> <span class="n">sort</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-</span><span id="__span-0-454"><a id="__codelineno-0-454" name="__codelineno-0-454"></a>        <span class="o">.</span><span class="n">agg</span><span class="p">(</span>
-</span><span id="__span-0-455"><a id="__codelineno-0-455" name="__codelineno-0-455"></a>            <span class="n">pickup_stress_ratio</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;_low_bikes&quot;</span><span class="p">,</span> <span class="s2">&quot;mean&quot;</span><span class="p">),</span>
-</span><span id="__span-0-456"><a id="__codelineno-0-456" name="__codelineno-0-456"></a>            <span class="n">dropoff_stress_ratio</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;_low_docks&quot;</span><span class="p">,</span> <span class="s2">&quot;mean&quot;</span><span class="p">),</span>
-</span><span id="__span-0-457"><a id="__codelineno-0-457" name="__codelineno-0-457"></a>            <span class="n">n_obs</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;_low_bikes&quot;</span><span class="p">,</span> <span class="s2">&quot;size&quot;</span><span class="p">),</span>
-</span><span id="__span-0-458"><a id="__codelineno-0-458" name="__codelineno-0-458"></a>        <span class="p">)</span>
-</span><span id="__span-0-459"><a id="__codelineno-0-459" name="__codelineno-0-459"></a>        <span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
-</span><span id="__span-0-460"><a id="__codelineno-0-460" name="__codelineno-0-460"></a>    <span class="p">)</span>
-</span><span id="__span-0-461"><a id="__codelineno-0-461" name="__codelineno-0-461"></a>    <span class="n">out</span><span class="p">[</span><span class="s2">&quot;dropoff_stress_ratio&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">out</span><span class="p">[</span><span class="s2">&quot;dropoff_stress_ratio&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s2">&quot;Float64&quot;</span><span class="p">)</span>
-</span><span id="__span-0-462"><a id="__codelineno-0-462" name="__codelineno-0-462"></a>    <span class="k">return</span> <span class="n">out</span>
+              <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#gbfs_toolkit.boundary_stress--source--__codelineno-0-382">382</a></span>
+<span class="normal"><a href="#gbfs_toolkit.boundary_stress--source--__codelineno-0-383">383</a></span>
+<span class="normal"><a href="#gbfs_toolkit.boundary_stress--source--__codelineno-0-384">384</a></span>
+<span class="normal"><a href="#gbfs_toolkit.boundary_stress--source--__codelineno-0-385">385</a></span>
+<span class="normal"><a href="#gbfs_toolkit.boundary_stress--source--__codelineno-0-386">386</a></span>
+<span class="normal"><a href="#gbfs_toolkit.boundary_stress--source--__codelineno-0-387">387</a></span>
+<span class="normal"><a href="#gbfs_toolkit.boundary_stress--source--__codelineno-0-388">388</a></span>
+<span class="normal"><a href="#gbfs_toolkit.boundary_stress--source--__codelineno-0-389">389</a></span>
+<span class="normal"><a href="#gbfs_toolkit.boundary_stress--source--__codelineno-0-390">390</a></span>
+<span class="normal"><a href="#gbfs_toolkit.boundary_stress--source--__codelineno-0-391">391</a></span>
+<span class="normal"><a href="#gbfs_toolkit.boundary_stress--source--__codelineno-0-392">392</a></span>
+<span class="normal"><a href="#gbfs_toolkit.boundary_stress--source--__codelineno-0-393">393</a></span>
+<span class="normal"><a href="#gbfs_toolkit.boundary_stress--source--__codelineno-0-394">394</a></span>
+<span class="normal"><a href="#gbfs_toolkit.boundary_stress--source--__codelineno-0-395">395</a></span>
+<span class="normal"><a href="#gbfs_toolkit.boundary_stress--source--__codelineno-0-396">396</a></span>
+<span class="normal"><a href="#gbfs_toolkit.boundary_stress--source--__codelineno-0-397">397</a></span>
+<span class="normal"><a href="#gbfs_toolkit.boundary_stress--source--__codelineno-0-398">398</a></span>
+<span class="normal"><a href="#gbfs_toolkit.boundary_stress--source--__codelineno-0-399">399</a></span>
+<span class="normal"><a href="#gbfs_toolkit.boundary_stress--source--__codelineno-0-400">400</a></span>
+<span class="normal"><a href="#gbfs_toolkit.boundary_stress--source--__codelineno-0-401">401</a></span>
+<span class="normal"><a href="#gbfs_toolkit.boundary_stress--source--__codelineno-0-402">402</a></span>
+<span class="normal"><a href="#gbfs_toolkit.boundary_stress--source--__codelineno-0-403">403</a></span>
+<span class="normal"><a href="#gbfs_toolkit.boundary_stress--source--__codelineno-0-404">404</a></span>
+<span class="normal"><a href="#gbfs_toolkit.boundary_stress--source--__codelineno-0-405">405</a></span>
+<span class="normal"><a href="#gbfs_toolkit.boundary_stress--source--__codelineno-0-406">406</a></span>
+<span class="normal"><a href="#gbfs_toolkit.boundary_stress--source--__codelineno-0-407">407</a></span>
+<span class="normal"><a href="#gbfs_toolkit.boundary_stress--source--__codelineno-0-408">408</a></span>
+<span class="normal"><a href="#gbfs_toolkit.boundary_stress--source--__codelineno-0-409">409</a></span>
+<span class="normal"><a href="#gbfs_toolkit.boundary_stress--source--__codelineno-0-410">410</a></span>
+<span class="normal"><a href="#gbfs_toolkit.boundary_stress--source--__codelineno-0-411">411</a></span>
+<span class="normal"><a href="#gbfs_toolkit.boundary_stress--source--__codelineno-0-412">412</a></span>
+<span class="normal"><a href="#gbfs_toolkit.boundary_stress--source--__codelineno-0-413">413</a></span>
+<span class="normal"><a href="#gbfs_toolkit.boundary_stress--source--__codelineno-0-414">414</a></span>
+<span class="normal"><a href="#gbfs_toolkit.boundary_stress--source--__codelineno-0-415">415</a></span>
+<span class="normal"><a href="#gbfs_toolkit.boundary_stress--source--__codelineno-0-416">416</a></span>
+<span class="normal"><a href="#gbfs_toolkit.boundary_stress--source--__codelineno-0-417">417</a></span>
+<span class="normal"><a href="#gbfs_toolkit.boundary_stress--source--__codelineno-0-418">418</a></span>
+<span class="normal"><a href="#gbfs_toolkit.boundary_stress--source--__codelineno-0-419">419</a></span>
+<span class="normal"><a href="#gbfs_toolkit.boundary_stress--source--__codelineno-0-420">420</a></span>
+<span class="normal"><a href="#gbfs_toolkit.boundary_stress--source--__codelineno-0-421">421</a></span>
+<span class="normal"><a href="#gbfs_toolkit.boundary_stress--source--__codelineno-0-422">422</a></span>
+<span class="normal"><a href="#gbfs_toolkit.boundary_stress--source--__codelineno-0-423">423</a></span>
+<span class="normal"><a href="#gbfs_toolkit.boundary_stress--source--__codelineno-0-424">424</a></span>
+<span class="normal"><a href="#gbfs_toolkit.boundary_stress--source--__codelineno-0-425">425</a></span>
+<span class="normal"><a href="#gbfs_toolkit.boundary_stress--source--__codelineno-0-426">426</a></span>
+<span class="normal"><a href="#gbfs_toolkit.boundary_stress--source--__codelineno-0-427">427</a></span>
+<span class="normal"><a href="#gbfs_toolkit.boundary_stress--source--__codelineno-0-428">428</a></span>
+<span class="normal"><a href="#gbfs_toolkit.boundary_stress--source--__codelineno-0-429">429</a></span>
+<span class="normal"><a href="#gbfs_toolkit.boundary_stress--source--__codelineno-0-430">430</a></span>
+<span class="normal"><a href="#gbfs_toolkit.boundary_stress--source--__codelineno-0-431">431</a></span>
+<span class="normal"><a href="#gbfs_toolkit.boundary_stress--source--__codelineno-0-432">432</a></span>
+<span class="normal"><a href="#gbfs_toolkit.boundary_stress--source--__codelineno-0-433">433</a></span>
+<span class="normal"><a href="#gbfs_toolkit.boundary_stress--source--__codelineno-0-434">434</a></span>
+<span class="normal"><a href="#gbfs_toolkit.boundary_stress--source--__codelineno-0-435">435</a></span>
+<span class="normal"><a href="#gbfs_toolkit.boundary_stress--source--__codelineno-0-436">436</a></span>
+<span class="normal"><a href="#gbfs_toolkit.boundary_stress--source--__codelineno-0-437">437</a></span>
+<span class="normal"><a href="#gbfs_toolkit.boundary_stress--source--__codelineno-0-438">438</a></span>
+<span class="normal"><a href="#gbfs_toolkit.boundary_stress--source--__codelineno-0-439">439</a></span>
+<span class="normal"><a href="#gbfs_toolkit.boundary_stress--source--__codelineno-0-440">440</a></span>
+<span class="normal"><a href="#gbfs_toolkit.boundary_stress--source--__codelineno-0-441">441</a></span>
+<span class="normal"><a href="#gbfs_toolkit.boundary_stress--source--__codelineno-0-442">442</a></span>
+<span class="normal"><a href="#gbfs_toolkit.boundary_stress--source--__codelineno-0-443">443</a></span>
+<span class="normal"><a href="#gbfs_toolkit.boundary_stress--source--__codelineno-0-444">444</a></span>
+<span class="normal"><a href="#gbfs_toolkit.boundary_stress--source--__codelineno-0-445">445</a></span>
+<span class="normal"><a href="#gbfs_toolkit.boundary_stress--source--__codelineno-0-446">446</a></span>
+<span class="normal"><a href="#gbfs_toolkit.boundary_stress--source--__codelineno-0-447">447</a></span>
+<span class="normal"><a href="#gbfs_toolkit.boundary_stress--source--__codelineno-0-448">448</a></span>
+<span class="normal"><a href="#gbfs_toolkit.boundary_stress--source--__codelineno-0-449">449</a></span>
+<span class="normal"><a href="#gbfs_toolkit.boundary_stress--source--__codelineno-0-450">450</a></span>
+<span class="normal"><a href="#gbfs_toolkit.boundary_stress--source--__codelineno-0-451">451</a></span>
+<span class="normal"><a href="#gbfs_toolkit.boundary_stress--source--__codelineno-0-452">452</a></span>
+<span class="normal"><a href="#gbfs_toolkit.boundary_stress--source--__codelineno-0-453">453</a></span>
+<span class="normal"><a href="#gbfs_toolkit.boundary_stress--source--__codelineno-0-454">454</a></span>
+<span class="normal"><a href="#gbfs_toolkit.boundary_stress--source--__codelineno-0-455">455</a></span>
+<span class="normal"><a href="#gbfs_toolkit.boundary_stress--source--__codelineno-0-456">456</a></span>
+<span class="normal"><a href="#gbfs_toolkit.boundary_stress--source--__codelineno-0-457">457</a></span>
+<span class="normal"><a href="#gbfs_toolkit.boundary_stress--source--__codelineno-0-458">458</a></span>
+<span class="normal"><a href="#gbfs_toolkit.boundary_stress--source--__codelineno-0-459">459</a></span>
+<span class="normal"><a href="#gbfs_toolkit.boundary_stress--source--__codelineno-0-460">460</a></span>
+<span class="normal"><a href="#gbfs_toolkit.boundary_stress--source--__codelineno-0-461">461</a></span>
+<span class="normal"><a href="#gbfs_toolkit.boundary_stress--source--__codelineno-0-462">462</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="gbfs_toolkit.boundary_stress--source--__span-0-382"><a id="gbfs_toolkit.boundary_stress--source--__codelineno-0-382" name="gbfs_toolkit.boundary_stress--source--__codelineno-0-382"></a><span class="k">def</span><span class="w"> </span><span class="nf">boundary_stress</span><span class="p">(</span><span class="n">panel</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">bikes_le</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span> <span class="n">docks_le</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">2</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+</span><span id="gbfs_toolkit.boundary_stress--source--__span-0-383"><a id="gbfs_toolkit.boundary_stress--source--__codelineno-0-383" name="gbfs_toolkit.boundary_stress--source--__codelineno-0-383"></a><span class="w">    </span><span class="sd">"""Per-station share of time *near* empty or *near* full, not just at the boundary.</span>
+</span><span id="gbfs_toolkit.boundary_stress--source--__span-0-384"><a id="gbfs_toolkit.boundary_stress--source--__codelineno-0-384" name="gbfs_toolkit.boundary_stress--source--__codelineno-0-384"></a>
+</span><span id="gbfs_toolkit.boundary_stress--source--__span-0-385"><a id="gbfs_toolkit.boundary_stress--source--__codelineno-0-385" name="gbfs_toolkit.boundary_stress--source--__codelineno-0-385"></a><span class="sd">    A user reads a station with two bikes left as unreliable (they may be the broken</span>
+</span><span id="gbfs_toolkit.boundary_stress--source--__span-0-386"><a id="gbfs_toolkit.boundary_stress--source--__codelineno-0-386" name="gbfs_toolkit.boundary_stress--source--__codelineno-0-386"></a><span class="sd">    ones), long before it hits zero; [`station_outage_rates`][gbfs_toolkit.station_outage_rates] (strictly ``== 0``)</span>
+</span><span id="gbfs_toolkit.boundary_stress--source--__span-0-387"><a id="gbfs_toolkit.boundary_stress--source--__codelineno-0-387" name="gbfs_toolkit.boundary_stress--source--__codelineno-0-387"></a><span class="sd">    undercounts that perceived stress. This reports the fraction of observations with</span>
+</span><span id="gbfs_toolkit.boundary_stress--source--__span-0-388"><a id="gbfs_toolkit.boundary_stress--source--__codelineno-0-388" name="gbfs_toolkit.boundary_stress--source--__codelineno-0-388"></a><span class="sd">    at most ``bikes_le`` bikes (pick-up stress) and at most ``docks_le`` docks</span>
+</span><span id="gbfs_toolkit.boundary_stress--source--__span-0-389"><a id="gbfs_toolkit.boundary_stress--source--__codelineno-0-389" name="gbfs_toolkit.boundary_stress--source--__codelineno-0-389"></a><span class="sd">    (drop-off stress), using **absolute** thresholds, since two bikes mean stress at a</span>
+</span><span id="gbfs_toolkit.boundary_stress--source--__span-0-390"><a id="gbfs_toolkit.boundary_stress--source--__codelineno-0-390" name="gbfs_toolkit.boundary_stress--source--__codelineno-0-390"></a><span class="sd">    10-dock station but not at a 40-dock one. Drop-off stress is undefined for</span>
+</span><span id="gbfs_toolkit.boundary_stress--source--__span-0-391"><a id="gbfs_toolkit.boundary_stress--source--__codelineno-0-391" name="gbfs_toolkit.boundary_stress--source--__codelineno-0-391"></a><span class="sd">    free-floating or zero-capacity stations (no physical docks), so it returns ``NA``</span>
+</span><span id="gbfs_toolkit.boundary_stress--source--__span-0-392"><a id="gbfs_toolkit.boundary_stress--source--__codelineno-0-392" name="gbfs_toolkit.boundary_stress--source--__codelineno-0-392"></a><span class="sd">    there rather than a misleading number.</span>
+</span><span id="gbfs_toolkit.boundary_stress--source--__span-0-393"><a id="gbfs_toolkit.boundary_stress--source--__codelineno-0-393" name="gbfs_toolkit.boundary_stress--source--__codelineno-0-393"></a>
+</span><span id="gbfs_toolkit.boundary_stress--source--__span-0-394"><a id="gbfs_toolkit.boundary_stress--source--__codelineno-0-394" name="gbfs_toolkit.boundary_stress--source--__codelineno-0-394"></a><span class="sd">    Parameters</span>
+</span><span id="gbfs_toolkit.boundary_stress--source--__span-0-395"><a id="gbfs_toolkit.boundary_stress--source--__codelineno-0-395" name="gbfs_toolkit.boundary_stress--source--__codelineno-0-395"></a><span class="sd">    ----------</span>
+</span><span id="gbfs_toolkit.boundary_stress--source--__span-0-396"><a id="gbfs_toolkit.boundary_stress--source--__codelineno-0-396" name="gbfs_toolkit.boundary_stress--source--__codelineno-0-396"></a><span class="sd">    panel : pandas.DataFrame</span>
+</span><span id="gbfs_toolkit.boundary_stress--source--__span-0-397"><a id="gbfs_toolkit.boundary_stress--source--__codelineno-0-397" name="gbfs_toolkit.boundary_stress--source--__codelineno-0-397"></a><span class="sd">        Panel or snapshots with ``system_id, station_id, num_bikes_available,</span>
+</span><span id="gbfs_toolkit.boundary_stress--source--__span-0-398"><a id="gbfs_toolkit.boundary_stress--source--__codelineno-0-398" name="gbfs_toolkit.boundary_stress--source--__codelineno-0-398"></a><span class="sd">        num_docks_available``; uses ``capacity`` / ``is_virtual_station`` when present.</span>
+</span><span id="gbfs_toolkit.boundary_stress--source--__span-0-399"><a id="gbfs_toolkit.boundary_stress--source--__codelineno-0-399" name="gbfs_toolkit.boundary_stress--source--__codelineno-0-399"></a><span class="sd">    bikes_le, docks_le : int, default 2</span>
+</span><span id="gbfs_toolkit.boundary_stress--source--__span-0-400"><a id="gbfs_toolkit.boundary_stress--source--__codelineno-0-400" name="gbfs_toolkit.boundary_stress--source--__codelineno-0-400"></a><span class="sd">        A station is under pick-up / drop-off stress when its bikes / docks are at or</span>
+</span><span id="gbfs_toolkit.boundary_stress--source--__span-0-401"><a id="gbfs_toolkit.boundary_stress--source--__codelineno-0-401" name="gbfs_toolkit.boundary_stress--source--__codelineno-0-401"></a><span class="sd">        below this absolute count.</span>
+</span><span id="gbfs_toolkit.boundary_stress--source--__span-0-402"><a id="gbfs_toolkit.boundary_stress--source--__codelineno-0-402" name="gbfs_toolkit.boundary_stress--source--__codelineno-0-402"></a>
+</span><span id="gbfs_toolkit.boundary_stress--source--__span-0-403"><a id="gbfs_toolkit.boundary_stress--source--__codelineno-0-403" name="gbfs_toolkit.boundary_stress--source--__codelineno-0-403"></a><span class="sd">    Returns</span>
+</span><span id="gbfs_toolkit.boundary_stress--source--__span-0-404"><a id="gbfs_toolkit.boundary_stress--source--__codelineno-0-404" name="gbfs_toolkit.boundary_stress--source--__codelineno-0-404"></a><span class="sd">    -------</span>
+</span><span id="gbfs_toolkit.boundary_stress--source--__span-0-405"><a id="gbfs_toolkit.boundary_stress--source--__codelineno-0-405" name="gbfs_toolkit.boundary_stress--source--__codelineno-0-405"></a><span class="sd">    pandas.DataFrame</span>
+</span><span id="gbfs_toolkit.boundary_stress--source--__span-0-406"><a id="gbfs_toolkit.boundary_stress--source--__codelineno-0-406" name="gbfs_toolkit.boundary_stress--source--__codelineno-0-406"></a><span class="sd">        ``system_id, station_id, pickup_stress_ratio, dropoff_stress_ratio, n_obs``</span>
+</span><span id="gbfs_toolkit.boundary_stress--source--__span-0-407"><a id="gbfs_toolkit.boundary_stress--source--__codelineno-0-407" name="gbfs_toolkit.boundary_stress--source--__codelineno-0-407"></a><span class="sd">        (rates in ``[0, 1]``; ``dropoff_stress_ratio`` is nullable ``NA`` for</span>
+</span><span id="gbfs_toolkit.boundary_stress--source--__span-0-408"><a id="gbfs_toolkit.boundary_stress--source--__codelineno-0-408" name="gbfs_toolkit.boundary_stress--source--__codelineno-0-408"></a><span class="sd">        free-floating / zero-capacity stations).</span>
+</span><span id="gbfs_toolkit.boundary_stress--source--__span-0-409"><a id="gbfs_toolkit.boundary_stress--source--__codelineno-0-409" name="gbfs_toolkit.boundary_stress--source--__codelineno-0-409"></a>
+</span><span id="gbfs_toolkit.boundary_stress--source--__span-0-410"><a id="gbfs_toolkit.boundary_stress--source--__codelineno-0-410" name="gbfs_toolkit.boundary_stress--source--__codelineno-0-410"></a><span class="sd">    See Also</span>
+</span><span id="gbfs_toolkit.boundary_stress--source--__span-0-411"><a id="gbfs_toolkit.boundary_stress--source--__codelineno-0-411" name="gbfs_toolkit.boundary_stress--source--__codelineno-0-411"></a><span class="sd">    --------</span>
+</span><span id="gbfs_toolkit.boundary_stress--source--__span-0-412"><a id="gbfs_toolkit.boundary_stress--source--__codelineno-0-412" name="gbfs_toolkit.boundary_stress--source--__codelineno-0-412"></a><span class="sd">    [`station_outage_rates`][gbfs_toolkit.station_outage_rates] : The strict empty/full (``== 0``) rates.</span>
+</span><span id="gbfs_toolkit.boundary_stress--source--__span-0-413"><a id="gbfs_toolkit.boundary_stress--source--__codelineno-0-413" name="gbfs_toolkit.boundary_stress--source--__codelineno-0-413"></a><span class="sd">    [`censored_time_ratio`][gbfs_toolkit.censored_time_ratio] : Share of demand lost at the boundary.</span>
+</span><span id="gbfs_toolkit.boundary_stress--source--__span-0-414"><a id="gbfs_toolkit.boundary_stress--source--__codelineno-0-414" name="gbfs_toolkit.boundary_stress--source--__codelineno-0-414"></a><span class="sd">    [`service_reliability_index`][gbfs_toolkit.service_reliability_index] : Level-of-service probabilities.</span>
+</span><span id="gbfs_toolkit.boundary_stress--source--__span-0-415"><a id="gbfs_toolkit.boundary_stress--source--__codelineno-0-415" name="gbfs_toolkit.boundary_stress--source--__codelineno-0-415"></a>
+</span><span id="gbfs_toolkit.boundary_stress--source--__span-0-416"><a id="gbfs_toolkit.boundary_stress--source--__codelineno-0-416" name="gbfs_toolkit.boundary_stress--source--__codelineno-0-416"></a><span class="sd">    Examples</span>
+</span><span id="gbfs_toolkit.boundary_stress--source--__span-0-417"><a id="gbfs_toolkit.boundary_stress--source--__codelineno-0-417" name="gbfs_toolkit.boundary_stress--source--__codelineno-0-417"></a><span class="sd">    --------</span>
+</span><span id="gbfs_toolkit.boundary_stress--source--__span-0-418"><a id="gbfs_toolkit.boundary_stress--source--__codelineno-0-418" name="gbfs_toolkit.boundary_stress--source--__codelineno-0-418"></a><span class="sd">    &gt;&gt;&gt; import pandas as pd</span>
+</span><span id="gbfs_toolkit.boundary_stress--source--__span-0-419"><a id="gbfs_toolkit.boundary_stress--source--__codelineno-0-419" name="gbfs_toolkit.boundary_stress--source--__codelineno-0-419"></a><span class="sd">    &gt;&gt;&gt; panel = pd.DataFrame({</span>
+</span><span id="gbfs_toolkit.boundary_stress--source--__span-0-420"><a id="gbfs_toolkit.boundary_stress--source--__codelineno-0-420" name="gbfs_toolkit.boundary_stress--source--__codelineno-0-420"></a><span class="sd">    ...     "system_id": "s", "station_id": "a",</span>
+</span><span id="gbfs_toolkit.boundary_stress--source--__span-0-421"><a id="gbfs_toolkit.boundary_stress--source--__codelineno-0-421" name="gbfs_toolkit.boundary_stress--source--__codelineno-0-421"></a><span class="sd">    ...     "num_bikes_available": [0, 1, 5, 10],</span>
+</span><span id="gbfs_toolkit.boundary_stress--source--__span-0-422"><a id="gbfs_toolkit.boundary_stress--source--__codelineno-0-422" name="gbfs_toolkit.boundary_stress--source--__codelineno-0-422"></a><span class="sd">    ...     "num_docks_available": [10, 9, 5, 0],</span>
+</span><span id="gbfs_toolkit.boundary_stress--source--__span-0-423"><a id="gbfs_toolkit.boundary_stress--source--__codelineno-0-423" name="gbfs_toolkit.boundary_stress--source--__codelineno-0-423"></a><span class="sd">    ... })</span>
+</span><span id="gbfs_toolkit.boundary_stress--source--__span-0-424"><a id="gbfs_toolkit.boundary_stress--source--__codelineno-0-424" name="gbfs_toolkit.boundary_stress--source--__codelineno-0-424"></a><span class="sd">    &gt;&gt;&gt; float(boundary_stress(panel)["pickup_stress_ratio"].iloc[0])</span>
+</span><span id="gbfs_toolkit.boundary_stress--source--__span-0-425"><a id="gbfs_toolkit.boundary_stress--source--__codelineno-0-425" name="gbfs_toolkit.boundary_stress--source--__codelineno-0-425"></a><span class="sd">    0.5</span>
+</span><span id="gbfs_toolkit.boundary_stress--source--__span-0-426"><a id="gbfs_toolkit.boundary_stress--source--__codelineno-0-426" name="gbfs_toolkit.boundary_stress--source--__codelineno-0-426"></a><span class="sd">    """</span>
+</span><span id="gbfs_toolkit.boundary_stress--source--__span-0-427"><a id="gbfs_toolkit.boundary_stress--source--__codelineno-0-427" name="gbfs_toolkit.boundary_stress--source--__codelineno-0-427"></a>    <span class="n">df</span> <span class="o">=</span> <span class="n">panel_frame</span><span class="p">(</span><span class="n">panel</span><span class="p">)</span>
+</span><span id="gbfs_toolkit.boundary_stress--source--__span-0-428"><a id="gbfs_toolkit.boundary_stress--source--__codelineno-0-428" name="gbfs_toolkit.boundary_stress--source--__codelineno-0-428"></a>    <span class="n">require_columns</span><span class="p">(</span>
+</span><span id="gbfs_toolkit.boundary_stress--source--__span-0-429"><a id="gbfs_toolkit.boundary_stress--source--__codelineno-0-429" name="gbfs_toolkit.boundary_stress--source--__codelineno-0-429"></a>        <span class="n">df</span><span class="p">,</span>
+</span><span id="gbfs_toolkit.boundary_stress--source--__span-0-430"><a id="gbfs_toolkit.boundary_stress--source--__codelineno-0-430" name="gbfs_toolkit.boundary_stress--source--__codelineno-0-430"></a>        <span class="p">[</span><span class="s2">"system_id"</span><span class="p">,</span> <span class="s2">"station_id"</span><span class="p">,</span> <span class="s2">"num_bikes_available"</span><span class="p">,</span> <span class="s2">"num_docks_available"</span><span class="p">],</span>
+</span><span id="gbfs_toolkit.boundary_stress--source--__span-0-431"><a id="gbfs_toolkit.boundary_stress--source--__codelineno-0-431" name="gbfs_toolkit.boundary_stress--source--__codelineno-0-431"></a>        <span class="n">what</span><span class="o">=</span><span class="s2">"boundary_stress"</span><span class="p">,</span>
+</span><span id="gbfs_toolkit.boundary_stress--source--__span-0-432"><a id="gbfs_toolkit.boundary_stress--source--__codelineno-0-432" name="gbfs_toolkit.boundary_stress--source--__codelineno-0-432"></a>    <span class="p">)</span>
+</span><span id="gbfs_toolkit.boundary_stress--source--__span-0-433"><a id="gbfs_toolkit.boundary_stress--source--__codelineno-0-433" name="gbfs_toolkit.boundary_stress--source--__codelineno-0-433"></a>    <span class="n">bikes</span> <span class="o">=</span> <span class="n">num</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="s2">"num_bikes_available"</span><span class="p">)</span>
+</span><span id="gbfs_toolkit.boundary_stress--source--__span-0-434"><a id="gbfs_toolkit.boundary_stress--source--__codelineno-0-434" name="gbfs_toolkit.boundary_stress--source--__codelineno-0-434"></a>    <span class="n">docks</span> <span class="o">=</span> <span class="n">num</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="s2">"num_docks_available"</span><span class="p">)</span>
+</span><span id="gbfs_toolkit.boundary_stress--source--__span-0-435"><a id="gbfs_toolkit.boundary_stress--source--__codelineno-0-435" name="gbfs_toolkit.boundary_stress--source--__codelineno-0-435"></a>    <span class="n">virtual</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">bool</span><span class="p">)</span>
+</span><span id="gbfs_toolkit.boundary_stress--source--__span-0-436"><a id="gbfs_toolkit.boundary_stress--source--__codelineno-0-436" name="gbfs_toolkit.boundary_stress--source--__codelineno-0-436"></a>    <span class="k">if</span> <span class="s2">"is_virtual_station"</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+</span><span id="gbfs_toolkit.boundary_stress--source--__span-0-437"><a id="gbfs_toolkit.boundary_stress--source--__codelineno-0-437" name="gbfs_toolkit.boundary_stress--source--__codelineno-0-437"></a>        <span class="n">virtual</span> <span class="o">|=</span> <span class="n">df</span><span class="p">[</span><span class="s2">"is_virtual_station"</span><span class="p">]</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">bool</span><span class="p">)</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
+</span><span id="gbfs_toolkit.boundary_stress--source--__span-0-438"><a id="gbfs_toolkit.boundary_stress--source--__codelineno-0-438" name="gbfs_toolkit.boundary_stress--source--__codelineno-0-438"></a>    <span class="k">if</span> <span class="s2">"capacity"</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+</span><span id="gbfs_toolkit.boundary_stress--source--__span-0-439"><a id="gbfs_toolkit.boundary_stress--source--__codelineno-0-439" name="gbfs_toolkit.boundary_stress--source--__codelineno-0-439"></a>        <span class="c1"># Only a *finite* non-positive capacity means "no physical docks"; a missing</span>
+</span><span id="gbfs_toolkit.boundary_stress--source--__span-0-440"><a id="gbfs_toolkit.boundary_stress--source--__codelineno-0-440" name="gbfs_toolkit.boundary_stress--source--__codelineno-0-440"></a>        <span class="c1"># (NaN) capacity is unknown, not virtual, so it must not null the dock metric.</span>
+</span><span id="gbfs_toolkit.boundary_stress--source--__span-0-441"><a id="gbfs_toolkit.boundary_stress--source--__codelineno-0-441" name="gbfs_toolkit.boundary_stress--source--__codelineno-0-441"></a>        <span class="n">cap</span> <span class="o">=</span> <span class="n">num</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="s2">"capacity"</span><span class="p">)</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
+</span><span id="gbfs_toolkit.boundary_stress--source--__span-0-442"><a id="gbfs_toolkit.boundary_stress--source--__codelineno-0-442" name="gbfs_toolkit.boundary_stress--source--__codelineno-0-442"></a>        <span class="n">virtual</span> <span class="o">|=</span> <span class="n">np</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">cap</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">cap</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">)</span>
+</span><span id="gbfs_toolkit.boundary_stress--source--__span-0-443"><a id="gbfs_toolkit.boundary_stress--source--__codelineno-0-443" name="gbfs_toolkit.boundary_stress--source--__codelineno-0-443"></a>    <span class="n">low_docks</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">virtual</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span> <span class="p">(</span><span class="n">docks</span> <span class="o">&lt;=</span> <span class="n">docks_le</span><span class="p">)</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s2">"float64"</span><span class="p">))</span>
+</span><span id="gbfs_toolkit.boundary_stress--source--__span-0-444"><a id="gbfs_toolkit.boundary_stress--source--__codelineno-0-444" name="gbfs_toolkit.boundary_stress--source--__codelineno-0-444"></a>    <span class="n">work</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+</span><span id="gbfs_toolkit.boundary_stress--source--__span-0-445"><a id="gbfs_toolkit.boundary_stress--source--__codelineno-0-445" name="gbfs_toolkit.boundary_stress--source--__codelineno-0-445"></a>        <span class="p">{</span>
+</span><span id="gbfs_toolkit.boundary_stress--source--__span-0-446"><a id="gbfs_toolkit.boundary_stress--source--__codelineno-0-446" name="gbfs_toolkit.boundary_stress--source--__codelineno-0-446"></a>            <span class="s2">"system_id"</span><span class="p">:</span> <span class="n">df</span><span class="p">[</span><span class="s2">"system_id"</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">(),</span>
+</span><span id="gbfs_toolkit.boundary_stress--source--__span-0-447"><a id="gbfs_toolkit.boundary_stress--source--__codelineno-0-447" name="gbfs_toolkit.boundary_stress--source--__codelineno-0-447"></a>            <span class="s2">"station_id"</span><span class="p">:</span> <span class="n">df</span><span class="p">[</span><span class="s2">"station_id"</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">(),</span>
+</span><span id="gbfs_toolkit.boundary_stress--source--__span-0-448"><a id="gbfs_toolkit.boundary_stress--source--__codelineno-0-448" name="gbfs_toolkit.boundary_stress--source--__codelineno-0-448"></a>            <span class="s2">"_low_bikes"</span><span class="p">:</span> <span class="p">(</span><span class="n">bikes</span> <span class="o">&lt;=</span> <span class="n">bikes_le</span><span class="p">)</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">(),</span>
+</span><span id="gbfs_toolkit.boundary_stress--source--__span-0-449"><a id="gbfs_toolkit.boundary_stress--source--__codelineno-0-449" name="gbfs_toolkit.boundary_stress--source--__codelineno-0-449"></a>            <span class="s2">"_low_docks"</span><span class="p">:</span> <span class="n">low_docks</span><span class="p">,</span>
+</span><span id="gbfs_toolkit.boundary_stress--source--__span-0-450"><a id="gbfs_toolkit.boundary_stress--source--__codelineno-0-450" name="gbfs_toolkit.boundary_stress--source--__codelineno-0-450"></a>        <span class="p">}</span>
+</span><span id="gbfs_toolkit.boundary_stress--source--__span-0-451"><a id="gbfs_toolkit.boundary_stress--source--__codelineno-0-451" name="gbfs_toolkit.boundary_stress--source--__codelineno-0-451"></a>    <span class="p">)</span>
+</span><span id="gbfs_toolkit.boundary_stress--source--__span-0-452"><a id="gbfs_toolkit.boundary_stress--source--__codelineno-0-452" name="gbfs_toolkit.boundary_stress--source--__codelineno-0-452"></a>    <span class="n">out</span> <span class="o">=</span> <span class="p">(</span>
+</span><span id="gbfs_toolkit.boundary_stress--source--__span-0-453"><a id="gbfs_toolkit.boundary_stress--source--__codelineno-0-453" name="gbfs_toolkit.boundary_stress--source--__codelineno-0-453"></a>        <span class="n">work</span><span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="s2">"system_id"</span><span class="p">,</span> <span class="s2">"station_id"</span><span class="p">],</span> <span class="n">sort</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</span><span id="gbfs_toolkit.boundary_stress--source--__span-0-454"><a id="gbfs_toolkit.boundary_stress--source--__codelineno-0-454" name="gbfs_toolkit.boundary_stress--source--__codelineno-0-454"></a>        <span class="o">.</span><span class="n">agg</span><span class="p">(</span>
+</span><span id="gbfs_toolkit.boundary_stress--source--__span-0-455"><a id="gbfs_toolkit.boundary_stress--source--__codelineno-0-455" name="gbfs_toolkit.boundary_stress--source--__codelineno-0-455"></a>            <span class="n">pickup_stress_ratio</span><span class="o">=</span><span class="p">(</span><span class="s2">"_low_bikes"</span><span class="p">,</span> <span class="s2">"mean"</span><span class="p">),</span>
+</span><span id="gbfs_toolkit.boundary_stress--source--__span-0-456"><a id="gbfs_toolkit.boundary_stress--source--__codelineno-0-456" name="gbfs_toolkit.boundary_stress--source--__codelineno-0-456"></a>            <span class="n">dropoff_stress_ratio</span><span class="o">=</span><span class="p">(</span><span class="s2">"_low_docks"</span><span class="p">,</span> <span class="s2">"mean"</span><span class="p">),</span>
+</span><span id="gbfs_toolkit.boundary_stress--source--__span-0-457"><a id="gbfs_toolkit.boundary_stress--source--__codelineno-0-457" name="gbfs_toolkit.boundary_stress--source--__codelineno-0-457"></a>            <span class="n">n_obs</span><span class="o">=</span><span class="p">(</span><span class="s2">"_low_bikes"</span><span class="p">,</span> <span class="s2">"size"</span><span class="p">),</span>
+</span><span id="gbfs_toolkit.boundary_stress--source--__span-0-458"><a id="gbfs_toolkit.boundary_stress--source--__codelineno-0-458" name="gbfs_toolkit.boundary_stress--source--__codelineno-0-458"></a>        <span class="p">)</span>
+</span><span id="gbfs_toolkit.boundary_stress--source--__span-0-459"><a id="gbfs_toolkit.boundary_stress--source--__codelineno-0-459" name="gbfs_toolkit.boundary_stress--source--__codelineno-0-459"></a>        <span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+</span><span id="gbfs_toolkit.boundary_stress--source--__span-0-460"><a id="gbfs_toolkit.boundary_stress--source--__codelineno-0-460" name="gbfs_toolkit.boundary_stress--source--__codelineno-0-460"></a>    <span class="p">)</span>
+</span><span id="gbfs_toolkit.boundary_stress--source--__span-0-461"><a id="gbfs_toolkit.boundary_stress--source--__codelineno-0-461" name="gbfs_toolkit.boundary_stress--source--__codelineno-0-461"></a>    <span class="n">out</span><span class="p">[</span><span class="s2">"dropoff_stress_ratio"</span><span class="p">]</span> <span class="o">=</span> <span class="n">out</span><span class="p">[</span><span class="s2">"dropoff_stress_ratio"</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s2">"Float64"</span><span class="p">)</span>
+</span><span id="gbfs_toolkit.boundary_stress--source--__span-0-462"><a id="gbfs_toolkit.boundary_stress--source--__codelineno-0-462" name="gbfs_toolkit.boundary_stress--source--__codelineno-0-462"></a>    <span class="k">return</span> <span class="n">out</span>
 </span></code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -6841,10 +6841,10 @@ free-floating / zero-capacity stations).</p>
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.instant", "navigation.instant.progress", "navigation.tracking", "navigation.sections", "navigation.tabs", "navigation.tabs.sticky", "navigation.top", "navigation.indexes", "navigation.footer", "toc.follow", "search.suggest", "search.highlight", "search.share", "content.code.copy", "content.code.annotate", "content.tooltips"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.instant", "navigation.instant.progress", "navigation.tracking", "navigation.sections", "navigation.tabs", "navigation.tabs.sticky", "navigation.top", "navigation.indexes", "navigation.footer", "toc.follow", "search.suggest", "search.highlight", "search.share", "content.code.copy", "content.code.annotate", "content.tooltips"], "search": "../../../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
     
     
-      <script src="../../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../../../assets/javascripts/bundle.c21346df.min.js"></script>
       
         <script src="../../../javascripts/mathjax.js"></script>
       

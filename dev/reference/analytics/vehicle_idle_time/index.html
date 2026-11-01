@@ -25,7 +25,7 @@
       
       
       <link rel="icon" href="../../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-ProperDocs 1.6.7, mkdocs-material-9.7.6">
+      <meta name="generator" content="mkdocs-ProperDocs 1.6.7, mkdocs-material-9.8.0">
     
     
       
@@ -33,10 +33,10 @@
       
     
     
-      <link rel="stylesheet" href="../../../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.57a0d79d.min.css">
       
         
-        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.fb2fffe2.min.css">
       
       
 
@@ -1146,7 +1146,7 @@
   <span class="md-ellipsis">
     
   
-    __version__
+    _version_
   
 
     
@@ -6531,154 +6531,154 @@ detection is only meaningful where the feed keeps them stable.</p>
 <p><span class="doc-section-title">Examples:</span></p>
     <div class="language-pycon highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="gp">&gt;&gt;&gt; </span><span class="n">panel</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="gp">... </span>    <span class="s2">&quot;system_id&quot;</span><span class="p">:</span> <span class="s2">&quot;s&quot;</span><span class="p">,</span> <span class="s2">&quot;vehicle_id&quot;</span><span class="p">:</span> <span class="s2">&quot;v1&quot;</span><span class="p">,</span>
-</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="gp">... </span>    <span class="s2">&quot;lat&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">48.85</span><span class="p">,</span> <span class="mf">48.85</span><span class="p">],</span> <span class="s2">&quot;lon&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">2.35</span><span class="p">,</span> <span class="mf">2.35</span><span class="p">],</span>
-</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="gp">... </span>    <span class="s2">&quot;fetched_at&quot;</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">([</span><span class="s2">&quot;2026-01-01T00:00Z&quot;</span><span class="p">,</span> <span class="s2">&quot;2026-01-05T00:00Z&quot;</span><span class="p">]),</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="gp">... </span>    <span class="s2">"system_id"</span><span class="p">:</span> <span class="s2">"s"</span><span class="p">,</span> <span class="s2">"vehicle_id"</span><span class="p">:</span> <span class="s2">"v1"</span><span class="p">,</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="gp">... </span>    <span class="s2">"lat"</span><span class="p">:</span> <span class="p">[</span><span class="mf">48.85</span><span class="p">,</span> <span class="mf">48.85</span><span class="p">],</span> <span class="s2">"lon"</span><span class="p">:</span> <span class="p">[</span><span class="mf">2.35</span><span class="p">,</span> <span class="mf">2.35</span><span class="p">],</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="gp">... </span>    <span class="s2">"fetched_at"</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">([</span><span class="s2">"2026-01-01T00:00Z"</span><span class="p">,</span> <span class="s2">"2026-01-05T00:00Z"</span><span class="p">]),</span>
 </span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="gp">... </span><span class="p">})</span>
-</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="gp">&gt;&gt;&gt; </span><span class="nb">float</span><span class="p">(</span><span class="n">vehicle_idle_time</span><span class="p">(</span><span class="n">panel</span><span class="p">)[</span><span class="s2">&quot;idle_fraction&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="gp">&gt;&gt;&gt; </span><span class="nb">float</span><span class="p">(</span><span class="n">vehicle_idle_time</span><span class="p">(</span><span class="n">panel</span><span class="p">)[</span><span class="s2">"idle_fraction"</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
 </span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="go">1.0</span>
 </span></code></pre></div>
 
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/gbfs_toolkit/analytics/fleet.py</code></summary>
-              <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-185">185</a></span>
-<span class="normal"><a href="#__codelineno-0-186">186</a></span>
-<span class="normal"><a href="#__codelineno-0-187">187</a></span>
-<span class="normal"><a href="#__codelineno-0-188">188</a></span>
-<span class="normal"><a href="#__codelineno-0-189">189</a></span>
-<span class="normal"><a href="#__codelineno-0-190">190</a></span>
-<span class="normal"><a href="#__codelineno-0-191">191</a></span>
-<span class="normal"><a href="#__codelineno-0-192">192</a></span>
-<span class="normal"><a href="#__codelineno-0-193">193</a></span>
-<span class="normal"><a href="#__codelineno-0-194">194</a></span>
-<span class="normal"><a href="#__codelineno-0-195">195</a></span>
-<span class="normal"><a href="#__codelineno-0-196">196</a></span>
-<span class="normal"><a href="#__codelineno-0-197">197</a></span>
-<span class="normal"><a href="#__codelineno-0-198">198</a></span>
-<span class="normal"><a href="#__codelineno-0-199">199</a></span>
-<span class="normal"><a href="#__codelineno-0-200">200</a></span>
-<span class="normal"><a href="#__codelineno-0-201">201</a></span>
-<span class="normal"><a href="#__codelineno-0-202">202</a></span>
-<span class="normal"><a href="#__codelineno-0-203">203</a></span>
-<span class="normal"><a href="#__codelineno-0-204">204</a></span>
-<span class="normal"><a href="#__codelineno-0-205">205</a></span>
-<span class="normal"><a href="#__codelineno-0-206">206</a></span>
-<span class="normal"><a href="#__codelineno-0-207">207</a></span>
-<span class="normal"><a href="#__codelineno-0-208">208</a></span>
-<span class="normal"><a href="#__codelineno-0-209">209</a></span>
-<span class="normal"><a href="#__codelineno-0-210">210</a></span>
-<span class="normal"><a href="#__codelineno-0-211">211</a></span>
-<span class="normal"><a href="#__codelineno-0-212">212</a></span>
-<span class="normal"><a href="#__codelineno-0-213">213</a></span>
-<span class="normal"><a href="#__codelineno-0-214">214</a></span>
-<span class="normal"><a href="#__codelineno-0-215">215</a></span>
-<span class="normal"><a href="#__codelineno-0-216">216</a></span>
-<span class="normal"><a href="#__codelineno-0-217">217</a></span>
-<span class="normal"><a href="#__codelineno-0-218">218</a></span>
-<span class="normal"><a href="#__codelineno-0-219">219</a></span>
-<span class="normal"><a href="#__codelineno-0-220">220</a></span>
-<span class="normal"><a href="#__codelineno-0-221">221</a></span>
-<span class="normal"><a href="#__codelineno-0-222">222</a></span>
-<span class="normal"><a href="#__codelineno-0-223">223</a></span>
-<span class="normal"><a href="#__codelineno-0-224">224</a></span>
-<span class="normal"><a href="#__codelineno-0-225">225</a></span>
-<span class="normal"><a href="#__codelineno-0-226">226</a></span>
-<span class="normal"><a href="#__codelineno-0-227">227</a></span>
-<span class="normal"><a href="#__codelineno-0-228">228</a></span>
-<span class="normal"><a href="#__codelineno-0-229">229</a></span>
-<span class="normal"><a href="#__codelineno-0-230">230</a></span>
-<span class="normal"><a href="#__codelineno-0-231">231</a></span>
-<span class="normal"><a href="#__codelineno-0-232">232</a></span>
-<span class="normal"><a href="#__codelineno-0-233">233</a></span>
-<span class="normal"><a href="#__codelineno-0-234">234</a></span>
-<span class="normal"><a href="#__codelineno-0-235">235</a></span>
-<span class="normal"><a href="#__codelineno-0-236">236</a></span>
-<span class="normal"><a href="#__codelineno-0-237">237</a></span>
-<span class="normal"><a href="#__codelineno-0-238">238</a></span>
-<span class="normal"><a href="#__codelineno-0-239">239</a></span>
-<span class="normal"><a href="#__codelineno-0-240">240</a></span>
-<span class="normal"><a href="#__codelineno-0-241">241</a></span>
-<span class="normal"><a href="#__codelineno-0-242">242</a></span>
-<span class="normal"><a href="#__codelineno-0-243">243</a></span>
-<span class="normal"><a href="#__codelineno-0-244">244</a></span>
-<span class="normal"><a href="#__codelineno-0-245">245</a></span>
-<span class="normal"><a href="#__codelineno-0-246">246</a></span>
-<span class="normal"><a href="#__codelineno-0-247">247</a></span>
-<span class="normal"><a href="#__codelineno-0-248">248</a></span>
-<span class="normal"><a href="#__codelineno-0-249">249</a></span>
-<span class="normal"><a href="#__codelineno-0-250">250</a></span>
-<span class="normal"><a href="#__codelineno-0-251">251</a></span>
-<span class="normal"><a href="#__codelineno-0-252">252</a></span>
-<span class="normal"><a href="#__codelineno-0-253">253</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-185"><a id="__codelineno-0-185" name="__codelineno-0-185"></a><span class="k">def</span><span class="w"> </span><span class="nf">vehicle_idle_time</span><span class="p">(</span>
-</span><span id="__span-0-186"><a id="__codelineno-0-186" name="__codelineno-0-186"></a>    <span class="n">vehicle_panel</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
-</span><span id="__span-0-187"><a id="__codelineno-0-187" name="__codelineno-0-187"></a>    <span class="o">*</span><span class="p">,</span>
-</span><span id="__span-0-188"><a id="__codelineno-0-188" name="__codelineno-0-188"></a>    <span class="n">threshold_hours</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">48.0</span><span class="p">,</span>
-</span><span id="__span-0-189"><a id="__codelineno-0-189" name="__codelineno-0-189"></a>    <span class="n">move_threshold_m</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">50.0</span><span class="p">,</span>
-</span><span id="__span-0-190"><a id="__codelineno-0-190" name="__codelineno-0-190"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
-</span><span id="__span-0-191"><a id="__codelineno-0-191" name="__codelineno-0-191"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Fraction of the fleet that has not moved for ``threshold_hours``, as a time series.</span>
-</span><span id="__span-0-192"><a id="__codelineno-0-192" name="__codelineno-0-192"></a>
-</span><span id="__span-0-193"><a id="__codelineno-0-193" name="__codelineno-0-193"></a><span class="sd">    Operators advertise large fleets, but researchers suspect a sizeable share is abandoned,</span>
-</span><span id="__span-0-194"><a id="__codelineno-0-194" name="__codelineno-0-194"></a><span class="sd">    broken (without an ``is_disabled`` flag) or stuck in courtyards. For each snapshot this reports</span>
-</span><span id="__span-0-195"><a id="__codelineno-0-195" name="__codelineno-0-195"></a><span class="sd">    the share of vehicles whose position has not changed (beyond ``move_threshold_m``) for at least</span>
-</span><span id="__span-0-196"><a id="__codelineno-0-196" name="__codelineno-0-196"></a><span class="sd">    ``threshold_hours``, quantifying the &quot;zombie fleet&quot;.</span>
-</span><span id="__span-0-197"><a id="__codelineno-0-197" name="__codelineno-0-197"></a>
-</span><span id="__span-0-198"><a id="__codelineno-0-198" name="__codelineno-0-198"></a><span class="sd">    Requires stable ``vehicle_id`` over the window. GBFS 2.1+ rotates ids for privacy; idle</span>
-</span><span id="__span-0-199"><a id="__codelineno-0-199" name="__codelineno-0-199"></a><span class="sd">    detection is only meaningful where the feed keeps them stable.</span>
-</span><span id="__span-0-200"><a id="__codelineno-0-200" name="__codelineno-0-200"></a>
-</span><span id="__span-0-201"><a id="__codelineno-0-201" name="__codelineno-0-201"></a><span class="sd">    Parameters</span>
-</span><span id="__span-0-202"><a id="__codelineno-0-202" name="__codelineno-0-202"></a><span class="sd">    ----------</span>
-</span><span id="__span-0-203"><a id="__codelineno-0-203" name="__codelineno-0-203"></a><span class="sd">    vehicle_panel : pandas.DataFrame</span>
-</span><span id="__span-0-204"><a id="__codelineno-0-204" name="__codelineno-0-204"></a><span class="sd">        Long frame of vehicle snapshots with ``system_id, vehicle_id, lat, lon, fetched_at``.</span>
-</span><span id="__span-0-205"><a id="__codelineno-0-205" name="__codelineno-0-205"></a><span class="sd">    threshold_hours : float, default 48.0</span>
-</span><span id="__span-0-206"><a id="__codelineno-0-206" name="__codelineno-0-206"></a><span class="sd">        Idle duration above which a vehicle counts as idle.</span>
-</span><span id="__span-0-207"><a id="__codelineno-0-207" name="__codelineno-0-207"></a><span class="sd">    move_threshold_m : float, default 50.0</span>
-</span><span id="__span-0-208"><a id="__codelineno-0-208" name="__codelineno-0-208"></a><span class="sd">        Displacement (great-circle metres) above which a vehicle is considered to have moved.</span>
-</span><span id="__span-0-209"><a id="__codelineno-0-209" name="__codelineno-0-209"></a>
-</span><span id="__span-0-210"><a id="__codelineno-0-210" name="__codelineno-0-210"></a><span class="sd">    Returns</span>
-</span><span id="__span-0-211"><a id="__codelineno-0-211" name="__codelineno-0-211"></a><span class="sd">    -------</span>
-</span><span id="__span-0-212"><a id="__codelineno-0-212" name="__codelineno-0-212"></a><span class="sd">    pandas.DataFrame</span>
-</span><span id="__span-0-213"><a id="__codelineno-0-213" name="__codelineno-0-213"></a><span class="sd">        ``system_id, fetched_at, n_vehicles, n_idle, idle_fraction`` (one row per snapshot).</span>
-</span><span id="__span-0-214"><a id="__codelineno-0-214" name="__codelineno-0-214"></a>
-</span><span id="__span-0-215"><a id="__codelineno-0-215" name="__codelineno-0-215"></a><span class="sd">    See Also</span>
-</span><span id="__span-0-216"><a id="__codelineno-0-216" name="__codelineno-0-216"></a><span class="sd">    --------</span>
-</span><span id="__span-0-217"><a id="__codelineno-0-217" name="__codelineno-0-217"></a><span class="sd">    [`detect_ghost_vehicles`][gbfs_toolkit.detect_ghost_vehicles] : Flag individually immobile units.</span>
-</span><span id="__span-0-218"><a id="__codelineno-0-218" name="__codelineno-0-218"></a><span class="sd">    [`reconcile_fleet_state`][gbfs_toolkit.reconcile_fleet_state] : The deduplicated fleet tally.</span>
-</span><span id="__span-0-219"><a id="__codelineno-0-219" name="__codelineno-0-219"></a>
-</span><span id="__span-0-220"><a id="__codelineno-0-220" name="__codelineno-0-220"></a><span class="sd">    Examples</span>
-</span><span id="__span-0-221"><a id="__codelineno-0-221" name="__codelineno-0-221"></a><span class="sd">    --------</span>
-</span><span id="__span-0-222"><a id="__codelineno-0-222" name="__codelineno-0-222"></a><span class="sd">    &gt;&gt;&gt; import pandas as pd</span>
-</span><span id="__span-0-223"><a id="__codelineno-0-223" name="__codelineno-0-223"></a><span class="sd">    &gt;&gt;&gt; panel = pd.DataFrame({</span>
-</span><span id="__span-0-224"><a id="__codelineno-0-224" name="__codelineno-0-224"></a><span class="sd">    ...     &quot;system_id&quot;: &quot;s&quot;, &quot;vehicle_id&quot;: &quot;v1&quot;,</span>
-</span><span id="__span-0-225"><a id="__codelineno-0-225" name="__codelineno-0-225"></a><span class="sd">    ...     &quot;lat&quot;: [48.85, 48.85], &quot;lon&quot;: [2.35, 2.35],</span>
-</span><span id="__span-0-226"><a id="__codelineno-0-226" name="__codelineno-0-226"></a><span class="sd">    ...     &quot;fetched_at&quot;: pd.to_datetime([&quot;2026-01-01T00:00Z&quot;, &quot;2026-01-05T00:00Z&quot;]),</span>
-</span><span id="__span-0-227"><a id="__codelineno-0-227" name="__codelineno-0-227"></a><span class="sd">    ... })</span>
-</span><span id="__span-0-228"><a id="__codelineno-0-228" name="__codelineno-0-228"></a><span class="sd">    &gt;&gt;&gt; float(vehicle_idle_time(panel)[&quot;idle_fraction&quot;].iloc[-1])</span>
-</span><span id="__span-0-229"><a id="__codelineno-0-229" name="__codelineno-0-229"></a><span class="sd">    1.0</span>
-</span><span id="__span-0-230"><a id="__codelineno-0-230" name="__codelineno-0-230"></a><span class="sd">    &quot;&quot;&quot;</span>
-</span><span id="__span-0-231"><a id="__codelineno-0-231" name="__codelineno-0-231"></a>    <span class="n">df</span> <span class="o">=</span> <span class="n">panel_frame</span><span class="p">(</span><span class="n">vehicle_panel</span><span class="p">)</span>
-</span><span id="__span-0-232"><a id="__codelineno-0-232" name="__codelineno-0-232"></a>    <span class="n">require_columns</span><span class="p">(</span>
-</span><span id="__span-0-233"><a id="__codelineno-0-233" name="__codelineno-0-233"></a>        <span class="n">df</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;system_id&quot;</span><span class="p">,</span> <span class="s2">&quot;vehicle_id&quot;</span><span class="p">,</span> <span class="s2">&quot;lat&quot;</span><span class="p">,</span> <span class="s2">&quot;lon&quot;</span><span class="p">,</span> <span class="s2">&quot;fetched_at&quot;</span><span class="p">],</span> <span class="n">what</span><span class="o">=</span><span class="s2">&quot;vehicle_idle_time&quot;</span>
-</span><span id="__span-0-234"><a id="__codelineno-0-234" name="__codelineno-0-234"></a>    <span class="p">)</span>
-</span><span id="__span-0-235"><a id="__codelineno-0-235" name="__codelineno-0-235"></a>    <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">sort_values</span><span class="p">([</span><span class="s2">&quot;system_id&quot;</span><span class="p">,</span> <span class="s2">&quot;vehicle_id&quot;</span><span class="p">,</span> <span class="s2">&quot;fetched_at&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-</span><span id="__span-0-236"><a id="__codelineno-0-236" name="__codelineno-0-236"></a>    <span class="n">keys</span> <span class="o">=</span> <span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;system_id&quot;</span><span class="p">],</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;vehicle_id&quot;</span><span class="p">]]</span>
-</span><span id="__span-0-237"><a id="__codelineno-0-237" name="__codelineno-0-237"></a>    <span class="n">grp</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="s2">&quot;system_id&quot;</span><span class="p">,</span> <span class="s2">&quot;vehicle_id&quot;</span><span class="p">],</span> <span class="n">sort</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-</span><span id="__span-0-238"><a id="__codelineno-0-238" name="__codelineno-0-238"></a>    <span class="n">prev_lat</span> <span class="o">=</span> <span class="n">grp</span><span class="p">[</span><span class="s2">&quot;lat&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">shift</span><span class="p">()</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
-</span><span id="__span-0-239"><a id="__codelineno-0-239" name="__codelineno-0-239"></a>    <span class="n">prev_lon</span> <span class="o">=</span> <span class="n">grp</span><span class="p">[</span><span class="s2">&quot;lon&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">shift</span><span class="p">()</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
-</span><span id="__span-0-240"><a id="__codelineno-0-240" name="__codelineno-0-240"></a>    <span class="n">disp</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span>
-</span><span id="__span-0-241"><a id="__codelineno-0-241" name="__codelineno-0-241"></a>        <span class="n">haversine_m</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;lat&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">(),</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;lon&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">(),</span> <span class="n">prev_lat</span><span class="p">,</span> <span class="n">prev_lon</span><span class="p">),</span> <span class="n">index</span><span class="o">=</span><span class="n">df</span><span class="o">.</span><span class="n">index</span>
-</span><span id="__span-0-242"><a id="__codelineno-0-242" name="__codelineno-0-242"></a>    <span class="p">)</span>
-</span><span id="__span-0-243"><a id="__codelineno-0-243" name="__codelineno-0-243"></a>    <span class="n">moved</span> <span class="o">=</span> <span class="p">(</span><span class="n">disp</span> <span class="o">&gt;</span> <span class="n">move_threshold_m</span><span class="p">)</span><span class="o">.</span><span class="n">mask</span><span class="p">(</span><span class="n">disp</span><span class="o">.</span><span class="n">isna</span><span class="p">(),</span> <span class="kc">True</span><span class="p">)</span>
-</span><span id="__span-0-244"><a id="__codelineno-0-244" name="__codelineno-0-244"></a>    <span class="n">move_time</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;fetched_at&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">moved</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">())</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="n">keys</span><span class="p">)</span><span class="o">.</span><span class="n">ffill</span><span class="p">()</span>
-</span><span id="__span-0-245"><a id="__codelineno-0-245" name="__codelineno-0-245"></a>    <span class="n">idle_hours</span> <span class="o">=</span> <span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;fetched_at&quot;</span><span class="p">])</span> <span class="o">-</span> <span class="n">move_time</span><span class="p">)</span><span class="o">.</span><span class="n">dt</span><span class="o">.</span><span class="n">total_seconds</span><span class="p">()</span> <span class="o">/</span> <span class="mf">3600.0</span>
-</span><span id="__span-0-246"><a id="__codelineno-0-246" name="__codelineno-0-246"></a>    <span class="n">df</span><span class="p">[</span><span class="s2">&quot;_idle&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">idle_hours</span> <span class="o">&gt;=</span> <span class="n">threshold_hours</span><span class="p">)</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
-</span><span id="__span-0-247"><a id="__codelineno-0-247" name="__codelineno-0-247"></a>    <span class="n">out</span> <span class="o">=</span> <span class="p">(</span>
-</span><span id="__span-0-248"><a id="__codelineno-0-248" name="__codelineno-0-248"></a>        <span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="s2">&quot;system_id&quot;</span><span class="p">,</span> <span class="s2">&quot;fetched_at&quot;</span><span class="p">])</span>
-</span><span id="__span-0-249"><a id="__codelineno-0-249" name="__codelineno-0-249"></a>        <span class="o">.</span><span class="n">agg</span><span class="p">(</span><span class="n">n_vehicles</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;vehicle_id&quot;</span><span class="p">,</span> <span class="s2">&quot;size&quot;</span><span class="p">),</span> <span class="n">n_idle</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;_idle&quot;</span><span class="p">,</span> <span class="s2">&quot;sum&quot;</span><span class="p">))</span>
-</span><span id="__span-0-250"><a id="__codelineno-0-250" name="__codelineno-0-250"></a>        <span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
-</span><span id="__span-0-251"><a id="__codelineno-0-251" name="__codelineno-0-251"></a>    <span class="p">)</span>
-</span><span id="__span-0-252"><a id="__codelineno-0-252" name="__codelineno-0-252"></a>    <span class="n">out</span><span class="p">[</span><span class="s2">&quot;idle_fraction&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">out</span><span class="p">[</span><span class="s2">&quot;n_idle&quot;</span><span class="p">]</span> <span class="o">/</span> <span class="n">out</span><span class="p">[</span><span class="s2">&quot;n_vehicles&quot;</span><span class="p">]</span>
-</span><span id="__span-0-253"><a id="__codelineno-0-253" name="__codelineno-0-253"></a>    <span class="k">return</span> <span class="n">out</span>
+              <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-185">185</a></span>
+<span class="normal"><a href="#gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-186">186</a></span>
+<span class="normal"><a href="#gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-187">187</a></span>
+<span class="normal"><a href="#gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-188">188</a></span>
+<span class="normal"><a href="#gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-189">189</a></span>
+<span class="normal"><a href="#gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-190">190</a></span>
+<span class="normal"><a href="#gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-191">191</a></span>
+<span class="normal"><a href="#gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-192">192</a></span>
+<span class="normal"><a href="#gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-193">193</a></span>
+<span class="normal"><a href="#gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-194">194</a></span>
+<span class="normal"><a href="#gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-195">195</a></span>
+<span class="normal"><a href="#gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-196">196</a></span>
+<span class="normal"><a href="#gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-197">197</a></span>
+<span class="normal"><a href="#gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-198">198</a></span>
+<span class="normal"><a href="#gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-199">199</a></span>
+<span class="normal"><a href="#gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-200">200</a></span>
+<span class="normal"><a href="#gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-201">201</a></span>
+<span class="normal"><a href="#gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-202">202</a></span>
+<span class="normal"><a href="#gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-203">203</a></span>
+<span class="normal"><a href="#gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-204">204</a></span>
+<span class="normal"><a href="#gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-205">205</a></span>
+<span class="normal"><a href="#gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-206">206</a></span>
+<span class="normal"><a href="#gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-207">207</a></span>
+<span class="normal"><a href="#gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-208">208</a></span>
+<span class="normal"><a href="#gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-209">209</a></span>
+<span class="normal"><a href="#gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-210">210</a></span>
+<span class="normal"><a href="#gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-211">211</a></span>
+<span class="normal"><a href="#gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-212">212</a></span>
+<span class="normal"><a href="#gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-213">213</a></span>
+<span class="normal"><a href="#gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-214">214</a></span>
+<span class="normal"><a href="#gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-215">215</a></span>
+<span class="normal"><a href="#gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-216">216</a></span>
+<span class="normal"><a href="#gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-217">217</a></span>
+<span class="normal"><a href="#gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-218">218</a></span>
+<span class="normal"><a href="#gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-219">219</a></span>
+<span class="normal"><a href="#gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-220">220</a></span>
+<span class="normal"><a href="#gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-221">221</a></span>
+<span class="normal"><a href="#gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-222">222</a></span>
+<span class="normal"><a href="#gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-223">223</a></span>
+<span class="normal"><a href="#gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-224">224</a></span>
+<span class="normal"><a href="#gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-225">225</a></span>
+<span class="normal"><a href="#gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-226">226</a></span>
+<span class="normal"><a href="#gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-227">227</a></span>
+<span class="normal"><a href="#gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-228">228</a></span>
+<span class="normal"><a href="#gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-229">229</a></span>
+<span class="normal"><a href="#gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-230">230</a></span>
+<span class="normal"><a href="#gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-231">231</a></span>
+<span class="normal"><a href="#gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-232">232</a></span>
+<span class="normal"><a href="#gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-233">233</a></span>
+<span class="normal"><a href="#gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-234">234</a></span>
+<span class="normal"><a href="#gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-235">235</a></span>
+<span class="normal"><a href="#gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-236">236</a></span>
+<span class="normal"><a href="#gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-237">237</a></span>
+<span class="normal"><a href="#gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-238">238</a></span>
+<span class="normal"><a href="#gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-239">239</a></span>
+<span class="normal"><a href="#gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-240">240</a></span>
+<span class="normal"><a href="#gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-241">241</a></span>
+<span class="normal"><a href="#gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-242">242</a></span>
+<span class="normal"><a href="#gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-243">243</a></span>
+<span class="normal"><a href="#gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-244">244</a></span>
+<span class="normal"><a href="#gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-245">245</a></span>
+<span class="normal"><a href="#gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-246">246</a></span>
+<span class="normal"><a href="#gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-247">247</a></span>
+<span class="normal"><a href="#gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-248">248</a></span>
+<span class="normal"><a href="#gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-249">249</a></span>
+<span class="normal"><a href="#gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-250">250</a></span>
+<span class="normal"><a href="#gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-251">251</a></span>
+<span class="normal"><a href="#gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-252">252</a></span>
+<span class="normal"><a href="#gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-253">253</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="gbfs_toolkit.vehicle_idle_time--source--__span-0-185"><a id="gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-185" name="gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-185"></a><span class="k">def</span><span class="w"> </span><span class="nf">vehicle_idle_time</span><span class="p">(</span>
+</span><span id="gbfs_toolkit.vehicle_idle_time--source--__span-0-186"><a id="gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-186" name="gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-186"></a>    <span class="n">vehicle_panel</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+</span><span id="gbfs_toolkit.vehicle_idle_time--source--__span-0-187"><a id="gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-187" name="gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-187"></a>    <span class="o">*</span><span class="p">,</span>
+</span><span id="gbfs_toolkit.vehicle_idle_time--source--__span-0-188"><a id="gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-188" name="gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-188"></a>    <span class="n">threshold_hours</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">48.0</span><span class="p">,</span>
+</span><span id="gbfs_toolkit.vehicle_idle_time--source--__span-0-189"><a id="gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-189" name="gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-189"></a>    <span class="n">move_threshold_m</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">50.0</span><span class="p">,</span>
+</span><span id="gbfs_toolkit.vehicle_idle_time--source--__span-0-190"><a id="gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-190" name="gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-190"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+</span><span id="gbfs_toolkit.vehicle_idle_time--source--__span-0-191"><a id="gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-191" name="gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-191"></a><span class="w">    </span><span class="sd">"""Fraction of the fleet that has not moved for ``threshold_hours``, as a time series.</span>
+</span><span id="gbfs_toolkit.vehicle_idle_time--source--__span-0-192"><a id="gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-192" name="gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-192"></a>
+</span><span id="gbfs_toolkit.vehicle_idle_time--source--__span-0-193"><a id="gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-193" name="gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-193"></a><span class="sd">    Operators advertise large fleets, but researchers suspect a sizeable share is abandoned,</span>
+</span><span id="gbfs_toolkit.vehicle_idle_time--source--__span-0-194"><a id="gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-194" name="gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-194"></a><span class="sd">    broken (without an ``is_disabled`` flag) or stuck in courtyards. For each snapshot this reports</span>
+</span><span id="gbfs_toolkit.vehicle_idle_time--source--__span-0-195"><a id="gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-195" name="gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-195"></a><span class="sd">    the share of vehicles whose position has not changed (beyond ``move_threshold_m``) for at least</span>
+</span><span id="gbfs_toolkit.vehicle_idle_time--source--__span-0-196"><a id="gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-196" name="gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-196"></a><span class="sd">    ``threshold_hours``, quantifying the "zombie fleet".</span>
+</span><span id="gbfs_toolkit.vehicle_idle_time--source--__span-0-197"><a id="gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-197" name="gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-197"></a>
+</span><span id="gbfs_toolkit.vehicle_idle_time--source--__span-0-198"><a id="gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-198" name="gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-198"></a><span class="sd">    Requires stable ``vehicle_id`` over the window. GBFS 2.1+ rotates ids for privacy; idle</span>
+</span><span id="gbfs_toolkit.vehicle_idle_time--source--__span-0-199"><a id="gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-199" name="gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-199"></a><span class="sd">    detection is only meaningful where the feed keeps them stable.</span>
+</span><span id="gbfs_toolkit.vehicle_idle_time--source--__span-0-200"><a id="gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-200" name="gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-200"></a>
+</span><span id="gbfs_toolkit.vehicle_idle_time--source--__span-0-201"><a id="gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-201" name="gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-201"></a><span class="sd">    Parameters</span>
+</span><span id="gbfs_toolkit.vehicle_idle_time--source--__span-0-202"><a id="gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-202" name="gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-202"></a><span class="sd">    ----------</span>
+</span><span id="gbfs_toolkit.vehicle_idle_time--source--__span-0-203"><a id="gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-203" name="gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-203"></a><span class="sd">    vehicle_panel : pandas.DataFrame</span>
+</span><span id="gbfs_toolkit.vehicle_idle_time--source--__span-0-204"><a id="gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-204" name="gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-204"></a><span class="sd">        Long frame of vehicle snapshots with ``system_id, vehicle_id, lat, lon, fetched_at``.</span>
+</span><span id="gbfs_toolkit.vehicle_idle_time--source--__span-0-205"><a id="gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-205" name="gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-205"></a><span class="sd">    threshold_hours : float, default 48.0</span>
+</span><span id="gbfs_toolkit.vehicle_idle_time--source--__span-0-206"><a id="gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-206" name="gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-206"></a><span class="sd">        Idle duration above which a vehicle counts as idle.</span>
+</span><span id="gbfs_toolkit.vehicle_idle_time--source--__span-0-207"><a id="gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-207" name="gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-207"></a><span class="sd">    move_threshold_m : float, default 50.0</span>
+</span><span id="gbfs_toolkit.vehicle_idle_time--source--__span-0-208"><a id="gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-208" name="gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-208"></a><span class="sd">        Displacement (great-circle metres) above which a vehicle is considered to have moved.</span>
+</span><span id="gbfs_toolkit.vehicle_idle_time--source--__span-0-209"><a id="gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-209" name="gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-209"></a>
+</span><span id="gbfs_toolkit.vehicle_idle_time--source--__span-0-210"><a id="gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-210" name="gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-210"></a><span class="sd">    Returns</span>
+</span><span id="gbfs_toolkit.vehicle_idle_time--source--__span-0-211"><a id="gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-211" name="gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-211"></a><span class="sd">    -------</span>
+</span><span id="gbfs_toolkit.vehicle_idle_time--source--__span-0-212"><a id="gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-212" name="gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-212"></a><span class="sd">    pandas.DataFrame</span>
+</span><span id="gbfs_toolkit.vehicle_idle_time--source--__span-0-213"><a id="gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-213" name="gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-213"></a><span class="sd">        ``system_id, fetched_at, n_vehicles, n_idle, idle_fraction`` (one row per snapshot).</span>
+</span><span id="gbfs_toolkit.vehicle_idle_time--source--__span-0-214"><a id="gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-214" name="gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-214"></a>
+</span><span id="gbfs_toolkit.vehicle_idle_time--source--__span-0-215"><a id="gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-215" name="gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-215"></a><span class="sd">    See Also</span>
+</span><span id="gbfs_toolkit.vehicle_idle_time--source--__span-0-216"><a id="gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-216" name="gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-216"></a><span class="sd">    --------</span>
+</span><span id="gbfs_toolkit.vehicle_idle_time--source--__span-0-217"><a id="gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-217" name="gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-217"></a><span class="sd">    [`detect_ghost_vehicles`][gbfs_toolkit.detect_ghost_vehicles] : Flag individually immobile units.</span>
+</span><span id="gbfs_toolkit.vehicle_idle_time--source--__span-0-218"><a id="gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-218" name="gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-218"></a><span class="sd">    [`reconcile_fleet_state`][gbfs_toolkit.reconcile_fleet_state] : The deduplicated fleet tally.</span>
+</span><span id="gbfs_toolkit.vehicle_idle_time--source--__span-0-219"><a id="gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-219" name="gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-219"></a>
+</span><span id="gbfs_toolkit.vehicle_idle_time--source--__span-0-220"><a id="gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-220" name="gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-220"></a><span class="sd">    Examples</span>
+</span><span id="gbfs_toolkit.vehicle_idle_time--source--__span-0-221"><a id="gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-221" name="gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-221"></a><span class="sd">    --------</span>
+</span><span id="gbfs_toolkit.vehicle_idle_time--source--__span-0-222"><a id="gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-222" name="gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-222"></a><span class="sd">    &gt;&gt;&gt; import pandas as pd</span>
+</span><span id="gbfs_toolkit.vehicle_idle_time--source--__span-0-223"><a id="gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-223" name="gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-223"></a><span class="sd">    &gt;&gt;&gt; panel = pd.DataFrame({</span>
+</span><span id="gbfs_toolkit.vehicle_idle_time--source--__span-0-224"><a id="gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-224" name="gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-224"></a><span class="sd">    ...     "system_id": "s", "vehicle_id": "v1",</span>
+</span><span id="gbfs_toolkit.vehicle_idle_time--source--__span-0-225"><a id="gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-225" name="gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-225"></a><span class="sd">    ...     "lat": [48.85, 48.85], "lon": [2.35, 2.35],</span>
+</span><span id="gbfs_toolkit.vehicle_idle_time--source--__span-0-226"><a id="gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-226" name="gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-226"></a><span class="sd">    ...     "fetched_at": pd.to_datetime(["2026-01-01T00:00Z", "2026-01-05T00:00Z"]),</span>
+</span><span id="gbfs_toolkit.vehicle_idle_time--source--__span-0-227"><a id="gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-227" name="gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-227"></a><span class="sd">    ... })</span>
+</span><span id="gbfs_toolkit.vehicle_idle_time--source--__span-0-228"><a id="gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-228" name="gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-228"></a><span class="sd">    &gt;&gt;&gt; float(vehicle_idle_time(panel)["idle_fraction"].iloc[-1])</span>
+</span><span id="gbfs_toolkit.vehicle_idle_time--source--__span-0-229"><a id="gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-229" name="gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-229"></a><span class="sd">    1.0</span>
+</span><span id="gbfs_toolkit.vehicle_idle_time--source--__span-0-230"><a id="gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-230" name="gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-230"></a><span class="sd">    """</span>
+</span><span id="gbfs_toolkit.vehicle_idle_time--source--__span-0-231"><a id="gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-231" name="gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-231"></a>    <span class="n">df</span> <span class="o">=</span> <span class="n">panel_frame</span><span class="p">(</span><span class="n">vehicle_panel</span><span class="p">)</span>
+</span><span id="gbfs_toolkit.vehicle_idle_time--source--__span-0-232"><a id="gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-232" name="gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-232"></a>    <span class="n">require_columns</span><span class="p">(</span>
+</span><span id="gbfs_toolkit.vehicle_idle_time--source--__span-0-233"><a id="gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-233" name="gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-233"></a>        <span class="n">df</span><span class="p">,</span> <span class="p">[</span><span class="s2">"system_id"</span><span class="p">,</span> <span class="s2">"vehicle_id"</span><span class="p">,</span> <span class="s2">"lat"</span><span class="p">,</span> <span class="s2">"lon"</span><span class="p">,</span> <span class="s2">"fetched_at"</span><span class="p">],</span> <span class="n">what</span><span class="o">=</span><span class="s2">"vehicle_idle_time"</span>
+</span><span id="gbfs_toolkit.vehicle_idle_time--source--__span-0-234"><a id="gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-234" name="gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-234"></a>    <span class="p">)</span>
+</span><span id="gbfs_toolkit.vehicle_idle_time--source--__span-0-235"><a id="gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-235" name="gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-235"></a>    <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">sort_values</span><span class="p">([</span><span class="s2">"system_id"</span><span class="p">,</span> <span class="s2">"vehicle_id"</span><span class="p">,</span> <span class="s2">"fetched_at"</span><span class="p">])</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span><span id="gbfs_toolkit.vehicle_idle_time--source--__span-0-236"><a id="gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-236" name="gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-236"></a>    <span class="n">keys</span> <span class="o">=</span> <span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s2">"system_id"</span><span class="p">],</span> <span class="n">df</span><span class="p">[</span><span class="s2">"vehicle_id"</span><span class="p">]]</span>
+</span><span id="gbfs_toolkit.vehicle_idle_time--source--__span-0-237"><a id="gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-237" name="gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-237"></a>    <span class="n">grp</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="s2">"system_id"</span><span class="p">,</span> <span class="s2">"vehicle_id"</span><span class="p">],</span> <span class="n">sort</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</span><span id="gbfs_toolkit.vehicle_idle_time--source--__span-0-238"><a id="gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-238" name="gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-238"></a>    <span class="n">prev_lat</span> <span class="o">=</span> <span class="n">grp</span><span class="p">[</span><span class="s2">"lat"</span><span class="p">]</span><span class="o">.</span><span class="n">shift</span><span class="p">()</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
+</span><span id="gbfs_toolkit.vehicle_idle_time--source--__span-0-239"><a id="gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-239" name="gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-239"></a>    <span class="n">prev_lon</span> <span class="o">=</span> <span class="n">grp</span><span class="p">[</span><span class="s2">"lon"</span><span class="p">]</span><span class="o">.</span><span class="n">shift</span><span class="p">()</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
+</span><span id="gbfs_toolkit.vehicle_idle_time--source--__span-0-240"><a id="gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-240" name="gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-240"></a>    <span class="n">disp</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span>
+</span><span id="gbfs_toolkit.vehicle_idle_time--source--__span-0-241"><a id="gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-241" name="gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-241"></a>        <span class="n">haversine_m</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">"lat"</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">(),</span> <span class="n">df</span><span class="p">[</span><span class="s2">"lon"</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">(),</span> <span class="n">prev_lat</span><span class="p">,</span> <span class="n">prev_lon</span><span class="p">),</span> <span class="n">index</span><span class="o">=</span><span class="n">df</span><span class="o">.</span><span class="n">index</span>
+</span><span id="gbfs_toolkit.vehicle_idle_time--source--__span-0-242"><a id="gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-242" name="gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-242"></a>    <span class="p">)</span>
+</span><span id="gbfs_toolkit.vehicle_idle_time--source--__span-0-243"><a id="gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-243" name="gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-243"></a>    <span class="n">moved</span> <span class="o">=</span> <span class="p">(</span><span class="n">disp</span> <span class="o">&gt;</span> <span class="n">move_threshold_m</span><span class="p">)</span><span class="o">.</span><span class="n">mask</span><span class="p">(</span><span class="n">disp</span><span class="o">.</span><span class="n">isna</span><span class="p">(),</span> <span class="kc">True</span><span class="p">)</span>
+</span><span id="gbfs_toolkit.vehicle_idle_time--source--__span-0-244"><a id="gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-244" name="gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-244"></a>    <span class="n">move_time</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">"fetched_at"</span><span class="p">])</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">moved</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">())</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="n">keys</span><span class="p">)</span><span class="o">.</span><span class="n">ffill</span><span class="p">()</span>
+</span><span id="gbfs_toolkit.vehicle_idle_time--source--__span-0-245"><a id="gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-245" name="gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-245"></a>    <span class="n">idle_hours</span> <span class="o">=</span> <span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">"fetched_at"</span><span class="p">])</span> <span class="o">-</span> <span class="n">move_time</span><span class="p">)</span><span class="o">.</span><span class="n">dt</span><span class="o">.</span><span class="n">total_seconds</span><span class="p">()</span> <span class="o">/</span> <span class="mf">3600.0</span>
+</span><span id="gbfs_toolkit.vehicle_idle_time--source--__span-0-246"><a id="gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-246" name="gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-246"></a>    <span class="n">df</span><span class="p">[</span><span class="s2">"_idle"</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">idle_hours</span> <span class="o">&gt;=</span> <span class="n">threshold_hours</span><span class="p">)</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
+</span><span id="gbfs_toolkit.vehicle_idle_time--source--__span-0-247"><a id="gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-247" name="gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-247"></a>    <span class="n">out</span> <span class="o">=</span> <span class="p">(</span>
+</span><span id="gbfs_toolkit.vehicle_idle_time--source--__span-0-248"><a id="gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-248" name="gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-248"></a>        <span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="s2">"system_id"</span><span class="p">,</span> <span class="s2">"fetched_at"</span><span class="p">])</span>
+</span><span id="gbfs_toolkit.vehicle_idle_time--source--__span-0-249"><a id="gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-249" name="gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-249"></a>        <span class="o">.</span><span class="n">agg</span><span class="p">(</span><span class="n">n_vehicles</span><span class="o">=</span><span class="p">(</span><span class="s2">"vehicle_id"</span><span class="p">,</span> <span class="s2">"size"</span><span class="p">),</span> <span class="n">n_idle</span><span class="o">=</span><span class="p">(</span><span class="s2">"_idle"</span><span class="p">,</span> <span class="s2">"sum"</span><span class="p">))</span>
+</span><span id="gbfs_toolkit.vehicle_idle_time--source--__span-0-250"><a id="gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-250" name="gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-250"></a>        <span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+</span><span id="gbfs_toolkit.vehicle_idle_time--source--__span-0-251"><a id="gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-251" name="gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-251"></a>    <span class="p">)</span>
+</span><span id="gbfs_toolkit.vehicle_idle_time--source--__span-0-252"><a id="gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-252" name="gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-252"></a>    <span class="n">out</span><span class="p">[</span><span class="s2">"idle_fraction"</span><span class="p">]</span> <span class="o">=</span> <span class="n">out</span><span class="p">[</span><span class="s2">"n_idle"</span><span class="p">]</span> <span class="o">/</span> <span class="n">out</span><span class="p">[</span><span class="s2">"n_vehicles"</span><span class="p">]</span>
+</span><span id="gbfs_toolkit.vehicle_idle_time--source--__span-0-253"><a id="gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-253" name="gbfs_toolkit.vehicle_idle_time--source--__codelineno-0-253"></a>    <span class="k">return</span> <span class="n">out</span>
 </span></code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -6809,10 +6809,10 @@ detection is only meaningful where the feed keeps them stable.</p>
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.instant", "navigation.instant.progress", "navigation.tracking", "navigation.sections", "navigation.tabs", "navigation.tabs.sticky", "navigation.top", "navigation.indexes", "navigation.footer", "toc.follow", "search.suggest", "search.highlight", "search.share", "content.code.copy", "content.code.annotate", "content.tooltips"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.instant", "navigation.instant.progress", "navigation.tracking", "navigation.sections", "navigation.tabs", "navigation.tabs.sticky", "navigation.top", "navigation.indexes", "navigation.footer", "toc.follow", "search.suggest", "search.highlight", "search.share", "content.code.copy", "content.code.annotate", "content.tooltips"], "search": "../../../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
     
     
-      <script src="../../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../../../assets/javascripts/bundle.c21346df.min.js"></script>
       
         <script src="../../../javascripts/mathjax.js"></script>
       

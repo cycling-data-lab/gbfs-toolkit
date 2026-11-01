@@ -25,7 +25,7 @@
       
       
       <link rel="icon" href="../../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-ProperDocs 1.6.7, mkdocs-material-9.7.6">
+      <meta name="generator" content="mkdocs-ProperDocs 1.6.7, mkdocs-material-9.8.0">
     
     
       
@@ -33,10 +33,10 @@
       
     
     
-      <link rel="stylesheet" href="../../../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.57a0d79d.min.css">
       
         
-        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.fb2fffe2.min.css">
       
       
 
@@ -1146,7 +1146,7 @@
   <span class="md-ellipsis">
     
   
-    __version__
+    _version_
   
 
     
@@ -6438,23 +6438,23 @@
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/gbfs_toolkit/io/fetch.py</code></summary>
-              <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-483">483</a></span>
-<span class="normal"><a href="#__codelineno-0-484">484</a></span>
-<span class="normal"><a href="#__codelineno-0-485">485</a></span>
-<span class="normal"><a href="#__codelineno-0-486">486</a></span>
-<span class="normal"><a href="#__codelineno-0-487">487</a></span>
-<span class="normal"><a href="#__codelineno-0-488">488</a></span>
-<span class="normal"><a href="#__codelineno-0-489">489</a></span>
-<span class="normal"><a href="#__codelineno-0-490">490</a></span>
-<span class="normal"><a href="#__codelineno-0-491">491</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-483"><a id="__codelineno-0-483" name="__codelineno-0-483"></a><span class="k">def</span><span class="w"> </span><span class="nf">audit_feed</span><span class="p">(</span><span class="n">gbfs_url</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
-</span><span id="__span-0-484"><a id="__codelineno-0-484" name="__codelineno-0-484"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;One-liner: A1–A7 semantic audit of a live feed.</span>
-</span><span id="__span-0-485"><a id="__codelineno-0-485" name="__codelineno-0-485"></a>
-</span><span id="__span-0-486"><a id="__codelineno-0-486" name="__codelineno-0-486"></a><span class="sd">    See Also</span>
-</span><span id="__span-0-487"><a id="__codelineno-0-487" name="__codelineno-0-487"></a><span class="sd">    --------</span>
-</span><span id="__span-0-488"><a id="__codelineno-0-488" name="__codelineno-0-488"></a><span class="sd">    [`GBFSFeed`][gbfs_toolkit.GBFSFeed] : The feed this audits.</span>
-</span><span id="__span-0-489"><a id="__codelineno-0-489" name="__codelineno-0-489"></a><span class="sd">    [`coverage_report`][gbfs_toolkit.coverage_report] : Summarise feed coverage.</span>
-</span><span id="__span-0-490"><a id="__codelineno-0-490" name="__codelineno-0-490"></a><span class="sd">    &quot;&quot;&quot;</span>
-</span><span id="__span-0-491"><a id="__codelineno-0-491" name="__codelineno-0-491"></a>    <span class="k">return</span> <span class="n">GBFSFeed</span><span class="o">.</span><span class="n">from_url</span><span class="p">(</span><span class="n">gbfs_url</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span><span class="o">.</span><span class="n">audit</span><span class="p">()</span>
+              <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#gbfs_toolkit.audit_feed--source--__codelineno-0-483">483</a></span>
+<span class="normal"><a href="#gbfs_toolkit.audit_feed--source--__codelineno-0-484">484</a></span>
+<span class="normal"><a href="#gbfs_toolkit.audit_feed--source--__codelineno-0-485">485</a></span>
+<span class="normal"><a href="#gbfs_toolkit.audit_feed--source--__codelineno-0-486">486</a></span>
+<span class="normal"><a href="#gbfs_toolkit.audit_feed--source--__codelineno-0-487">487</a></span>
+<span class="normal"><a href="#gbfs_toolkit.audit_feed--source--__codelineno-0-488">488</a></span>
+<span class="normal"><a href="#gbfs_toolkit.audit_feed--source--__codelineno-0-489">489</a></span>
+<span class="normal"><a href="#gbfs_toolkit.audit_feed--source--__codelineno-0-490">490</a></span>
+<span class="normal"><a href="#gbfs_toolkit.audit_feed--source--__codelineno-0-491">491</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="gbfs_toolkit.audit_feed--source--__span-0-483"><a id="gbfs_toolkit.audit_feed--source--__codelineno-0-483" name="gbfs_toolkit.audit_feed--source--__codelineno-0-483"></a><span class="k">def</span><span class="w"> </span><span class="nf">audit_feed</span><span class="p">(</span><span class="n">gbfs_url</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+</span><span id="gbfs_toolkit.audit_feed--source--__span-0-484"><a id="gbfs_toolkit.audit_feed--source--__codelineno-0-484" name="gbfs_toolkit.audit_feed--source--__codelineno-0-484"></a><span class="w">    </span><span class="sd">"""One-liner: A1–A7 semantic audit of a live feed.</span>
+</span><span id="gbfs_toolkit.audit_feed--source--__span-0-485"><a id="gbfs_toolkit.audit_feed--source--__codelineno-0-485" name="gbfs_toolkit.audit_feed--source--__codelineno-0-485"></a>
+</span><span id="gbfs_toolkit.audit_feed--source--__span-0-486"><a id="gbfs_toolkit.audit_feed--source--__codelineno-0-486" name="gbfs_toolkit.audit_feed--source--__codelineno-0-486"></a><span class="sd">    See Also</span>
+</span><span id="gbfs_toolkit.audit_feed--source--__span-0-487"><a id="gbfs_toolkit.audit_feed--source--__codelineno-0-487" name="gbfs_toolkit.audit_feed--source--__codelineno-0-487"></a><span class="sd">    --------</span>
+</span><span id="gbfs_toolkit.audit_feed--source--__span-0-488"><a id="gbfs_toolkit.audit_feed--source--__codelineno-0-488" name="gbfs_toolkit.audit_feed--source--__codelineno-0-488"></a><span class="sd">    [`GBFSFeed`][gbfs_toolkit.GBFSFeed] : The feed this audits.</span>
+</span><span id="gbfs_toolkit.audit_feed--source--__span-0-489"><a id="gbfs_toolkit.audit_feed--source--__codelineno-0-489" name="gbfs_toolkit.audit_feed--source--__codelineno-0-489"></a><span class="sd">    [`coverage_report`][gbfs_toolkit.coverage_report] : Summarise feed coverage.</span>
+</span><span id="gbfs_toolkit.audit_feed--source--__span-0-490"><a id="gbfs_toolkit.audit_feed--source--__codelineno-0-490" name="gbfs_toolkit.audit_feed--source--__codelineno-0-490"></a><span class="sd">    """</span>
+</span><span id="gbfs_toolkit.audit_feed--source--__span-0-491"><a id="gbfs_toolkit.audit_feed--source--__codelineno-0-491" name="gbfs_toolkit.audit_feed--source--__codelineno-0-491"></a>    <span class="k">return</span> <span class="n">GBFSFeed</span><span class="o">.</span><span class="n">from_url</span><span class="p">(</span><span class="n">gbfs_url</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span><span class="o">.</span><span class="n">audit</span><span class="p">()</span>
 </span></code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -6585,10 +6585,10 @@
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.instant", "navigation.instant.progress", "navigation.tracking", "navigation.sections", "navigation.tabs", "navigation.tabs.sticky", "navigation.top", "navigation.indexes", "navigation.footer", "toc.follow", "search.suggest", "search.highlight", "search.share", "content.code.copy", "content.code.annotate", "content.tooltips"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.instant", "navigation.instant.progress", "navigation.tracking", "navigation.sections", "navigation.tabs", "navigation.tabs.sticky", "navigation.top", "navigation.indexes", "navigation.footer", "toc.follow", "search.suggest", "search.highlight", "search.share", "content.code.copy", "content.code.annotate", "content.tooltips"], "search": "../../../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
     
     
-      <script src="../../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../../../assets/javascripts/bundle.c21346df.min.js"></script>
       
         <script src="../../../javascripts/mathjax.js"></script>
       

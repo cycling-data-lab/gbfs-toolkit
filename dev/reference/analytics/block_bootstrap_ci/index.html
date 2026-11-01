@@ -25,7 +25,7 @@
       
       
       <link rel="icon" href="../../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-ProperDocs 1.6.7, mkdocs-material-9.7.6">
+      <meta name="generator" content="mkdocs-ProperDocs 1.6.7, mkdocs-material-9.8.0">
     
     
       
@@ -33,10 +33,10 @@
       
     
     
-      <link rel="stylesheet" href="../../../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.57a0d79d.min.css">
       
         
-        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.fb2fffe2.min.css">
       
       
 
@@ -1146,7 +1146,7 @@
   <span class="md-ellipsis">
     
   
-    __version__
+    _version_
   
 
     
@@ -6470,120 +6470,120 @@ block size is <code>n**(1/3)</code> (the standard rate). Seeded, hence reproduci
 <p><span class="doc-section-title">Examples:</span></p>
     <div class="language-pycon highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="gp">&gt;&gt;&gt; </span><span class="n">s</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">([</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">,</span> <span class="mf">4.0</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">]</span> <span class="o">*</span> <span class="mi">20</span><span class="p">)</span>
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="gp">&gt;&gt;&gt; </span><span class="nb">round</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">block_bootstrap_ci</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">1</span><span class="p">)[</span><span class="s2">&quot;estimate&quot;</span><span class="p">]),</span> <span class="mi">1</span><span class="p">)</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="gp">&gt;&gt;&gt; </span><span class="nb">round</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">block_bootstrap_ci</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">1</span><span class="p">)[</span><span class="s2">"estimate"</span><span class="p">]),</span> <span class="mi">1</span><span class="p">)</span>
 </span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="go">3.0</span>
 </span></code></pre></div>
 
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/gbfs_toolkit/analytics/resampling.py</code></summary>
-              <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-55"> 55</a></span>
-<span class="normal"><a href="#__codelineno-0-56"> 56</a></span>
-<span class="normal"><a href="#__codelineno-0-57"> 57</a></span>
-<span class="normal"><a href="#__codelineno-0-58"> 58</a></span>
-<span class="normal"><a href="#__codelineno-0-59"> 59</a></span>
-<span class="normal"><a href="#__codelineno-0-60"> 60</a></span>
-<span class="normal"><a href="#__codelineno-0-61"> 61</a></span>
-<span class="normal"><a href="#__codelineno-0-62"> 62</a></span>
-<span class="normal"><a href="#__codelineno-0-63"> 63</a></span>
-<span class="normal"><a href="#__codelineno-0-64"> 64</a></span>
-<span class="normal"><a href="#__codelineno-0-65"> 65</a></span>
-<span class="normal"><a href="#__codelineno-0-66"> 66</a></span>
-<span class="normal"><a href="#__codelineno-0-67"> 67</a></span>
-<span class="normal"><a href="#__codelineno-0-68"> 68</a></span>
-<span class="normal"><a href="#__codelineno-0-69"> 69</a></span>
-<span class="normal"><a href="#__codelineno-0-70"> 70</a></span>
-<span class="normal"><a href="#__codelineno-0-71"> 71</a></span>
-<span class="normal"><a href="#__codelineno-0-72"> 72</a></span>
-<span class="normal"><a href="#__codelineno-0-73"> 73</a></span>
-<span class="normal"><a href="#__codelineno-0-74"> 74</a></span>
-<span class="normal"><a href="#__codelineno-0-75"> 75</a></span>
-<span class="normal"><a href="#__codelineno-0-76"> 76</a></span>
-<span class="normal"><a href="#__codelineno-0-77"> 77</a></span>
-<span class="normal"><a href="#__codelineno-0-78"> 78</a></span>
-<span class="normal"><a href="#__codelineno-0-79"> 79</a></span>
-<span class="normal"><a href="#__codelineno-0-80"> 80</a></span>
-<span class="normal"><a href="#__codelineno-0-81"> 81</a></span>
-<span class="normal"><a href="#__codelineno-0-82"> 82</a></span>
-<span class="normal"><a href="#__codelineno-0-83"> 83</a></span>
-<span class="normal"><a href="#__codelineno-0-84"> 84</a></span>
-<span class="normal"><a href="#__codelineno-0-85"> 85</a></span>
-<span class="normal"><a href="#__codelineno-0-86"> 86</a></span>
-<span class="normal"><a href="#__codelineno-0-87"> 87</a></span>
-<span class="normal"><a href="#__codelineno-0-88"> 88</a></span>
-<span class="normal"><a href="#__codelineno-0-89"> 89</a></span>
-<span class="normal"><a href="#__codelineno-0-90"> 90</a></span>
-<span class="normal"><a href="#__codelineno-0-91"> 91</a></span>
-<span class="normal"><a href="#__codelineno-0-92"> 92</a></span>
-<span class="normal"><a href="#__codelineno-0-93"> 93</a></span>
-<span class="normal"><a href="#__codelineno-0-94"> 94</a></span>
-<span class="normal"><a href="#__codelineno-0-95"> 95</a></span>
-<span class="normal"><a href="#__codelineno-0-96"> 96</a></span>
-<span class="normal"><a href="#__codelineno-0-97"> 97</a></span>
-<span class="normal"><a href="#__codelineno-0-98"> 98</a></span>
-<span class="normal"><a href="#__codelineno-0-99"> 99</a></span>
-<span class="normal"><a href="#__codelineno-0-100">100</a></span>
-<span class="normal"><a href="#__codelineno-0-101">101</a></span>
-<span class="normal"><a href="#__codelineno-0-102">102</a></span>
-<span class="normal"><a href="#__codelineno-0-103">103</a></span>
-<span class="normal"><a href="#__codelineno-0-104">104</a></span>
-<span class="normal"><a href="#__codelineno-0-105">105</a></span>
-<span class="normal"><a href="#__codelineno-0-106">106</a></span>
-<span class="normal"><a href="#__codelineno-0-107">107</a></span>
-<span class="normal"><a href="#__codelineno-0-108">108</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-55"><a id="__codelineno-0-55" name="__codelineno-0-55"></a><span class="k">def</span><span class="w"> </span><span class="nf">block_bootstrap_ci</span><span class="p">(</span>
-</span><span id="__span-0-56"><a id="__codelineno-0-56" name="__codelineno-0-56"></a>    <span class="n">series</span><span class="p">,</span>
-</span><span id="__span-0-57"><a id="__codelineno-0-57" name="__codelineno-0-57"></a>    <span class="o">*</span><span class="p">,</span>
-</span><span id="__span-0-58"><a id="__codelineno-0-58" name="__codelineno-0-58"></a>    <span class="n">statistic</span><span class="p">:</span> <span class="n">Callable</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">,</span>
-</span><span id="__span-0-59"><a id="__codelineno-0-59" name="__codelineno-0-59"></a>    <span class="n">block_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-</span><span id="__span-0-60"><a id="__codelineno-0-60" name="__codelineno-0-60"></a>    <span class="n">n_boot</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">2000</span><span class="p">,</span>
-</span><span id="__span-0-61"><a id="__codelineno-0-61" name="__codelineno-0-61"></a>    <span class="n">alpha</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.05</span><span class="p">,</span>
-</span><span id="__span-0-62"><a id="__codelineno-0-62" name="__codelineno-0-62"></a>    <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">42</span><span class="p">,</span>
-</span><span id="__span-0-63"><a id="__codelineno-0-63" name="__codelineno-0-63"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">:</span>
-</span><span id="__span-0-64"><a id="__codelineno-0-64" name="__codelineno-0-64"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Moving-block bootstrap confidence interval for a statistic of a dependent series.</span>
-</span><span id="__span-0-65"><a id="__codelineno-0-65" name="__codelineno-0-65"></a>
-</span><span id="__span-0-66"><a id="__codelineno-0-66" name="__codelineno-0-66"></a><span class="sd">    Resamples contiguous blocks (not individual points) so the within-block</span>
-</span><span id="__span-0-67"><a id="__codelineno-0-67" name="__codelineno-0-67"></a><span class="sd">    autocorrelation is preserved, the way to bootstrap a time series. The default</span>
-</span><span id="__span-0-68"><a id="__codelineno-0-68" name="__codelineno-0-68"></a><span class="sd">    block size is ``n**(1/3)`` (the standard rate). Seeded, hence reproducible.</span>
-</span><span id="__span-0-69"><a id="__codelineno-0-69" name="__codelineno-0-69"></a>
-</span><span id="__span-0-70"><a id="__codelineno-0-70" name="__codelineno-0-70"></a><span class="sd">    Returns</span>
-</span><span id="__span-0-71"><a id="__codelineno-0-71" name="__codelineno-0-71"></a><span class="sd">    -------</span>
-</span><span id="__span-0-72"><a id="__codelineno-0-72" name="__codelineno-0-72"></a><span class="sd">    pandas.Series</span>
-</span><span id="__span-0-73"><a id="__codelineno-0-73" name="__codelineno-0-73"></a><span class="sd">        ``{estimate, ci_lo, ci_hi}`` at the central ``1 - alpha`` level.</span>
-</span><span id="__span-0-74"><a id="__codelineno-0-74" name="__codelineno-0-74"></a>
-</span><span id="__span-0-75"><a id="__codelineno-0-75" name="__codelineno-0-75"></a><span class="sd">    References</span>
-</span><span id="__span-0-76"><a id="__codelineno-0-76" name="__codelineno-0-76"></a><span class="sd">    ----------</span>
-</span><span id="__span-0-77"><a id="__codelineno-0-77" name="__codelineno-0-77"></a><span class="sd">    Lahiri (2003). *Resampling Methods for Dependent Data*. Springer.</span>
-</span><span id="__span-0-78"><a id="__codelineno-0-78" name="__codelineno-0-78"></a>
-</span><span id="__span-0-79"><a id="__codelineno-0-79" name="__codelineno-0-79"></a><span class="sd">    See Also</span>
-</span><span id="__span-0-80"><a id="__codelineno-0-80" name="__codelineno-0-80"></a><span class="sd">    --------</span>
-</span><span id="__span-0-81"><a id="__codelineno-0-81" name="__codelineno-0-81"></a><span class="sd">    [`effective_sample_size`][gbfs_toolkit.effective_sample_size] : Autocorrelation-adjusted sample size.</span>
-</span><span id="__span-0-82"><a id="__codelineno-0-82" name="__codelineno-0-82"></a><span class="sd">    [`flag_rate_ci`][gbfs_toolkit.flag_rate_ci] : Cluster bootstrap on audit flag rates.</span>
-</span><span id="__span-0-83"><a id="__codelineno-0-83" name="__codelineno-0-83"></a>
-</span><span id="__span-0-84"><a id="__codelineno-0-84" name="__codelineno-0-84"></a><span class="sd">    Examples</span>
-</span><span id="__span-0-85"><a id="__codelineno-0-85" name="__codelineno-0-85"></a><span class="sd">    --------</span>
-</span><span id="__span-0-86"><a id="__codelineno-0-86" name="__codelineno-0-86"></a><span class="sd">    &gt;&gt;&gt; import pandas as pd</span>
-</span><span id="__span-0-87"><a id="__codelineno-0-87" name="__codelineno-0-87"></a><span class="sd">    &gt;&gt;&gt; s = pd.Series([1.0, 2.0, 3.0, 4.0, 5.0] * 20)</span>
-</span><span id="__span-0-88"><a id="__codelineno-0-88" name="__codelineno-0-88"></a><span class="sd">    &gt;&gt;&gt; round(float(block_bootstrap_ci(s, seed=1)[&quot;estimate&quot;]), 1)</span>
-</span><span id="__span-0-89"><a id="__codelineno-0-89" name="__codelineno-0-89"></a><span class="sd">    3.0</span>
-</span><span id="__span-0-90"><a id="__codelineno-0-90" name="__codelineno-0-90"></a><span class="sd">    &quot;&quot;&quot;</span>
-</span><span id="__span-0-91"><a id="__codelineno-0-91" name="__codelineno-0-91"></a>    <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">series</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="s2">&quot;float64&quot;</span><span class="p">)</span>
-</span><span id="__span-0-92"><a id="__codelineno-0-92" name="__codelineno-0-92"></a>    <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">x</span><span class="p">)]</span>
-</span><span id="__span-0-93"><a id="__codelineno-0-93" name="__codelineno-0-93"></a>    <span class="n">n</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">size</span>
-</span><span id="__span-0-94"><a id="__codelineno-0-94" name="__codelineno-0-94"></a>    <span class="k">if</span> <span class="n">n</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-</span><span id="__span-0-95"><a id="__codelineno-0-95" name="__codelineno-0-95"></a>        <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">({</span><span class="s2">&quot;estimate&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="s2">&quot;nan&quot;</span><span class="p">),</span> <span class="s2">&quot;ci_lo&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="s2">&quot;nan&quot;</span><span class="p">),</span> <span class="s2">&quot;ci_hi&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="s2">&quot;nan&quot;</span><span class="p">)})</span>
-</span><span id="__span-0-96"><a id="__codelineno-0-96" name="__codelineno-0-96"></a>    <span class="k">if</span> <span class="n">block_size</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-</span><span id="__span-0-97"><a id="__codelineno-0-97" name="__codelineno-0-97"></a>        <span class="n">block_size</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">n</span> <span class="o">**</span> <span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="mi">3</span><span class="p">))))</span>
-</span><span id="__span-0-98"><a id="__codelineno-0-98" name="__codelineno-0-98"></a>    <span class="n">block_size</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">block_size</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span>
-</span><span id="__span-0-99"><a id="__codelineno-0-99" name="__codelineno-0-99"></a>    <span class="n">n_blocks</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">n</span> <span class="o">/</span> <span class="n">block_size</span><span class="p">))</span>
-</span><span id="__span-0-100"><a id="__codelineno-0-100" name="__codelineno-0-100"></a>    <span class="n">starts_max</span> <span class="o">=</span> <span class="n">n</span> <span class="o">-</span> <span class="n">block_size</span> <span class="o">+</span> <span class="mi">1</span>
-</span><span id="__span-0-101"><a id="__codelineno-0-101" name="__codelineno-0-101"></a>    <span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
-</span><span id="__span-0-102"><a id="__codelineno-0-102" name="__codelineno-0-102"></a>    <span class="n">boots</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="n">n_boot</span><span class="p">)</span>
-</span><span id="__span-0-103"><a id="__codelineno-0-103" name="__codelineno-0-103"></a>    <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_boot</span><span class="p">):</span>
-</span><span id="__span-0-104"><a id="__codelineno-0-104" name="__codelineno-0-104"></a>        <span class="n">starts</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">integers</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">starts_max</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">n_blocks</span><span class="p">)</span>
-</span><span id="__span-0-105"><a id="__codelineno-0-105" name="__codelineno-0-105"></a>        <span class="n">sample</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">x</span><span class="p">[</span><span class="n">s</span> <span class="p">:</span> <span class="n">s</span> <span class="o">+</span> <span class="n">block_size</span><span class="p">]</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">starts</span><span class="p">])[:</span><span class="n">n</span><span class="p">]</span>
-</span><span id="__span-0-106"><a id="__codelineno-0-106" name="__codelineno-0-106"></a>        <span class="n">boots</span><span class="p">[</span><span class="n">b</span><span class="p">]</span> <span class="o">=</span> <span class="n">statistic</span><span class="p">(</span><span class="n">sample</span><span class="p">)</span>
-</span><span id="__span-0-107"><a id="__codelineno-0-107" name="__codelineno-0-107"></a>    <span class="n">lo</span><span class="p">,</span> <span class="n">hi</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">boots</span><span class="p">,</span> <span class="p">[</span><span class="mi">100</span> <span class="o">*</span> <span class="n">alpha</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">100</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">alpha</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)])</span>
-</span><span id="__span-0-108"><a id="__codelineno-0-108" name="__codelineno-0-108"></a>    <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">({</span><span class="s2">&quot;estimate&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">statistic</span><span class="p">(</span><span class="n">x</span><span class="p">)),</span> <span class="s2">&quot;ci_lo&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">lo</span><span class="p">),</span> <span class="s2">&quot;ci_hi&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">hi</span><span class="p">)})</span>
+              <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#gbfs_toolkit.block_bootstrap_ci--source--__codelineno-0-55"> 55</a></span>
+<span class="normal"><a href="#gbfs_toolkit.block_bootstrap_ci--source--__codelineno-0-56"> 56</a></span>
+<span class="normal"><a href="#gbfs_toolkit.block_bootstrap_ci--source--__codelineno-0-57"> 57</a></span>
+<span class="normal"><a href="#gbfs_toolkit.block_bootstrap_ci--source--__codelineno-0-58"> 58</a></span>
+<span class="normal"><a href="#gbfs_toolkit.block_bootstrap_ci--source--__codelineno-0-59"> 59</a></span>
+<span class="normal"><a href="#gbfs_toolkit.block_bootstrap_ci--source--__codelineno-0-60"> 60</a></span>
+<span class="normal"><a href="#gbfs_toolkit.block_bootstrap_ci--source--__codelineno-0-61"> 61</a></span>
+<span class="normal"><a href="#gbfs_toolkit.block_bootstrap_ci--source--__codelineno-0-62"> 62</a></span>
+<span class="normal"><a href="#gbfs_toolkit.block_bootstrap_ci--source--__codelineno-0-63"> 63</a></span>
+<span class="normal"><a href="#gbfs_toolkit.block_bootstrap_ci--source--__codelineno-0-64"> 64</a></span>
+<span class="normal"><a href="#gbfs_toolkit.block_bootstrap_ci--source--__codelineno-0-65"> 65</a></span>
+<span class="normal"><a href="#gbfs_toolkit.block_bootstrap_ci--source--__codelineno-0-66"> 66</a></span>
+<span class="normal"><a href="#gbfs_toolkit.block_bootstrap_ci--source--__codelineno-0-67"> 67</a></span>
+<span class="normal"><a href="#gbfs_toolkit.block_bootstrap_ci--source--__codelineno-0-68"> 68</a></span>
+<span class="normal"><a href="#gbfs_toolkit.block_bootstrap_ci--source--__codelineno-0-69"> 69</a></span>
+<span class="normal"><a href="#gbfs_toolkit.block_bootstrap_ci--source--__codelineno-0-70"> 70</a></span>
+<span class="normal"><a href="#gbfs_toolkit.block_bootstrap_ci--source--__codelineno-0-71"> 71</a></span>
+<span class="normal"><a href="#gbfs_toolkit.block_bootstrap_ci--source--__codelineno-0-72"> 72</a></span>
+<span class="normal"><a href="#gbfs_toolkit.block_bootstrap_ci--source--__codelineno-0-73"> 73</a></span>
+<span class="normal"><a href="#gbfs_toolkit.block_bootstrap_ci--source--__codelineno-0-74"> 74</a></span>
+<span class="normal"><a href="#gbfs_toolkit.block_bootstrap_ci--source--__codelineno-0-75"> 75</a></span>
+<span class="normal"><a href="#gbfs_toolkit.block_bootstrap_ci--source--__codelineno-0-76"> 76</a></span>
+<span class="normal"><a href="#gbfs_toolkit.block_bootstrap_ci--source--__codelineno-0-77"> 77</a></span>
+<span class="normal"><a href="#gbfs_toolkit.block_bootstrap_ci--source--__codelineno-0-78"> 78</a></span>
+<span class="normal"><a href="#gbfs_toolkit.block_bootstrap_ci--source--__codelineno-0-79"> 79</a></span>
+<span class="normal"><a href="#gbfs_toolkit.block_bootstrap_ci--source--__codelineno-0-80"> 80</a></span>
+<span class="normal"><a href="#gbfs_toolkit.block_bootstrap_ci--source--__codelineno-0-81"> 81</a></span>
+<span class="normal"><a href="#gbfs_toolkit.block_bootstrap_ci--source--__codelineno-0-82"> 82</a></span>
+<span class="normal"><a href="#gbfs_toolkit.block_bootstrap_ci--source--__codelineno-0-83"> 83</a></span>
+<span class="normal"><a href="#gbfs_toolkit.block_bootstrap_ci--source--__codelineno-0-84"> 84</a></span>
+<span class="normal"><a href="#gbfs_toolkit.block_bootstrap_ci--source--__codelineno-0-85"> 85</a></span>
+<span class="normal"><a href="#gbfs_toolkit.block_bootstrap_ci--source--__codelineno-0-86"> 86</a></span>
+<span class="normal"><a href="#gbfs_toolkit.block_bootstrap_ci--source--__codelineno-0-87"> 87</a></span>
+<span class="normal"><a href="#gbfs_toolkit.block_bootstrap_ci--source--__codelineno-0-88"> 88</a></span>
+<span class="normal"><a href="#gbfs_toolkit.block_bootstrap_ci--source--__codelineno-0-89"> 89</a></span>
+<span class="normal"><a href="#gbfs_toolkit.block_bootstrap_ci--source--__codelineno-0-90"> 90</a></span>
+<span class="normal"><a href="#gbfs_toolkit.block_bootstrap_ci--source--__codelineno-0-91"> 91</a></span>
+<span class="normal"><a href="#gbfs_toolkit.block_bootstrap_ci--source--__codelineno-0-92"> 92</a></span>
+<span class="normal"><a href="#gbfs_toolkit.block_bootstrap_ci--source--__codelineno-0-93"> 93</a></span>
+<span class="normal"><a href="#gbfs_toolkit.block_bootstrap_ci--source--__codelineno-0-94"> 94</a></span>
+<span class="normal"><a href="#gbfs_toolkit.block_bootstrap_ci--source--__codelineno-0-95"> 95</a></span>
+<span class="normal"><a href="#gbfs_toolkit.block_bootstrap_ci--source--__codelineno-0-96"> 96</a></span>
+<span class="normal"><a href="#gbfs_toolkit.block_bootstrap_ci--source--__codelineno-0-97"> 97</a></span>
+<span class="normal"><a href="#gbfs_toolkit.block_bootstrap_ci--source--__codelineno-0-98"> 98</a></span>
+<span class="normal"><a href="#gbfs_toolkit.block_bootstrap_ci--source--__codelineno-0-99"> 99</a></span>
+<span class="normal"><a href="#gbfs_toolkit.block_bootstrap_ci--source--__codelineno-0-100">100</a></span>
+<span class="normal"><a href="#gbfs_toolkit.block_bootstrap_ci--source--__codelineno-0-101">101</a></span>
+<span class="normal"><a href="#gbfs_toolkit.block_bootstrap_ci--source--__codelineno-0-102">102</a></span>
+<span class="normal"><a href="#gbfs_toolkit.block_bootstrap_ci--source--__codelineno-0-103">103</a></span>
+<span class="normal"><a href="#gbfs_toolkit.block_bootstrap_ci--source--__codelineno-0-104">104</a></span>
+<span class="normal"><a href="#gbfs_toolkit.block_bootstrap_ci--source--__codelineno-0-105">105</a></span>
+<span class="normal"><a href="#gbfs_toolkit.block_bootstrap_ci--source--__codelineno-0-106">106</a></span>
+<span class="normal"><a href="#gbfs_toolkit.block_bootstrap_ci--source--__codelineno-0-107">107</a></span>
+<span class="normal"><a href="#gbfs_toolkit.block_bootstrap_ci--source--__codelineno-0-108">108</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="gbfs_toolkit.block_bootstrap_ci--source--__span-0-55"><a id="gbfs_toolkit.block_bootstrap_ci--source--__codelineno-0-55" name="gbfs_toolkit.block_bootstrap_ci--source--__codelineno-0-55"></a><span class="k">def</span><span class="w"> </span><span class="nf">block_bootstrap_ci</span><span class="p">(</span>
+</span><span id="gbfs_toolkit.block_bootstrap_ci--source--__span-0-56"><a id="gbfs_toolkit.block_bootstrap_ci--source--__codelineno-0-56" name="gbfs_toolkit.block_bootstrap_ci--source--__codelineno-0-56"></a>    <span class="n">series</span><span class="p">,</span>
+</span><span id="gbfs_toolkit.block_bootstrap_ci--source--__span-0-57"><a id="gbfs_toolkit.block_bootstrap_ci--source--__codelineno-0-57" name="gbfs_toolkit.block_bootstrap_ci--source--__codelineno-0-57"></a>    <span class="o">*</span><span class="p">,</span>
+</span><span id="gbfs_toolkit.block_bootstrap_ci--source--__span-0-58"><a id="gbfs_toolkit.block_bootstrap_ci--source--__codelineno-0-58" name="gbfs_toolkit.block_bootstrap_ci--source--__codelineno-0-58"></a>    <span class="n">statistic</span><span class="p">:</span> <span class="n">Callable</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">,</span>
+</span><span id="gbfs_toolkit.block_bootstrap_ci--source--__span-0-59"><a id="gbfs_toolkit.block_bootstrap_ci--source--__codelineno-0-59" name="gbfs_toolkit.block_bootstrap_ci--source--__codelineno-0-59"></a>    <span class="n">block_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+</span><span id="gbfs_toolkit.block_bootstrap_ci--source--__span-0-60"><a id="gbfs_toolkit.block_bootstrap_ci--source--__codelineno-0-60" name="gbfs_toolkit.block_bootstrap_ci--source--__codelineno-0-60"></a>    <span class="n">n_boot</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">2000</span><span class="p">,</span>
+</span><span id="gbfs_toolkit.block_bootstrap_ci--source--__span-0-61"><a id="gbfs_toolkit.block_bootstrap_ci--source--__codelineno-0-61" name="gbfs_toolkit.block_bootstrap_ci--source--__codelineno-0-61"></a>    <span class="n">alpha</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.05</span><span class="p">,</span>
+</span><span id="gbfs_toolkit.block_bootstrap_ci--source--__span-0-62"><a id="gbfs_toolkit.block_bootstrap_ci--source--__codelineno-0-62" name="gbfs_toolkit.block_bootstrap_ci--source--__codelineno-0-62"></a>    <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">42</span><span class="p">,</span>
+</span><span id="gbfs_toolkit.block_bootstrap_ci--source--__span-0-63"><a id="gbfs_toolkit.block_bootstrap_ci--source--__codelineno-0-63" name="gbfs_toolkit.block_bootstrap_ci--source--__codelineno-0-63"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">:</span>
+</span><span id="gbfs_toolkit.block_bootstrap_ci--source--__span-0-64"><a id="gbfs_toolkit.block_bootstrap_ci--source--__codelineno-0-64" name="gbfs_toolkit.block_bootstrap_ci--source--__codelineno-0-64"></a><span class="w">    </span><span class="sd">"""Moving-block bootstrap confidence interval for a statistic of a dependent series.</span>
+</span><span id="gbfs_toolkit.block_bootstrap_ci--source--__span-0-65"><a id="gbfs_toolkit.block_bootstrap_ci--source--__codelineno-0-65" name="gbfs_toolkit.block_bootstrap_ci--source--__codelineno-0-65"></a>
+</span><span id="gbfs_toolkit.block_bootstrap_ci--source--__span-0-66"><a id="gbfs_toolkit.block_bootstrap_ci--source--__codelineno-0-66" name="gbfs_toolkit.block_bootstrap_ci--source--__codelineno-0-66"></a><span class="sd">    Resamples contiguous blocks (not individual points) so the within-block</span>
+</span><span id="gbfs_toolkit.block_bootstrap_ci--source--__span-0-67"><a id="gbfs_toolkit.block_bootstrap_ci--source--__codelineno-0-67" name="gbfs_toolkit.block_bootstrap_ci--source--__codelineno-0-67"></a><span class="sd">    autocorrelation is preserved, the way to bootstrap a time series. The default</span>
+</span><span id="gbfs_toolkit.block_bootstrap_ci--source--__span-0-68"><a id="gbfs_toolkit.block_bootstrap_ci--source--__codelineno-0-68" name="gbfs_toolkit.block_bootstrap_ci--source--__codelineno-0-68"></a><span class="sd">    block size is ``n**(1/3)`` (the standard rate). Seeded, hence reproducible.</span>
+</span><span id="gbfs_toolkit.block_bootstrap_ci--source--__span-0-69"><a id="gbfs_toolkit.block_bootstrap_ci--source--__codelineno-0-69" name="gbfs_toolkit.block_bootstrap_ci--source--__codelineno-0-69"></a>
+</span><span id="gbfs_toolkit.block_bootstrap_ci--source--__span-0-70"><a id="gbfs_toolkit.block_bootstrap_ci--source--__codelineno-0-70" name="gbfs_toolkit.block_bootstrap_ci--source--__codelineno-0-70"></a><span class="sd">    Returns</span>
+</span><span id="gbfs_toolkit.block_bootstrap_ci--source--__span-0-71"><a id="gbfs_toolkit.block_bootstrap_ci--source--__codelineno-0-71" name="gbfs_toolkit.block_bootstrap_ci--source--__codelineno-0-71"></a><span class="sd">    -------</span>
+</span><span id="gbfs_toolkit.block_bootstrap_ci--source--__span-0-72"><a id="gbfs_toolkit.block_bootstrap_ci--source--__codelineno-0-72" name="gbfs_toolkit.block_bootstrap_ci--source--__codelineno-0-72"></a><span class="sd">    pandas.Series</span>
+</span><span id="gbfs_toolkit.block_bootstrap_ci--source--__span-0-73"><a id="gbfs_toolkit.block_bootstrap_ci--source--__codelineno-0-73" name="gbfs_toolkit.block_bootstrap_ci--source--__codelineno-0-73"></a><span class="sd">        ``{estimate, ci_lo, ci_hi}`` at the central ``1 - alpha`` level.</span>
+</span><span id="gbfs_toolkit.block_bootstrap_ci--source--__span-0-74"><a id="gbfs_toolkit.block_bootstrap_ci--source--__codelineno-0-74" name="gbfs_toolkit.block_bootstrap_ci--source--__codelineno-0-74"></a>
+</span><span id="gbfs_toolkit.block_bootstrap_ci--source--__span-0-75"><a id="gbfs_toolkit.block_bootstrap_ci--source--__codelineno-0-75" name="gbfs_toolkit.block_bootstrap_ci--source--__codelineno-0-75"></a><span class="sd">    References</span>
+</span><span id="gbfs_toolkit.block_bootstrap_ci--source--__span-0-76"><a id="gbfs_toolkit.block_bootstrap_ci--source--__codelineno-0-76" name="gbfs_toolkit.block_bootstrap_ci--source--__codelineno-0-76"></a><span class="sd">    ----------</span>
+</span><span id="gbfs_toolkit.block_bootstrap_ci--source--__span-0-77"><a id="gbfs_toolkit.block_bootstrap_ci--source--__codelineno-0-77" name="gbfs_toolkit.block_bootstrap_ci--source--__codelineno-0-77"></a><span class="sd">    Lahiri (2003). *Resampling Methods for Dependent Data*. Springer.</span>
+</span><span id="gbfs_toolkit.block_bootstrap_ci--source--__span-0-78"><a id="gbfs_toolkit.block_bootstrap_ci--source--__codelineno-0-78" name="gbfs_toolkit.block_bootstrap_ci--source--__codelineno-0-78"></a>
+</span><span id="gbfs_toolkit.block_bootstrap_ci--source--__span-0-79"><a id="gbfs_toolkit.block_bootstrap_ci--source--__codelineno-0-79" name="gbfs_toolkit.block_bootstrap_ci--source--__codelineno-0-79"></a><span class="sd">    See Also</span>
+</span><span id="gbfs_toolkit.block_bootstrap_ci--source--__span-0-80"><a id="gbfs_toolkit.block_bootstrap_ci--source--__codelineno-0-80" name="gbfs_toolkit.block_bootstrap_ci--source--__codelineno-0-80"></a><span class="sd">    --------</span>
+</span><span id="gbfs_toolkit.block_bootstrap_ci--source--__span-0-81"><a id="gbfs_toolkit.block_bootstrap_ci--source--__codelineno-0-81" name="gbfs_toolkit.block_bootstrap_ci--source--__codelineno-0-81"></a><span class="sd">    [`effective_sample_size`][gbfs_toolkit.effective_sample_size] : Autocorrelation-adjusted sample size.</span>
+</span><span id="gbfs_toolkit.block_bootstrap_ci--source--__span-0-82"><a id="gbfs_toolkit.block_bootstrap_ci--source--__codelineno-0-82" name="gbfs_toolkit.block_bootstrap_ci--source--__codelineno-0-82"></a><span class="sd">    [`flag_rate_ci`][gbfs_toolkit.flag_rate_ci] : Cluster bootstrap on audit flag rates.</span>
+</span><span id="gbfs_toolkit.block_bootstrap_ci--source--__span-0-83"><a id="gbfs_toolkit.block_bootstrap_ci--source--__codelineno-0-83" name="gbfs_toolkit.block_bootstrap_ci--source--__codelineno-0-83"></a>
+</span><span id="gbfs_toolkit.block_bootstrap_ci--source--__span-0-84"><a id="gbfs_toolkit.block_bootstrap_ci--source--__codelineno-0-84" name="gbfs_toolkit.block_bootstrap_ci--source--__codelineno-0-84"></a><span class="sd">    Examples</span>
+</span><span id="gbfs_toolkit.block_bootstrap_ci--source--__span-0-85"><a id="gbfs_toolkit.block_bootstrap_ci--source--__codelineno-0-85" name="gbfs_toolkit.block_bootstrap_ci--source--__codelineno-0-85"></a><span class="sd">    --------</span>
+</span><span id="gbfs_toolkit.block_bootstrap_ci--source--__span-0-86"><a id="gbfs_toolkit.block_bootstrap_ci--source--__codelineno-0-86" name="gbfs_toolkit.block_bootstrap_ci--source--__codelineno-0-86"></a><span class="sd">    &gt;&gt;&gt; import pandas as pd</span>
+</span><span id="gbfs_toolkit.block_bootstrap_ci--source--__span-0-87"><a id="gbfs_toolkit.block_bootstrap_ci--source--__codelineno-0-87" name="gbfs_toolkit.block_bootstrap_ci--source--__codelineno-0-87"></a><span class="sd">    &gt;&gt;&gt; s = pd.Series([1.0, 2.0, 3.0, 4.0, 5.0] * 20)</span>
+</span><span id="gbfs_toolkit.block_bootstrap_ci--source--__span-0-88"><a id="gbfs_toolkit.block_bootstrap_ci--source--__codelineno-0-88" name="gbfs_toolkit.block_bootstrap_ci--source--__codelineno-0-88"></a><span class="sd">    &gt;&gt;&gt; round(float(block_bootstrap_ci(s, seed=1)["estimate"]), 1)</span>
+</span><span id="gbfs_toolkit.block_bootstrap_ci--source--__span-0-89"><a id="gbfs_toolkit.block_bootstrap_ci--source--__codelineno-0-89" name="gbfs_toolkit.block_bootstrap_ci--source--__codelineno-0-89"></a><span class="sd">    3.0</span>
+</span><span id="gbfs_toolkit.block_bootstrap_ci--source--__span-0-90"><a id="gbfs_toolkit.block_bootstrap_ci--source--__codelineno-0-90" name="gbfs_toolkit.block_bootstrap_ci--source--__codelineno-0-90"></a><span class="sd">    """</span>
+</span><span id="gbfs_toolkit.block_bootstrap_ci--source--__span-0-91"><a id="gbfs_toolkit.block_bootstrap_ci--source--__codelineno-0-91" name="gbfs_toolkit.block_bootstrap_ci--source--__codelineno-0-91"></a>    <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">series</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="s2">"float64"</span><span class="p">)</span>
+</span><span id="gbfs_toolkit.block_bootstrap_ci--source--__span-0-92"><a id="gbfs_toolkit.block_bootstrap_ci--source--__codelineno-0-92" name="gbfs_toolkit.block_bootstrap_ci--source--__codelineno-0-92"></a>    <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">x</span><span class="p">)]</span>
+</span><span id="gbfs_toolkit.block_bootstrap_ci--source--__span-0-93"><a id="gbfs_toolkit.block_bootstrap_ci--source--__codelineno-0-93" name="gbfs_toolkit.block_bootstrap_ci--source--__codelineno-0-93"></a>    <span class="n">n</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">size</span>
+</span><span id="gbfs_toolkit.block_bootstrap_ci--source--__span-0-94"><a id="gbfs_toolkit.block_bootstrap_ci--source--__codelineno-0-94" name="gbfs_toolkit.block_bootstrap_ci--source--__codelineno-0-94"></a>    <span class="k">if</span> <span class="n">n</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+</span><span id="gbfs_toolkit.block_bootstrap_ci--source--__span-0-95"><a id="gbfs_toolkit.block_bootstrap_ci--source--__codelineno-0-95" name="gbfs_toolkit.block_bootstrap_ci--source--__codelineno-0-95"></a>        <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">({</span><span class="s2">"estimate"</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="s2">"nan"</span><span class="p">),</span> <span class="s2">"ci_lo"</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="s2">"nan"</span><span class="p">),</span> <span class="s2">"ci_hi"</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="s2">"nan"</span><span class="p">)})</span>
+</span><span id="gbfs_toolkit.block_bootstrap_ci--source--__span-0-96"><a id="gbfs_toolkit.block_bootstrap_ci--source--__codelineno-0-96" name="gbfs_toolkit.block_bootstrap_ci--source--__codelineno-0-96"></a>    <span class="k">if</span> <span class="n">block_size</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="gbfs_toolkit.block_bootstrap_ci--source--__span-0-97"><a id="gbfs_toolkit.block_bootstrap_ci--source--__codelineno-0-97" name="gbfs_toolkit.block_bootstrap_ci--source--__codelineno-0-97"></a>        <span class="n">block_size</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">n</span> <span class="o">**</span> <span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="mi">3</span><span class="p">))))</span>
+</span><span id="gbfs_toolkit.block_bootstrap_ci--source--__span-0-98"><a id="gbfs_toolkit.block_bootstrap_ci--source--__codelineno-0-98" name="gbfs_toolkit.block_bootstrap_ci--source--__codelineno-0-98"></a>    <span class="n">block_size</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">block_size</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span>
+</span><span id="gbfs_toolkit.block_bootstrap_ci--source--__span-0-99"><a id="gbfs_toolkit.block_bootstrap_ci--source--__codelineno-0-99" name="gbfs_toolkit.block_bootstrap_ci--source--__codelineno-0-99"></a>    <span class="n">n_blocks</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">n</span> <span class="o">/</span> <span class="n">block_size</span><span class="p">))</span>
+</span><span id="gbfs_toolkit.block_bootstrap_ci--source--__span-0-100"><a id="gbfs_toolkit.block_bootstrap_ci--source--__codelineno-0-100" name="gbfs_toolkit.block_bootstrap_ci--source--__codelineno-0-100"></a>    <span class="n">starts_max</span> <span class="o">=</span> <span class="n">n</span> <span class="o">-</span> <span class="n">block_size</span> <span class="o">+</span> <span class="mi">1</span>
+</span><span id="gbfs_toolkit.block_bootstrap_ci--source--__span-0-101"><a id="gbfs_toolkit.block_bootstrap_ci--source--__codelineno-0-101" name="gbfs_toolkit.block_bootstrap_ci--source--__codelineno-0-101"></a>    <span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
+</span><span id="gbfs_toolkit.block_bootstrap_ci--source--__span-0-102"><a id="gbfs_toolkit.block_bootstrap_ci--source--__codelineno-0-102" name="gbfs_toolkit.block_bootstrap_ci--source--__codelineno-0-102"></a>    <span class="n">boots</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="n">n_boot</span><span class="p">)</span>
+</span><span id="gbfs_toolkit.block_bootstrap_ci--source--__span-0-103"><a id="gbfs_toolkit.block_bootstrap_ci--source--__codelineno-0-103" name="gbfs_toolkit.block_bootstrap_ci--source--__codelineno-0-103"></a>    <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_boot</span><span class="p">):</span>
+</span><span id="gbfs_toolkit.block_bootstrap_ci--source--__span-0-104"><a id="gbfs_toolkit.block_bootstrap_ci--source--__codelineno-0-104" name="gbfs_toolkit.block_bootstrap_ci--source--__codelineno-0-104"></a>        <span class="n">starts</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">integers</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">starts_max</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">n_blocks</span><span class="p">)</span>
+</span><span id="gbfs_toolkit.block_bootstrap_ci--source--__span-0-105"><a id="gbfs_toolkit.block_bootstrap_ci--source--__codelineno-0-105" name="gbfs_toolkit.block_bootstrap_ci--source--__codelineno-0-105"></a>        <span class="n">sample</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">x</span><span class="p">[</span><span class="n">s</span> <span class="p">:</span> <span class="n">s</span> <span class="o">+</span> <span class="n">block_size</span><span class="p">]</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">starts</span><span class="p">])[:</span><span class="n">n</span><span class="p">]</span>
+</span><span id="gbfs_toolkit.block_bootstrap_ci--source--__span-0-106"><a id="gbfs_toolkit.block_bootstrap_ci--source--__codelineno-0-106" name="gbfs_toolkit.block_bootstrap_ci--source--__codelineno-0-106"></a>        <span class="n">boots</span><span class="p">[</span><span class="n">b</span><span class="p">]</span> <span class="o">=</span> <span class="n">statistic</span><span class="p">(</span><span class="n">sample</span><span class="p">)</span>
+</span><span id="gbfs_toolkit.block_bootstrap_ci--source--__span-0-107"><a id="gbfs_toolkit.block_bootstrap_ci--source--__codelineno-0-107" name="gbfs_toolkit.block_bootstrap_ci--source--__codelineno-0-107"></a>    <span class="n">lo</span><span class="p">,</span> <span class="n">hi</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">boots</span><span class="p">,</span> <span class="p">[</span><span class="mi">100</span> <span class="o">*</span> <span class="n">alpha</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">100</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">alpha</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)])</span>
+</span><span id="gbfs_toolkit.block_bootstrap_ci--source--__span-0-108"><a id="gbfs_toolkit.block_bootstrap_ci--source--__codelineno-0-108" name="gbfs_toolkit.block_bootstrap_ci--source--__codelineno-0-108"></a>    <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">({</span><span class="s2">"estimate"</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">statistic</span><span class="p">(</span><span class="n">x</span><span class="p">)),</span> <span class="s2">"ci_lo"</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">lo</span><span class="p">),</span> <span class="s2">"ci_hi"</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">hi</span><span class="p">)})</span>
 </span></code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -6714,10 +6714,10 @@ block size is <code>n**(1/3)</code> (the standard rate). Seeded, hence reproduci
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.instant", "navigation.instant.progress", "navigation.tracking", "navigation.sections", "navigation.tabs", "navigation.tabs.sticky", "navigation.top", "navigation.indexes", "navigation.footer", "toc.follow", "search.suggest", "search.highlight", "search.share", "content.code.copy", "content.code.annotate", "content.tooltips"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.instant", "navigation.instant.progress", "navigation.tracking", "navigation.sections", "navigation.tabs", "navigation.tabs.sticky", "navigation.top", "navigation.indexes", "navigation.footer", "toc.follow", "search.suggest", "search.highlight", "search.share", "content.code.copy", "content.code.annotate", "content.tooltips"], "search": "../../../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
     
     
-      <script src="../../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../../../assets/javascripts/bundle.c21346df.min.js"></script>
       
         <script src="../../../javascripts/mathjax.js"></script>
       

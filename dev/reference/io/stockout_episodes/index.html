@@ -25,7 +25,7 @@
       
       
       <link rel="icon" href="../../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-ProperDocs 1.6.7, mkdocs-material-9.7.6">
+      <meta name="generator" content="mkdocs-ProperDocs 1.6.7, mkdocs-material-9.8.0">
     
     
       
@@ -33,10 +33,10 @@
       
     
     
-      <link rel="stylesheet" href="../../../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.57a0d79d.min.css">
       
         
-        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.fb2fffe2.min.css">
       
       
 
@@ -1146,7 +1146,7 @@
   <span class="md-ellipsis">
     
   
-    __version__
+    _version_
   
 
     
@@ -6422,7 +6422,7 @@
 
 
 <a href="#gbfs_toolkit.stockout_episodes" class="headerlink" title="Permanent link">&para;</a></h2>
-<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">stockout_episodes</span><span class="p">(</span><span class="n">panel</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-external" title="&lt;code&gt;pandas.DataFrame&lt;/code&gt;" href="https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.html#pandas.DataFrame">DataFrame</a></span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">kinds</span><span class="p">:</span> <span class="n"><span title="tuple">tuple</span></span><span class="p">[</span><span class="n"><span title="str">str</span></span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;empty&#39;</span><span class="p">,</span> <span class="s1">&#39;full&#39;</span><span class="p">))</span> <span class="o">-&gt;</span> <span class="n"><a class="autorefs autorefs-external" title="&lt;code&gt;pandas.DataFrame&lt;/code&gt;" href="https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.html#pandas.DataFrame">DataFrame</a></span>
+<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">stockout_episodes</span><span class="p">(</span><span class="n">panel</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-external" title="&lt;code&gt;pandas.DataFrame&lt;/code&gt;" href="https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.html#pandas.DataFrame">DataFrame</a></span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">kinds</span><span class="p">:</span> <span class="n"><span title="tuple">tuple</span></span><span class="p">[</span><span class="n"><span title="str">str</span></span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="s1">'empty'</span><span class="p">,</span> <span class="s1">'full'</span><span class="p">))</span> <span class="o">-&gt;</span> <span class="n"><a class="autorefs autorefs-external" title="&lt;code&gt;pandas.DataFrame&lt;/code&gt;" href="https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.html#pandas.DataFrame">DataFrame</a></span>
 </span></code></pre></div>
 
     <div class="doc doc-contents first">
@@ -6515,137 +6515,137 @@ n_obs</code> (sorted by station then start).</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/gbfs_toolkit/io/timeseries.py</code></summary>
-              <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-248">248</a></span>
-<span class="normal"><a href="#__codelineno-0-249">249</a></span>
-<span class="normal"><a href="#__codelineno-0-250">250</a></span>
-<span class="normal"><a href="#__codelineno-0-251">251</a></span>
-<span class="normal"><a href="#__codelineno-0-252">252</a></span>
-<span class="normal"><a href="#__codelineno-0-253">253</a></span>
-<span class="normal"><a href="#__codelineno-0-254">254</a></span>
-<span class="normal"><a href="#__codelineno-0-255">255</a></span>
-<span class="normal"><a href="#__codelineno-0-256">256</a></span>
-<span class="normal"><a href="#__codelineno-0-257">257</a></span>
-<span class="normal"><a href="#__codelineno-0-258">258</a></span>
-<span class="normal"><a href="#__codelineno-0-259">259</a></span>
-<span class="normal"><a href="#__codelineno-0-260">260</a></span>
-<span class="normal"><a href="#__codelineno-0-261">261</a></span>
-<span class="normal"><a href="#__codelineno-0-262">262</a></span>
-<span class="normal"><a href="#__codelineno-0-263">263</a></span>
-<span class="normal"><a href="#__codelineno-0-264">264</a></span>
-<span class="normal"><a href="#__codelineno-0-265">265</a></span>
-<span class="normal"><a href="#__codelineno-0-266">266</a></span>
-<span class="normal"><a href="#__codelineno-0-267">267</a></span>
-<span class="normal"><a href="#__codelineno-0-268">268</a></span>
-<span class="normal"><a href="#__codelineno-0-269">269</a></span>
-<span class="normal"><a href="#__codelineno-0-270">270</a></span>
-<span class="normal"><a href="#__codelineno-0-271">271</a></span>
-<span class="normal"><a href="#__codelineno-0-272">272</a></span>
-<span class="normal"><a href="#__codelineno-0-273">273</a></span>
-<span class="normal"><a href="#__codelineno-0-274">274</a></span>
-<span class="normal"><a href="#__codelineno-0-275">275</a></span>
-<span class="normal"><a href="#__codelineno-0-276">276</a></span>
-<span class="normal"><a href="#__codelineno-0-277">277</a></span>
-<span class="normal"><a href="#__codelineno-0-278">278</a></span>
-<span class="normal"><a href="#__codelineno-0-279">279</a></span>
-<span class="normal"><a href="#__codelineno-0-280">280</a></span>
-<span class="normal"><a href="#__codelineno-0-281">281</a></span>
-<span class="normal"><a href="#__codelineno-0-282">282</a></span>
-<span class="normal"><a href="#__codelineno-0-283">283</a></span>
-<span class="normal"><a href="#__codelineno-0-284">284</a></span>
-<span class="normal"><a href="#__codelineno-0-285">285</a></span>
-<span class="normal"><a href="#__codelineno-0-286">286</a></span>
-<span class="normal"><a href="#__codelineno-0-287">287</a></span>
-<span class="normal"><a href="#__codelineno-0-288">288</a></span>
-<span class="normal"><a href="#__codelineno-0-289">289</a></span>
-<span class="normal"><a href="#__codelineno-0-290">290</a></span>
-<span class="normal"><a href="#__codelineno-0-291">291</a></span>
-<span class="normal"><a href="#__codelineno-0-292">292</a></span>
-<span class="normal"><a href="#__codelineno-0-293">293</a></span>
-<span class="normal"><a href="#__codelineno-0-294">294</a></span>
-<span class="normal"><a href="#__codelineno-0-295">295</a></span>
-<span class="normal"><a href="#__codelineno-0-296">296</a></span>
-<span class="normal"><a href="#__codelineno-0-297">297</a></span>
-<span class="normal"><a href="#__codelineno-0-298">298</a></span>
-<span class="normal"><a href="#__codelineno-0-299">299</a></span>
-<span class="normal"><a href="#__codelineno-0-300">300</a></span>
-<span class="normal"><a href="#__codelineno-0-301">301</a></span>
-<span class="normal"><a href="#__codelineno-0-302">302</a></span>
-<span class="normal"><a href="#__codelineno-0-303">303</a></span>
-<span class="normal"><a href="#__codelineno-0-304">304</a></span>
-<span class="normal"><a href="#__codelineno-0-305">305</a></span>
-<span class="normal"><a href="#__codelineno-0-306">306</a></span>
-<span class="normal"><a href="#__codelineno-0-307">307</a></span>
-<span class="normal"><a href="#__codelineno-0-308">308</a></span>
-<span class="normal"><a href="#__codelineno-0-309">309</a></span>
-<span class="normal"><a href="#__codelineno-0-310">310</a></span>
-<span class="normal"><a href="#__codelineno-0-311">311</a></span>
-<span class="normal"><a href="#__codelineno-0-312">312</a></span>
-<span class="normal"><a href="#__codelineno-0-313">313</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-248"><a id="__codelineno-0-248" name="__codelineno-0-248"></a><span class="k">def</span><span class="w"> </span><span class="nf">stockout_episodes</span><span class="p">(</span>
-</span><span id="__span-0-249"><a id="__codelineno-0-249" name="__codelineno-0-249"></a>    <span class="n">panel</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">kinds</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;empty&quot;</span><span class="p">,</span> <span class="s2">&quot;full&quot;</span><span class="p">)</span>
-</span><span id="__span-0-250"><a id="__codelineno-0-250" name="__codelineno-0-250"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
-</span><span id="__span-0-251"><a id="__codelineno-0-251" name="__codelineno-0-251"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Discrete empty/full episodes per station: the service-quality view of a panel.</span>
-</span><span id="__span-0-252"><a id="__codelineno-0-252" name="__codelineno-0-252"></a>
-</span><span id="__span-0-253"><a id="__codelineno-0-253" name="__codelineno-0-253"></a><span class="sd">    Where [`coverage_report`][gbfs_toolkit.coverage_report] and ``availability_stats`` give *fractions* of time, this</span>
-</span><span id="__span-0-254"><a id="__codelineno-0-254" name="__codelineno-0-254"></a><span class="sd">    returns the individual outage **events**: each contiguous run of empty (no bikes) or full</span>
-</span><span id="__span-0-255"><a id="__codelineno-0-255" name="__codelineno-0-255"></a><span class="sd">    (no docks) snapshots becomes one row, so you can study how *often* stockouts happen and how</span>
-</span><span id="__span-0-256"><a id="__codelineno-0-256" name="__codelineno-0-256"></a><span class="sd">    *long* they last. Durations span the observed snapshots in the run (a single-observation</span>
-</span><span id="__span-0-257"><a id="__codelineno-0-257" name="__codelineno-0-257"></a><span class="sd">    episode has duration 0); read them together with [`coverage_report`][gbfs_toolkit.coverage_report].</span>
-</span><span id="__span-0-258"><a id="__codelineno-0-258" name="__codelineno-0-258"></a>
-</span><span id="__span-0-259"><a id="__codelineno-0-259" name="__codelineno-0-259"></a><span class="sd">    Parameters</span>
-</span><span id="__span-0-260"><a id="__codelineno-0-260" name="__codelineno-0-260"></a><span class="sd">    ----------</span>
-</span><span id="__span-0-261"><a id="__codelineno-0-261" name="__codelineno-0-261"></a><span class="sd">    panel : pandas.DataFrame</span>
-</span><span id="__span-0-262"><a id="__codelineno-0-262" name="__codelineno-0-262"></a><span class="sd">        From [`build_availability_panel`][gbfs_toolkit.build_availability_panel] (MultiIndexed) or a flat frame with</span>
-</span><span id="__span-0-263"><a id="__codelineno-0-263" name="__codelineno-0-263"></a><span class="sd">        ``system_id, station_id, fetched_at, num_bikes_available, num_docks_available``.</span>
-</span><span id="__span-0-264"><a id="__codelineno-0-264" name="__codelineno-0-264"></a><span class="sd">    kinds : tuple of {&quot;empty&quot;, &quot;full&quot;}</span>
-</span><span id="__span-0-265"><a id="__codelineno-0-265" name="__codelineno-0-265"></a><span class="sd">        Which outage types to extract.</span>
-</span><span id="__span-0-266"><a id="__codelineno-0-266" name="__codelineno-0-266"></a>
-</span><span id="__span-0-267"><a id="__codelineno-0-267" name="__codelineno-0-267"></a><span class="sd">    Returns</span>
-</span><span id="__span-0-268"><a id="__codelineno-0-268" name="__codelineno-0-268"></a><span class="sd">    -------</span>
-</span><span id="__span-0-269"><a id="__codelineno-0-269" name="__codelineno-0-269"></a><span class="sd">    pandas.DataFrame</span>
-</span><span id="__span-0-270"><a id="__codelineno-0-270" name="__codelineno-0-270"></a><span class="sd">        One row per episode: ``system_id, station_id, kind, start, end, duration_minutes,</span>
-</span><span id="__span-0-271"><a id="__codelineno-0-271" name="__codelineno-0-271"></a><span class="sd">        n_obs`` (sorted by station then start).</span>
-</span><span id="__span-0-272"><a id="__codelineno-0-272" name="__codelineno-0-272"></a>
-</span><span id="__span-0-273"><a id="__codelineno-0-273" name="__codelineno-0-273"></a><span class="sd">    See Also</span>
-</span><span id="__span-0-274"><a id="__codelineno-0-274" name="__codelineno-0-274"></a><span class="sd">    --------</span>
-</span><span id="__span-0-275"><a id="__codelineno-0-275" name="__codelineno-0-275"></a><span class="sd">    [`detect_frozen_stations`][gbfs_toolkit.detect_frozen_stations] : Find stuck (never-changing) stations.</span>
-</span><span id="__span-0-276"><a id="__codelineno-0-276" name="__codelineno-0-276"></a><span class="sd">    [`build_availability_panel`][gbfs_toolkit.build_availability_panel] : The panel this scans.</span>
-</span><span id="__span-0-277"><a id="__codelineno-0-277" name="__codelineno-0-277"></a><span class="sd">    &quot;&quot;&quot;</span>
-</span><span id="__span-0-278"><a id="__codelineno-0-278" name="__codelineno-0-278"></a>    <span class="n">df</span> <span class="o">=</span> <span class="n">panel_frame</span><span class="p">(</span><span class="n">panel</span><span class="p">)</span>
-</span><span id="__span-0-279"><a id="__codelineno-0-279" name="__codelineno-0-279"></a>    <span class="n">require_columns</span><span class="p">(</span>
-</span><span id="__span-0-280"><a id="__codelineno-0-280" name="__codelineno-0-280"></a>        <span class="n">df</span><span class="p">,</span>
-</span><span id="__span-0-281"><a id="__codelineno-0-281" name="__codelineno-0-281"></a>        <span class="p">[</span><span class="s2">&quot;system_id&quot;</span><span class="p">,</span> <span class="s2">&quot;station_id&quot;</span><span class="p">,</span> <span class="s2">&quot;fetched_at&quot;</span><span class="p">,</span> <span class="s2">&quot;num_bikes_available&quot;</span><span class="p">,</span> <span class="s2">&quot;num_docks_available&quot;</span><span class="p">],</span>
-</span><span id="__span-0-282"><a id="__codelineno-0-282" name="__codelineno-0-282"></a>        <span class="n">what</span><span class="o">=</span><span class="s2">&quot;stockout_episodes&quot;</span><span class="p">,</span>
-</span><span id="__span-0-283"><a id="__codelineno-0-283" name="__codelineno-0-283"></a>    <span class="p">)</span>
-</span><span id="__span-0-284"><a id="__codelineno-0-284" name="__codelineno-0-284"></a>    <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">sort_values</span><span class="p">([</span><span class="s2">&quot;system_id&quot;</span><span class="p">,</span> <span class="s2">&quot;station_id&quot;</span><span class="p">,</span> <span class="s2">&quot;fetched_at&quot;</span><span class="p">])</span>
-</span><span id="__span-0-285"><a id="__codelineno-0-285" name="__codelineno-0-285"></a>    <span class="n">bikes</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_numeric</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;num_bikes_available&quot;</span><span class="p">],</span> <span class="n">errors</span><span class="o">=</span><span class="s2">&quot;coerce&quot;</span><span class="p">)</span>
-</span><span id="__span-0-286"><a id="__codelineno-0-286" name="__codelineno-0-286"></a>    <span class="n">docks</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_numeric</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;num_docks_available&quot;</span><span class="p">],</span> <span class="n">errors</span><span class="o">=</span><span class="s2">&quot;coerce&quot;</span><span class="p">)</span>
-</span><span id="__span-0-287"><a id="__codelineno-0-287" name="__codelineno-0-287"></a>    <span class="n">state</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;empty&quot;</span><span class="p">:</span> <span class="n">bikes</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;full&quot;</span><span class="p">:</span> <span class="n">docks</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">}</span>
-</span><span id="__span-0-288"><a id="__codelineno-0-288" name="__codelineno-0-288"></a>
-</span><span id="__span-0-289"><a id="__codelineno-0-289" name="__codelineno-0-289"></a>    <span class="n">rows</span> <span class="o">=</span> <span class="p">[]</span>
-</span><span id="__span-0-290"><a id="__codelineno-0-290" name="__codelineno-0-290"></a>    <span class="n">keys</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;system_id&quot;</span><span class="p">,</span> <span class="s2">&quot;station_id&quot;</span><span class="p">]</span>
-</span><span id="__span-0-291"><a id="__codelineno-0-291" name="__codelineno-0-291"></a>    <span class="k">for</span> <span class="n">kind</span> <span class="ow">in</span> <span class="n">kinds</span><span class="p">:</span>
-</span><span id="__span-0-292"><a id="__codelineno-0-292" name="__codelineno-0-292"></a>        <span class="n">tmp</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">keys</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-</span><span id="__span-0-293"><a id="__codelineno-0-293" name="__codelineno-0-293"></a>        <span class="n">tmp</span><span class="p">[</span><span class="s2">&quot;_flag&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">state</span><span class="p">[</span><span class="n">kind</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
-</span><span id="__span-0-294"><a id="__codelineno-0-294" name="__codelineno-0-294"></a>        <span class="c1"># a new run starts whenever the flag changes (groupby shift resets at station bounds)</span>
-</span><span id="__span-0-295"><a id="__codelineno-0-295" name="__codelineno-0-295"></a>        <span class="n">shifted</span> <span class="o">=</span> <span class="n">tmp</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="n">keys</span><span class="p">,</span> <span class="n">sort</span><span class="o">=</span><span class="kc">False</span><span class="p">)[</span><span class="s2">&quot;_flag&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">shift</span><span class="p">()</span>
-</span><span id="__span-0-296"><a id="__codelineno-0-296" name="__codelineno-0-296"></a>        <span class="n">run</span> <span class="o">=</span> <span class="p">(</span><span class="n">tmp</span><span class="p">[</span><span class="s2">&quot;_flag&quot;</span><span class="p">]</span> <span class="o">!=</span> <span class="n">shifted</span><span class="p">)</span><span class="o">.</span><span class="n">cumsum</span><span class="p">()</span>
-</span><span id="__span-0-297"><a id="__codelineno-0-297" name="__codelineno-0-297"></a>        <span class="n">mask</span> <span class="o">=</span> <span class="n">tmp</span><span class="p">[</span><span class="s2">&quot;_flag&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
-</span><span id="__span-0-298"><a id="__codelineno-0-298" name="__codelineno-0-298"></a>        <span class="n">active</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span><span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">_run</span><span class="o">=</span><span class="n">run</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">())</span>
-</span><span id="__span-0-299"><a id="__codelineno-0-299" name="__codelineno-0-299"></a>        <span class="k">for</span> <span class="p">(</span><span class="n">sid</span><span class="p">,</span> <span class="n">stid</span><span class="p">,</span> <span class="n">_r</span><span class="p">),</span> <span class="n">g</span> <span class="ow">in</span> <span class="n">active</span><span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="o">*</span><span class="n">keys</span><span class="p">,</span> <span class="s2">&quot;_run&quot;</span><span class="p">],</span> <span class="n">sort</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-</span><span id="__span-0-300"><a id="__codelineno-0-300" name="__codelineno-0-300"></a>            <span class="n">start</span><span class="p">,</span> <span class="n">end</span> <span class="o">=</span> <span class="n">g</span><span class="p">[</span><span class="s2">&quot;fetched_at&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="n">g</span><span class="p">[</span><span class="s2">&quot;fetched_at&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
-</span><span id="__span-0-301"><a id="__codelineno-0-301" name="__codelineno-0-301"></a>            <span class="n">rows</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
-</span><span id="__span-0-302"><a id="__codelineno-0-302" name="__codelineno-0-302"></a>                <span class="p">{</span>
-</span><span id="__span-0-303"><a id="__codelineno-0-303" name="__codelineno-0-303"></a>                    <span class="s2">&quot;system_id&quot;</span><span class="p">:</span> <span class="n">sid</span><span class="p">,</span>
-</span><span id="__span-0-304"><a id="__codelineno-0-304" name="__codelineno-0-304"></a>                    <span class="s2">&quot;station_id&quot;</span><span class="p">:</span> <span class="n">stid</span><span class="p">,</span>
-</span><span id="__span-0-305"><a id="__codelineno-0-305" name="__codelineno-0-305"></a>                    <span class="s2">&quot;kind&quot;</span><span class="p">:</span> <span class="n">kind</span><span class="p">,</span>
-</span><span id="__span-0-306"><a id="__codelineno-0-306" name="__codelineno-0-306"></a>                    <span class="s2">&quot;start&quot;</span><span class="p">:</span> <span class="n">start</span><span class="p">,</span>
-</span><span id="__span-0-307"><a id="__codelineno-0-307" name="__codelineno-0-307"></a>                    <span class="s2">&quot;end&quot;</span><span class="p">:</span> <span class="n">end</span><span class="p">,</span>
-</span><span id="__span-0-308"><a id="__codelineno-0-308" name="__codelineno-0-308"></a>                    <span class="s2">&quot;duration_minutes&quot;</span><span class="p">:</span> <span class="nb">round</span><span class="p">((</span><span class="n">end</span> <span class="o">-</span> <span class="n">start</span><span class="p">)</span><span class="o">.</span><span class="n">total_seconds</span><span class="p">()</span> <span class="o">/</span> <span class="mi">60</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
-</span><span id="__span-0-309"><a id="__codelineno-0-309" name="__codelineno-0-309"></a>                    <span class="s2">&quot;n_obs&quot;</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">g</span><span class="p">)),</span>
-</span><span id="__span-0-310"><a id="__codelineno-0-310" name="__codelineno-0-310"></a>                <span class="p">}</span>
-</span><span id="__span-0-311"><a id="__codelineno-0-311" name="__codelineno-0-311"></a>            <span class="p">)</span>
-</span><span id="__span-0-312"><a id="__codelineno-0-312" name="__codelineno-0-312"></a>    <span class="n">out</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">rows</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">_EPISODE_COLUMNS</span><span class="p">)</span>
-</span><span id="__span-0-313"><a id="__codelineno-0-313" name="__codelineno-0-313"></a>    <span class="k">return</span> <span class="n">out</span><span class="o">.</span><span class="n">sort_values</span><span class="p">([</span><span class="s2">&quot;system_id&quot;</span><span class="p">,</span> <span class="s2">&quot;station_id&quot;</span><span class="p">,</span> <span class="s2">&quot;start&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+              <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#gbfs_toolkit.stockout_episodes--source--__codelineno-0-248">248</a></span>
+<span class="normal"><a href="#gbfs_toolkit.stockout_episodes--source--__codelineno-0-249">249</a></span>
+<span class="normal"><a href="#gbfs_toolkit.stockout_episodes--source--__codelineno-0-250">250</a></span>
+<span class="normal"><a href="#gbfs_toolkit.stockout_episodes--source--__codelineno-0-251">251</a></span>
+<span class="normal"><a href="#gbfs_toolkit.stockout_episodes--source--__codelineno-0-252">252</a></span>
+<span class="normal"><a href="#gbfs_toolkit.stockout_episodes--source--__codelineno-0-253">253</a></span>
+<span class="normal"><a href="#gbfs_toolkit.stockout_episodes--source--__codelineno-0-254">254</a></span>
+<span class="normal"><a href="#gbfs_toolkit.stockout_episodes--source--__codelineno-0-255">255</a></span>
+<span class="normal"><a href="#gbfs_toolkit.stockout_episodes--source--__codelineno-0-256">256</a></span>
+<span class="normal"><a href="#gbfs_toolkit.stockout_episodes--source--__codelineno-0-257">257</a></span>
+<span class="normal"><a href="#gbfs_toolkit.stockout_episodes--source--__codelineno-0-258">258</a></span>
+<span class="normal"><a href="#gbfs_toolkit.stockout_episodes--source--__codelineno-0-259">259</a></span>
+<span class="normal"><a href="#gbfs_toolkit.stockout_episodes--source--__codelineno-0-260">260</a></span>
+<span class="normal"><a href="#gbfs_toolkit.stockout_episodes--source--__codelineno-0-261">261</a></span>
+<span class="normal"><a href="#gbfs_toolkit.stockout_episodes--source--__codelineno-0-262">262</a></span>
+<span class="normal"><a href="#gbfs_toolkit.stockout_episodes--source--__codelineno-0-263">263</a></span>
+<span class="normal"><a href="#gbfs_toolkit.stockout_episodes--source--__codelineno-0-264">264</a></span>
+<span class="normal"><a href="#gbfs_toolkit.stockout_episodes--source--__codelineno-0-265">265</a></span>
+<span class="normal"><a href="#gbfs_toolkit.stockout_episodes--source--__codelineno-0-266">266</a></span>
+<span class="normal"><a href="#gbfs_toolkit.stockout_episodes--source--__codelineno-0-267">267</a></span>
+<span class="normal"><a href="#gbfs_toolkit.stockout_episodes--source--__codelineno-0-268">268</a></span>
+<span class="normal"><a href="#gbfs_toolkit.stockout_episodes--source--__codelineno-0-269">269</a></span>
+<span class="normal"><a href="#gbfs_toolkit.stockout_episodes--source--__codelineno-0-270">270</a></span>
+<span class="normal"><a href="#gbfs_toolkit.stockout_episodes--source--__codelineno-0-271">271</a></span>
+<span class="normal"><a href="#gbfs_toolkit.stockout_episodes--source--__codelineno-0-272">272</a></span>
+<span class="normal"><a href="#gbfs_toolkit.stockout_episodes--source--__codelineno-0-273">273</a></span>
+<span class="normal"><a href="#gbfs_toolkit.stockout_episodes--source--__codelineno-0-274">274</a></span>
+<span class="normal"><a href="#gbfs_toolkit.stockout_episodes--source--__codelineno-0-275">275</a></span>
+<span class="normal"><a href="#gbfs_toolkit.stockout_episodes--source--__codelineno-0-276">276</a></span>
+<span class="normal"><a href="#gbfs_toolkit.stockout_episodes--source--__codelineno-0-277">277</a></span>
+<span class="normal"><a href="#gbfs_toolkit.stockout_episodes--source--__codelineno-0-278">278</a></span>
+<span class="normal"><a href="#gbfs_toolkit.stockout_episodes--source--__codelineno-0-279">279</a></span>
+<span class="normal"><a href="#gbfs_toolkit.stockout_episodes--source--__codelineno-0-280">280</a></span>
+<span class="normal"><a href="#gbfs_toolkit.stockout_episodes--source--__codelineno-0-281">281</a></span>
+<span class="normal"><a href="#gbfs_toolkit.stockout_episodes--source--__codelineno-0-282">282</a></span>
+<span class="normal"><a href="#gbfs_toolkit.stockout_episodes--source--__codelineno-0-283">283</a></span>
+<span class="normal"><a href="#gbfs_toolkit.stockout_episodes--source--__codelineno-0-284">284</a></span>
+<span class="normal"><a href="#gbfs_toolkit.stockout_episodes--source--__codelineno-0-285">285</a></span>
+<span class="normal"><a href="#gbfs_toolkit.stockout_episodes--source--__codelineno-0-286">286</a></span>
+<span class="normal"><a href="#gbfs_toolkit.stockout_episodes--source--__codelineno-0-287">287</a></span>
+<span class="normal"><a href="#gbfs_toolkit.stockout_episodes--source--__codelineno-0-288">288</a></span>
+<span class="normal"><a href="#gbfs_toolkit.stockout_episodes--source--__codelineno-0-289">289</a></span>
+<span class="normal"><a href="#gbfs_toolkit.stockout_episodes--source--__codelineno-0-290">290</a></span>
+<span class="normal"><a href="#gbfs_toolkit.stockout_episodes--source--__codelineno-0-291">291</a></span>
+<span class="normal"><a href="#gbfs_toolkit.stockout_episodes--source--__codelineno-0-292">292</a></span>
+<span class="normal"><a href="#gbfs_toolkit.stockout_episodes--source--__codelineno-0-293">293</a></span>
+<span class="normal"><a href="#gbfs_toolkit.stockout_episodes--source--__codelineno-0-294">294</a></span>
+<span class="normal"><a href="#gbfs_toolkit.stockout_episodes--source--__codelineno-0-295">295</a></span>
+<span class="normal"><a href="#gbfs_toolkit.stockout_episodes--source--__codelineno-0-296">296</a></span>
+<span class="normal"><a href="#gbfs_toolkit.stockout_episodes--source--__codelineno-0-297">297</a></span>
+<span class="normal"><a href="#gbfs_toolkit.stockout_episodes--source--__codelineno-0-298">298</a></span>
+<span class="normal"><a href="#gbfs_toolkit.stockout_episodes--source--__codelineno-0-299">299</a></span>
+<span class="normal"><a href="#gbfs_toolkit.stockout_episodes--source--__codelineno-0-300">300</a></span>
+<span class="normal"><a href="#gbfs_toolkit.stockout_episodes--source--__codelineno-0-301">301</a></span>
+<span class="normal"><a href="#gbfs_toolkit.stockout_episodes--source--__codelineno-0-302">302</a></span>
+<span class="normal"><a href="#gbfs_toolkit.stockout_episodes--source--__codelineno-0-303">303</a></span>
+<span class="normal"><a href="#gbfs_toolkit.stockout_episodes--source--__codelineno-0-304">304</a></span>
+<span class="normal"><a href="#gbfs_toolkit.stockout_episodes--source--__codelineno-0-305">305</a></span>
+<span class="normal"><a href="#gbfs_toolkit.stockout_episodes--source--__codelineno-0-306">306</a></span>
+<span class="normal"><a href="#gbfs_toolkit.stockout_episodes--source--__codelineno-0-307">307</a></span>
+<span class="normal"><a href="#gbfs_toolkit.stockout_episodes--source--__codelineno-0-308">308</a></span>
+<span class="normal"><a href="#gbfs_toolkit.stockout_episodes--source--__codelineno-0-309">309</a></span>
+<span class="normal"><a href="#gbfs_toolkit.stockout_episodes--source--__codelineno-0-310">310</a></span>
+<span class="normal"><a href="#gbfs_toolkit.stockout_episodes--source--__codelineno-0-311">311</a></span>
+<span class="normal"><a href="#gbfs_toolkit.stockout_episodes--source--__codelineno-0-312">312</a></span>
+<span class="normal"><a href="#gbfs_toolkit.stockout_episodes--source--__codelineno-0-313">313</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="gbfs_toolkit.stockout_episodes--source--__span-0-248"><a id="gbfs_toolkit.stockout_episodes--source--__codelineno-0-248" name="gbfs_toolkit.stockout_episodes--source--__codelineno-0-248"></a><span class="k">def</span><span class="w"> </span><span class="nf">stockout_episodes</span><span class="p">(</span>
+</span><span id="gbfs_toolkit.stockout_episodes--source--__span-0-249"><a id="gbfs_toolkit.stockout_episodes--source--__codelineno-0-249" name="gbfs_toolkit.stockout_episodes--source--__codelineno-0-249"></a>    <span class="n">panel</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">kinds</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="s2">"empty"</span><span class="p">,</span> <span class="s2">"full"</span><span class="p">)</span>
+</span><span id="gbfs_toolkit.stockout_episodes--source--__span-0-250"><a id="gbfs_toolkit.stockout_episodes--source--__codelineno-0-250" name="gbfs_toolkit.stockout_episodes--source--__codelineno-0-250"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+</span><span id="gbfs_toolkit.stockout_episodes--source--__span-0-251"><a id="gbfs_toolkit.stockout_episodes--source--__codelineno-0-251" name="gbfs_toolkit.stockout_episodes--source--__codelineno-0-251"></a><span class="w">    </span><span class="sd">"""Discrete empty/full episodes per station: the service-quality view of a panel.</span>
+</span><span id="gbfs_toolkit.stockout_episodes--source--__span-0-252"><a id="gbfs_toolkit.stockout_episodes--source--__codelineno-0-252" name="gbfs_toolkit.stockout_episodes--source--__codelineno-0-252"></a>
+</span><span id="gbfs_toolkit.stockout_episodes--source--__span-0-253"><a id="gbfs_toolkit.stockout_episodes--source--__codelineno-0-253" name="gbfs_toolkit.stockout_episodes--source--__codelineno-0-253"></a><span class="sd">    Where [`coverage_report`][gbfs_toolkit.coverage_report] and ``availability_stats`` give *fractions* of time, this</span>
+</span><span id="gbfs_toolkit.stockout_episodes--source--__span-0-254"><a id="gbfs_toolkit.stockout_episodes--source--__codelineno-0-254" name="gbfs_toolkit.stockout_episodes--source--__codelineno-0-254"></a><span class="sd">    returns the individual outage **events**: each contiguous run of empty (no bikes) or full</span>
+</span><span id="gbfs_toolkit.stockout_episodes--source--__span-0-255"><a id="gbfs_toolkit.stockout_episodes--source--__codelineno-0-255" name="gbfs_toolkit.stockout_episodes--source--__codelineno-0-255"></a><span class="sd">    (no docks) snapshots becomes one row, so you can study how *often* stockouts happen and how</span>
+</span><span id="gbfs_toolkit.stockout_episodes--source--__span-0-256"><a id="gbfs_toolkit.stockout_episodes--source--__codelineno-0-256" name="gbfs_toolkit.stockout_episodes--source--__codelineno-0-256"></a><span class="sd">    *long* they last. Durations span the observed snapshots in the run (a single-observation</span>
+</span><span id="gbfs_toolkit.stockout_episodes--source--__span-0-257"><a id="gbfs_toolkit.stockout_episodes--source--__codelineno-0-257" name="gbfs_toolkit.stockout_episodes--source--__codelineno-0-257"></a><span class="sd">    episode has duration 0); read them together with [`coverage_report`][gbfs_toolkit.coverage_report].</span>
+</span><span id="gbfs_toolkit.stockout_episodes--source--__span-0-258"><a id="gbfs_toolkit.stockout_episodes--source--__codelineno-0-258" name="gbfs_toolkit.stockout_episodes--source--__codelineno-0-258"></a>
+</span><span id="gbfs_toolkit.stockout_episodes--source--__span-0-259"><a id="gbfs_toolkit.stockout_episodes--source--__codelineno-0-259" name="gbfs_toolkit.stockout_episodes--source--__codelineno-0-259"></a><span class="sd">    Parameters</span>
+</span><span id="gbfs_toolkit.stockout_episodes--source--__span-0-260"><a id="gbfs_toolkit.stockout_episodes--source--__codelineno-0-260" name="gbfs_toolkit.stockout_episodes--source--__codelineno-0-260"></a><span class="sd">    ----------</span>
+</span><span id="gbfs_toolkit.stockout_episodes--source--__span-0-261"><a id="gbfs_toolkit.stockout_episodes--source--__codelineno-0-261" name="gbfs_toolkit.stockout_episodes--source--__codelineno-0-261"></a><span class="sd">    panel : pandas.DataFrame</span>
+</span><span id="gbfs_toolkit.stockout_episodes--source--__span-0-262"><a id="gbfs_toolkit.stockout_episodes--source--__codelineno-0-262" name="gbfs_toolkit.stockout_episodes--source--__codelineno-0-262"></a><span class="sd">        From [`build_availability_panel`][gbfs_toolkit.build_availability_panel] (MultiIndexed) or a flat frame with</span>
+</span><span id="gbfs_toolkit.stockout_episodes--source--__span-0-263"><a id="gbfs_toolkit.stockout_episodes--source--__codelineno-0-263" name="gbfs_toolkit.stockout_episodes--source--__codelineno-0-263"></a><span class="sd">        ``system_id, station_id, fetched_at, num_bikes_available, num_docks_available``.</span>
+</span><span id="gbfs_toolkit.stockout_episodes--source--__span-0-264"><a id="gbfs_toolkit.stockout_episodes--source--__codelineno-0-264" name="gbfs_toolkit.stockout_episodes--source--__codelineno-0-264"></a><span class="sd">    kinds : tuple of {"empty", "full"}</span>
+</span><span id="gbfs_toolkit.stockout_episodes--source--__span-0-265"><a id="gbfs_toolkit.stockout_episodes--source--__codelineno-0-265" name="gbfs_toolkit.stockout_episodes--source--__codelineno-0-265"></a><span class="sd">        Which outage types to extract.</span>
+</span><span id="gbfs_toolkit.stockout_episodes--source--__span-0-266"><a id="gbfs_toolkit.stockout_episodes--source--__codelineno-0-266" name="gbfs_toolkit.stockout_episodes--source--__codelineno-0-266"></a>
+</span><span id="gbfs_toolkit.stockout_episodes--source--__span-0-267"><a id="gbfs_toolkit.stockout_episodes--source--__codelineno-0-267" name="gbfs_toolkit.stockout_episodes--source--__codelineno-0-267"></a><span class="sd">    Returns</span>
+</span><span id="gbfs_toolkit.stockout_episodes--source--__span-0-268"><a id="gbfs_toolkit.stockout_episodes--source--__codelineno-0-268" name="gbfs_toolkit.stockout_episodes--source--__codelineno-0-268"></a><span class="sd">    -------</span>
+</span><span id="gbfs_toolkit.stockout_episodes--source--__span-0-269"><a id="gbfs_toolkit.stockout_episodes--source--__codelineno-0-269" name="gbfs_toolkit.stockout_episodes--source--__codelineno-0-269"></a><span class="sd">    pandas.DataFrame</span>
+</span><span id="gbfs_toolkit.stockout_episodes--source--__span-0-270"><a id="gbfs_toolkit.stockout_episodes--source--__codelineno-0-270" name="gbfs_toolkit.stockout_episodes--source--__codelineno-0-270"></a><span class="sd">        One row per episode: ``system_id, station_id, kind, start, end, duration_minutes,</span>
+</span><span id="gbfs_toolkit.stockout_episodes--source--__span-0-271"><a id="gbfs_toolkit.stockout_episodes--source--__codelineno-0-271" name="gbfs_toolkit.stockout_episodes--source--__codelineno-0-271"></a><span class="sd">        n_obs`` (sorted by station then start).</span>
+</span><span id="gbfs_toolkit.stockout_episodes--source--__span-0-272"><a id="gbfs_toolkit.stockout_episodes--source--__codelineno-0-272" name="gbfs_toolkit.stockout_episodes--source--__codelineno-0-272"></a>
+</span><span id="gbfs_toolkit.stockout_episodes--source--__span-0-273"><a id="gbfs_toolkit.stockout_episodes--source--__codelineno-0-273" name="gbfs_toolkit.stockout_episodes--source--__codelineno-0-273"></a><span class="sd">    See Also</span>
+</span><span id="gbfs_toolkit.stockout_episodes--source--__span-0-274"><a id="gbfs_toolkit.stockout_episodes--source--__codelineno-0-274" name="gbfs_toolkit.stockout_episodes--source--__codelineno-0-274"></a><span class="sd">    --------</span>
+</span><span id="gbfs_toolkit.stockout_episodes--source--__span-0-275"><a id="gbfs_toolkit.stockout_episodes--source--__codelineno-0-275" name="gbfs_toolkit.stockout_episodes--source--__codelineno-0-275"></a><span class="sd">    [`detect_frozen_stations`][gbfs_toolkit.detect_frozen_stations] : Find stuck (never-changing) stations.</span>
+</span><span id="gbfs_toolkit.stockout_episodes--source--__span-0-276"><a id="gbfs_toolkit.stockout_episodes--source--__codelineno-0-276" name="gbfs_toolkit.stockout_episodes--source--__codelineno-0-276"></a><span class="sd">    [`build_availability_panel`][gbfs_toolkit.build_availability_panel] : The panel this scans.</span>
+</span><span id="gbfs_toolkit.stockout_episodes--source--__span-0-277"><a id="gbfs_toolkit.stockout_episodes--source--__codelineno-0-277" name="gbfs_toolkit.stockout_episodes--source--__codelineno-0-277"></a><span class="sd">    """</span>
+</span><span id="gbfs_toolkit.stockout_episodes--source--__span-0-278"><a id="gbfs_toolkit.stockout_episodes--source--__codelineno-0-278" name="gbfs_toolkit.stockout_episodes--source--__codelineno-0-278"></a>    <span class="n">df</span> <span class="o">=</span> <span class="n">panel_frame</span><span class="p">(</span><span class="n">panel</span><span class="p">)</span>
+</span><span id="gbfs_toolkit.stockout_episodes--source--__span-0-279"><a id="gbfs_toolkit.stockout_episodes--source--__codelineno-0-279" name="gbfs_toolkit.stockout_episodes--source--__codelineno-0-279"></a>    <span class="n">require_columns</span><span class="p">(</span>
+</span><span id="gbfs_toolkit.stockout_episodes--source--__span-0-280"><a id="gbfs_toolkit.stockout_episodes--source--__codelineno-0-280" name="gbfs_toolkit.stockout_episodes--source--__codelineno-0-280"></a>        <span class="n">df</span><span class="p">,</span>
+</span><span id="gbfs_toolkit.stockout_episodes--source--__span-0-281"><a id="gbfs_toolkit.stockout_episodes--source--__codelineno-0-281" name="gbfs_toolkit.stockout_episodes--source--__codelineno-0-281"></a>        <span class="p">[</span><span class="s2">"system_id"</span><span class="p">,</span> <span class="s2">"station_id"</span><span class="p">,</span> <span class="s2">"fetched_at"</span><span class="p">,</span> <span class="s2">"num_bikes_available"</span><span class="p">,</span> <span class="s2">"num_docks_available"</span><span class="p">],</span>
+</span><span id="gbfs_toolkit.stockout_episodes--source--__span-0-282"><a id="gbfs_toolkit.stockout_episodes--source--__codelineno-0-282" name="gbfs_toolkit.stockout_episodes--source--__codelineno-0-282"></a>        <span class="n">what</span><span class="o">=</span><span class="s2">"stockout_episodes"</span><span class="p">,</span>
+</span><span id="gbfs_toolkit.stockout_episodes--source--__span-0-283"><a id="gbfs_toolkit.stockout_episodes--source--__codelineno-0-283" name="gbfs_toolkit.stockout_episodes--source--__codelineno-0-283"></a>    <span class="p">)</span>
+</span><span id="gbfs_toolkit.stockout_episodes--source--__span-0-284"><a id="gbfs_toolkit.stockout_episodes--source--__codelineno-0-284" name="gbfs_toolkit.stockout_episodes--source--__codelineno-0-284"></a>    <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">sort_values</span><span class="p">([</span><span class="s2">"system_id"</span><span class="p">,</span> <span class="s2">"station_id"</span><span class="p">,</span> <span class="s2">"fetched_at"</span><span class="p">])</span>
+</span><span id="gbfs_toolkit.stockout_episodes--source--__span-0-285"><a id="gbfs_toolkit.stockout_episodes--source--__codelineno-0-285" name="gbfs_toolkit.stockout_episodes--source--__codelineno-0-285"></a>    <span class="n">bikes</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_numeric</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">"num_bikes_available"</span><span class="p">],</span> <span class="n">errors</span><span class="o">=</span><span class="s2">"coerce"</span><span class="p">)</span>
+</span><span id="gbfs_toolkit.stockout_episodes--source--__span-0-286"><a id="gbfs_toolkit.stockout_episodes--source--__codelineno-0-286" name="gbfs_toolkit.stockout_episodes--source--__codelineno-0-286"></a>    <span class="n">docks</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_numeric</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">"num_docks_available"</span><span class="p">],</span> <span class="n">errors</span><span class="o">=</span><span class="s2">"coerce"</span><span class="p">)</span>
+</span><span id="gbfs_toolkit.stockout_episodes--source--__span-0-287"><a id="gbfs_toolkit.stockout_episodes--source--__codelineno-0-287" name="gbfs_toolkit.stockout_episodes--source--__codelineno-0-287"></a>    <span class="n">state</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"empty"</span><span class="p">:</span> <span class="n">bikes</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">"full"</span><span class="p">:</span> <span class="n">docks</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">}</span>
+</span><span id="gbfs_toolkit.stockout_episodes--source--__span-0-288"><a id="gbfs_toolkit.stockout_episodes--source--__codelineno-0-288" name="gbfs_toolkit.stockout_episodes--source--__codelineno-0-288"></a>
+</span><span id="gbfs_toolkit.stockout_episodes--source--__span-0-289"><a id="gbfs_toolkit.stockout_episodes--source--__codelineno-0-289" name="gbfs_toolkit.stockout_episodes--source--__codelineno-0-289"></a>    <span class="n">rows</span> <span class="o">=</span> <span class="p">[]</span>
+</span><span id="gbfs_toolkit.stockout_episodes--source--__span-0-290"><a id="gbfs_toolkit.stockout_episodes--source--__codelineno-0-290" name="gbfs_toolkit.stockout_episodes--source--__codelineno-0-290"></a>    <span class="n">keys</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"system_id"</span><span class="p">,</span> <span class="s2">"station_id"</span><span class="p">]</span>
+</span><span id="gbfs_toolkit.stockout_episodes--source--__span-0-291"><a id="gbfs_toolkit.stockout_episodes--source--__codelineno-0-291" name="gbfs_toolkit.stockout_episodes--source--__codelineno-0-291"></a>    <span class="k">for</span> <span class="n">kind</span> <span class="ow">in</span> <span class="n">kinds</span><span class="p">:</span>
+</span><span id="gbfs_toolkit.stockout_episodes--source--__span-0-292"><a id="gbfs_toolkit.stockout_episodes--source--__codelineno-0-292" name="gbfs_toolkit.stockout_episodes--source--__codelineno-0-292"></a>        <span class="n">tmp</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">keys</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+</span><span id="gbfs_toolkit.stockout_episodes--source--__span-0-293"><a id="gbfs_toolkit.stockout_episodes--source--__codelineno-0-293" name="gbfs_toolkit.stockout_episodes--source--__codelineno-0-293"></a>        <span class="n">tmp</span><span class="p">[</span><span class="s2">"_flag"</span><span class="p">]</span> <span class="o">=</span> <span class="n">state</span><span class="p">[</span><span class="n">kind</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
+</span><span id="gbfs_toolkit.stockout_episodes--source--__span-0-294"><a id="gbfs_toolkit.stockout_episodes--source--__codelineno-0-294" name="gbfs_toolkit.stockout_episodes--source--__codelineno-0-294"></a>        <span class="c1"># a new run starts whenever the flag changes (groupby shift resets at station bounds)</span>
+</span><span id="gbfs_toolkit.stockout_episodes--source--__span-0-295"><a id="gbfs_toolkit.stockout_episodes--source--__codelineno-0-295" name="gbfs_toolkit.stockout_episodes--source--__codelineno-0-295"></a>        <span class="n">shifted</span> <span class="o">=</span> <span class="n">tmp</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="n">keys</span><span class="p">,</span> <span class="n">sort</span><span class="o">=</span><span class="kc">False</span><span class="p">)[</span><span class="s2">"_flag"</span><span class="p">]</span><span class="o">.</span><span class="n">shift</span><span class="p">()</span>
+</span><span id="gbfs_toolkit.stockout_episodes--source--__span-0-296"><a id="gbfs_toolkit.stockout_episodes--source--__codelineno-0-296" name="gbfs_toolkit.stockout_episodes--source--__codelineno-0-296"></a>        <span class="n">run</span> <span class="o">=</span> <span class="p">(</span><span class="n">tmp</span><span class="p">[</span><span class="s2">"_flag"</span><span class="p">]</span> <span class="o">!=</span> <span class="n">shifted</span><span class="p">)</span><span class="o">.</span><span class="n">cumsum</span><span class="p">()</span>
+</span><span id="gbfs_toolkit.stockout_episodes--source--__span-0-297"><a id="gbfs_toolkit.stockout_episodes--source--__codelineno-0-297" name="gbfs_toolkit.stockout_episodes--source--__codelineno-0-297"></a>        <span class="n">mask</span> <span class="o">=</span> <span class="n">tmp</span><span class="p">[</span><span class="s2">"_flag"</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
+</span><span id="gbfs_toolkit.stockout_episodes--source--__span-0-298"><a id="gbfs_toolkit.stockout_episodes--source--__codelineno-0-298" name="gbfs_toolkit.stockout_episodes--source--__codelineno-0-298"></a>        <span class="n">active</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span><span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">_run</span><span class="o">=</span><span class="n">run</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">())</span>
+</span><span id="gbfs_toolkit.stockout_episodes--source--__span-0-299"><a id="gbfs_toolkit.stockout_episodes--source--__codelineno-0-299" name="gbfs_toolkit.stockout_episodes--source--__codelineno-0-299"></a>        <span class="k">for</span> <span class="p">(</span><span class="n">sid</span><span class="p">,</span> <span class="n">stid</span><span class="p">,</span> <span class="n">_r</span><span class="p">),</span> <span class="n">g</span> <span class="ow">in</span> <span class="n">active</span><span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="o">*</span><span class="n">keys</span><span class="p">,</span> <span class="s2">"_run"</span><span class="p">],</span> <span class="n">sort</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+</span><span id="gbfs_toolkit.stockout_episodes--source--__span-0-300"><a id="gbfs_toolkit.stockout_episodes--source--__codelineno-0-300" name="gbfs_toolkit.stockout_episodes--source--__codelineno-0-300"></a>            <span class="n">start</span><span class="p">,</span> <span class="n">end</span> <span class="o">=</span> <span class="n">g</span><span class="p">[</span><span class="s2">"fetched_at"</span><span class="p">]</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="n">g</span><span class="p">[</span><span class="s2">"fetched_at"</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
+</span><span id="gbfs_toolkit.stockout_episodes--source--__span-0-301"><a id="gbfs_toolkit.stockout_episodes--source--__codelineno-0-301" name="gbfs_toolkit.stockout_episodes--source--__codelineno-0-301"></a>            <span class="n">rows</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+</span><span id="gbfs_toolkit.stockout_episodes--source--__span-0-302"><a id="gbfs_toolkit.stockout_episodes--source--__codelineno-0-302" name="gbfs_toolkit.stockout_episodes--source--__codelineno-0-302"></a>                <span class="p">{</span>
+</span><span id="gbfs_toolkit.stockout_episodes--source--__span-0-303"><a id="gbfs_toolkit.stockout_episodes--source--__codelineno-0-303" name="gbfs_toolkit.stockout_episodes--source--__codelineno-0-303"></a>                    <span class="s2">"system_id"</span><span class="p">:</span> <span class="n">sid</span><span class="p">,</span>
+</span><span id="gbfs_toolkit.stockout_episodes--source--__span-0-304"><a id="gbfs_toolkit.stockout_episodes--source--__codelineno-0-304" name="gbfs_toolkit.stockout_episodes--source--__codelineno-0-304"></a>                    <span class="s2">"station_id"</span><span class="p">:</span> <span class="n">stid</span><span class="p">,</span>
+</span><span id="gbfs_toolkit.stockout_episodes--source--__span-0-305"><a id="gbfs_toolkit.stockout_episodes--source--__codelineno-0-305" name="gbfs_toolkit.stockout_episodes--source--__codelineno-0-305"></a>                    <span class="s2">"kind"</span><span class="p">:</span> <span class="n">kind</span><span class="p">,</span>
+</span><span id="gbfs_toolkit.stockout_episodes--source--__span-0-306"><a id="gbfs_toolkit.stockout_episodes--source--__codelineno-0-306" name="gbfs_toolkit.stockout_episodes--source--__codelineno-0-306"></a>                    <span class="s2">"start"</span><span class="p">:</span> <span class="n">start</span><span class="p">,</span>
+</span><span id="gbfs_toolkit.stockout_episodes--source--__span-0-307"><a id="gbfs_toolkit.stockout_episodes--source--__codelineno-0-307" name="gbfs_toolkit.stockout_episodes--source--__codelineno-0-307"></a>                    <span class="s2">"end"</span><span class="p">:</span> <span class="n">end</span><span class="p">,</span>
+</span><span id="gbfs_toolkit.stockout_episodes--source--__span-0-308"><a id="gbfs_toolkit.stockout_episodes--source--__codelineno-0-308" name="gbfs_toolkit.stockout_episodes--source--__codelineno-0-308"></a>                    <span class="s2">"duration_minutes"</span><span class="p">:</span> <span class="nb">round</span><span class="p">((</span><span class="n">end</span> <span class="o">-</span> <span class="n">start</span><span class="p">)</span><span class="o">.</span><span class="n">total_seconds</span><span class="p">()</span> <span class="o">/</span> <span class="mi">60</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+</span><span id="gbfs_toolkit.stockout_episodes--source--__span-0-309"><a id="gbfs_toolkit.stockout_episodes--source--__codelineno-0-309" name="gbfs_toolkit.stockout_episodes--source--__codelineno-0-309"></a>                    <span class="s2">"n_obs"</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">g</span><span class="p">)),</span>
+</span><span id="gbfs_toolkit.stockout_episodes--source--__span-0-310"><a id="gbfs_toolkit.stockout_episodes--source--__codelineno-0-310" name="gbfs_toolkit.stockout_episodes--source--__codelineno-0-310"></a>                <span class="p">}</span>
+</span><span id="gbfs_toolkit.stockout_episodes--source--__span-0-311"><a id="gbfs_toolkit.stockout_episodes--source--__codelineno-0-311" name="gbfs_toolkit.stockout_episodes--source--__codelineno-0-311"></a>            <span class="p">)</span>
+</span><span id="gbfs_toolkit.stockout_episodes--source--__span-0-312"><a id="gbfs_toolkit.stockout_episodes--source--__codelineno-0-312" name="gbfs_toolkit.stockout_episodes--source--__codelineno-0-312"></a>    <span class="n">out</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">rows</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">_EPISODE_COLUMNS</span><span class="p">)</span>
+</span><span id="gbfs_toolkit.stockout_episodes--source--__span-0-313"><a id="gbfs_toolkit.stockout_episodes--source--__codelineno-0-313" name="gbfs_toolkit.stockout_episodes--source--__codelineno-0-313"></a>    <span class="k">return</span> <span class="n">out</span><span class="o">.</span><span class="n">sort_values</span><span class="p">([</span><span class="s2">"system_id"</span><span class="p">,</span> <span class="s2">"station_id"</span><span class="p">,</span> <span class="s2">"start"</span><span class="p">])</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </span></code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -6776,10 +6776,10 @@ n_obs</code> (sorted by station then start).</p>
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.instant", "navigation.instant.progress", "navigation.tracking", "navigation.sections", "navigation.tabs", "navigation.tabs.sticky", "navigation.top", "navigation.indexes", "navigation.footer", "toc.follow", "search.suggest", "search.highlight", "search.share", "content.code.copy", "content.code.annotate", "content.tooltips"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.instant", "navigation.instant.progress", "navigation.tracking", "navigation.sections", "navigation.tabs", "navigation.tabs.sticky", "navigation.top", "navigation.indexes", "navigation.footer", "toc.follow", "search.suggest", "search.highlight", "search.share", "content.code.copy", "content.code.annotate", "content.tooltips"], "search": "../../../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
     
     
-      <script src="../../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../../../assets/javascripts/bundle.c21346df.min.js"></script>
       
         <script src="../../../javascripts/mathjax.js"></script>
       

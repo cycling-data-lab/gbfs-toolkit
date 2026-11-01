@@ -25,7 +25,7 @@
       
       
       <link rel="icon" href="../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-ProperDocs 1.6.7, mkdocs-material-9.7.6">
+      <meta name="generator" content="mkdocs-ProperDocs 1.6.7, mkdocs-material-9.8.0">
     
     
       
@@ -33,10 +33,10 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.57a0d79d.min.css">
       
         
-        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+        <link rel="stylesheet" href="../assets/stylesheets/palette.fb2fffe2.min.css">
       
       
 
@@ -1289,7 +1289,7 @@
   <span class="md-ellipsis">
     
   
-    __version__
+    _version_
   
 
     
@@ -6575,11 +6575,11 @@ environment. Heavier capabilities are isolated behind optional extras and lazy i
 core never pulls in geopandas, pyarrow or scikit-learn unless you ask for them.</p>
 <h2 id="installation">Installation<a class="headerlink" href="#installation" title="Permanent link">&para;</a></h2>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>pip<span class="w"> </span>install<span class="w"> </span>gbfs-toolkit<span class="w">                                  </span><span class="c1"># core only</span>
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;gbfs-toolkit[fetch,parquet]&quot;</span><span class="w">                 </span><span class="c1"># a typical collection setup</span>
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;gbfs-toolkit[fetch,parquet,cluster,geo,osm,dtw]&quot;</span><span class="w">   </span><span class="c1"># everything</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">"gbfs-toolkit[fetch,parquet]"</span><span class="w">                 </span><span class="c1"># a typical collection setup</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">"gbfs-toolkit[fetch,parquet,cluster,geo,osm,dtw]"</span><span class="w">   </span><span class="c1"># everything</span>
 </span></code></pre></div>
 <p>From a local clone, for development:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;.[dev]&quot;</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span><span class="s2">".[dev]"</span>
 </span></code></pre></div>
 <h2 id="extras-matrix">Extras matrix<a class="headerlink" href="#extras-matrix" title="Permanent link">&para;</a></h2>
 <p>Each extra unlocks one functional area. Installing a function's feature without its extra raises a
@@ -6647,9 +6647,9 @@ offline tests. No network access is required.</p>
 </span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>
 </span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="n">info</span><span class="p">,</span> <span class="n">status</span> <span class="o">=</span> <span class="n">gb</span><span class="o">.</span><span class="n">load_example</span><span class="p">()</span>                 <span class="c1"># canonical (station_info, station_status)</span>
 </span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="n">verdict</span> <span class="o">=</span> <span class="n">gb</span><span class="o">.</span><span class="n">audit_static</span><span class="p">(</span><span class="n">info</span><span class="p">)</span>                  <span class="c1"># A1–A7 verdict, one row per station</span>
-</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="n">clean</span> <span class="o">=</span> <span class="n">info</span><span class="p">[</span><span class="o">~</span><span class="n">verdict</span><span class="p">[</span><span class="s2">&quot;flagged&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()]</span>     <span class="c1"># keep the trustworthy stations</span>
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="n">clean</span> <span class="o">=</span> <span class="n">info</span><span class="p">[</span><span class="o">~</span><span class="n">verdict</span><span class="p">[</span><span class="s2">"flagged"</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()]</span>     <span class="c1"># keep the trustworthy stations</span>
 </span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="n">av</span> <span class="o">=</span> <span class="n">gb</span><span class="o">.</span><span class="n">join_availability</span><span class="p">(</span><span class="n">info</span><span class="p">,</span> <span class="n">status</span><span class="p">)</span>          <span class="c1"># bikes and docks per station</span>
-</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="n">av</span><span class="p">[</span><span class="s2">&quot;occupancy&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">gb</span><span class="o">.</span><span class="n">occupancy</span><span class="p">(</span><span class="n">av</span><span class="p">)</span>               <span class="c1"># bikes / (bikes + docks), NaN-safe</span>
+</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="n">av</span><span class="p">[</span><span class="s2">"occupancy"</span><span class="p">]</span> <span class="o">=</span> <span class="n">gb</span><span class="o">.</span><span class="n">occupancy</span><span class="p">(</span><span class="n">av</span><span class="p">)</span>               <span class="c1"># bikes / (bikes + docks), NaN-safe</span>
 </span></code></pre></div>
 <p>Every public function is also a <code>.gbfs</code> accessor method and is pure, so method chaining and
 <code>df.pipe(...)</code> both work:</p>
@@ -6661,8 +6661,8 @@ offline tests. No network access is required.</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
 </span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="kn">import</span><span class="w"> </span><span class="nn">gbfs_toolkit</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">gb</span>
 </span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
-</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="n">raw</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="s2">&quot;station_information.json&quot;</span><span class="p">))</span>
-</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="n">stations</span> <span class="o">=</span> <span class="n">gb</span><span class="o">.</span><span class="n">to_canonical_station_info</span><span class="p">(</span><span class="n">raw</span><span class="p">,</span> <span class="n">system_id</span><span class="o">=</span><span class="s2">&quot;velib&quot;</span><span class="p">)</span>   <span class="c1"># version-independent frame</span>
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="n">raw</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="s2">"station_information.json"</span><span class="p">))</span>
+</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="n">stations</span> <span class="o">=</span> <span class="n">gb</span><span class="o">.</span><span class="n">to_canonical_station_info</span><span class="p">(</span><span class="n">raw</span><span class="p">,</span> <span class="n">system_id</span><span class="o">=</span><span class="s2">"velib"</span><span class="p">)</span>   <span class="c1"># version-independent frame</span>
 </span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="n">verdict</span> <span class="o">=</span> <span class="n">gb</span><span class="o">.</span><span class="n">audit_static</span><span class="p">(</span><span class="n">stations</span><span class="p">)</span>                               <span class="c1"># A1–A7 per station</span>
 </span></code></pre></div>
 <h2 id="command-line">Command line<a class="headerlink" href="#command-line" title="Permanent link">&para;</a></h2>
@@ -6678,7 +6678,7 @@ machine-readable summary, and <code>--a7-scope all</code> reproduces the <code>g
 <p>For a study that must be reproducible, pin the whole environment, not just <code>gbfs-toolkit</code>. The
 audit thresholds and the canonical schema are frozen under semantic versioning, so a pinned version
 reproduces the same verdicts.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;gbfs-toolkit==1.1.0&quot;</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">"gbfs-toolkit==1.1.0"</span>
 </span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>pip<span class="w"> </span>freeze<span class="w"> </span>&gt;<span class="w"> </span>requirements.lock<span class="w">          </span><span class="c1"># or use a Poetry / uv / conda lock file</span>
 </span></code></pre></div>
 <p>Record the lock file alongside your analysis. When you deposit a collected dataset, also record its
@@ -6823,10 +6823,10 @@ The core audit needs none of this.</p>
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.instant", "navigation.instant.progress", "navigation.tracking", "navigation.sections", "navigation.tabs", "navigation.tabs.sticky", "navigation.top", "navigation.indexes", "navigation.footer", "toc.follow", "search.suggest", "search.highlight", "search.share", "content.code.copy", "content.code.annotate", "content.tooltips"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.instant", "navigation.instant.progress", "navigation.tracking", "navigation.sections", "navigation.tabs", "navigation.tabs.sticky", "navigation.top", "navigation.indexes", "navigation.footer", "toc.follow", "search.suggest", "search.highlight", "search.share", "content.code.copy", "content.code.annotate", "content.tooltips"], "search": "../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
     
     
-      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../assets/javascripts/bundle.c21346df.min.js"></script>
       
         <script src="../javascripts/mathjax.js"></script>
       

@@ -25,7 +25,7 @@
       
       
       <link rel="icon" href="../../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-ProperDocs 1.6.7, mkdocs-material-9.7.6">
+      <meta name="generator" content="mkdocs-ProperDocs 1.6.7, mkdocs-material-9.8.0">
     
     
       
@@ -33,10 +33,10 @@
       
     
     
-      <link rel="stylesheet" href="../../../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.57a0d79d.min.css">
       
         
-        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.fb2fffe2.min.css">
       
       
 
@@ -1146,7 +1146,7 @@
   <span class="md-ellipsis">
     
   
-    __version__
+    _version_
   
 
     
@@ -6512,7 +6512,7 @@ drop or quarantine these rows.</p>
 
 <p><span class="doc-section-title">Examples:</span></p>
     <div class="language-pycon highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="gp">&gt;&gt;&gt; </span><span class="n">info</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s2">&quot;lat&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">48.85</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span> <span class="s2">&quot;lon&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">2.35</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">]})</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="gp">&gt;&gt;&gt; </span><span class="n">info</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s2">"lat"</span><span class="p">:</span> <span class="p">[</span><span class="mf">48.85</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span> <span class="s2">"lon"</span><span class="p">:</span> <span class="p">[</span><span class="mf">2.35</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">]})</span>
 </span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="gp">&gt;&gt;&gt; </span><span class="n">flag_sentinel_coordinates</span><span class="p">(</span><span class="n">info</span><span class="p">)</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
 </span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="go">[False, True]</span>
 </span></code></pre></div>
@@ -6520,77 +6520,77 @@ drop or quarantine these rows.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/gbfs_toolkit/audit/static.py</code></summary>
-              <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-307">307</a></span>
-<span class="normal"><a href="#__codelineno-0-308">308</a></span>
-<span class="normal"><a href="#__codelineno-0-309">309</a></span>
-<span class="normal"><a href="#__codelineno-0-310">310</a></span>
-<span class="normal"><a href="#__codelineno-0-311">311</a></span>
-<span class="normal"><a href="#__codelineno-0-312">312</a></span>
-<span class="normal"><a href="#__codelineno-0-313">313</a></span>
-<span class="normal"><a href="#__codelineno-0-314">314</a></span>
-<span class="normal"><a href="#__codelineno-0-315">315</a></span>
-<span class="normal"><a href="#__codelineno-0-316">316</a></span>
-<span class="normal"><a href="#__codelineno-0-317">317</a></span>
-<span class="normal"><a href="#__codelineno-0-318">318</a></span>
-<span class="normal"><a href="#__codelineno-0-319">319</a></span>
-<span class="normal"><a href="#__codelineno-0-320">320</a></span>
-<span class="normal"><a href="#__codelineno-0-321">321</a></span>
-<span class="normal"><a href="#__codelineno-0-322">322</a></span>
-<span class="normal"><a href="#__codelineno-0-323">323</a></span>
-<span class="normal"><a href="#__codelineno-0-324">324</a></span>
-<span class="normal"><a href="#__codelineno-0-325">325</a></span>
-<span class="normal"><a href="#__codelineno-0-326">326</a></span>
-<span class="normal"><a href="#__codelineno-0-327">327</a></span>
-<span class="normal"><a href="#__codelineno-0-328">328</a></span>
-<span class="normal"><a href="#__codelineno-0-329">329</a></span>
-<span class="normal"><a href="#__codelineno-0-330">330</a></span>
-<span class="normal"><a href="#__codelineno-0-331">331</a></span>
-<span class="normal"><a href="#__codelineno-0-332">332</a></span>
-<span class="normal"><a href="#__codelineno-0-333">333</a></span>
-<span class="normal"><a href="#__codelineno-0-334">334</a></span>
-<span class="normal"><a href="#__codelineno-0-335">335</a></span>
-<span class="normal"><a href="#__codelineno-0-336">336</a></span>
-<span class="normal"><a href="#__codelineno-0-337">337</a></span>
-<span class="normal"><a href="#__codelineno-0-338">338</a></span>
-<span class="normal"><a href="#__codelineno-0-339">339</a></span>
-<span class="normal"><a href="#__codelineno-0-340">340</a></span>
-<span class="normal"><a href="#__codelineno-0-341">341</a></span>
-<span class="normal"><a href="#__codelineno-0-342">342</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-307"><a id="__codelineno-0-307" name="__codelineno-0-307"></a><span class="k">def</span><span class="w"> </span><span class="nf">flag_sentinel_coordinates</span><span class="p">(</span><span class="n">info</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">tol</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1e-6</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">:</span>
-</span><span id="__span-0-308"><a id="__codelineno-0-308" name="__codelineno-0-308"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Boolean mask of stations sitting on the ``(0, 0)`` null-island sentinel.</span>
-</span><span id="__span-0-309"><a id="__codelineno-0-309" name="__codelineno-0-309"></a>
-</span><span id="__span-0-310"><a id="__codelineno-0-310" name="__codelineno-0-310"></a><span class="sd">    Operators sometimes publish ``lat = lon = 0`` as a placeholder for a station</span>
-</span><span id="__span-0-311"><a id="__codelineno-0-311" name="__codelineno-0-311"></a><span class="sd">    whose geolocation is pending. A single such point inflates a system&#39;s</span>
-</span><span id="__span-0-312"><a id="__codelineno-0-312" name="__codelineno-0-312"></a><span class="sd">    bounding-box area by orders of magnitude (the A5/A4 coupling behind the Sevici</span>
-</span><span id="__span-0-313"><a id="__codelineno-0-313" name="__codelineno-0-313"></a><span class="sd">    case), so it should be filtered before any geospatial rule. Use the mask to</span>
-</span><span id="__span-0-314"><a id="__codelineno-0-314" name="__codelineno-0-314"></a><span class="sd">    drop or quarantine these rows.</span>
-</span><span id="__span-0-315"><a id="__codelineno-0-315" name="__codelineno-0-315"></a>
-</span><span id="__span-0-316"><a id="__codelineno-0-316" name="__codelineno-0-316"></a><span class="sd">    Parameters</span>
-</span><span id="__span-0-317"><a id="__codelineno-0-317" name="__codelineno-0-317"></a><span class="sd">    ----------</span>
-</span><span id="__span-0-318"><a id="__codelineno-0-318" name="__codelineno-0-318"></a><span class="sd">    info : pandas.DataFrame</span>
-</span><span id="__span-0-319"><a id="__codelineno-0-319" name="__codelineno-0-319"></a><span class="sd">        Requires ``lat`` and ``lon``.</span>
-</span><span id="__span-0-320"><a id="__codelineno-0-320" name="__codelineno-0-320"></a><span class="sd">    tol : float, default 1e-6</span>
-</span><span id="__span-0-321"><a id="__codelineno-0-321" name="__codelineno-0-321"></a><span class="sd">        Degrees within which a coordinate counts as the ``(0, 0)`` sentinel.</span>
-</span><span id="__span-0-322"><a id="__codelineno-0-322" name="__codelineno-0-322"></a>
-</span><span id="__span-0-323"><a id="__codelineno-0-323" name="__codelineno-0-323"></a><span class="sd">    Returns</span>
-</span><span id="__span-0-324"><a id="__codelineno-0-324" name="__codelineno-0-324"></a><span class="sd">    -------</span>
-</span><span id="__span-0-325"><a id="__codelineno-0-325" name="__codelineno-0-325"></a><span class="sd">    pandas.Series</span>
-</span><span id="__span-0-326"><a id="__codelineno-0-326" name="__codelineno-0-326"></a><span class="sd">        Boolean mask aligned to ``info`` (``True`` where a station is on the sentinel).</span>
-</span><span id="__span-0-327"><a id="__codelineno-0-327" name="__codelineno-0-327"></a>
-</span><span id="__span-0-328"><a id="__codelineno-0-328" name="__codelineno-0-328"></a><span class="sd">    See Also</span>
-</span><span id="__span-0-329"><a id="__codelineno-0-329" name="__codelineno-0-329"></a><span class="sd">    --------</span>
-</span><span id="__span-0-330"><a id="__codelineno-0-330" name="__codelineno-0-330"></a><span class="sd">    [`audit_static`][gbfs_toolkit.audit_static] : The A1-A7 audit; filter the sentinel before its A4/A5 geometry rules.</span>
-</span><span id="__span-0-331"><a id="__codelineno-0-331" name="__codelineno-0-331"></a>
-</span><span id="__span-0-332"><a id="__codelineno-0-332" name="__codelineno-0-332"></a><span class="sd">    Examples</span>
-</span><span id="__span-0-333"><a id="__codelineno-0-333" name="__codelineno-0-333"></a><span class="sd">    --------</span>
-</span><span id="__span-0-334"><a id="__codelineno-0-334" name="__codelineno-0-334"></a><span class="sd">    &gt;&gt;&gt; import pandas as pd</span>
-</span><span id="__span-0-335"><a id="__codelineno-0-335" name="__codelineno-0-335"></a><span class="sd">    &gt;&gt;&gt; info = pd.DataFrame({&quot;lat&quot;: [48.85, 0.0], &quot;lon&quot;: [2.35, 0.0]})</span>
-</span><span id="__span-0-336"><a id="__codelineno-0-336" name="__codelineno-0-336"></a><span class="sd">    &gt;&gt;&gt; flag_sentinel_coordinates(info).tolist()</span>
-</span><span id="__span-0-337"><a id="__codelineno-0-337" name="__codelineno-0-337"></a><span class="sd">    [False, True]</span>
-</span><span id="__span-0-338"><a id="__codelineno-0-338" name="__codelineno-0-338"></a><span class="sd">    &quot;&quot;&quot;</span>
-</span><span id="__span-0-339"><a id="__codelineno-0-339" name="__codelineno-0-339"></a>    <span class="n">require_columns</span><span class="p">(</span><span class="n">info</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;lat&quot;</span><span class="p">,</span> <span class="s2">&quot;lon&quot;</span><span class="p">],</span> <span class="n">what</span><span class="o">=</span><span class="s2">&quot;flag_sentinel_coordinates&quot;</span><span class="p">)</span>
-</span><span id="__span-0-340"><a id="__codelineno-0-340" name="__codelineno-0-340"></a>    <span class="n">lat</span> <span class="o">=</span> <span class="n">info</span><span class="p">[</span><span class="s2">&quot;lat&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s2">&quot;float64&quot;</span><span class="p">)</span>
-</span><span id="__span-0-341"><a id="__codelineno-0-341" name="__codelineno-0-341"></a>    <span class="n">lon</span> <span class="o">=</span> <span class="n">info</span><span class="p">[</span><span class="s2">&quot;lon&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s2">&quot;float64&quot;</span><span class="p">)</span>
-</span><span id="__span-0-342"><a id="__codelineno-0-342" name="__codelineno-0-342"></a>    <span class="k">return</span> <span class="p">(</span><span class="n">lat</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span> <span class="o">&lt;</span> <span class="n">tol</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">lon</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span> <span class="o">&lt;</span> <span class="n">tol</span><span class="p">)</span>
+              <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#gbfs_toolkit.flag_sentinel_coordinates--source--__codelineno-0-307">307</a></span>
+<span class="normal"><a href="#gbfs_toolkit.flag_sentinel_coordinates--source--__codelineno-0-308">308</a></span>
+<span class="normal"><a href="#gbfs_toolkit.flag_sentinel_coordinates--source--__codelineno-0-309">309</a></span>
+<span class="normal"><a href="#gbfs_toolkit.flag_sentinel_coordinates--source--__codelineno-0-310">310</a></span>
+<span class="normal"><a href="#gbfs_toolkit.flag_sentinel_coordinates--source--__codelineno-0-311">311</a></span>
+<span class="normal"><a href="#gbfs_toolkit.flag_sentinel_coordinates--source--__codelineno-0-312">312</a></span>
+<span class="normal"><a href="#gbfs_toolkit.flag_sentinel_coordinates--source--__codelineno-0-313">313</a></span>
+<span class="normal"><a href="#gbfs_toolkit.flag_sentinel_coordinates--source--__codelineno-0-314">314</a></span>
+<span class="normal"><a href="#gbfs_toolkit.flag_sentinel_coordinates--source--__codelineno-0-315">315</a></span>
+<span class="normal"><a href="#gbfs_toolkit.flag_sentinel_coordinates--source--__codelineno-0-316">316</a></span>
+<span class="normal"><a href="#gbfs_toolkit.flag_sentinel_coordinates--source--__codelineno-0-317">317</a></span>
+<span class="normal"><a href="#gbfs_toolkit.flag_sentinel_coordinates--source--__codelineno-0-318">318</a></span>
+<span class="normal"><a href="#gbfs_toolkit.flag_sentinel_coordinates--source--__codelineno-0-319">319</a></span>
+<span class="normal"><a href="#gbfs_toolkit.flag_sentinel_coordinates--source--__codelineno-0-320">320</a></span>
+<span class="normal"><a href="#gbfs_toolkit.flag_sentinel_coordinates--source--__codelineno-0-321">321</a></span>
+<span class="normal"><a href="#gbfs_toolkit.flag_sentinel_coordinates--source--__codelineno-0-322">322</a></span>
+<span class="normal"><a href="#gbfs_toolkit.flag_sentinel_coordinates--source--__codelineno-0-323">323</a></span>
+<span class="normal"><a href="#gbfs_toolkit.flag_sentinel_coordinates--source--__codelineno-0-324">324</a></span>
+<span class="normal"><a href="#gbfs_toolkit.flag_sentinel_coordinates--source--__codelineno-0-325">325</a></span>
+<span class="normal"><a href="#gbfs_toolkit.flag_sentinel_coordinates--source--__codelineno-0-326">326</a></span>
+<span class="normal"><a href="#gbfs_toolkit.flag_sentinel_coordinates--source--__codelineno-0-327">327</a></span>
+<span class="normal"><a href="#gbfs_toolkit.flag_sentinel_coordinates--source--__codelineno-0-328">328</a></span>
+<span class="normal"><a href="#gbfs_toolkit.flag_sentinel_coordinates--source--__codelineno-0-329">329</a></span>
+<span class="normal"><a href="#gbfs_toolkit.flag_sentinel_coordinates--source--__codelineno-0-330">330</a></span>
+<span class="normal"><a href="#gbfs_toolkit.flag_sentinel_coordinates--source--__codelineno-0-331">331</a></span>
+<span class="normal"><a href="#gbfs_toolkit.flag_sentinel_coordinates--source--__codelineno-0-332">332</a></span>
+<span class="normal"><a href="#gbfs_toolkit.flag_sentinel_coordinates--source--__codelineno-0-333">333</a></span>
+<span class="normal"><a href="#gbfs_toolkit.flag_sentinel_coordinates--source--__codelineno-0-334">334</a></span>
+<span class="normal"><a href="#gbfs_toolkit.flag_sentinel_coordinates--source--__codelineno-0-335">335</a></span>
+<span class="normal"><a href="#gbfs_toolkit.flag_sentinel_coordinates--source--__codelineno-0-336">336</a></span>
+<span class="normal"><a href="#gbfs_toolkit.flag_sentinel_coordinates--source--__codelineno-0-337">337</a></span>
+<span class="normal"><a href="#gbfs_toolkit.flag_sentinel_coordinates--source--__codelineno-0-338">338</a></span>
+<span class="normal"><a href="#gbfs_toolkit.flag_sentinel_coordinates--source--__codelineno-0-339">339</a></span>
+<span class="normal"><a href="#gbfs_toolkit.flag_sentinel_coordinates--source--__codelineno-0-340">340</a></span>
+<span class="normal"><a href="#gbfs_toolkit.flag_sentinel_coordinates--source--__codelineno-0-341">341</a></span>
+<span class="normal"><a href="#gbfs_toolkit.flag_sentinel_coordinates--source--__codelineno-0-342">342</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="gbfs_toolkit.flag_sentinel_coordinates--source--__span-0-307"><a id="gbfs_toolkit.flag_sentinel_coordinates--source--__codelineno-0-307" name="gbfs_toolkit.flag_sentinel_coordinates--source--__codelineno-0-307"></a><span class="k">def</span><span class="w"> </span><span class="nf">flag_sentinel_coordinates</span><span class="p">(</span><span class="n">info</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">tol</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1e-6</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">:</span>
+</span><span id="gbfs_toolkit.flag_sentinel_coordinates--source--__span-0-308"><a id="gbfs_toolkit.flag_sentinel_coordinates--source--__codelineno-0-308" name="gbfs_toolkit.flag_sentinel_coordinates--source--__codelineno-0-308"></a><span class="w">    </span><span class="sd">"""Boolean mask of stations sitting on the ``(0, 0)`` null-island sentinel.</span>
+</span><span id="gbfs_toolkit.flag_sentinel_coordinates--source--__span-0-309"><a id="gbfs_toolkit.flag_sentinel_coordinates--source--__codelineno-0-309" name="gbfs_toolkit.flag_sentinel_coordinates--source--__codelineno-0-309"></a>
+</span><span id="gbfs_toolkit.flag_sentinel_coordinates--source--__span-0-310"><a id="gbfs_toolkit.flag_sentinel_coordinates--source--__codelineno-0-310" name="gbfs_toolkit.flag_sentinel_coordinates--source--__codelineno-0-310"></a><span class="sd">    Operators sometimes publish ``lat = lon = 0`` as a placeholder for a station</span>
+</span><span id="gbfs_toolkit.flag_sentinel_coordinates--source--__span-0-311"><a id="gbfs_toolkit.flag_sentinel_coordinates--source--__codelineno-0-311" name="gbfs_toolkit.flag_sentinel_coordinates--source--__codelineno-0-311"></a><span class="sd">    whose geolocation is pending. A single such point inflates a system's</span>
+</span><span id="gbfs_toolkit.flag_sentinel_coordinates--source--__span-0-312"><a id="gbfs_toolkit.flag_sentinel_coordinates--source--__codelineno-0-312" name="gbfs_toolkit.flag_sentinel_coordinates--source--__codelineno-0-312"></a><span class="sd">    bounding-box area by orders of magnitude (the A5/A4 coupling behind the Sevici</span>
+</span><span id="gbfs_toolkit.flag_sentinel_coordinates--source--__span-0-313"><a id="gbfs_toolkit.flag_sentinel_coordinates--source--__codelineno-0-313" name="gbfs_toolkit.flag_sentinel_coordinates--source--__codelineno-0-313"></a><span class="sd">    case), so it should be filtered before any geospatial rule. Use the mask to</span>
+</span><span id="gbfs_toolkit.flag_sentinel_coordinates--source--__span-0-314"><a id="gbfs_toolkit.flag_sentinel_coordinates--source--__codelineno-0-314" name="gbfs_toolkit.flag_sentinel_coordinates--source--__codelineno-0-314"></a><span class="sd">    drop or quarantine these rows.</span>
+</span><span id="gbfs_toolkit.flag_sentinel_coordinates--source--__span-0-315"><a id="gbfs_toolkit.flag_sentinel_coordinates--source--__codelineno-0-315" name="gbfs_toolkit.flag_sentinel_coordinates--source--__codelineno-0-315"></a>
+</span><span id="gbfs_toolkit.flag_sentinel_coordinates--source--__span-0-316"><a id="gbfs_toolkit.flag_sentinel_coordinates--source--__codelineno-0-316" name="gbfs_toolkit.flag_sentinel_coordinates--source--__codelineno-0-316"></a><span class="sd">    Parameters</span>
+</span><span id="gbfs_toolkit.flag_sentinel_coordinates--source--__span-0-317"><a id="gbfs_toolkit.flag_sentinel_coordinates--source--__codelineno-0-317" name="gbfs_toolkit.flag_sentinel_coordinates--source--__codelineno-0-317"></a><span class="sd">    ----------</span>
+</span><span id="gbfs_toolkit.flag_sentinel_coordinates--source--__span-0-318"><a id="gbfs_toolkit.flag_sentinel_coordinates--source--__codelineno-0-318" name="gbfs_toolkit.flag_sentinel_coordinates--source--__codelineno-0-318"></a><span class="sd">    info : pandas.DataFrame</span>
+</span><span id="gbfs_toolkit.flag_sentinel_coordinates--source--__span-0-319"><a id="gbfs_toolkit.flag_sentinel_coordinates--source--__codelineno-0-319" name="gbfs_toolkit.flag_sentinel_coordinates--source--__codelineno-0-319"></a><span class="sd">        Requires ``lat`` and ``lon``.</span>
+</span><span id="gbfs_toolkit.flag_sentinel_coordinates--source--__span-0-320"><a id="gbfs_toolkit.flag_sentinel_coordinates--source--__codelineno-0-320" name="gbfs_toolkit.flag_sentinel_coordinates--source--__codelineno-0-320"></a><span class="sd">    tol : float, default 1e-6</span>
+</span><span id="gbfs_toolkit.flag_sentinel_coordinates--source--__span-0-321"><a id="gbfs_toolkit.flag_sentinel_coordinates--source--__codelineno-0-321" name="gbfs_toolkit.flag_sentinel_coordinates--source--__codelineno-0-321"></a><span class="sd">        Degrees within which a coordinate counts as the ``(0, 0)`` sentinel.</span>
+</span><span id="gbfs_toolkit.flag_sentinel_coordinates--source--__span-0-322"><a id="gbfs_toolkit.flag_sentinel_coordinates--source--__codelineno-0-322" name="gbfs_toolkit.flag_sentinel_coordinates--source--__codelineno-0-322"></a>
+</span><span id="gbfs_toolkit.flag_sentinel_coordinates--source--__span-0-323"><a id="gbfs_toolkit.flag_sentinel_coordinates--source--__codelineno-0-323" name="gbfs_toolkit.flag_sentinel_coordinates--source--__codelineno-0-323"></a><span class="sd">    Returns</span>
+</span><span id="gbfs_toolkit.flag_sentinel_coordinates--source--__span-0-324"><a id="gbfs_toolkit.flag_sentinel_coordinates--source--__codelineno-0-324" name="gbfs_toolkit.flag_sentinel_coordinates--source--__codelineno-0-324"></a><span class="sd">    -------</span>
+</span><span id="gbfs_toolkit.flag_sentinel_coordinates--source--__span-0-325"><a id="gbfs_toolkit.flag_sentinel_coordinates--source--__codelineno-0-325" name="gbfs_toolkit.flag_sentinel_coordinates--source--__codelineno-0-325"></a><span class="sd">    pandas.Series</span>
+</span><span id="gbfs_toolkit.flag_sentinel_coordinates--source--__span-0-326"><a id="gbfs_toolkit.flag_sentinel_coordinates--source--__codelineno-0-326" name="gbfs_toolkit.flag_sentinel_coordinates--source--__codelineno-0-326"></a><span class="sd">        Boolean mask aligned to ``info`` (``True`` where a station is on the sentinel).</span>
+</span><span id="gbfs_toolkit.flag_sentinel_coordinates--source--__span-0-327"><a id="gbfs_toolkit.flag_sentinel_coordinates--source--__codelineno-0-327" name="gbfs_toolkit.flag_sentinel_coordinates--source--__codelineno-0-327"></a>
+</span><span id="gbfs_toolkit.flag_sentinel_coordinates--source--__span-0-328"><a id="gbfs_toolkit.flag_sentinel_coordinates--source--__codelineno-0-328" name="gbfs_toolkit.flag_sentinel_coordinates--source--__codelineno-0-328"></a><span class="sd">    See Also</span>
+</span><span id="gbfs_toolkit.flag_sentinel_coordinates--source--__span-0-329"><a id="gbfs_toolkit.flag_sentinel_coordinates--source--__codelineno-0-329" name="gbfs_toolkit.flag_sentinel_coordinates--source--__codelineno-0-329"></a><span class="sd">    --------</span>
+</span><span id="gbfs_toolkit.flag_sentinel_coordinates--source--__span-0-330"><a id="gbfs_toolkit.flag_sentinel_coordinates--source--__codelineno-0-330" name="gbfs_toolkit.flag_sentinel_coordinates--source--__codelineno-0-330"></a><span class="sd">    [`audit_static`][gbfs_toolkit.audit_static] : The A1-A7 audit; filter the sentinel before its A4/A5 geometry rules.</span>
+</span><span id="gbfs_toolkit.flag_sentinel_coordinates--source--__span-0-331"><a id="gbfs_toolkit.flag_sentinel_coordinates--source--__codelineno-0-331" name="gbfs_toolkit.flag_sentinel_coordinates--source--__codelineno-0-331"></a>
+</span><span id="gbfs_toolkit.flag_sentinel_coordinates--source--__span-0-332"><a id="gbfs_toolkit.flag_sentinel_coordinates--source--__codelineno-0-332" name="gbfs_toolkit.flag_sentinel_coordinates--source--__codelineno-0-332"></a><span class="sd">    Examples</span>
+</span><span id="gbfs_toolkit.flag_sentinel_coordinates--source--__span-0-333"><a id="gbfs_toolkit.flag_sentinel_coordinates--source--__codelineno-0-333" name="gbfs_toolkit.flag_sentinel_coordinates--source--__codelineno-0-333"></a><span class="sd">    --------</span>
+</span><span id="gbfs_toolkit.flag_sentinel_coordinates--source--__span-0-334"><a id="gbfs_toolkit.flag_sentinel_coordinates--source--__codelineno-0-334" name="gbfs_toolkit.flag_sentinel_coordinates--source--__codelineno-0-334"></a><span class="sd">    &gt;&gt;&gt; import pandas as pd</span>
+</span><span id="gbfs_toolkit.flag_sentinel_coordinates--source--__span-0-335"><a id="gbfs_toolkit.flag_sentinel_coordinates--source--__codelineno-0-335" name="gbfs_toolkit.flag_sentinel_coordinates--source--__codelineno-0-335"></a><span class="sd">    &gt;&gt;&gt; info = pd.DataFrame({"lat": [48.85, 0.0], "lon": [2.35, 0.0]})</span>
+</span><span id="gbfs_toolkit.flag_sentinel_coordinates--source--__span-0-336"><a id="gbfs_toolkit.flag_sentinel_coordinates--source--__codelineno-0-336" name="gbfs_toolkit.flag_sentinel_coordinates--source--__codelineno-0-336"></a><span class="sd">    &gt;&gt;&gt; flag_sentinel_coordinates(info).tolist()</span>
+</span><span id="gbfs_toolkit.flag_sentinel_coordinates--source--__span-0-337"><a id="gbfs_toolkit.flag_sentinel_coordinates--source--__codelineno-0-337" name="gbfs_toolkit.flag_sentinel_coordinates--source--__codelineno-0-337"></a><span class="sd">    [False, True]</span>
+</span><span id="gbfs_toolkit.flag_sentinel_coordinates--source--__span-0-338"><a id="gbfs_toolkit.flag_sentinel_coordinates--source--__codelineno-0-338" name="gbfs_toolkit.flag_sentinel_coordinates--source--__codelineno-0-338"></a><span class="sd">    """</span>
+</span><span id="gbfs_toolkit.flag_sentinel_coordinates--source--__span-0-339"><a id="gbfs_toolkit.flag_sentinel_coordinates--source--__codelineno-0-339" name="gbfs_toolkit.flag_sentinel_coordinates--source--__codelineno-0-339"></a>    <span class="n">require_columns</span><span class="p">(</span><span class="n">info</span><span class="p">,</span> <span class="p">[</span><span class="s2">"lat"</span><span class="p">,</span> <span class="s2">"lon"</span><span class="p">],</span> <span class="n">what</span><span class="o">=</span><span class="s2">"flag_sentinel_coordinates"</span><span class="p">)</span>
+</span><span id="gbfs_toolkit.flag_sentinel_coordinates--source--__span-0-340"><a id="gbfs_toolkit.flag_sentinel_coordinates--source--__codelineno-0-340" name="gbfs_toolkit.flag_sentinel_coordinates--source--__codelineno-0-340"></a>    <span class="n">lat</span> <span class="o">=</span> <span class="n">info</span><span class="p">[</span><span class="s2">"lat"</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s2">"float64"</span><span class="p">)</span>
+</span><span id="gbfs_toolkit.flag_sentinel_coordinates--source--__span-0-341"><a id="gbfs_toolkit.flag_sentinel_coordinates--source--__codelineno-0-341" name="gbfs_toolkit.flag_sentinel_coordinates--source--__codelineno-0-341"></a>    <span class="n">lon</span> <span class="o">=</span> <span class="n">info</span><span class="p">[</span><span class="s2">"lon"</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s2">"float64"</span><span class="p">)</span>
+</span><span id="gbfs_toolkit.flag_sentinel_coordinates--source--__span-0-342"><a id="gbfs_toolkit.flag_sentinel_coordinates--source--__codelineno-0-342" name="gbfs_toolkit.flag_sentinel_coordinates--source--__codelineno-0-342"></a>    <span class="k">return</span> <span class="p">(</span><span class="n">lat</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span> <span class="o">&lt;</span> <span class="n">tol</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">lon</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span> <span class="o">&lt;</span> <span class="n">tol</span><span class="p">)</span>
 </span></code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -6721,10 +6721,10 @@ drop or quarantine these rows.</p>
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.instant", "navigation.instant.progress", "navigation.tracking", "navigation.sections", "navigation.tabs", "navigation.tabs.sticky", "navigation.top", "navigation.indexes", "navigation.footer", "toc.follow", "search.suggest", "search.highlight", "search.share", "content.code.copy", "content.code.annotate", "content.tooltips"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.instant", "navigation.instant.progress", "navigation.tracking", "navigation.sections", "navigation.tabs", "navigation.tabs.sticky", "navigation.top", "navigation.indexes", "navigation.footer", "toc.follow", "search.suggest", "search.highlight", "search.share", "content.code.copy", "content.code.annotate", "content.tooltips"], "search": "../../../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
     
     
-      <script src="../../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../../../assets/javascripts/bundle.c21346df.min.js"></script>
       
         <script src="../../../javascripts/mathjax.js"></script>
       

@@ -25,7 +25,7 @@
       
       
       <link rel="icon" href="../../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-ProperDocs 1.6.7, mkdocs-material-9.7.6">
+      <meta name="generator" content="mkdocs-ProperDocs 1.6.7, mkdocs-material-9.8.0">
     
     
       
@@ -33,10 +33,10 @@
       
     
     
-      <link rel="stylesheet" href="../../../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.57a0d79d.min.css">
       
         
-        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.fb2fffe2.min.css">
       
       
 
@@ -1146,7 +1146,7 @@
   <span class="md-ellipsis">
     
   
-    __version__
+    _version_
   
 
     
@@ -6422,7 +6422,7 @@
 
 
 <a href="#gbfs_toolkit.zone_area_km2" class="headerlink" title="Permanent link">&para;</a></h2>
-<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">zone_area_km2</span><span class="p">(</span><span class="n">zones</span><span class="p">:</span> <span class="n"><span title="geopandas.GeoDataFrame">GeoDataFrame</span></span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">equal_area_crs</span><span class="p">:</span> <span class="n"><span title="str">str</span></span> <span class="o">=</span> <span class="s1">&#39;EPSG:6933&#39;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n"><a class="autorefs autorefs-external" title="&lt;code&gt;pandas.Series&lt;/code&gt;" href="https://pandas.pydata.org/docs/reference/api/pandas.Series.html#pandas.Series">Series</a></span>
+<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">zone_area_km2</span><span class="p">(</span><span class="n">zones</span><span class="p">:</span> <span class="n"><span title="geopandas.GeoDataFrame">GeoDataFrame</span></span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">equal_area_crs</span><span class="p">:</span> <span class="n"><span title="str">str</span></span> <span class="o">=</span> <span class="s1">'EPSG:6933'</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n"><a class="autorefs autorefs-external" title="&lt;code&gt;pandas.Series&lt;/code&gt;" href="https://pandas.pydata.org/docs/reference/api/pandas.Series.html#pandas.Series">Series</a></span>
 </span></code></pre></div>
 
     <div class="doc doc-contents first">
@@ -6440,31 +6440,31 @@ comparable across latitudes: the denominator for bikes-per-km² density. Require
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/gbfs_toolkit/spatial/geofencing.py</code></summary>
-              <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-167">167</a></span>
-<span class="normal"><a href="#__codelineno-0-168">168</a></span>
-<span class="normal"><a href="#__codelineno-0-169">169</a></span>
-<span class="normal"><a href="#__codelineno-0-170">170</a></span>
-<span class="normal"><a href="#__codelineno-0-171">171</a></span>
-<span class="normal"><a href="#__codelineno-0-172">172</a></span>
-<span class="normal"><a href="#__codelineno-0-173">173</a></span>
-<span class="normal"><a href="#__codelineno-0-174">174</a></span>
-<span class="normal"><a href="#__codelineno-0-175">175</a></span>
-<span class="normal"><a href="#__codelineno-0-176">176</a></span>
-<span class="normal"><a href="#__codelineno-0-177">177</a></span>
-<span class="normal"><a href="#__codelineno-0-178">178</a></span>
-<span class="normal"><a href="#__codelineno-0-179">179</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-167"><a id="__codelineno-0-167" name="__codelineno-0-167"></a><span class="k">def</span><span class="w"> </span><span class="nf">zone_area_km2</span><span class="p">(</span><span class="n">zones</span><span class="p">:</span> <span class="n">gpd</span><span class="o">.</span><span class="n">GeoDataFrame</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">equal_area_crs</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;EPSG:6933&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">:</span>
-</span><span id="__span-0-168"><a id="__codelineno-0-168" name="__codelineno-0-168"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Area of each zone in km², computed in an equal-area projection (not in degrees).</span>
-</span><span id="__span-0-169"><a id="__codelineno-0-169" name="__codelineno-0-169"></a>
-</span><span id="__span-0-170"><a id="__codelineno-0-170" name="__codelineno-0-170"></a><span class="sd">    Reprojects to ``EPSG:6933`` (World Cylindrical Equal Area) so areas are metric and</span>
-</span><span id="__span-0-171"><a id="__codelineno-0-171" name="__codelineno-0-171"></a><span class="sd">    comparable across latitudes: the denominator for bikes-per-km² density. Requires ``[geo]``.</span>
-</span><span id="__span-0-172"><a id="__codelineno-0-172" name="__codelineno-0-172"></a>
-</span><span id="__span-0-173"><a id="__codelineno-0-173" name="__codelineno-0-173"></a><span class="sd">    See Also</span>
-</span><span id="__span-0-174"><a id="__codelineno-0-174" name="__codelineno-0-174"></a><span class="sd">    --------</span>
-</span><span id="__span-0-175"><a id="__codelineno-0-175" name="__codelineno-0-175"></a><span class="sd">    [`zones_for_points`][gbfs_toolkit.zones_for_points] : Assign points to these zones.</span>
-</span><span id="__span-0-176"><a id="__codelineno-0-176" name="__codelineno-0-176"></a><span class="sd">    [`to_canonical_geofencing`][gbfs_toolkit.to_canonical_geofencing] : Parse the zones first.</span>
-</span><span id="__span-0-177"><a id="__codelineno-0-177" name="__codelineno-0-177"></a><span class="sd">    &quot;&quot;&quot;</span>
-</span><span id="__span-0-178"><a id="__codelineno-0-178" name="__codelineno-0-178"></a>    <span class="n">_require_geo</span><span class="p">()</span>
-</span><span id="__span-0-179"><a id="__codelineno-0-179" name="__codelineno-0-179"></a>    <span class="k">return</span> <span class="n">zones</span><span class="o">.</span><span class="n">to_crs</span><span class="p">(</span><span class="n">equal_area_crs</span><span class="p">)</span><span class="o">.</span><span class="n">geometry</span><span class="o">.</span><span class="n">area</span> <span class="o">/</span> <span class="mf">1e6</span>
+              <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#gbfs_toolkit.zone_area_km2--source--__codelineno-0-167">167</a></span>
+<span class="normal"><a href="#gbfs_toolkit.zone_area_km2--source--__codelineno-0-168">168</a></span>
+<span class="normal"><a href="#gbfs_toolkit.zone_area_km2--source--__codelineno-0-169">169</a></span>
+<span class="normal"><a href="#gbfs_toolkit.zone_area_km2--source--__codelineno-0-170">170</a></span>
+<span class="normal"><a href="#gbfs_toolkit.zone_area_km2--source--__codelineno-0-171">171</a></span>
+<span class="normal"><a href="#gbfs_toolkit.zone_area_km2--source--__codelineno-0-172">172</a></span>
+<span class="normal"><a href="#gbfs_toolkit.zone_area_km2--source--__codelineno-0-173">173</a></span>
+<span class="normal"><a href="#gbfs_toolkit.zone_area_km2--source--__codelineno-0-174">174</a></span>
+<span class="normal"><a href="#gbfs_toolkit.zone_area_km2--source--__codelineno-0-175">175</a></span>
+<span class="normal"><a href="#gbfs_toolkit.zone_area_km2--source--__codelineno-0-176">176</a></span>
+<span class="normal"><a href="#gbfs_toolkit.zone_area_km2--source--__codelineno-0-177">177</a></span>
+<span class="normal"><a href="#gbfs_toolkit.zone_area_km2--source--__codelineno-0-178">178</a></span>
+<span class="normal"><a href="#gbfs_toolkit.zone_area_km2--source--__codelineno-0-179">179</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="gbfs_toolkit.zone_area_km2--source--__span-0-167"><a id="gbfs_toolkit.zone_area_km2--source--__codelineno-0-167" name="gbfs_toolkit.zone_area_km2--source--__codelineno-0-167"></a><span class="k">def</span><span class="w"> </span><span class="nf">zone_area_km2</span><span class="p">(</span><span class="n">zones</span><span class="p">:</span> <span class="n">gpd</span><span class="o">.</span><span class="n">GeoDataFrame</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">equal_area_crs</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"EPSG:6933"</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">:</span>
+</span><span id="gbfs_toolkit.zone_area_km2--source--__span-0-168"><a id="gbfs_toolkit.zone_area_km2--source--__codelineno-0-168" name="gbfs_toolkit.zone_area_km2--source--__codelineno-0-168"></a><span class="w">    </span><span class="sd">"""Area of each zone in km², computed in an equal-area projection (not in degrees).</span>
+</span><span id="gbfs_toolkit.zone_area_km2--source--__span-0-169"><a id="gbfs_toolkit.zone_area_km2--source--__codelineno-0-169" name="gbfs_toolkit.zone_area_km2--source--__codelineno-0-169"></a>
+</span><span id="gbfs_toolkit.zone_area_km2--source--__span-0-170"><a id="gbfs_toolkit.zone_area_km2--source--__codelineno-0-170" name="gbfs_toolkit.zone_area_km2--source--__codelineno-0-170"></a><span class="sd">    Reprojects to ``EPSG:6933`` (World Cylindrical Equal Area) so areas are metric and</span>
+</span><span id="gbfs_toolkit.zone_area_km2--source--__span-0-171"><a id="gbfs_toolkit.zone_area_km2--source--__codelineno-0-171" name="gbfs_toolkit.zone_area_km2--source--__codelineno-0-171"></a><span class="sd">    comparable across latitudes: the denominator for bikes-per-km² density. Requires ``[geo]``.</span>
+</span><span id="gbfs_toolkit.zone_area_km2--source--__span-0-172"><a id="gbfs_toolkit.zone_area_km2--source--__codelineno-0-172" name="gbfs_toolkit.zone_area_km2--source--__codelineno-0-172"></a>
+</span><span id="gbfs_toolkit.zone_area_km2--source--__span-0-173"><a id="gbfs_toolkit.zone_area_km2--source--__codelineno-0-173" name="gbfs_toolkit.zone_area_km2--source--__codelineno-0-173"></a><span class="sd">    See Also</span>
+</span><span id="gbfs_toolkit.zone_area_km2--source--__span-0-174"><a id="gbfs_toolkit.zone_area_km2--source--__codelineno-0-174" name="gbfs_toolkit.zone_area_km2--source--__codelineno-0-174"></a><span class="sd">    --------</span>
+</span><span id="gbfs_toolkit.zone_area_km2--source--__span-0-175"><a id="gbfs_toolkit.zone_area_km2--source--__codelineno-0-175" name="gbfs_toolkit.zone_area_km2--source--__codelineno-0-175"></a><span class="sd">    [`zones_for_points`][gbfs_toolkit.zones_for_points] : Assign points to these zones.</span>
+</span><span id="gbfs_toolkit.zone_area_km2--source--__span-0-176"><a id="gbfs_toolkit.zone_area_km2--source--__codelineno-0-176" name="gbfs_toolkit.zone_area_km2--source--__codelineno-0-176"></a><span class="sd">    [`to_canonical_geofencing`][gbfs_toolkit.to_canonical_geofencing] : Parse the zones first.</span>
+</span><span id="gbfs_toolkit.zone_area_km2--source--__span-0-177"><a id="gbfs_toolkit.zone_area_km2--source--__codelineno-0-177" name="gbfs_toolkit.zone_area_km2--source--__codelineno-0-177"></a><span class="sd">    """</span>
+</span><span id="gbfs_toolkit.zone_area_km2--source--__span-0-178"><a id="gbfs_toolkit.zone_area_km2--source--__codelineno-0-178" name="gbfs_toolkit.zone_area_km2--source--__codelineno-0-178"></a>    <span class="n">_require_geo</span><span class="p">()</span>
+</span><span id="gbfs_toolkit.zone_area_km2--source--__span-0-179"><a id="gbfs_toolkit.zone_area_km2--source--__codelineno-0-179" name="gbfs_toolkit.zone_area_km2--source--__codelineno-0-179"></a>    <span class="k">return</span> <span class="n">zones</span><span class="o">.</span><span class="n">to_crs</span><span class="p">(</span><span class="n">equal_area_crs</span><span class="p">)</span><span class="o">.</span><span class="n">geometry</span><span class="o">.</span><span class="n">area</span> <span class="o">/</span> <span class="mf">1e6</span>
 </span></code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -6595,10 +6595,10 @@ comparable across latitudes: the denominator for bikes-per-km² density. Require
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.instant", "navigation.instant.progress", "navigation.tracking", "navigation.sections", "navigation.tabs", "navigation.tabs.sticky", "navigation.top", "navigation.indexes", "navigation.footer", "toc.follow", "search.suggest", "search.highlight", "search.share", "content.code.copy", "content.code.annotate", "content.tooltips"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.instant", "navigation.instant.progress", "navigation.tracking", "navigation.sections", "navigation.tabs", "navigation.tabs.sticky", "navigation.top", "navigation.indexes", "navigation.footer", "toc.follow", "search.suggest", "search.highlight", "search.share", "content.code.copy", "content.code.annotate", "content.tooltips"], "search": "../../../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
     
     
-      <script src="../../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../../../assets/javascripts/bundle.c21346df.min.js"></script>
       
         <script src="../../../javascripts/mathjax.js"></script>
       

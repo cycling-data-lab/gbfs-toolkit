@@ -25,7 +25,7 @@
       
       
       <link rel="icon" href="../../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-ProperDocs 1.6.7, mkdocs-material-9.7.6">
+      <meta name="generator" content="mkdocs-ProperDocs 1.6.7, mkdocs-material-9.8.0">
     
     
       
@@ -33,10 +33,10 @@
       
     
     
-      <link rel="stylesheet" href="../../../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.57a0d79d.min.css">
       
         
-        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.fb2fffe2.min.css">
       
       
 
@@ -1146,7 +1146,7 @@
   <span class="md-ellipsis">
     
   
-    __version__
+    _version_
   
 
     
@@ -6466,115 +6466,115 @@ list of <code>{path, sha256, bytes}</code> with paths relative to <code>lake_dir
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/gbfs_toolkit/io/timeseries.py</code></summary>
-              <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-637">637</a></span>
-<span class="normal"><a href="#__codelineno-0-638">638</a></span>
-<span class="normal"><a href="#__codelineno-0-639">639</a></span>
-<span class="normal"><a href="#__codelineno-0-640">640</a></span>
-<span class="normal"><a href="#__codelineno-0-641">641</a></span>
-<span class="normal"><a href="#__codelineno-0-642">642</a></span>
-<span class="normal"><a href="#__codelineno-0-643">643</a></span>
-<span class="normal"><a href="#__codelineno-0-644">644</a></span>
-<span class="normal"><a href="#__codelineno-0-645">645</a></span>
-<span class="normal"><a href="#__codelineno-0-646">646</a></span>
-<span class="normal"><a href="#__codelineno-0-647">647</a></span>
-<span class="normal"><a href="#__codelineno-0-648">648</a></span>
-<span class="normal"><a href="#__codelineno-0-649">649</a></span>
-<span class="normal"><a href="#__codelineno-0-650">650</a></span>
-<span class="normal"><a href="#__codelineno-0-651">651</a></span>
-<span class="normal"><a href="#__codelineno-0-652">652</a></span>
-<span class="normal"><a href="#__codelineno-0-653">653</a></span>
-<span class="normal"><a href="#__codelineno-0-654">654</a></span>
-<span class="normal"><a href="#__codelineno-0-655">655</a></span>
-<span class="normal"><a href="#__codelineno-0-656">656</a></span>
-<span class="normal"><a href="#__codelineno-0-657">657</a></span>
-<span class="normal"><a href="#__codelineno-0-658">658</a></span>
-<span class="normal"><a href="#__codelineno-0-659">659</a></span>
-<span class="normal"><a href="#__codelineno-0-660">660</a></span>
-<span class="normal"><a href="#__codelineno-0-661">661</a></span>
-<span class="normal"><a href="#__codelineno-0-662">662</a></span>
-<span class="normal"><a href="#__codelineno-0-663">663</a></span>
-<span class="normal"><a href="#__codelineno-0-664">664</a></span>
-<span class="normal"><a href="#__codelineno-0-665">665</a></span>
-<span class="normal"><a href="#__codelineno-0-666">666</a></span>
-<span class="normal"><a href="#__codelineno-0-667">667</a></span>
-<span class="normal"><a href="#__codelineno-0-668">668</a></span>
-<span class="normal"><a href="#__codelineno-0-669">669</a></span>
-<span class="normal"><a href="#__codelineno-0-670">670</a></span>
-<span class="normal"><a href="#__codelineno-0-671">671</a></span>
-<span class="normal"><a href="#__codelineno-0-672">672</a></span>
-<span class="normal"><a href="#__codelineno-0-673">673</a></span>
-<span class="normal"><a href="#__codelineno-0-674">674</a></span>
-<span class="normal"><a href="#__codelineno-0-675">675</a></span>
-<span class="normal"><a href="#__codelineno-0-676">676</a></span>
-<span class="normal"><a href="#__codelineno-0-677">677</a></span>
-<span class="normal"><a href="#__codelineno-0-678">678</a></span>
-<span class="normal"><a href="#__codelineno-0-679">679</a></span>
-<span class="normal"><a href="#__codelineno-0-680">680</a></span>
-<span class="normal"><a href="#__codelineno-0-681">681</a></span>
-<span class="normal"><a href="#__codelineno-0-682">682</a></span>
-<span class="normal"><a href="#__codelineno-0-683">683</a></span>
-<span class="normal"><a href="#__codelineno-0-684">684</a></span>
-<span class="normal"><a href="#__codelineno-0-685">685</a></span>
-<span class="normal"><a href="#__codelineno-0-686">686</a></span>
-<span class="normal"><a href="#__codelineno-0-687">687</a></span>
-<span class="normal"><a href="#__codelineno-0-688">688</a></span>
-<span class="normal"><a href="#__codelineno-0-689">689</a></span>
-<span class="normal"><a href="#__codelineno-0-690">690</a></span>
-<span class="normal"><a href="#__codelineno-0-691">691</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-637"><a id="__codelineno-0-637" name="__codelineno-0-637"></a><span class="k">def</span><span class="w"> </span><span class="nf">generate_manifest</span><span class="p">(</span><span class="n">lake_dir</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Path</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">chunk_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="mi">20</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
-</span><span id="__span-0-638"><a id="__codelineno-0-638" name="__codelineno-0-638"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;A cryptographic manifest of a Parquet lake, for citable, reproducible datasets.</span>
-</span><span id="__span-0-639"><a id="__codelineno-0-639" name="__codelineno-0-639"></a>
-</span><span id="__span-0-640"><a id="__codelineno-0-640" name="__codelineno-0-640"></a><span class="sd">    Walks every ``*.parquet`` partition file, records its SHA-256 and size, and summarises</span>
-</span><span id="__span-0-641"><a id="__codelineno-0-641" name="__codelineno-0-641"></a><span class="sd">    the dataset (systems, date span, row count). Drop the returned dict next to a Zenodo /</span>
-</span><span id="__span-0-642"><a id="__codelineno-0-642" name="__codelineno-0-642"></a><span class="sd">    Dataverse deposit so a reviewer can verify byte-for-byte what was analysed.</span>
-</span><span id="__span-0-643"><a id="__codelineno-0-643" name="__codelineno-0-643"></a>
-</span><span id="__span-0-644"><a id="__codelineno-0-644" name="__codelineno-0-644"></a><span class="sd">    Returns</span>
-</span><span id="__span-0-645"><a id="__codelineno-0-645" name="__codelineno-0-645"></a><span class="sd">    -------</span>
-</span><span id="__span-0-646"><a id="__codelineno-0-646" name="__codelineno-0-646"></a><span class="sd">    dict</span>
-</span><span id="__span-0-647"><a id="__codelineno-0-647" name="__codelineno-0-647"></a><span class="sd">        ``gbfs_toolkit_version``, ``generated_at`` (UTC ISO), ``n_files``, ``total_bytes``,</span>
-</span><span id="__span-0-648"><a id="__codelineno-0-648" name="__codelineno-0-648"></a><span class="sd">        ``total_rows``, ``system_ids``, ``min_date``, ``max_date``, and ``files`` (a sorted</span>
-</span><span id="__span-0-649"><a id="__codelineno-0-649" name="__codelineno-0-649"></a><span class="sd">        list of ``{path, sha256, bytes}`` with paths relative to ``lake_dir``).</span>
-</span><span id="__span-0-650"><a id="__codelineno-0-650" name="__codelineno-0-650"></a>
-</span><span id="__span-0-651"><a id="__codelineno-0-651" name="__codelineno-0-651"></a><span class="sd">    See Also</span>
-</span><span id="__span-0-652"><a id="__codelineno-0-652" name="__codelineno-0-652"></a><span class="sd">    --------</span>
-</span><span id="__span-0-653"><a id="__codelineno-0-653" name="__codelineno-0-653"></a><span class="sd">    [`append_to_parquet`][gbfs_toolkit.append_to_parquet] : The append step it documents.</span>
-</span><span id="__span-0-654"><a id="__codelineno-0-654" name="__codelineno-0-654"></a><span class="sd">    [`coverage_report`][gbfs_toolkit.coverage_report] : Per-feed coverage summary.</span>
-</span><span id="__span-0-655"><a id="__codelineno-0-655" name="__codelineno-0-655"></a><span class="sd">    &quot;&quot;&quot;</span>
-</span><span id="__span-0-656"><a id="__codelineno-0-656" name="__codelineno-0-656"></a>    <span class="kn">from</span><span class="w"> </span><span class="nn">gbfs_toolkit</span><span class="w"> </span><span class="kn">import</span> <span class="n">__version__</span>
-</span><span id="__span-0-657"><a id="__codelineno-0-657" name="__codelineno-0-657"></a>
-</span><span id="__span-0-658"><a id="__codelineno-0-658" name="__codelineno-0-658"></a>    <span class="n">base</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">lake_dir</span><span class="p">)</span>
-</span><span id="__span-0-659"><a id="__codelineno-0-659" name="__codelineno-0-659"></a>    <span class="n">files</span> <span class="o">=</span> <span class="p">[]</span>
-</span><span id="__span-0-660"><a id="__codelineno-0-660" name="__codelineno-0-660"></a>    <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">base</span><span class="o">.</span><span class="n">rglob</span><span class="p">(</span><span class="s2">&quot;*.parquet&quot;</span><span class="p">)):</span>
-</span><span id="__span-0-661"><a id="__codelineno-0-661" name="__codelineno-0-661"></a>        <span class="n">h</span> <span class="o">=</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">sha256</span><span class="p">()</span>
-</span><span id="__span-0-662"><a id="__codelineno-0-662" name="__codelineno-0-662"></a>        <span class="k">with</span> <span class="n">p</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s2">&quot;rb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fh</span><span class="p">:</span>
-</span><span id="__span-0-663"><a id="__codelineno-0-663" name="__codelineno-0-663"></a>            <span class="k">for</span> <span class="n">block</span> <span class="ow">in</span> <span class="nb">iter</span><span class="p">(</span><span class="n">functools</span><span class="o">.</span><span class="n">partial</span><span class="p">(</span><span class="n">fh</span><span class="o">.</span><span class="n">read</span><span class="p">,</span> <span class="n">chunk_size</span><span class="p">),</span> <span class="sa">b</span><span class="s2">&quot;&quot;</span><span class="p">):</span>
-</span><span id="__span-0-664"><a id="__codelineno-0-664" name="__codelineno-0-664"></a>                <span class="n">h</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">block</span><span class="p">)</span>
-</span><span id="__span-0-665"><a id="__codelineno-0-665" name="__codelineno-0-665"></a>        <span class="n">files</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
-</span><span id="__span-0-666"><a id="__codelineno-0-666" name="__codelineno-0-666"></a>            <span class="p">{</span><span class="s2">&quot;path&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">relative_to</span><span class="p">(</span><span class="n">base</span><span class="p">)),</span> <span class="s2">&quot;sha256&quot;</span><span class="p">:</span> <span class="n">h</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">(),</span> <span class="s2">&quot;bytes&quot;</span><span class="p">:</span> <span class="n">p</span><span class="o">.</span><span class="n">stat</span><span class="p">()</span><span class="o">.</span><span class="n">st_size</span><span class="p">}</span>
-</span><span id="__span-0-667"><a id="__codelineno-0-667" name="__codelineno-0-667"></a>        <span class="p">)</span>
-</span><span id="__span-0-668"><a id="__codelineno-0-668" name="__codelineno-0-668"></a>
-</span><span id="__span-0-669"><a id="__codelineno-0-669" name="__codelineno-0-669"></a>    <span class="n">manifest</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
-</span><span id="__span-0-670"><a id="__codelineno-0-670" name="__codelineno-0-670"></a>        <span class="s2">&quot;gbfs_toolkit_version&quot;</span><span class="p">:</span> <span class="n">__version__</span><span class="p">,</span>
-</span><span id="__span-0-671"><a id="__codelineno-0-671" name="__codelineno-0-671"></a>        <span class="s2">&quot;generated_at&quot;</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">Timestamp</span><span class="o">.</span><span class="n">now</span><span class="p">(</span><span class="n">tz</span><span class="o">=</span><span class="s2">&quot;UTC&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">isoformat</span><span class="p">(),</span>
-</span><span id="__span-0-672"><a id="__codelineno-0-672" name="__codelineno-0-672"></a>        <span class="s2">&quot;n_files&quot;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">files</span><span class="p">),</span>
-</span><span id="__span-0-673"><a id="__codelineno-0-673" name="__codelineno-0-673"></a>        <span class="s2">&quot;total_bytes&quot;</span><span class="p">:</span> <span class="nb">sum</span><span class="p">(</span><span class="n">f</span><span class="p">[</span><span class="s2">&quot;bytes&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">files</span><span class="p">),</span>
-</span><span id="__span-0-674"><a id="__codelineno-0-674" name="__codelineno-0-674"></a>        <span class="s2">&quot;files&quot;</span><span class="p">:</span> <span class="n">files</span><span class="p">,</span>
-</span><span id="__span-0-675"><a id="__codelineno-0-675" name="__codelineno-0-675"></a>    <span class="p">}</span>
-</span><span id="__span-0-676"><a id="__codelineno-0-676" name="__codelineno-0-676"></a>    <span class="k">try</span><span class="p">:</span>  <span class="c1"># dataset-level summary (best-effort; needs a readable dataset)</span>
-</span><span id="__span-0-677"><a id="__codelineno-0-677" name="__codelineno-0-677"></a>        <span class="n">ds</span> <span class="o">=</span> <span class="n">_require_pyarrow</span><span class="p">()</span>
-</span><span id="__span-0-678"><a id="__codelineno-0-678" name="__codelineno-0-678"></a>        <span class="n">dataset</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">dataset</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">base</span><span class="p">),</span> <span class="nb">format</span><span class="o">=</span><span class="s2">&quot;parquet&quot;</span><span class="p">,</span> <span class="n">partitioning</span><span class="o">=</span><span class="s2">&quot;hive&quot;</span><span class="p">)</span>
-</span><span id="__span-0-679"><a id="__codelineno-0-679" name="__codelineno-0-679"></a>        <span class="n">names</span> <span class="o">=</span> <span class="n">dataset</span><span class="o">.</span><span class="n">schema</span><span class="o">.</span><span class="n">names</span>
-</span><span id="__span-0-680"><a id="__codelineno-0-680" name="__codelineno-0-680"></a>        <span class="n">manifest</span><span class="p">[</span><span class="s2">&quot;total_rows&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">dataset</span><span class="o">.</span><span class="n">count_rows</span><span class="p">())</span>
-</span><span id="__span-0-681"><a id="__codelineno-0-681" name="__codelineno-0-681"></a>        <span class="n">cols</span> <span class="o">=</span> <span class="p">[</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;system_id&quot;</span><span class="p">,</span> <span class="s2">&quot;date&quot;</span><span class="p">)</span> <span class="k">if</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">names</span><span class="p">]</span>
-</span><span id="__span-0-682"><a id="__codelineno-0-682" name="__codelineno-0-682"></a>        <span class="k">if</span> <span class="n">cols</span><span class="p">:</span>
-</span><span id="__span-0-683"><a id="__codelineno-0-683" name="__codelineno-0-683"></a>            <span class="n">meta</span> <span class="o">=</span> <span class="n">dataset</span><span class="o">.</span><span class="n">to_table</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="n">cols</span><span class="p">)</span><span class="o">.</span><span class="n">to_pandas</span><span class="p">()</span>
-</span><span id="__span-0-684"><a id="__codelineno-0-684" name="__codelineno-0-684"></a>            <span class="k">if</span> <span class="s2">&quot;system_id&quot;</span> <span class="ow">in</span> <span class="n">meta</span><span class="p">:</span>
-</span><span id="__span-0-685"><a id="__codelineno-0-685" name="__codelineno-0-685"></a>                <span class="n">manifest</span><span class="p">[</span><span class="s2">&quot;system_ids&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">meta</span><span class="p">[</span><span class="s2">&quot;system_id&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span><span class="o">.</span><span class="n">unique</span><span class="p">()</span><span class="o">.</span><span class="n">tolist</span><span class="p">())</span>
-</span><span id="__span-0-686"><a id="__codelineno-0-686" name="__codelineno-0-686"></a>            <span class="k">if</span> <span class="s2">&quot;date&quot;</span> <span class="ow">in</span> <span class="n">meta</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">meta</span><span class="p">):</span>
-</span><span id="__span-0-687"><a id="__codelineno-0-687" name="__codelineno-0-687"></a>                <span class="n">manifest</span><span class="p">[</span><span class="s2">&quot;min_date&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">meta</span><span class="p">[</span><span class="s2">&quot;date&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">min</span><span class="p">())</span>
-</span><span id="__span-0-688"><a id="__codelineno-0-688" name="__codelineno-0-688"></a>                <span class="n">manifest</span><span class="p">[</span><span class="s2">&quot;max_date&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">meta</span><span class="p">[</span><span class="s2">&quot;date&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">())</span>
-</span><span id="__span-0-689"><a id="__codelineno-0-689" name="__codelineno-0-689"></a>    <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>  <span class="c1"># noqa: BLE001 (summary is best-effort; the hashes are the point)</span>
-</span><span id="__span-0-690"><a id="__codelineno-0-690" name="__codelineno-0-690"></a>        <span class="k">pass</span>
-</span><span id="__span-0-691"><a id="__codelineno-0-691" name="__codelineno-0-691"></a>    <span class="k">return</span> <span class="n">manifest</span>
+              <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#gbfs_toolkit.generate_manifest--source--__codelineno-0-637">637</a></span>
+<span class="normal"><a href="#gbfs_toolkit.generate_manifest--source--__codelineno-0-638">638</a></span>
+<span class="normal"><a href="#gbfs_toolkit.generate_manifest--source--__codelineno-0-639">639</a></span>
+<span class="normal"><a href="#gbfs_toolkit.generate_manifest--source--__codelineno-0-640">640</a></span>
+<span class="normal"><a href="#gbfs_toolkit.generate_manifest--source--__codelineno-0-641">641</a></span>
+<span class="normal"><a href="#gbfs_toolkit.generate_manifest--source--__codelineno-0-642">642</a></span>
+<span class="normal"><a href="#gbfs_toolkit.generate_manifest--source--__codelineno-0-643">643</a></span>
+<span class="normal"><a href="#gbfs_toolkit.generate_manifest--source--__codelineno-0-644">644</a></span>
+<span class="normal"><a href="#gbfs_toolkit.generate_manifest--source--__codelineno-0-645">645</a></span>
+<span class="normal"><a href="#gbfs_toolkit.generate_manifest--source--__codelineno-0-646">646</a></span>
+<span class="normal"><a href="#gbfs_toolkit.generate_manifest--source--__codelineno-0-647">647</a></span>
+<span class="normal"><a href="#gbfs_toolkit.generate_manifest--source--__codelineno-0-648">648</a></span>
+<span class="normal"><a href="#gbfs_toolkit.generate_manifest--source--__codelineno-0-649">649</a></span>
+<span class="normal"><a href="#gbfs_toolkit.generate_manifest--source--__codelineno-0-650">650</a></span>
+<span class="normal"><a href="#gbfs_toolkit.generate_manifest--source--__codelineno-0-651">651</a></span>
+<span class="normal"><a href="#gbfs_toolkit.generate_manifest--source--__codelineno-0-652">652</a></span>
+<span class="normal"><a href="#gbfs_toolkit.generate_manifest--source--__codelineno-0-653">653</a></span>
+<span class="normal"><a href="#gbfs_toolkit.generate_manifest--source--__codelineno-0-654">654</a></span>
+<span class="normal"><a href="#gbfs_toolkit.generate_manifest--source--__codelineno-0-655">655</a></span>
+<span class="normal"><a href="#gbfs_toolkit.generate_manifest--source--__codelineno-0-656">656</a></span>
+<span class="normal"><a href="#gbfs_toolkit.generate_manifest--source--__codelineno-0-657">657</a></span>
+<span class="normal"><a href="#gbfs_toolkit.generate_manifest--source--__codelineno-0-658">658</a></span>
+<span class="normal"><a href="#gbfs_toolkit.generate_manifest--source--__codelineno-0-659">659</a></span>
+<span class="normal"><a href="#gbfs_toolkit.generate_manifest--source--__codelineno-0-660">660</a></span>
+<span class="normal"><a href="#gbfs_toolkit.generate_manifest--source--__codelineno-0-661">661</a></span>
+<span class="normal"><a href="#gbfs_toolkit.generate_manifest--source--__codelineno-0-662">662</a></span>
+<span class="normal"><a href="#gbfs_toolkit.generate_manifest--source--__codelineno-0-663">663</a></span>
+<span class="normal"><a href="#gbfs_toolkit.generate_manifest--source--__codelineno-0-664">664</a></span>
+<span class="normal"><a href="#gbfs_toolkit.generate_manifest--source--__codelineno-0-665">665</a></span>
+<span class="normal"><a href="#gbfs_toolkit.generate_manifest--source--__codelineno-0-666">666</a></span>
+<span class="normal"><a href="#gbfs_toolkit.generate_manifest--source--__codelineno-0-667">667</a></span>
+<span class="normal"><a href="#gbfs_toolkit.generate_manifest--source--__codelineno-0-668">668</a></span>
+<span class="normal"><a href="#gbfs_toolkit.generate_manifest--source--__codelineno-0-669">669</a></span>
+<span class="normal"><a href="#gbfs_toolkit.generate_manifest--source--__codelineno-0-670">670</a></span>
+<span class="normal"><a href="#gbfs_toolkit.generate_manifest--source--__codelineno-0-671">671</a></span>
+<span class="normal"><a href="#gbfs_toolkit.generate_manifest--source--__codelineno-0-672">672</a></span>
+<span class="normal"><a href="#gbfs_toolkit.generate_manifest--source--__codelineno-0-673">673</a></span>
+<span class="normal"><a href="#gbfs_toolkit.generate_manifest--source--__codelineno-0-674">674</a></span>
+<span class="normal"><a href="#gbfs_toolkit.generate_manifest--source--__codelineno-0-675">675</a></span>
+<span class="normal"><a href="#gbfs_toolkit.generate_manifest--source--__codelineno-0-676">676</a></span>
+<span class="normal"><a href="#gbfs_toolkit.generate_manifest--source--__codelineno-0-677">677</a></span>
+<span class="normal"><a href="#gbfs_toolkit.generate_manifest--source--__codelineno-0-678">678</a></span>
+<span class="normal"><a href="#gbfs_toolkit.generate_manifest--source--__codelineno-0-679">679</a></span>
+<span class="normal"><a href="#gbfs_toolkit.generate_manifest--source--__codelineno-0-680">680</a></span>
+<span class="normal"><a href="#gbfs_toolkit.generate_manifest--source--__codelineno-0-681">681</a></span>
+<span class="normal"><a href="#gbfs_toolkit.generate_manifest--source--__codelineno-0-682">682</a></span>
+<span class="normal"><a href="#gbfs_toolkit.generate_manifest--source--__codelineno-0-683">683</a></span>
+<span class="normal"><a href="#gbfs_toolkit.generate_manifest--source--__codelineno-0-684">684</a></span>
+<span class="normal"><a href="#gbfs_toolkit.generate_manifest--source--__codelineno-0-685">685</a></span>
+<span class="normal"><a href="#gbfs_toolkit.generate_manifest--source--__codelineno-0-686">686</a></span>
+<span class="normal"><a href="#gbfs_toolkit.generate_manifest--source--__codelineno-0-687">687</a></span>
+<span class="normal"><a href="#gbfs_toolkit.generate_manifest--source--__codelineno-0-688">688</a></span>
+<span class="normal"><a href="#gbfs_toolkit.generate_manifest--source--__codelineno-0-689">689</a></span>
+<span class="normal"><a href="#gbfs_toolkit.generate_manifest--source--__codelineno-0-690">690</a></span>
+<span class="normal"><a href="#gbfs_toolkit.generate_manifest--source--__codelineno-0-691">691</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="gbfs_toolkit.generate_manifest--source--__span-0-637"><a id="gbfs_toolkit.generate_manifest--source--__codelineno-0-637" name="gbfs_toolkit.generate_manifest--source--__codelineno-0-637"></a><span class="k">def</span><span class="w"> </span><span class="nf">generate_manifest</span><span class="p">(</span><span class="n">lake_dir</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Path</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">chunk_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="mi">20</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+</span><span id="gbfs_toolkit.generate_manifest--source--__span-0-638"><a id="gbfs_toolkit.generate_manifest--source--__codelineno-0-638" name="gbfs_toolkit.generate_manifest--source--__codelineno-0-638"></a><span class="w">    </span><span class="sd">"""A cryptographic manifest of a Parquet lake, for citable, reproducible datasets.</span>
+</span><span id="gbfs_toolkit.generate_manifest--source--__span-0-639"><a id="gbfs_toolkit.generate_manifest--source--__codelineno-0-639" name="gbfs_toolkit.generate_manifest--source--__codelineno-0-639"></a>
+</span><span id="gbfs_toolkit.generate_manifest--source--__span-0-640"><a id="gbfs_toolkit.generate_manifest--source--__codelineno-0-640" name="gbfs_toolkit.generate_manifest--source--__codelineno-0-640"></a><span class="sd">    Walks every ``*.parquet`` partition file, records its SHA-256 and size, and summarises</span>
+</span><span id="gbfs_toolkit.generate_manifest--source--__span-0-641"><a id="gbfs_toolkit.generate_manifest--source--__codelineno-0-641" name="gbfs_toolkit.generate_manifest--source--__codelineno-0-641"></a><span class="sd">    the dataset (systems, date span, row count). Drop the returned dict next to a Zenodo /</span>
+</span><span id="gbfs_toolkit.generate_manifest--source--__span-0-642"><a id="gbfs_toolkit.generate_manifest--source--__codelineno-0-642" name="gbfs_toolkit.generate_manifest--source--__codelineno-0-642"></a><span class="sd">    Dataverse deposit so a reviewer can verify byte-for-byte what was analysed.</span>
+</span><span id="gbfs_toolkit.generate_manifest--source--__span-0-643"><a id="gbfs_toolkit.generate_manifest--source--__codelineno-0-643" name="gbfs_toolkit.generate_manifest--source--__codelineno-0-643"></a>
+</span><span id="gbfs_toolkit.generate_manifest--source--__span-0-644"><a id="gbfs_toolkit.generate_manifest--source--__codelineno-0-644" name="gbfs_toolkit.generate_manifest--source--__codelineno-0-644"></a><span class="sd">    Returns</span>
+</span><span id="gbfs_toolkit.generate_manifest--source--__span-0-645"><a id="gbfs_toolkit.generate_manifest--source--__codelineno-0-645" name="gbfs_toolkit.generate_manifest--source--__codelineno-0-645"></a><span class="sd">    -------</span>
+</span><span id="gbfs_toolkit.generate_manifest--source--__span-0-646"><a id="gbfs_toolkit.generate_manifest--source--__codelineno-0-646" name="gbfs_toolkit.generate_manifest--source--__codelineno-0-646"></a><span class="sd">    dict</span>
+</span><span id="gbfs_toolkit.generate_manifest--source--__span-0-647"><a id="gbfs_toolkit.generate_manifest--source--__codelineno-0-647" name="gbfs_toolkit.generate_manifest--source--__codelineno-0-647"></a><span class="sd">        ``gbfs_toolkit_version``, ``generated_at`` (UTC ISO), ``n_files``, ``total_bytes``,</span>
+</span><span id="gbfs_toolkit.generate_manifest--source--__span-0-648"><a id="gbfs_toolkit.generate_manifest--source--__codelineno-0-648" name="gbfs_toolkit.generate_manifest--source--__codelineno-0-648"></a><span class="sd">        ``total_rows``, ``system_ids``, ``min_date``, ``max_date``, and ``files`` (a sorted</span>
+</span><span id="gbfs_toolkit.generate_manifest--source--__span-0-649"><a id="gbfs_toolkit.generate_manifest--source--__codelineno-0-649" name="gbfs_toolkit.generate_manifest--source--__codelineno-0-649"></a><span class="sd">        list of ``{path, sha256, bytes}`` with paths relative to ``lake_dir``).</span>
+</span><span id="gbfs_toolkit.generate_manifest--source--__span-0-650"><a id="gbfs_toolkit.generate_manifest--source--__codelineno-0-650" name="gbfs_toolkit.generate_manifest--source--__codelineno-0-650"></a>
+</span><span id="gbfs_toolkit.generate_manifest--source--__span-0-651"><a id="gbfs_toolkit.generate_manifest--source--__codelineno-0-651" name="gbfs_toolkit.generate_manifest--source--__codelineno-0-651"></a><span class="sd">    See Also</span>
+</span><span id="gbfs_toolkit.generate_manifest--source--__span-0-652"><a id="gbfs_toolkit.generate_manifest--source--__codelineno-0-652" name="gbfs_toolkit.generate_manifest--source--__codelineno-0-652"></a><span class="sd">    --------</span>
+</span><span id="gbfs_toolkit.generate_manifest--source--__span-0-653"><a id="gbfs_toolkit.generate_manifest--source--__codelineno-0-653" name="gbfs_toolkit.generate_manifest--source--__codelineno-0-653"></a><span class="sd">    [`append_to_parquet`][gbfs_toolkit.append_to_parquet] : The append step it documents.</span>
+</span><span id="gbfs_toolkit.generate_manifest--source--__span-0-654"><a id="gbfs_toolkit.generate_manifest--source--__codelineno-0-654" name="gbfs_toolkit.generate_manifest--source--__codelineno-0-654"></a><span class="sd">    [`coverage_report`][gbfs_toolkit.coverage_report] : Per-feed coverage summary.</span>
+</span><span id="gbfs_toolkit.generate_manifest--source--__span-0-655"><a id="gbfs_toolkit.generate_manifest--source--__codelineno-0-655" name="gbfs_toolkit.generate_manifest--source--__codelineno-0-655"></a><span class="sd">    """</span>
+</span><span id="gbfs_toolkit.generate_manifest--source--__span-0-656"><a id="gbfs_toolkit.generate_manifest--source--__codelineno-0-656" name="gbfs_toolkit.generate_manifest--source--__codelineno-0-656"></a>    <span class="kn">from</span><span class="w"> </span><span class="nn">gbfs_toolkit</span><span class="w"> </span><span class="kn">import</span> <span class="n">__version__</span>
+</span><span id="gbfs_toolkit.generate_manifest--source--__span-0-657"><a id="gbfs_toolkit.generate_manifest--source--__codelineno-0-657" name="gbfs_toolkit.generate_manifest--source--__codelineno-0-657"></a>
+</span><span id="gbfs_toolkit.generate_manifest--source--__span-0-658"><a id="gbfs_toolkit.generate_manifest--source--__codelineno-0-658" name="gbfs_toolkit.generate_manifest--source--__codelineno-0-658"></a>    <span class="n">base</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">lake_dir</span><span class="p">)</span>
+</span><span id="gbfs_toolkit.generate_manifest--source--__span-0-659"><a id="gbfs_toolkit.generate_manifest--source--__codelineno-0-659" name="gbfs_toolkit.generate_manifest--source--__codelineno-0-659"></a>    <span class="n">files</span> <span class="o">=</span> <span class="p">[]</span>
+</span><span id="gbfs_toolkit.generate_manifest--source--__span-0-660"><a id="gbfs_toolkit.generate_manifest--source--__codelineno-0-660" name="gbfs_toolkit.generate_manifest--source--__codelineno-0-660"></a>    <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">base</span><span class="o">.</span><span class="n">rglob</span><span class="p">(</span><span class="s2">"*.parquet"</span><span class="p">)):</span>
+</span><span id="gbfs_toolkit.generate_manifest--source--__span-0-661"><a id="gbfs_toolkit.generate_manifest--source--__codelineno-0-661" name="gbfs_toolkit.generate_manifest--source--__codelineno-0-661"></a>        <span class="n">h</span> <span class="o">=</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">sha256</span><span class="p">()</span>
+</span><span id="gbfs_toolkit.generate_manifest--source--__span-0-662"><a id="gbfs_toolkit.generate_manifest--source--__codelineno-0-662" name="gbfs_toolkit.generate_manifest--source--__codelineno-0-662"></a>        <span class="k">with</span> <span class="n">p</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s2">"rb"</span><span class="p">)</span> <span class="k">as</span> <span class="n">fh</span><span class="p">:</span>
+</span><span id="gbfs_toolkit.generate_manifest--source--__span-0-663"><a id="gbfs_toolkit.generate_manifest--source--__codelineno-0-663" name="gbfs_toolkit.generate_manifest--source--__codelineno-0-663"></a>            <span class="k">for</span> <span class="n">block</span> <span class="ow">in</span> <span class="nb">iter</span><span class="p">(</span><span class="n">functools</span><span class="o">.</span><span class="n">partial</span><span class="p">(</span><span class="n">fh</span><span class="o">.</span><span class="n">read</span><span class="p">,</span> <span class="n">chunk_size</span><span class="p">),</span> <span class="sa">b</span><span class="s2">""</span><span class="p">):</span>
+</span><span id="gbfs_toolkit.generate_manifest--source--__span-0-664"><a id="gbfs_toolkit.generate_manifest--source--__codelineno-0-664" name="gbfs_toolkit.generate_manifest--source--__codelineno-0-664"></a>                <span class="n">h</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">block</span><span class="p">)</span>
+</span><span id="gbfs_toolkit.generate_manifest--source--__span-0-665"><a id="gbfs_toolkit.generate_manifest--source--__codelineno-0-665" name="gbfs_toolkit.generate_manifest--source--__codelineno-0-665"></a>        <span class="n">files</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+</span><span id="gbfs_toolkit.generate_manifest--source--__span-0-666"><a id="gbfs_toolkit.generate_manifest--source--__codelineno-0-666" name="gbfs_toolkit.generate_manifest--source--__codelineno-0-666"></a>            <span class="p">{</span><span class="s2">"path"</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">relative_to</span><span class="p">(</span><span class="n">base</span><span class="p">)),</span> <span class="s2">"sha256"</span><span class="p">:</span> <span class="n">h</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">(),</span> <span class="s2">"bytes"</span><span class="p">:</span> <span class="n">p</span><span class="o">.</span><span class="n">stat</span><span class="p">()</span><span class="o">.</span><span class="n">st_size</span><span class="p">}</span>
+</span><span id="gbfs_toolkit.generate_manifest--source--__span-0-667"><a id="gbfs_toolkit.generate_manifest--source--__codelineno-0-667" name="gbfs_toolkit.generate_manifest--source--__codelineno-0-667"></a>        <span class="p">)</span>
+</span><span id="gbfs_toolkit.generate_manifest--source--__span-0-668"><a id="gbfs_toolkit.generate_manifest--source--__codelineno-0-668" name="gbfs_toolkit.generate_manifest--source--__codelineno-0-668"></a>
+</span><span id="gbfs_toolkit.generate_manifest--source--__span-0-669"><a id="gbfs_toolkit.generate_manifest--source--__codelineno-0-669" name="gbfs_toolkit.generate_manifest--source--__codelineno-0-669"></a>    <span class="n">manifest</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+</span><span id="gbfs_toolkit.generate_manifest--source--__span-0-670"><a id="gbfs_toolkit.generate_manifest--source--__codelineno-0-670" name="gbfs_toolkit.generate_manifest--source--__codelineno-0-670"></a>        <span class="s2">"gbfs_toolkit_version"</span><span class="p">:</span> <span class="n">__version__</span><span class="p">,</span>
+</span><span id="gbfs_toolkit.generate_manifest--source--__span-0-671"><a id="gbfs_toolkit.generate_manifest--source--__codelineno-0-671" name="gbfs_toolkit.generate_manifest--source--__codelineno-0-671"></a>        <span class="s2">"generated_at"</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">Timestamp</span><span class="o">.</span><span class="n">now</span><span class="p">(</span><span class="n">tz</span><span class="o">=</span><span class="s2">"UTC"</span><span class="p">)</span><span class="o">.</span><span class="n">isoformat</span><span class="p">(),</span>
+</span><span id="gbfs_toolkit.generate_manifest--source--__span-0-672"><a id="gbfs_toolkit.generate_manifest--source--__codelineno-0-672" name="gbfs_toolkit.generate_manifest--source--__codelineno-0-672"></a>        <span class="s2">"n_files"</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">files</span><span class="p">),</span>
+</span><span id="gbfs_toolkit.generate_manifest--source--__span-0-673"><a id="gbfs_toolkit.generate_manifest--source--__codelineno-0-673" name="gbfs_toolkit.generate_manifest--source--__codelineno-0-673"></a>        <span class="s2">"total_bytes"</span><span class="p">:</span> <span class="nb">sum</span><span class="p">(</span><span class="n">f</span><span class="p">[</span><span class="s2">"bytes"</span><span class="p">]</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">files</span><span class="p">),</span>
+</span><span id="gbfs_toolkit.generate_manifest--source--__span-0-674"><a id="gbfs_toolkit.generate_manifest--source--__codelineno-0-674" name="gbfs_toolkit.generate_manifest--source--__codelineno-0-674"></a>        <span class="s2">"files"</span><span class="p">:</span> <span class="n">files</span><span class="p">,</span>
+</span><span id="gbfs_toolkit.generate_manifest--source--__span-0-675"><a id="gbfs_toolkit.generate_manifest--source--__codelineno-0-675" name="gbfs_toolkit.generate_manifest--source--__codelineno-0-675"></a>    <span class="p">}</span>
+</span><span id="gbfs_toolkit.generate_manifest--source--__span-0-676"><a id="gbfs_toolkit.generate_manifest--source--__codelineno-0-676" name="gbfs_toolkit.generate_manifest--source--__codelineno-0-676"></a>    <span class="k">try</span><span class="p">:</span>  <span class="c1"># dataset-level summary (best-effort; needs a readable dataset)</span>
+</span><span id="gbfs_toolkit.generate_manifest--source--__span-0-677"><a id="gbfs_toolkit.generate_manifest--source--__codelineno-0-677" name="gbfs_toolkit.generate_manifest--source--__codelineno-0-677"></a>        <span class="n">ds</span> <span class="o">=</span> <span class="n">_require_pyarrow</span><span class="p">()</span>
+</span><span id="gbfs_toolkit.generate_manifest--source--__span-0-678"><a id="gbfs_toolkit.generate_manifest--source--__codelineno-0-678" name="gbfs_toolkit.generate_manifest--source--__codelineno-0-678"></a>        <span class="n">dataset</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">dataset</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">base</span><span class="p">),</span> <span class="nb">format</span><span class="o">=</span><span class="s2">"parquet"</span><span class="p">,</span> <span class="n">partitioning</span><span class="o">=</span><span class="s2">"hive"</span><span class="p">)</span>
+</span><span id="gbfs_toolkit.generate_manifest--source--__span-0-679"><a id="gbfs_toolkit.generate_manifest--source--__codelineno-0-679" name="gbfs_toolkit.generate_manifest--source--__codelineno-0-679"></a>        <span class="n">names</span> <span class="o">=</span> <span class="n">dataset</span><span class="o">.</span><span class="n">schema</span><span class="o">.</span><span class="n">names</span>
+</span><span id="gbfs_toolkit.generate_manifest--source--__span-0-680"><a id="gbfs_toolkit.generate_manifest--source--__codelineno-0-680" name="gbfs_toolkit.generate_manifest--source--__codelineno-0-680"></a>        <span class="n">manifest</span><span class="p">[</span><span class="s2">"total_rows"</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">dataset</span><span class="o">.</span><span class="n">count_rows</span><span class="p">())</span>
+</span><span id="gbfs_toolkit.generate_manifest--source--__span-0-681"><a id="gbfs_toolkit.generate_manifest--source--__codelineno-0-681" name="gbfs_toolkit.generate_manifest--source--__codelineno-0-681"></a>        <span class="n">cols</span> <span class="o">=</span> <span class="p">[</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">"system_id"</span><span class="p">,</span> <span class="s2">"date"</span><span class="p">)</span> <span class="k">if</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">names</span><span class="p">]</span>
+</span><span id="gbfs_toolkit.generate_manifest--source--__span-0-682"><a id="gbfs_toolkit.generate_manifest--source--__codelineno-0-682" name="gbfs_toolkit.generate_manifest--source--__codelineno-0-682"></a>        <span class="k">if</span> <span class="n">cols</span><span class="p">:</span>
+</span><span id="gbfs_toolkit.generate_manifest--source--__span-0-683"><a id="gbfs_toolkit.generate_manifest--source--__codelineno-0-683" name="gbfs_toolkit.generate_manifest--source--__codelineno-0-683"></a>            <span class="n">meta</span> <span class="o">=</span> <span class="n">dataset</span><span class="o">.</span><span class="n">to_table</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="n">cols</span><span class="p">)</span><span class="o">.</span><span class="n">to_pandas</span><span class="p">()</span>
+</span><span id="gbfs_toolkit.generate_manifest--source--__span-0-684"><a id="gbfs_toolkit.generate_manifest--source--__codelineno-0-684" name="gbfs_toolkit.generate_manifest--source--__codelineno-0-684"></a>            <span class="k">if</span> <span class="s2">"system_id"</span> <span class="ow">in</span> <span class="n">meta</span><span class="p">:</span>
+</span><span id="gbfs_toolkit.generate_manifest--source--__span-0-685"><a id="gbfs_toolkit.generate_manifest--source--__codelineno-0-685" name="gbfs_toolkit.generate_manifest--source--__codelineno-0-685"></a>                <span class="n">manifest</span><span class="p">[</span><span class="s2">"system_ids"</span><span class="p">]</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">meta</span><span class="p">[</span><span class="s2">"system_id"</span><span class="p">]</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span><span class="o">.</span><span class="n">unique</span><span class="p">()</span><span class="o">.</span><span class="n">tolist</span><span class="p">())</span>
+</span><span id="gbfs_toolkit.generate_manifest--source--__span-0-686"><a id="gbfs_toolkit.generate_manifest--source--__codelineno-0-686" name="gbfs_toolkit.generate_manifest--source--__codelineno-0-686"></a>            <span class="k">if</span> <span class="s2">"date"</span> <span class="ow">in</span> <span class="n">meta</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">meta</span><span class="p">):</span>
+</span><span id="gbfs_toolkit.generate_manifest--source--__span-0-687"><a id="gbfs_toolkit.generate_manifest--source--__codelineno-0-687" name="gbfs_toolkit.generate_manifest--source--__codelineno-0-687"></a>                <span class="n">manifest</span><span class="p">[</span><span class="s2">"min_date"</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">meta</span><span class="p">[</span><span class="s2">"date"</span><span class="p">]</span><span class="o">.</span><span class="n">min</span><span class="p">())</span>
+</span><span id="gbfs_toolkit.generate_manifest--source--__span-0-688"><a id="gbfs_toolkit.generate_manifest--source--__codelineno-0-688" name="gbfs_toolkit.generate_manifest--source--__codelineno-0-688"></a>                <span class="n">manifest</span><span class="p">[</span><span class="s2">"max_date"</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">meta</span><span class="p">[</span><span class="s2">"date"</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">())</span>
+</span><span id="gbfs_toolkit.generate_manifest--source--__span-0-689"><a id="gbfs_toolkit.generate_manifest--source--__codelineno-0-689" name="gbfs_toolkit.generate_manifest--source--__codelineno-0-689"></a>    <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>  <span class="c1"># noqa: BLE001 (summary is best-effort; the hashes are the point)</span>
+</span><span id="gbfs_toolkit.generate_manifest--source--__span-0-690"><a id="gbfs_toolkit.generate_manifest--source--__codelineno-0-690" name="gbfs_toolkit.generate_manifest--source--__codelineno-0-690"></a>        <span class="k">pass</span>
+</span><span id="gbfs_toolkit.generate_manifest--source--__span-0-691"><a id="gbfs_toolkit.generate_manifest--source--__codelineno-0-691" name="gbfs_toolkit.generate_manifest--source--__codelineno-0-691"></a>    <span class="k">return</span> <span class="n">manifest</span>
 </span></code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -6705,10 +6705,10 @@ list of <code>{path, sha256, bytes}</code> with paths relative to <code>lake_dir
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.instant", "navigation.instant.progress", "navigation.tracking", "navigation.sections", "navigation.tabs", "navigation.tabs.sticky", "navigation.top", "navigation.indexes", "navigation.footer", "toc.follow", "search.suggest", "search.highlight", "search.share", "content.code.copy", "content.code.annotate", "content.tooltips"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.instant", "navigation.instant.progress", "navigation.tracking", "navigation.sections", "navigation.tabs", "navigation.tabs.sticky", "navigation.top", "navigation.indexes", "navigation.footer", "toc.follow", "search.suggest", "search.highlight", "search.share", "content.code.copy", "content.code.annotate", "content.tooltips"], "search": "../../../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
     
     
-      <script src="../../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../../../assets/javascripts/bundle.c21346df.min.js"></script>
       
         <script src="../../../javascripts/mathjax.js"></script>
       

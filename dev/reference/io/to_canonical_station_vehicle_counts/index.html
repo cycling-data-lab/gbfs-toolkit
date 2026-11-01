@@ -25,7 +25,7 @@
       
       
       <link rel="icon" href="../../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-ProperDocs 1.6.7, mkdocs-material-9.7.6">
+      <meta name="generator" content="mkdocs-ProperDocs 1.6.7, mkdocs-material-9.8.0">
     
     
       
@@ -33,10 +33,10 @@
       
     
     
-      <link rel="stylesheet" href="../../../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.57a0d79d.min.css">
       
         
-        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.fb2fffe2.min.css">
       
       
 
@@ -1146,7 +1146,7 @@
   <span class="md-ellipsis">
     
   
-    __version__
+    _version_
   
 
     
@@ -6443,89 +6443,89 @@ cannot answer it. Stations without the field contribute no rows.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/gbfs_toolkit/io/normalize.py</code></summary>
-              <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-193">193</a></span>
-<span class="normal"><a href="#__codelineno-0-194">194</a></span>
-<span class="normal"><a href="#__codelineno-0-195">195</a></span>
-<span class="normal"><a href="#__codelineno-0-196">196</a></span>
-<span class="normal"><a href="#__codelineno-0-197">197</a></span>
-<span class="normal"><a href="#__codelineno-0-198">198</a></span>
-<span class="normal"><a href="#__codelineno-0-199">199</a></span>
-<span class="normal"><a href="#__codelineno-0-200">200</a></span>
-<span class="normal"><a href="#__codelineno-0-201">201</a></span>
-<span class="normal"><a href="#__codelineno-0-202">202</a></span>
-<span class="normal"><a href="#__codelineno-0-203">203</a></span>
-<span class="normal"><a href="#__codelineno-0-204">204</a></span>
-<span class="normal"><a href="#__codelineno-0-205">205</a></span>
-<span class="normal"><a href="#__codelineno-0-206">206</a></span>
-<span class="normal"><a href="#__codelineno-0-207">207</a></span>
-<span class="normal"><a href="#__codelineno-0-208">208</a></span>
-<span class="normal"><a href="#__codelineno-0-209">209</a></span>
-<span class="normal"><a href="#__codelineno-0-210">210</a></span>
-<span class="normal"><a href="#__codelineno-0-211">211</a></span>
-<span class="normal"><a href="#__codelineno-0-212">212</a></span>
-<span class="normal"><a href="#__codelineno-0-213">213</a></span>
-<span class="normal"><a href="#__codelineno-0-214">214</a></span>
-<span class="normal"><a href="#__codelineno-0-215">215</a></span>
-<span class="normal"><a href="#__codelineno-0-216">216</a></span>
-<span class="normal"><a href="#__codelineno-0-217">217</a></span>
-<span class="normal"><a href="#__codelineno-0-218">218</a></span>
-<span class="normal"><a href="#__codelineno-0-219">219</a></span>
-<span class="normal"><a href="#__codelineno-0-220">220</a></span>
-<span class="normal"><a href="#__codelineno-0-221">221</a></span>
-<span class="normal"><a href="#__codelineno-0-222">222</a></span>
-<span class="normal"><a href="#__codelineno-0-223">223</a></span>
-<span class="normal"><a href="#__codelineno-0-224">224</a></span>
-<span class="normal"><a href="#__codelineno-0-225">225</a></span>
-<span class="normal"><a href="#__codelineno-0-226">226</a></span>
-<span class="normal"><a href="#__codelineno-0-227">227</a></span>
-<span class="normal"><a href="#__codelineno-0-228">228</a></span>
-<span class="normal"><a href="#__codelineno-0-229">229</a></span>
-<span class="normal"><a href="#__codelineno-0-230">230</a></span>
-<span class="normal"><a href="#__codelineno-0-231">231</a></span>
-<span class="normal"><a href="#__codelineno-0-232">232</a></span>
-<span class="normal"><a href="#__codelineno-0-233">233</a></span>
-<span class="normal"><a href="#__codelineno-0-234">234</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-193"><a id="__codelineno-0-193" name="__codelineno-0-193"></a><span class="k">def</span><span class="w"> </span><span class="nf">to_canonical_station_vehicle_counts</span><span class="p">(</span>
-</span><span id="__span-0-194"><a id="__codelineno-0-194" name="__codelineno-0-194"></a>    <span class="n">raw</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span>
-</span><span id="__span-0-195"><a id="__codelineno-0-195" name="__codelineno-0-195"></a>    <span class="o">*</span><span class="p">,</span>
-</span><span id="__span-0-196"><a id="__codelineno-0-196" name="__codelineno-0-196"></a>    <span class="n">system_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-</span><span id="__span-0-197"><a id="__codelineno-0-197" name="__codelineno-0-197"></a>    <span class="n">fetched_at</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">Timestamp</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-</span><span id="__span-0-198"><a id="__codelineno-0-198" name="__codelineno-0-198"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
-</span><span id="__span-0-199"><a id="__codelineno-0-199" name="__codelineno-0-199"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Melt per-vehicle-type availability from ``station_status`` into a long frame.</span>
-</span><span id="__span-0-200"><a id="__codelineno-0-200" name="__codelineno-0-200"></a>
-</span><span id="__span-0-201"><a id="__codelineno-0-201" name="__codelineno-0-201"></a><span class="sd">    GBFS 2.2+/3.x stations may report ``vehicle_types_available`` (a list of</span>
-</span><span id="__span-0-202"><a id="__codelineno-0-202" name="__codelineno-0-202"></a><span class="sd">    ``{vehicle_type_id, count}``). This explodes it to one row per station × vehicle type</span>
-</span><span id="__span-0-203"><a id="__codelineno-0-203" name="__codelineno-0-203"></a><span class="sd">    (`STATION_VEHICLE_COUNTS_COLUMNS`), so &quot;where are the e-bikes?&quot;</span>
-</span><span id="__span-0-204"><a id="__codelineno-0-204" name="__codelineno-0-204"></a><span class="sd">    is a join to [`to_canonical_vehicle_types`][gbfs_toolkit.to_canonical_vehicle_types]; the aggregate ``num_bikes_available``</span>
-</span><span id="__span-0-205"><a id="__codelineno-0-205" name="__codelineno-0-205"></a><span class="sd">    cannot answer it. Stations without the field contribute no rows.</span>
-</span><span id="__span-0-206"><a id="__codelineno-0-206" name="__codelineno-0-206"></a>
-</span><span id="__span-0-207"><a id="__codelineno-0-207" name="__codelineno-0-207"></a><span class="sd">    See Also</span>
-</span><span id="__span-0-208"><a id="__codelineno-0-208" name="__codelineno-0-208"></a><span class="sd">    --------</span>
-</span><span id="__span-0-209"><a id="__codelineno-0-209" name="__codelineno-0-209"></a><span class="sd">    [`to_canonical_station_status`][gbfs_toolkit.to_canonical_station_status] : The aggregate status parser.</span>
-</span><span id="__span-0-210"><a id="__codelineno-0-210" name="__codelineno-0-210"></a><span class="sd">    [`to_canonical_vehicle_types`][gbfs_toolkit.to_canonical_vehicle_types] : Resolve the vehicle types counted.</span>
-</span><span id="__span-0-211"><a id="__codelineno-0-211" name="__codelineno-0-211"></a><span class="sd">    &quot;&quot;&quot;</span>
-</span><span id="__span-0-212"><a id="__codelineno-0-212" name="__codelineno-0-212"></a>    <span class="n">fetched_at</span> <span class="o">=</span> <span class="n">fetched_at</span> <span class="k">if</span> <span class="n">fetched_at</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">_now_utc</span><span class="p">()</span>
-</span><span id="__span-0-213"><a id="__codelineno-0-213" name="__codelineno-0-213"></a>    <span class="n">data</span> <span class="o">=</span> <span class="n">raw</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;data&quot;</span><span class="p">,</span> <span class="n">raw</span><span class="p">)</span>
-</span><span id="__span-0-214"><a id="__codelineno-0-214" name="__codelineno-0-214"></a>    <span class="n">stations</span> <span class="o">=</span> <span class="n">_records</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="s2">&quot;stations&quot;</span><span class="p">)</span>
-</span><span id="__span-0-215"><a id="__codelineno-0-215" name="__codelineno-0-215"></a>    <span class="n">rows</span> <span class="o">=</span> <span class="p">[</span>
-</span><span id="__span-0-216"><a id="__codelineno-0-216" name="__codelineno-0-216"></a>        <span class="p">{</span>
-</span><span id="__span-0-217"><a id="__codelineno-0-217" name="__codelineno-0-217"></a>            <span class="s2">&quot;system_id&quot;</span><span class="p">:</span> <span class="n">system_id</span><span class="p">,</span>
-</span><span id="__span-0-218"><a id="__codelineno-0-218" name="__codelineno-0-218"></a>            <span class="s2">&quot;station_id&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;station_id&quot;</span><span class="p">)),</span>
-</span><span id="__span-0-219"><a id="__codelineno-0-219" name="__codelineno-0-219"></a>            <span class="s2">&quot;vehicle_type_id&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">vt</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;vehicle_type_id&quot;</span><span class="p">)),</span>
-</span><span id="__span-0-220"><a id="__codelineno-0-220" name="__codelineno-0-220"></a>            <span class="s2">&quot;num_vehicles_available&quot;</span><span class="p">:</span> <span class="n">vt</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;count&quot;</span><span class="p">),</span>
-</span><span id="__span-0-221"><a id="__codelineno-0-221" name="__codelineno-0-221"></a>            <span class="s2">&quot;fetched_at&quot;</span><span class="p">:</span> <span class="n">fetched_at</span><span class="p">,</span>
-</span><span id="__span-0-222"><a id="__codelineno-0-222" name="__codelineno-0-222"></a>        <span class="p">}</span>
-</span><span id="__span-0-223"><a id="__codelineno-0-223" name="__codelineno-0-223"></a>        <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">stations</span>
-</span><span id="__span-0-224"><a id="__codelineno-0-224" name="__codelineno-0-224"></a>        <span class="k">for</span> <span class="n">vt</span> <span class="ow">in</span> <span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;vehicle_types_available&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="p">[])</span>
-</span><span id="__span-0-225"><a id="__codelineno-0-225" name="__codelineno-0-225"></a>    <span class="p">]</span>
-</span><span id="__span-0-226"><a id="__codelineno-0-226" name="__codelineno-0-226"></a>    <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">rows</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">STATION_VEHICLE_COUNTS_COLUMNS</span><span class="p">)</span>
-</span><span id="__span-0-227"><a id="__codelineno-0-227" name="__codelineno-0-227"></a>    <span class="n">df</span><span class="p">[</span><span class="s2">&quot;num_vehicles_available&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_numeric</span><span class="p">(</span>
-</span><span id="__span-0-228"><a id="__codelineno-0-228" name="__codelineno-0-228"></a>        <span class="n">df</span><span class="p">[</span><span class="s2">&quot;num_vehicles_available&quot;</span><span class="p">],</span> <span class="n">errors</span><span class="o">=</span><span class="s2">&quot;coerce&quot;</span>
-</span><span id="__span-0-229"><a id="__codelineno-0-229" name="__codelineno-0-229"></a>    <span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s2">&quot;Int64&quot;</span><span class="p">)</span>
-</span><span id="__span-0-230"><a id="__codelineno-0-230" name="__codelineno-0-230"></a>    <span class="n">df</span><span class="p">[</span><span class="s2">&quot;vehicle_type_id&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;vehicle_type_id&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span>
-</span><span id="__span-0-231"><a id="__codelineno-0-231" name="__codelineno-0-231"></a>        <span class="s2">&quot;string&quot;</span>
-</span><span id="__span-0-232"><a id="__codelineno-0-232" name="__codelineno-0-232"></a>    <span class="p">)</span>  <span class="c1"># join key, see to_canonical_vehicles</span>
-</span><span id="__span-0-233"><a id="__codelineno-0-233" name="__codelineno-0-233"></a>    <span class="n">df</span><span class="p">[</span><span class="s2">&quot;fetched_at&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;fetched_at&quot;</span><span class="p">],</span> <span class="n">utc</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-</span><span id="__span-0-234"><a id="__codelineno-0-234" name="__codelineno-0-234"></a>    <span class="k">return</span> <span class="n">df</span>
+              <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#gbfs_toolkit.to_canonical_station_vehicle_counts--source--__codelineno-0-193">193</a></span>
+<span class="normal"><a href="#gbfs_toolkit.to_canonical_station_vehicle_counts--source--__codelineno-0-194">194</a></span>
+<span class="normal"><a href="#gbfs_toolkit.to_canonical_station_vehicle_counts--source--__codelineno-0-195">195</a></span>
+<span class="normal"><a href="#gbfs_toolkit.to_canonical_station_vehicle_counts--source--__codelineno-0-196">196</a></span>
+<span class="normal"><a href="#gbfs_toolkit.to_canonical_station_vehicle_counts--source--__codelineno-0-197">197</a></span>
+<span class="normal"><a href="#gbfs_toolkit.to_canonical_station_vehicle_counts--source--__codelineno-0-198">198</a></span>
+<span class="normal"><a href="#gbfs_toolkit.to_canonical_station_vehicle_counts--source--__codelineno-0-199">199</a></span>
+<span class="normal"><a href="#gbfs_toolkit.to_canonical_station_vehicle_counts--source--__codelineno-0-200">200</a></span>
+<span class="normal"><a href="#gbfs_toolkit.to_canonical_station_vehicle_counts--source--__codelineno-0-201">201</a></span>
+<span class="normal"><a href="#gbfs_toolkit.to_canonical_station_vehicle_counts--source--__codelineno-0-202">202</a></span>
+<span class="normal"><a href="#gbfs_toolkit.to_canonical_station_vehicle_counts--source--__codelineno-0-203">203</a></span>
+<span class="normal"><a href="#gbfs_toolkit.to_canonical_station_vehicle_counts--source--__codelineno-0-204">204</a></span>
+<span class="normal"><a href="#gbfs_toolkit.to_canonical_station_vehicle_counts--source--__codelineno-0-205">205</a></span>
+<span class="normal"><a href="#gbfs_toolkit.to_canonical_station_vehicle_counts--source--__codelineno-0-206">206</a></span>
+<span class="normal"><a href="#gbfs_toolkit.to_canonical_station_vehicle_counts--source--__codelineno-0-207">207</a></span>
+<span class="normal"><a href="#gbfs_toolkit.to_canonical_station_vehicle_counts--source--__codelineno-0-208">208</a></span>
+<span class="normal"><a href="#gbfs_toolkit.to_canonical_station_vehicle_counts--source--__codelineno-0-209">209</a></span>
+<span class="normal"><a href="#gbfs_toolkit.to_canonical_station_vehicle_counts--source--__codelineno-0-210">210</a></span>
+<span class="normal"><a href="#gbfs_toolkit.to_canonical_station_vehicle_counts--source--__codelineno-0-211">211</a></span>
+<span class="normal"><a href="#gbfs_toolkit.to_canonical_station_vehicle_counts--source--__codelineno-0-212">212</a></span>
+<span class="normal"><a href="#gbfs_toolkit.to_canonical_station_vehicle_counts--source--__codelineno-0-213">213</a></span>
+<span class="normal"><a href="#gbfs_toolkit.to_canonical_station_vehicle_counts--source--__codelineno-0-214">214</a></span>
+<span class="normal"><a href="#gbfs_toolkit.to_canonical_station_vehicle_counts--source--__codelineno-0-215">215</a></span>
+<span class="normal"><a href="#gbfs_toolkit.to_canonical_station_vehicle_counts--source--__codelineno-0-216">216</a></span>
+<span class="normal"><a href="#gbfs_toolkit.to_canonical_station_vehicle_counts--source--__codelineno-0-217">217</a></span>
+<span class="normal"><a href="#gbfs_toolkit.to_canonical_station_vehicle_counts--source--__codelineno-0-218">218</a></span>
+<span class="normal"><a href="#gbfs_toolkit.to_canonical_station_vehicle_counts--source--__codelineno-0-219">219</a></span>
+<span class="normal"><a href="#gbfs_toolkit.to_canonical_station_vehicle_counts--source--__codelineno-0-220">220</a></span>
+<span class="normal"><a href="#gbfs_toolkit.to_canonical_station_vehicle_counts--source--__codelineno-0-221">221</a></span>
+<span class="normal"><a href="#gbfs_toolkit.to_canonical_station_vehicle_counts--source--__codelineno-0-222">222</a></span>
+<span class="normal"><a href="#gbfs_toolkit.to_canonical_station_vehicle_counts--source--__codelineno-0-223">223</a></span>
+<span class="normal"><a href="#gbfs_toolkit.to_canonical_station_vehicle_counts--source--__codelineno-0-224">224</a></span>
+<span class="normal"><a href="#gbfs_toolkit.to_canonical_station_vehicle_counts--source--__codelineno-0-225">225</a></span>
+<span class="normal"><a href="#gbfs_toolkit.to_canonical_station_vehicle_counts--source--__codelineno-0-226">226</a></span>
+<span class="normal"><a href="#gbfs_toolkit.to_canonical_station_vehicle_counts--source--__codelineno-0-227">227</a></span>
+<span class="normal"><a href="#gbfs_toolkit.to_canonical_station_vehicle_counts--source--__codelineno-0-228">228</a></span>
+<span class="normal"><a href="#gbfs_toolkit.to_canonical_station_vehicle_counts--source--__codelineno-0-229">229</a></span>
+<span class="normal"><a href="#gbfs_toolkit.to_canonical_station_vehicle_counts--source--__codelineno-0-230">230</a></span>
+<span class="normal"><a href="#gbfs_toolkit.to_canonical_station_vehicle_counts--source--__codelineno-0-231">231</a></span>
+<span class="normal"><a href="#gbfs_toolkit.to_canonical_station_vehicle_counts--source--__codelineno-0-232">232</a></span>
+<span class="normal"><a href="#gbfs_toolkit.to_canonical_station_vehicle_counts--source--__codelineno-0-233">233</a></span>
+<span class="normal"><a href="#gbfs_toolkit.to_canonical_station_vehicle_counts--source--__codelineno-0-234">234</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="gbfs_toolkit.to_canonical_station_vehicle_counts--source--__span-0-193"><a id="gbfs_toolkit.to_canonical_station_vehicle_counts--source--__codelineno-0-193" name="gbfs_toolkit.to_canonical_station_vehicle_counts--source--__codelineno-0-193"></a><span class="k">def</span><span class="w"> </span><span class="nf">to_canonical_station_vehicle_counts</span><span class="p">(</span>
+</span><span id="gbfs_toolkit.to_canonical_station_vehicle_counts--source--__span-0-194"><a id="gbfs_toolkit.to_canonical_station_vehicle_counts--source--__codelineno-0-194" name="gbfs_toolkit.to_canonical_station_vehicle_counts--source--__codelineno-0-194"></a>    <span class="n">raw</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span>
+</span><span id="gbfs_toolkit.to_canonical_station_vehicle_counts--source--__span-0-195"><a id="gbfs_toolkit.to_canonical_station_vehicle_counts--source--__codelineno-0-195" name="gbfs_toolkit.to_canonical_station_vehicle_counts--source--__codelineno-0-195"></a>    <span class="o">*</span><span class="p">,</span>
+</span><span id="gbfs_toolkit.to_canonical_station_vehicle_counts--source--__span-0-196"><a id="gbfs_toolkit.to_canonical_station_vehicle_counts--source--__codelineno-0-196" name="gbfs_toolkit.to_canonical_station_vehicle_counts--source--__codelineno-0-196"></a>    <span class="n">system_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+</span><span id="gbfs_toolkit.to_canonical_station_vehicle_counts--source--__span-0-197"><a id="gbfs_toolkit.to_canonical_station_vehicle_counts--source--__codelineno-0-197" name="gbfs_toolkit.to_canonical_station_vehicle_counts--source--__codelineno-0-197"></a>    <span class="n">fetched_at</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">Timestamp</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+</span><span id="gbfs_toolkit.to_canonical_station_vehicle_counts--source--__span-0-198"><a id="gbfs_toolkit.to_canonical_station_vehicle_counts--source--__codelineno-0-198" name="gbfs_toolkit.to_canonical_station_vehicle_counts--source--__codelineno-0-198"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+</span><span id="gbfs_toolkit.to_canonical_station_vehicle_counts--source--__span-0-199"><a id="gbfs_toolkit.to_canonical_station_vehicle_counts--source--__codelineno-0-199" name="gbfs_toolkit.to_canonical_station_vehicle_counts--source--__codelineno-0-199"></a><span class="w">    </span><span class="sd">"""Melt per-vehicle-type availability from ``station_status`` into a long frame.</span>
+</span><span id="gbfs_toolkit.to_canonical_station_vehicle_counts--source--__span-0-200"><a id="gbfs_toolkit.to_canonical_station_vehicle_counts--source--__codelineno-0-200" name="gbfs_toolkit.to_canonical_station_vehicle_counts--source--__codelineno-0-200"></a>
+</span><span id="gbfs_toolkit.to_canonical_station_vehicle_counts--source--__span-0-201"><a id="gbfs_toolkit.to_canonical_station_vehicle_counts--source--__codelineno-0-201" name="gbfs_toolkit.to_canonical_station_vehicle_counts--source--__codelineno-0-201"></a><span class="sd">    GBFS 2.2+/3.x stations may report ``vehicle_types_available`` (a list of</span>
+</span><span id="gbfs_toolkit.to_canonical_station_vehicle_counts--source--__span-0-202"><a id="gbfs_toolkit.to_canonical_station_vehicle_counts--source--__codelineno-0-202" name="gbfs_toolkit.to_canonical_station_vehicle_counts--source--__codelineno-0-202"></a><span class="sd">    ``{vehicle_type_id, count}``). This explodes it to one row per station × vehicle type</span>
+</span><span id="gbfs_toolkit.to_canonical_station_vehicle_counts--source--__span-0-203"><a id="gbfs_toolkit.to_canonical_station_vehicle_counts--source--__codelineno-0-203" name="gbfs_toolkit.to_canonical_station_vehicle_counts--source--__codelineno-0-203"></a><span class="sd">    (`STATION_VEHICLE_COUNTS_COLUMNS`), so "where are the e-bikes?"</span>
+</span><span id="gbfs_toolkit.to_canonical_station_vehicle_counts--source--__span-0-204"><a id="gbfs_toolkit.to_canonical_station_vehicle_counts--source--__codelineno-0-204" name="gbfs_toolkit.to_canonical_station_vehicle_counts--source--__codelineno-0-204"></a><span class="sd">    is a join to [`to_canonical_vehicle_types`][gbfs_toolkit.to_canonical_vehicle_types]; the aggregate ``num_bikes_available``</span>
+</span><span id="gbfs_toolkit.to_canonical_station_vehicle_counts--source--__span-0-205"><a id="gbfs_toolkit.to_canonical_station_vehicle_counts--source--__codelineno-0-205" name="gbfs_toolkit.to_canonical_station_vehicle_counts--source--__codelineno-0-205"></a><span class="sd">    cannot answer it. Stations without the field contribute no rows.</span>
+</span><span id="gbfs_toolkit.to_canonical_station_vehicle_counts--source--__span-0-206"><a id="gbfs_toolkit.to_canonical_station_vehicle_counts--source--__codelineno-0-206" name="gbfs_toolkit.to_canonical_station_vehicle_counts--source--__codelineno-0-206"></a>
+</span><span id="gbfs_toolkit.to_canonical_station_vehicle_counts--source--__span-0-207"><a id="gbfs_toolkit.to_canonical_station_vehicle_counts--source--__codelineno-0-207" name="gbfs_toolkit.to_canonical_station_vehicle_counts--source--__codelineno-0-207"></a><span class="sd">    See Also</span>
+</span><span id="gbfs_toolkit.to_canonical_station_vehicle_counts--source--__span-0-208"><a id="gbfs_toolkit.to_canonical_station_vehicle_counts--source--__codelineno-0-208" name="gbfs_toolkit.to_canonical_station_vehicle_counts--source--__codelineno-0-208"></a><span class="sd">    --------</span>
+</span><span id="gbfs_toolkit.to_canonical_station_vehicle_counts--source--__span-0-209"><a id="gbfs_toolkit.to_canonical_station_vehicle_counts--source--__codelineno-0-209" name="gbfs_toolkit.to_canonical_station_vehicle_counts--source--__codelineno-0-209"></a><span class="sd">    [`to_canonical_station_status`][gbfs_toolkit.to_canonical_station_status] : The aggregate status parser.</span>
+</span><span id="gbfs_toolkit.to_canonical_station_vehicle_counts--source--__span-0-210"><a id="gbfs_toolkit.to_canonical_station_vehicle_counts--source--__codelineno-0-210" name="gbfs_toolkit.to_canonical_station_vehicle_counts--source--__codelineno-0-210"></a><span class="sd">    [`to_canonical_vehicle_types`][gbfs_toolkit.to_canonical_vehicle_types] : Resolve the vehicle types counted.</span>
+</span><span id="gbfs_toolkit.to_canonical_station_vehicle_counts--source--__span-0-211"><a id="gbfs_toolkit.to_canonical_station_vehicle_counts--source--__codelineno-0-211" name="gbfs_toolkit.to_canonical_station_vehicle_counts--source--__codelineno-0-211"></a><span class="sd">    """</span>
+</span><span id="gbfs_toolkit.to_canonical_station_vehicle_counts--source--__span-0-212"><a id="gbfs_toolkit.to_canonical_station_vehicle_counts--source--__codelineno-0-212" name="gbfs_toolkit.to_canonical_station_vehicle_counts--source--__codelineno-0-212"></a>    <span class="n">fetched_at</span> <span class="o">=</span> <span class="n">fetched_at</span> <span class="k">if</span> <span class="n">fetched_at</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">_now_utc</span><span class="p">()</span>
+</span><span id="gbfs_toolkit.to_canonical_station_vehicle_counts--source--__span-0-213"><a id="gbfs_toolkit.to_canonical_station_vehicle_counts--source--__codelineno-0-213" name="gbfs_toolkit.to_canonical_station_vehicle_counts--source--__codelineno-0-213"></a>    <span class="n">data</span> <span class="o">=</span> <span class="n">raw</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"data"</span><span class="p">,</span> <span class="n">raw</span><span class="p">)</span>
+</span><span id="gbfs_toolkit.to_canonical_station_vehicle_counts--source--__span-0-214"><a id="gbfs_toolkit.to_canonical_station_vehicle_counts--source--__codelineno-0-214" name="gbfs_toolkit.to_canonical_station_vehicle_counts--source--__codelineno-0-214"></a>    <span class="n">stations</span> <span class="o">=</span> <span class="n">_records</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="s2">"stations"</span><span class="p">)</span>
+</span><span id="gbfs_toolkit.to_canonical_station_vehicle_counts--source--__span-0-215"><a id="gbfs_toolkit.to_canonical_station_vehicle_counts--source--__codelineno-0-215" name="gbfs_toolkit.to_canonical_station_vehicle_counts--source--__codelineno-0-215"></a>    <span class="n">rows</span> <span class="o">=</span> <span class="p">[</span>
+</span><span id="gbfs_toolkit.to_canonical_station_vehicle_counts--source--__span-0-216"><a id="gbfs_toolkit.to_canonical_station_vehicle_counts--source--__codelineno-0-216" name="gbfs_toolkit.to_canonical_station_vehicle_counts--source--__codelineno-0-216"></a>        <span class="p">{</span>
+</span><span id="gbfs_toolkit.to_canonical_station_vehicle_counts--source--__span-0-217"><a id="gbfs_toolkit.to_canonical_station_vehicle_counts--source--__codelineno-0-217" name="gbfs_toolkit.to_canonical_station_vehicle_counts--source--__codelineno-0-217"></a>            <span class="s2">"system_id"</span><span class="p">:</span> <span class="n">system_id</span><span class="p">,</span>
+</span><span id="gbfs_toolkit.to_canonical_station_vehicle_counts--source--__span-0-218"><a id="gbfs_toolkit.to_canonical_station_vehicle_counts--source--__codelineno-0-218" name="gbfs_toolkit.to_canonical_station_vehicle_counts--source--__codelineno-0-218"></a>            <span class="s2">"station_id"</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"station_id"</span><span class="p">)),</span>
+</span><span id="gbfs_toolkit.to_canonical_station_vehicle_counts--source--__span-0-219"><a id="gbfs_toolkit.to_canonical_station_vehicle_counts--source--__codelineno-0-219" name="gbfs_toolkit.to_canonical_station_vehicle_counts--source--__codelineno-0-219"></a>            <span class="s2">"vehicle_type_id"</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">vt</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"vehicle_type_id"</span><span class="p">)),</span>
+</span><span id="gbfs_toolkit.to_canonical_station_vehicle_counts--source--__span-0-220"><a id="gbfs_toolkit.to_canonical_station_vehicle_counts--source--__codelineno-0-220" name="gbfs_toolkit.to_canonical_station_vehicle_counts--source--__codelineno-0-220"></a>            <span class="s2">"num_vehicles_available"</span><span class="p">:</span> <span class="n">vt</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"count"</span><span class="p">),</span>
+</span><span id="gbfs_toolkit.to_canonical_station_vehicle_counts--source--__span-0-221"><a id="gbfs_toolkit.to_canonical_station_vehicle_counts--source--__codelineno-0-221" name="gbfs_toolkit.to_canonical_station_vehicle_counts--source--__codelineno-0-221"></a>            <span class="s2">"fetched_at"</span><span class="p">:</span> <span class="n">fetched_at</span><span class="p">,</span>
+</span><span id="gbfs_toolkit.to_canonical_station_vehicle_counts--source--__span-0-222"><a id="gbfs_toolkit.to_canonical_station_vehicle_counts--source--__codelineno-0-222" name="gbfs_toolkit.to_canonical_station_vehicle_counts--source--__codelineno-0-222"></a>        <span class="p">}</span>
+</span><span id="gbfs_toolkit.to_canonical_station_vehicle_counts--source--__span-0-223"><a id="gbfs_toolkit.to_canonical_station_vehicle_counts--source--__codelineno-0-223" name="gbfs_toolkit.to_canonical_station_vehicle_counts--source--__codelineno-0-223"></a>        <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">stations</span>
+</span><span id="gbfs_toolkit.to_canonical_station_vehicle_counts--source--__span-0-224"><a id="gbfs_toolkit.to_canonical_station_vehicle_counts--source--__codelineno-0-224" name="gbfs_toolkit.to_canonical_station_vehicle_counts--source--__codelineno-0-224"></a>        <span class="k">for</span> <span class="n">vt</span> <span class="ow">in</span> <span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"vehicle_types_available"</span><span class="p">)</span> <span class="ow">or</span> <span class="p">[])</span>
+</span><span id="gbfs_toolkit.to_canonical_station_vehicle_counts--source--__span-0-225"><a id="gbfs_toolkit.to_canonical_station_vehicle_counts--source--__codelineno-0-225" name="gbfs_toolkit.to_canonical_station_vehicle_counts--source--__codelineno-0-225"></a>    <span class="p">]</span>
+</span><span id="gbfs_toolkit.to_canonical_station_vehicle_counts--source--__span-0-226"><a id="gbfs_toolkit.to_canonical_station_vehicle_counts--source--__codelineno-0-226" name="gbfs_toolkit.to_canonical_station_vehicle_counts--source--__codelineno-0-226"></a>    <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">rows</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">STATION_VEHICLE_COUNTS_COLUMNS</span><span class="p">)</span>
+</span><span id="gbfs_toolkit.to_canonical_station_vehicle_counts--source--__span-0-227"><a id="gbfs_toolkit.to_canonical_station_vehicle_counts--source--__codelineno-0-227" name="gbfs_toolkit.to_canonical_station_vehicle_counts--source--__codelineno-0-227"></a>    <span class="n">df</span><span class="p">[</span><span class="s2">"num_vehicles_available"</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_numeric</span><span class="p">(</span>
+</span><span id="gbfs_toolkit.to_canonical_station_vehicle_counts--source--__span-0-228"><a id="gbfs_toolkit.to_canonical_station_vehicle_counts--source--__codelineno-0-228" name="gbfs_toolkit.to_canonical_station_vehicle_counts--source--__codelineno-0-228"></a>        <span class="n">df</span><span class="p">[</span><span class="s2">"num_vehicles_available"</span><span class="p">],</span> <span class="n">errors</span><span class="o">=</span><span class="s2">"coerce"</span>
+</span><span id="gbfs_toolkit.to_canonical_station_vehicle_counts--source--__span-0-229"><a id="gbfs_toolkit.to_canonical_station_vehicle_counts--source--__codelineno-0-229" name="gbfs_toolkit.to_canonical_station_vehicle_counts--source--__codelineno-0-229"></a>    <span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s2">"Int64"</span><span class="p">)</span>
+</span><span id="gbfs_toolkit.to_canonical_station_vehicle_counts--source--__span-0-230"><a id="gbfs_toolkit.to_canonical_station_vehicle_counts--source--__codelineno-0-230" name="gbfs_toolkit.to_canonical_station_vehicle_counts--source--__codelineno-0-230"></a>    <span class="n">df</span><span class="p">[</span><span class="s2">"vehicle_type_id"</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">"vehicle_type_id"</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span>
+</span><span id="gbfs_toolkit.to_canonical_station_vehicle_counts--source--__span-0-231"><a id="gbfs_toolkit.to_canonical_station_vehicle_counts--source--__codelineno-0-231" name="gbfs_toolkit.to_canonical_station_vehicle_counts--source--__codelineno-0-231"></a>        <span class="s2">"string"</span>
+</span><span id="gbfs_toolkit.to_canonical_station_vehicle_counts--source--__span-0-232"><a id="gbfs_toolkit.to_canonical_station_vehicle_counts--source--__codelineno-0-232" name="gbfs_toolkit.to_canonical_station_vehicle_counts--source--__codelineno-0-232"></a>    <span class="p">)</span>  <span class="c1"># join key, see to_canonical_vehicles</span>
+</span><span id="gbfs_toolkit.to_canonical_station_vehicle_counts--source--__span-0-233"><a id="gbfs_toolkit.to_canonical_station_vehicle_counts--source--__codelineno-0-233" name="gbfs_toolkit.to_canonical_station_vehicle_counts--source--__codelineno-0-233"></a>    <span class="n">df</span><span class="p">[</span><span class="s2">"fetched_at"</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">"fetched_at"</span><span class="p">],</span> <span class="n">utc</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span><span id="gbfs_toolkit.to_canonical_station_vehicle_counts--source--__span-0-234"><a id="gbfs_toolkit.to_canonical_station_vehicle_counts--source--__codelineno-0-234" name="gbfs_toolkit.to_canonical_station_vehicle_counts--source--__codelineno-0-234"></a>    <span class="k">return</span> <span class="n">df</span>
 </span></code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -6656,10 +6656,10 @@ cannot answer it. Stations without the field contribute no rows.</p>
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.instant", "navigation.instant.progress", "navigation.tracking", "navigation.sections", "navigation.tabs", "navigation.tabs.sticky", "navigation.top", "navigation.indexes", "navigation.footer", "toc.follow", "search.suggest", "search.highlight", "search.share", "content.code.copy", "content.code.annotate", "content.tooltips"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.instant", "navigation.instant.progress", "navigation.tracking", "navigation.sections", "navigation.tabs", "navigation.tabs.sticky", "navigation.top", "navigation.indexes", "navigation.footer", "toc.follow", "search.suggest", "search.highlight", "search.share", "content.code.copy", "content.code.annotate", "content.tooltips"], "search": "../../../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
     
     
-      <script src="../../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../../../assets/javascripts/bundle.c21346df.min.js"></script>
       
         <script src="../../../javascripts/mathjax.js"></script>
       

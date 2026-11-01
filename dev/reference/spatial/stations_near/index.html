@@ -25,7 +25,7 @@
       
       
       <link rel="icon" href="../../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-ProperDocs 1.6.7, mkdocs-material-9.7.6">
+      <meta name="generator" content="mkdocs-ProperDocs 1.6.7, mkdocs-material-9.8.0">
     
     
       
@@ -33,10 +33,10 @@
       
     
     
-      <link rel="stylesheet" href="../../../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.57a0d79d.min.css">
       
         
-        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.fb2fffe2.min.css">
       
       
 
@@ -1146,7 +1146,7 @@
   <span class="md-ellipsis">
     
   
-    __version__
+    _version_
   
 
     
@@ -6422,7 +6422,7 @@
 
 
 <a href="#gbfs_toolkit.stations_near" class="headerlink" title="Permanent link">&para;</a></h2>
-<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">stations_near</span><span class="p">(</span><span class="n">points</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-external" title="&lt;code&gt;pandas.DataFrame&lt;/code&gt;" href="https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.html#pandas.DataFrame">DataFrame</a></span><span class="p">,</span> <span class="n">info</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-external" title="&lt;code&gt;pandas.DataFrame&lt;/code&gt;" href="https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.html#pandas.DataFrame">DataFrame</a></span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">radius_m</span><span class="p">:</span> <span class="n"><span title="float">float</span></span> <span class="o">=</span> <span class="mf">300.0</span><span class="p">,</span> <span class="n">point_lat</span><span class="p">:</span> <span class="n"><span title="str">str</span></span> <span class="o">=</span> <span class="s1">&#39;lat&#39;</span><span class="p">,</span> <span class="n">point_lon</span><span class="p">:</span> <span class="n"><span title="str">str</span></span> <span class="o">=</span> <span class="s1">&#39;lon&#39;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n"><a class="autorefs autorefs-external" title="&lt;code&gt;pandas.DataFrame&lt;/code&gt;" href="https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.html#pandas.DataFrame">DataFrame</a></span>
+<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">stations_near</span><span class="p">(</span><span class="n">points</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-external" title="&lt;code&gt;pandas.DataFrame&lt;/code&gt;" href="https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.html#pandas.DataFrame">DataFrame</a></span><span class="p">,</span> <span class="n">info</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-external" title="&lt;code&gt;pandas.DataFrame&lt;/code&gt;" href="https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.html#pandas.DataFrame">DataFrame</a></span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">radius_m</span><span class="p">:</span> <span class="n"><span title="float">float</span></span> <span class="o">=</span> <span class="mf">300.0</span><span class="p">,</span> <span class="n">point_lat</span><span class="p">:</span> <span class="n"><span title="str">str</span></span> <span class="o">=</span> <span class="s1">'lat'</span><span class="p">,</span> <span class="n">point_lon</span><span class="p">:</span> <span class="n"><span title="str">str</span></span> <span class="o">=</span> <span class="s1">'lon'</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n"><a class="autorefs autorefs-external" title="&lt;code&gt;pandas.DataFrame&lt;/code&gt;" href="https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.html#pandas.DataFrame">DataFrame</a></span>
 </span></code></pre></div>
 
     <div class="doc doc-contents first">
@@ -6529,113 +6529,113 @@ served by stations</em>. Straight-line (great-circle) proximity only; no routing
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/gbfs_toolkit/spatial/geometry.py</code></summary>
-              <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-206">206</a></span>
-<span class="normal"><a href="#__codelineno-0-207">207</a></span>
-<span class="normal"><a href="#__codelineno-0-208">208</a></span>
-<span class="normal"><a href="#__codelineno-0-209">209</a></span>
-<span class="normal"><a href="#__codelineno-0-210">210</a></span>
-<span class="normal"><a href="#__codelineno-0-211">211</a></span>
-<span class="normal"><a href="#__codelineno-0-212">212</a></span>
-<span class="normal"><a href="#__codelineno-0-213">213</a></span>
-<span class="normal"><a href="#__codelineno-0-214">214</a></span>
-<span class="normal"><a href="#__codelineno-0-215">215</a></span>
-<span class="normal"><a href="#__codelineno-0-216">216</a></span>
-<span class="normal"><a href="#__codelineno-0-217">217</a></span>
-<span class="normal"><a href="#__codelineno-0-218">218</a></span>
-<span class="normal"><a href="#__codelineno-0-219">219</a></span>
-<span class="normal"><a href="#__codelineno-0-220">220</a></span>
-<span class="normal"><a href="#__codelineno-0-221">221</a></span>
-<span class="normal"><a href="#__codelineno-0-222">222</a></span>
-<span class="normal"><a href="#__codelineno-0-223">223</a></span>
-<span class="normal"><a href="#__codelineno-0-224">224</a></span>
-<span class="normal"><a href="#__codelineno-0-225">225</a></span>
-<span class="normal"><a href="#__codelineno-0-226">226</a></span>
-<span class="normal"><a href="#__codelineno-0-227">227</a></span>
-<span class="normal"><a href="#__codelineno-0-228">228</a></span>
-<span class="normal"><a href="#__codelineno-0-229">229</a></span>
-<span class="normal"><a href="#__codelineno-0-230">230</a></span>
-<span class="normal"><a href="#__codelineno-0-231">231</a></span>
-<span class="normal"><a href="#__codelineno-0-232">232</a></span>
-<span class="normal"><a href="#__codelineno-0-233">233</a></span>
-<span class="normal"><a href="#__codelineno-0-234">234</a></span>
-<span class="normal"><a href="#__codelineno-0-235">235</a></span>
-<span class="normal"><a href="#__codelineno-0-236">236</a></span>
-<span class="normal"><a href="#__codelineno-0-237">237</a></span>
-<span class="normal"><a href="#__codelineno-0-238">238</a></span>
-<span class="normal"><a href="#__codelineno-0-239">239</a></span>
-<span class="normal"><a href="#__codelineno-0-240">240</a></span>
-<span class="normal"><a href="#__codelineno-0-241">241</a></span>
-<span class="normal"><a href="#__codelineno-0-242">242</a></span>
-<span class="normal"><a href="#__codelineno-0-243">243</a></span>
-<span class="normal"><a href="#__codelineno-0-244">244</a></span>
-<span class="normal"><a href="#__codelineno-0-245">245</a></span>
-<span class="normal"><a href="#__codelineno-0-246">246</a></span>
-<span class="normal"><a href="#__codelineno-0-247">247</a></span>
-<span class="normal"><a href="#__codelineno-0-248">248</a></span>
-<span class="normal"><a href="#__codelineno-0-249">249</a></span>
-<span class="normal"><a href="#__codelineno-0-250">250</a></span>
-<span class="normal"><a href="#__codelineno-0-251">251</a></span>
-<span class="normal"><a href="#__codelineno-0-252">252</a></span>
-<span class="normal"><a href="#__codelineno-0-253">253</a></span>
-<span class="normal"><a href="#__codelineno-0-254">254</a></span>
-<span class="normal"><a href="#__codelineno-0-255">255</a></span>
-<span class="normal"><a href="#__codelineno-0-256">256</a></span>
-<span class="normal"><a href="#__codelineno-0-257">257</a></span>
-<span class="normal"><a href="#__codelineno-0-258">258</a></span>
-<span class="normal"><a href="#__codelineno-0-259">259</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-206"><a id="__codelineno-0-206" name="__codelineno-0-206"></a><span class="k">def</span><span class="w"> </span><span class="nf">stations_near</span><span class="p">(</span>
-</span><span id="__span-0-207"><a id="__codelineno-0-207" name="__codelineno-0-207"></a>    <span class="n">points</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
-</span><span id="__span-0-208"><a id="__codelineno-0-208" name="__codelineno-0-208"></a>    <span class="n">info</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
-</span><span id="__span-0-209"><a id="__codelineno-0-209" name="__codelineno-0-209"></a>    <span class="o">*</span><span class="p">,</span>
-</span><span id="__span-0-210"><a id="__codelineno-0-210" name="__codelineno-0-210"></a>    <span class="n">radius_m</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">300.0</span><span class="p">,</span>
-</span><span id="__span-0-211"><a id="__codelineno-0-211" name="__codelineno-0-211"></a>    <span class="n">point_lat</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;lat&quot;</span><span class="p">,</span>
-</span><span id="__span-0-212"><a id="__codelineno-0-212" name="__codelineno-0-212"></a>    <span class="n">point_lon</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;lon&quot;</span><span class="p">,</span>
-</span><span id="__span-0-213"><a id="__codelineno-0-213" name="__codelineno-0-213"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
-</span><span id="__span-0-214"><a id="__codelineno-0-214" name="__codelineno-0-214"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;For each external point, how many stations are nearby: the accessibility primitive.</span>
-</span><span id="__span-0-215"><a id="__codelineno-0-215" name="__codelineno-0-215"></a>
-</span><span id="__span-0-216"><a id="__codelineno-0-216" name="__codelineno-0-216"></a><span class="sd">    The inverse of [`features_within`][gbfs_toolkit.features_within]: there you summarise things *around stations*; here</span>
-</span><span id="__span-0-217"><a id="__codelineno-0-217" name="__codelineno-0-217"></a><span class="sd">    you ask, for arbitrary places (clinics, schools, neighbourhood centroids), *how well each is</span>
-</span><span id="__span-0-218"><a id="__codelineno-0-218" name="__codelineno-0-218"></a><span class="sd">    served by stations*. Straight-line (great-circle) proximity only; no routing.</span>
-</span><span id="__span-0-219"><a id="__codelineno-0-219" name="__codelineno-0-219"></a>
-</span><span id="__span-0-220"><a id="__codelineno-0-220" name="__codelineno-0-220"></a><span class="sd">    Parameters</span>
-</span><span id="__span-0-221"><a id="__codelineno-0-221" name="__codelineno-0-221"></a><span class="sd">    ----------</span>
-</span><span id="__span-0-222"><a id="__codelineno-0-222" name="__codelineno-0-222"></a><span class="sd">    points : pandas.DataFrame</span>
-</span><span id="__span-0-223"><a id="__codelineno-0-223" name="__codelineno-0-223"></a><span class="sd">        Places of interest with ``point_lat``/``point_lon`` columns.</span>
-</span><span id="__span-0-224"><a id="__codelineno-0-224" name="__codelineno-0-224"></a><span class="sd">    info : pandas.DataFrame</span>
-</span><span id="__span-0-225"><a id="__codelineno-0-225" name="__codelineno-0-225"></a><span class="sd">        Canonical station inventory (``lat``/``lon``, optionally ``station_id``).</span>
-</span><span id="__span-0-226"><a id="__codelineno-0-226" name="__codelineno-0-226"></a><span class="sd">    radius_m : float, default 300</span>
-</span><span id="__span-0-227"><a id="__codelineno-0-227" name="__codelineno-0-227"></a>
-</span><span id="__span-0-228"><a id="__codelineno-0-228" name="__codelineno-0-228"></a><span class="sd">    Returns</span>
-</span><span id="__span-0-229"><a id="__codelineno-0-229" name="__codelineno-0-229"></a><span class="sd">    -------</span>
-</span><span id="__span-0-230"><a id="__codelineno-0-230" name="__codelineno-0-230"></a><span class="sd">    pandas.DataFrame</span>
-</span><span id="__span-0-231"><a id="__codelineno-0-231" name="__codelineno-0-231"></a><span class="sd">        ``points`` + ``n_stations_within``, ``nearest_station_dist_m`` and (if ``info`` has</span>
-</span><span id="__span-0-232"><a id="__codelineno-0-232" name="__codelineno-0-232"></a><span class="sd">        ``station_id``) ``nearest_station_id``.</span>
-</span><span id="__span-0-233"><a id="__codelineno-0-233" name="__codelineno-0-233"></a>
-</span><span id="__span-0-234"><a id="__codelineno-0-234" name="__codelineno-0-234"></a><span class="sd">    See Also</span>
-</span><span id="__span-0-235"><a id="__codelineno-0-235" name="__codelineno-0-235"></a><span class="sd">    --------</span>
-</span><span id="__span-0-236"><a id="__codelineno-0-236" name="__codelineno-0-236"></a><span class="sd">    [`GeoKDTree`][gbfs_toolkit.GeoKDTree] : The spatial index underneath.</span>
-</span><span id="__span-0-237"><a id="__codelineno-0-237" name="__codelineno-0-237"></a><span class="sd">    [`find_nearest_stations`][gbfs_toolkit.find_nearest_stations] : k-nearest instead of radius.</span>
-</span><span id="__span-0-238"><a id="__codelineno-0-238" name="__codelineno-0-238"></a><span class="sd">    [`features_within`][gbfs_toolkit.features_within] : Join external features in a buffer.</span>
-</span><span id="__span-0-239"><a id="__codelineno-0-239" name="__codelineno-0-239"></a><span class="sd">    &quot;&quot;&quot;</span>
-</span><span id="__span-0-240"><a id="__codelineno-0-240" name="__codelineno-0-240"></a>    <span class="n">out</span> <span class="o">=</span> <span class="n">points</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-</span><span id="__span-0-241"><a id="__codelineno-0-241" name="__codelineno-0-241"></a>    <span class="k">if</span> <span class="n">out</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
-</span><span id="__span-0-242"><a id="__codelineno-0-242" name="__codelineno-0-242"></a>        <span class="n">out</span><span class="p">[</span><span class="s2">&quot;n_stations_within&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">dtype</span><span class="o">=</span><span class="s2">&quot;int64&quot;</span><span class="p">)</span>
-</span><span id="__span-0-243"><a id="__codelineno-0-243" name="__codelineno-0-243"></a>        <span class="n">out</span><span class="p">[</span><span class="s2">&quot;nearest_station_dist_m&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">dtype</span><span class="o">=</span><span class="s2">&quot;float64&quot;</span><span class="p">)</span>
-</span><span id="__span-0-244"><a id="__codelineno-0-244" name="__codelineno-0-244"></a>        <span class="k">return</span> <span class="n">out</span>
-</span><span id="__span-0-245"><a id="__codelineno-0-245" name="__codelineno-0-245"></a>    <span class="k">if</span> <span class="n">info</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
-</span><span id="__span-0-246"><a id="__codelineno-0-246" name="__codelineno-0-246"></a>        <span class="n">out</span><span class="p">[</span><span class="s2">&quot;n_stations_within&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
-</span><span id="__span-0-247"><a id="__codelineno-0-247" name="__codelineno-0-247"></a>        <span class="n">out</span><span class="p">[</span><span class="s2">&quot;nearest_station_dist_m&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span>
-</span><span id="__span-0-248"><a id="__codelineno-0-248" name="__codelineno-0-248"></a>        <span class="k">if</span> <span class="s2">&quot;station_id&quot;</span> <span class="ow">in</span> <span class="n">info</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
-</span><span id="__span-0-249"><a id="__codelineno-0-249" name="__codelineno-0-249"></a>            <span class="n">out</span><span class="p">[</span><span class="s2">&quot;nearest_station_id&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
-</span><span id="__span-0-250"><a id="__codelineno-0-250" name="__codelineno-0-250"></a>        <span class="k">return</span> <span class="n">out</span>
-</span><span id="__span-0-251"><a id="__codelineno-0-251" name="__codelineno-0-251"></a>    <span class="n">tree</span> <span class="o">=</span> <span class="n">GeoKDTree</span><span class="p">(</span><span class="n">info</span><span class="p">[</span><span class="s2">&quot;lat&quot;</span><span class="p">],</span> <span class="n">info</span><span class="p">[</span><span class="s2">&quot;lon&quot;</span><span class="p">])</span>
-</span><span id="__span-0-252"><a id="__codelineno-0-252" name="__codelineno-0-252"></a>    <span class="n">lat</span><span class="p">,</span> <span class="n">lon</span> <span class="o">=</span> <span class="n">out</span><span class="p">[</span><span class="n">point_lat</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">(),</span> <span class="n">out</span><span class="p">[</span><span class="n">point_lon</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
-</span><span id="__span-0-253"><a id="__codelineno-0-253" name="__codelineno-0-253"></a>    <span class="n">within</span> <span class="o">=</span> <span class="n">tree</span><span class="o">.</span><span class="n">query_radius</span><span class="p">(</span><span class="n">lat</span><span class="p">,</span> <span class="n">lon</span><span class="p">,</span> <span class="n">radius_m</span><span class="o">=</span><span class="n">radius_m</span><span class="p">)</span>
-</span><span id="__span-0-254"><a id="__codelineno-0-254" name="__codelineno-0-254"></a>    <span class="n">dist</span><span class="p">,</span> <span class="n">idx</span> <span class="o">=</span> <span class="n">tree</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">lat</span><span class="p">,</span> <span class="n">lon</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-</span><span id="__span-0-255"><a id="__codelineno-0-255" name="__codelineno-0-255"></a>    <span class="n">out</span><span class="p">[</span><span class="s2">&quot;n_stations_within&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">h</span><span class="p">)</span> <span class="k">for</span> <span class="n">h</span> <span class="ow">in</span> <span class="n">within</span><span class="p">]</span>
-</span><span id="__span-0-256"><a id="__codelineno-0-256" name="__codelineno-0-256"></a>    <span class="n">out</span><span class="p">[</span><span class="s2">&quot;nearest_station_dist_m&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">dist</span><span class="p">)</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
-</span><span id="__span-0-257"><a id="__codelineno-0-257" name="__codelineno-0-257"></a>    <span class="k">if</span> <span class="s2">&quot;station_id&quot;</span> <span class="ow">in</span> <span class="n">info</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
-</span><span id="__span-0-258"><a id="__codelineno-0-258" name="__codelineno-0-258"></a>        <span class="n">out</span><span class="p">[</span><span class="s2">&quot;nearest_station_id&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">info</span><span class="p">[</span><span class="s2">&quot;station_id&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()[</span><span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">idx</span><span class="p">)</span><span class="o">.</span><span class="n">ravel</span><span class="p">()]</span>
-</span><span id="__span-0-259"><a id="__codelineno-0-259" name="__codelineno-0-259"></a>    <span class="k">return</span> <span class="n">out</span>
+              <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#gbfs_toolkit.stations_near--source--__codelineno-0-206">206</a></span>
+<span class="normal"><a href="#gbfs_toolkit.stations_near--source--__codelineno-0-207">207</a></span>
+<span class="normal"><a href="#gbfs_toolkit.stations_near--source--__codelineno-0-208">208</a></span>
+<span class="normal"><a href="#gbfs_toolkit.stations_near--source--__codelineno-0-209">209</a></span>
+<span class="normal"><a href="#gbfs_toolkit.stations_near--source--__codelineno-0-210">210</a></span>
+<span class="normal"><a href="#gbfs_toolkit.stations_near--source--__codelineno-0-211">211</a></span>
+<span class="normal"><a href="#gbfs_toolkit.stations_near--source--__codelineno-0-212">212</a></span>
+<span class="normal"><a href="#gbfs_toolkit.stations_near--source--__codelineno-0-213">213</a></span>
+<span class="normal"><a href="#gbfs_toolkit.stations_near--source--__codelineno-0-214">214</a></span>
+<span class="normal"><a href="#gbfs_toolkit.stations_near--source--__codelineno-0-215">215</a></span>
+<span class="normal"><a href="#gbfs_toolkit.stations_near--source--__codelineno-0-216">216</a></span>
+<span class="normal"><a href="#gbfs_toolkit.stations_near--source--__codelineno-0-217">217</a></span>
+<span class="normal"><a href="#gbfs_toolkit.stations_near--source--__codelineno-0-218">218</a></span>
+<span class="normal"><a href="#gbfs_toolkit.stations_near--source--__codelineno-0-219">219</a></span>
+<span class="normal"><a href="#gbfs_toolkit.stations_near--source--__codelineno-0-220">220</a></span>
+<span class="normal"><a href="#gbfs_toolkit.stations_near--source--__codelineno-0-221">221</a></span>
+<span class="normal"><a href="#gbfs_toolkit.stations_near--source--__codelineno-0-222">222</a></span>
+<span class="normal"><a href="#gbfs_toolkit.stations_near--source--__codelineno-0-223">223</a></span>
+<span class="normal"><a href="#gbfs_toolkit.stations_near--source--__codelineno-0-224">224</a></span>
+<span class="normal"><a href="#gbfs_toolkit.stations_near--source--__codelineno-0-225">225</a></span>
+<span class="normal"><a href="#gbfs_toolkit.stations_near--source--__codelineno-0-226">226</a></span>
+<span class="normal"><a href="#gbfs_toolkit.stations_near--source--__codelineno-0-227">227</a></span>
+<span class="normal"><a href="#gbfs_toolkit.stations_near--source--__codelineno-0-228">228</a></span>
+<span class="normal"><a href="#gbfs_toolkit.stations_near--source--__codelineno-0-229">229</a></span>
+<span class="normal"><a href="#gbfs_toolkit.stations_near--source--__codelineno-0-230">230</a></span>
+<span class="normal"><a href="#gbfs_toolkit.stations_near--source--__codelineno-0-231">231</a></span>
+<span class="normal"><a href="#gbfs_toolkit.stations_near--source--__codelineno-0-232">232</a></span>
+<span class="normal"><a href="#gbfs_toolkit.stations_near--source--__codelineno-0-233">233</a></span>
+<span class="normal"><a href="#gbfs_toolkit.stations_near--source--__codelineno-0-234">234</a></span>
+<span class="normal"><a href="#gbfs_toolkit.stations_near--source--__codelineno-0-235">235</a></span>
+<span class="normal"><a href="#gbfs_toolkit.stations_near--source--__codelineno-0-236">236</a></span>
+<span class="normal"><a href="#gbfs_toolkit.stations_near--source--__codelineno-0-237">237</a></span>
+<span class="normal"><a href="#gbfs_toolkit.stations_near--source--__codelineno-0-238">238</a></span>
+<span class="normal"><a href="#gbfs_toolkit.stations_near--source--__codelineno-0-239">239</a></span>
+<span class="normal"><a href="#gbfs_toolkit.stations_near--source--__codelineno-0-240">240</a></span>
+<span class="normal"><a href="#gbfs_toolkit.stations_near--source--__codelineno-0-241">241</a></span>
+<span class="normal"><a href="#gbfs_toolkit.stations_near--source--__codelineno-0-242">242</a></span>
+<span class="normal"><a href="#gbfs_toolkit.stations_near--source--__codelineno-0-243">243</a></span>
+<span class="normal"><a href="#gbfs_toolkit.stations_near--source--__codelineno-0-244">244</a></span>
+<span class="normal"><a href="#gbfs_toolkit.stations_near--source--__codelineno-0-245">245</a></span>
+<span class="normal"><a href="#gbfs_toolkit.stations_near--source--__codelineno-0-246">246</a></span>
+<span class="normal"><a href="#gbfs_toolkit.stations_near--source--__codelineno-0-247">247</a></span>
+<span class="normal"><a href="#gbfs_toolkit.stations_near--source--__codelineno-0-248">248</a></span>
+<span class="normal"><a href="#gbfs_toolkit.stations_near--source--__codelineno-0-249">249</a></span>
+<span class="normal"><a href="#gbfs_toolkit.stations_near--source--__codelineno-0-250">250</a></span>
+<span class="normal"><a href="#gbfs_toolkit.stations_near--source--__codelineno-0-251">251</a></span>
+<span class="normal"><a href="#gbfs_toolkit.stations_near--source--__codelineno-0-252">252</a></span>
+<span class="normal"><a href="#gbfs_toolkit.stations_near--source--__codelineno-0-253">253</a></span>
+<span class="normal"><a href="#gbfs_toolkit.stations_near--source--__codelineno-0-254">254</a></span>
+<span class="normal"><a href="#gbfs_toolkit.stations_near--source--__codelineno-0-255">255</a></span>
+<span class="normal"><a href="#gbfs_toolkit.stations_near--source--__codelineno-0-256">256</a></span>
+<span class="normal"><a href="#gbfs_toolkit.stations_near--source--__codelineno-0-257">257</a></span>
+<span class="normal"><a href="#gbfs_toolkit.stations_near--source--__codelineno-0-258">258</a></span>
+<span class="normal"><a href="#gbfs_toolkit.stations_near--source--__codelineno-0-259">259</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="gbfs_toolkit.stations_near--source--__span-0-206"><a id="gbfs_toolkit.stations_near--source--__codelineno-0-206" name="gbfs_toolkit.stations_near--source--__codelineno-0-206"></a><span class="k">def</span><span class="w"> </span><span class="nf">stations_near</span><span class="p">(</span>
+</span><span id="gbfs_toolkit.stations_near--source--__span-0-207"><a id="gbfs_toolkit.stations_near--source--__codelineno-0-207" name="gbfs_toolkit.stations_near--source--__codelineno-0-207"></a>    <span class="n">points</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+</span><span id="gbfs_toolkit.stations_near--source--__span-0-208"><a id="gbfs_toolkit.stations_near--source--__codelineno-0-208" name="gbfs_toolkit.stations_near--source--__codelineno-0-208"></a>    <span class="n">info</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+</span><span id="gbfs_toolkit.stations_near--source--__span-0-209"><a id="gbfs_toolkit.stations_near--source--__codelineno-0-209" name="gbfs_toolkit.stations_near--source--__codelineno-0-209"></a>    <span class="o">*</span><span class="p">,</span>
+</span><span id="gbfs_toolkit.stations_near--source--__span-0-210"><a id="gbfs_toolkit.stations_near--source--__codelineno-0-210" name="gbfs_toolkit.stations_near--source--__codelineno-0-210"></a>    <span class="n">radius_m</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">300.0</span><span class="p">,</span>
+</span><span id="gbfs_toolkit.stations_near--source--__span-0-211"><a id="gbfs_toolkit.stations_near--source--__codelineno-0-211" name="gbfs_toolkit.stations_near--source--__codelineno-0-211"></a>    <span class="n">point_lat</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"lat"</span><span class="p">,</span>
+</span><span id="gbfs_toolkit.stations_near--source--__span-0-212"><a id="gbfs_toolkit.stations_near--source--__codelineno-0-212" name="gbfs_toolkit.stations_near--source--__codelineno-0-212"></a>    <span class="n">point_lon</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"lon"</span><span class="p">,</span>
+</span><span id="gbfs_toolkit.stations_near--source--__span-0-213"><a id="gbfs_toolkit.stations_near--source--__codelineno-0-213" name="gbfs_toolkit.stations_near--source--__codelineno-0-213"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+</span><span id="gbfs_toolkit.stations_near--source--__span-0-214"><a id="gbfs_toolkit.stations_near--source--__codelineno-0-214" name="gbfs_toolkit.stations_near--source--__codelineno-0-214"></a><span class="w">    </span><span class="sd">"""For each external point, how many stations are nearby: the accessibility primitive.</span>
+</span><span id="gbfs_toolkit.stations_near--source--__span-0-215"><a id="gbfs_toolkit.stations_near--source--__codelineno-0-215" name="gbfs_toolkit.stations_near--source--__codelineno-0-215"></a>
+</span><span id="gbfs_toolkit.stations_near--source--__span-0-216"><a id="gbfs_toolkit.stations_near--source--__codelineno-0-216" name="gbfs_toolkit.stations_near--source--__codelineno-0-216"></a><span class="sd">    The inverse of [`features_within`][gbfs_toolkit.features_within]: there you summarise things *around stations*; here</span>
+</span><span id="gbfs_toolkit.stations_near--source--__span-0-217"><a id="gbfs_toolkit.stations_near--source--__codelineno-0-217" name="gbfs_toolkit.stations_near--source--__codelineno-0-217"></a><span class="sd">    you ask, for arbitrary places (clinics, schools, neighbourhood centroids), *how well each is</span>
+</span><span id="gbfs_toolkit.stations_near--source--__span-0-218"><a id="gbfs_toolkit.stations_near--source--__codelineno-0-218" name="gbfs_toolkit.stations_near--source--__codelineno-0-218"></a><span class="sd">    served by stations*. Straight-line (great-circle) proximity only; no routing.</span>
+</span><span id="gbfs_toolkit.stations_near--source--__span-0-219"><a id="gbfs_toolkit.stations_near--source--__codelineno-0-219" name="gbfs_toolkit.stations_near--source--__codelineno-0-219"></a>
+</span><span id="gbfs_toolkit.stations_near--source--__span-0-220"><a id="gbfs_toolkit.stations_near--source--__codelineno-0-220" name="gbfs_toolkit.stations_near--source--__codelineno-0-220"></a><span class="sd">    Parameters</span>
+</span><span id="gbfs_toolkit.stations_near--source--__span-0-221"><a id="gbfs_toolkit.stations_near--source--__codelineno-0-221" name="gbfs_toolkit.stations_near--source--__codelineno-0-221"></a><span class="sd">    ----------</span>
+</span><span id="gbfs_toolkit.stations_near--source--__span-0-222"><a id="gbfs_toolkit.stations_near--source--__codelineno-0-222" name="gbfs_toolkit.stations_near--source--__codelineno-0-222"></a><span class="sd">    points : pandas.DataFrame</span>
+</span><span id="gbfs_toolkit.stations_near--source--__span-0-223"><a id="gbfs_toolkit.stations_near--source--__codelineno-0-223" name="gbfs_toolkit.stations_near--source--__codelineno-0-223"></a><span class="sd">        Places of interest with ``point_lat``/``point_lon`` columns.</span>
+</span><span id="gbfs_toolkit.stations_near--source--__span-0-224"><a id="gbfs_toolkit.stations_near--source--__codelineno-0-224" name="gbfs_toolkit.stations_near--source--__codelineno-0-224"></a><span class="sd">    info : pandas.DataFrame</span>
+</span><span id="gbfs_toolkit.stations_near--source--__span-0-225"><a id="gbfs_toolkit.stations_near--source--__codelineno-0-225" name="gbfs_toolkit.stations_near--source--__codelineno-0-225"></a><span class="sd">        Canonical station inventory (``lat``/``lon``, optionally ``station_id``).</span>
+</span><span id="gbfs_toolkit.stations_near--source--__span-0-226"><a id="gbfs_toolkit.stations_near--source--__codelineno-0-226" name="gbfs_toolkit.stations_near--source--__codelineno-0-226"></a><span class="sd">    radius_m : float, default 300</span>
+</span><span id="gbfs_toolkit.stations_near--source--__span-0-227"><a id="gbfs_toolkit.stations_near--source--__codelineno-0-227" name="gbfs_toolkit.stations_near--source--__codelineno-0-227"></a>
+</span><span id="gbfs_toolkit.stations_near--source--__span-0-228"><a id="gbfs_toolkit.stations_near--source--__codelineno-0-228" name="gbfs_toolkit.stations_near--source--__codelineno-0-228"></a><span class="sd">    Returns</span>
+</span><span id="gbfs_toolkit.stations_near--source--__span-0-229"><a id="gbfs_toolkit.stations_near--source--__codelineno-0-229" name="gbfs_toolkit.stations_near--source--__codelineno-0-229"></a><span class="sd">    -------</span>
+</span><span id="gbfs_toolkit.stations_near--source--__span-0-230"><a id="gbfs_toolkit.stations_near--source--__codelineno-0-230" name="gbfs_toolkit.stations_near--source--__codelineno-0-230"></a><span class="sd">    pandas.DataFrame</span>
+</span><span id="gbfs_toolkit.stations_near--source--__span-0-231"><a id="gbfs_toolkit.stations_near--source--__codelineno-0-231" name="gbfs_toolkit.stations_near--source--__codelineno-0-231"></a><span class="sd">        ``points`` + ``n_stations_within``, ``nearest_station_dist_m`` and (if ``info`` has</span>
+</span><span id="gbfs_toolkit.stations_near--source--__span-0-232"><a id="gbfs_toolkit.stations_near--source--__codelineno-0-232" name="gbfs_toolkit.stations_near--source--__codelineno-0-232"></a><span class="sd">        ``station_id``) ``nearest_station_id``.</span>
+</span><span id="gbfs_toolkit.stations_near--source--__span-0-233"><a id="gbfs_toolkit.stations_near--source--__codelineno-0-233" name="gbfs_toolkit.stations_near--source--__codelineno-0-233"></a>
+</span><span id="gbfs_toolkit.stations_near--source--__span-0-234"><a id="gbfs_toolkit.stations_near--source--__codelineno-0-234" name="gbfs_toolkit.stations_near--source--__codelineno-0-234"></a><span class="sd">    See Also</span>
+</span><span id="gbfs_toolkit.stations_near--source--__span-0-235"><a id="gbfs_toolkit.stations_near--source--__codelineno-0-235" name="gbfs_toolkit.stations_near--source--__codelineno-0-235"></a><span class="sd">    --------</span>
+</span><span id="gbfs_toolkit.stations_near--source--__span-0-236"><a id="gbfs_toolkit.stations_near--source--__codelineno-0-236" name="gbfs_toolkit.stations_near--source--__codelineno-0-236"></a><span class="sd">    [`GeoKDTree`][gbfs_toolkit.GeoKDTree] : The spatial index underneath.</span>
+</span><span id="gbfs_toolkit.stations_near--source--__span-0-237"><a id="gbfs_toolkit.stations_near--source--__codelineno-0-237" name="gbfs_toolkit.stations_near--source--__codelineno-0-237"></a><span class="sd">    [`find_nearest_stations`][gbfs_toolkit.find_nearest_stations] : k-nearest instead of radius.</span>
+</span><span id="gbfs_toolkit.stations_near--source--__span-0-238"><a id="gbfs_toolkit.stations_near--source--__codelineno-0-238" name="gbfs_toolkit.stations_near--source--__codelineno-0-238"></a><span class="sd">    [`features_within`][gbfs_toolkit.features_within] : Join external features in a buffer.</span>
+</span><span id="gbfs_toolkit.stations_near--source--__span-0-239"><a id="gbfs_toolkit.stations_near--source--__codelineno-0-239" name="gbfs_toolkit.stations_near--source--__codelineno-0-239"></a><span class="sd">    """</span>
+</span><span id="gbfs_toolkit.stations_near--source--__span-0-240"><a id="gbfs_toolkit.stations_near--source--__codelineno-0-240" name="gbfs_toolkit.stations_near--source--__codelineno-0-240"></a>    <span class="n">out</span> <span class="o">=</span> <span class="n">points</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+</span><span id="gbfs_toolkit.stations_near--source--__span-0-241"><a id="gbfs_toolkit.stations_near--source--__codelineno-0-241" name="gbfs_toolkit.stations_near--source--__codelineno-0-241"></a>    <span class="k">if</span> <span class="n">out</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
+</span><span id="gbfs_toolkit.stations_near--source--__span-0-242"><a id="gbfs_toolkit.stations_near--source--__codelineno-0-242" name="gbfs_toolkit.stations_near--source--__codelineno-0-242"></a>        <span class="n">out</span><span class="p">[</span><span class="s2">"n_stations_within"</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">dtype</span><span class="o">=</span><span class="s2">"int64"</span><span class="p">)</span>
+</span><span id="gbfs_toolkit.stations_near--source--__span-0-243"><a id="gbfs_toolkit.stations_near--source--__codelineno-0-243" name="gbfs_toolkit.stations_near--source--__codelineno-0-243"></a>        <span class="n">out</span><span class="p">[</span><span class="s2">"nearest_station_dist_m"</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">dtype</span><span class="o">=</span><span class="s2">"float64"</span><span class="p">)</span>
+</span><span id="gbfs_toolkit.stations_near--source--__span-0-244"><a id="gbfs_toolkit.stations_near--source--__codelineno-0-244" name="gbfs_toolkit.stations_near--source--__codelineno-0-244"></a>        <span class="k">return</span> <span class="n">out</span>
+</span><span id="gbfs_toolkit.stations_near--source--__span-0-245"><a id="gbfs_toolkit.stations_near--source--__codelineno-0-245" name="gbfs_toolkit.stations_near--source--__codelineno-0-245"></a>    <span class="k">if</span> <span class="n">info</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
+</span><span id="gbfs_toolkit.stations_near--source--__span-0-246"><a id="gbfs_toolkit.stations_near--source--__codelineno-0-246" name="gbfs_toolkit.stations_near--source--__codelineno-0-246"></a>        <span class="n">out</span><span class="p">[</span><span class="s2">"n_stations_within"</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+</span><span id="gbfs_toolkit.stations_near--source--__span-0-247"><a id="gbfs_toolkit.stations_near--source--__codelineno-0-247" name="gbfs_toolkit.stations_near--source--__codelineno-0-247"></a>        <span class="n">out</span><span class="p">[</span><span class="s2">"nearest_station_dist_m"</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span>
+</span><span id="gbfs_toolkit.stations_near--source--__span-0-248"><a id="gbfs_toolkit.stations_near--source--__codelineno-0-248" name="gbfs_toolkit.stations_near--source--__codelineno-0-248"></a>        <span class="k">if</span> <span class="s2">"station_id"</span> <span class="ow">in</span> <span class="n">info</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+</span><span id="gbfs_toolkit.stations_near--source--__span-0-249"><a id="gbfs_toolkit.stations_near--source--__codelineno-0-249" name="gbfs_toolkit.stations_near--source--__codelineno-0-249"></a>            <span class="n">out</span><span class="p">[</span><span class="s2">"nearest_station_id"</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span id="gbfs_toolkit.stations_near--source--__span-0-250"><a id="gbfs_toolkit.stations_near--source--__codelineno-0-250" name="gbfs_toolkit.stations_near--source--__codelineno-0-250"></a>        <span class="k">return</span> <span class="n">out</span>
+</span><span id="gbfs_toolkit.stations_near--source--__span-0-251"><a id="gbfs_toolkit.stations_near--source--__codelineno-0-251" name="gbfs_toolkit.stations_near--source--__codelineno-0-251"></a>    <span class="n">tree</span> <span class="o">=</span> <span class="n">GeoKDTree</span><span class="p">(</span><span class="n">info</span><span class="p">[</span><span class="s2">"lat"</span><span class="p">],</span> <span class="n">info</span><span class="p">[</span><span class="s2">"lon"</span><span class="p">])</span>
+</span><span id="gbfs_toolkit.stations_near--source--__span-0-252"><a id="gbfs_toolkit.stations_near--source--__codelineno-0-252" name="gbfs_toolkit.stations_near--source--__codelineno-0-252"></a>    <span class="n">lat</span><span class="p">,</span> <span class="n">lon</span> <span class="o">=</span> <span class="n">out</span><span class="p">[</span><span class="n">point_lat</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">(),</span> <span class="n">out</span><span class="p">[</span><span class="n">point_lon</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
+</span><span id="gbfs_toolkit.stations_near--source--__span-0-253"><a id="gbfs_toolkit.stations_near--source--__codelineno-0-253" name="gbfs_toolkit.stations_near--source--__codelineno-0-253"></a>    <span class="n">within</span> <span class="o">=</span> <span class="n">tree</span><span class="o">.</span><span class="n">query_radius</span><span class="p">(</span><span class="n">lat</span><span class="p">,</span> <span class="n">lon</span><span class="p">,</span> <span class="n">radius_m</span><span class="o">=</span><span class="n">radius_m</span><span class="p">)</span>
+</span><span id="gbfs_toolkit.stations_near--source--__span-0-254"><a id="gbfs_toolkit.stations_near--source--__codelineno-0-254" name="gbfs_toolkit.stations_near--source--__codelineno-0-254"></a>    <span class="n">dist</span><span class="p">,</span> <span class="n">idx</span> <span class="o">=</span> <span class="n">tree</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">lat</span><span class="p">,</span> <span class="n">lon</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</span><span id="gbfs_toolkit.stations_near--source--__span-0-255"><a id="gbfs_toolkit.stations_near--source--__codelineno-0-255" name="gbfs_toolkit.stations_near--source--__codelineno-0-255"></a>    <span class="n">out</span><span class="p">[</span><span class="s2">"n_stations_within"</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">h</span><span class="p">)</span> <span class="k">for</span> <span class="n">h</span> <span class="ow">in</span> <span class="n">within</span><span class="p">]</span>
+</span><span id="gbfs_toolkit.stations_near--source--__span-0-256"><a id="gbfs_toolkit.stations_near--source--__codelineno-0-256" name="gbfs_toolkit.stations_near--source--__codelineno-0-256"></a>    <span class="n">out</span><span class="p">[</span><span class="s2">"nearest_station_dist_m"</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">dist</span><span class="p">)</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
+</span><span id="gbfs_toolkit.stations_near--source--__span-0-257"><a id="gbfs_toolkit.stations_near--source--__codelineno-0-257" name="gbfs_toolkit.stations_near--source--__codelineno-0-257"></a>    <span class="k">if</span> <span class="s2">"station_id"</span> <span class="ow">in</span> <span class="n">info</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+</span><span id="gbfs_toolkit.stations_near--source--__span-0-258"><a id="gbfs_toolkit.stations_near--source--__codelineno-0-258" name="gbfs_toolkit.stations_near--source--__codelineno-0-258"></a>        <span class="n">out</span><span class="p">[</span><span class="s2">"nearest_station_id"</span><span class="p">]</span> <span class="o">=</span> <span class="n">info</span><span class="p">[</span><span class="s2">"station_id"</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()[</span><span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">idx</span><span class="p">)</span><span class="o">.</span><span class="n">ravel</span><span class="p">()]</span>
+</span><span id="gbfs_toolkit.stations_near--source--__span-0-259"><a id="gbfs_toolkit.stations_near--source--__codelineno-0-259" name="gbfs_toolkit.stations_near--source--__codelineno-0-259"></a>    <span class="k">return</span> <span class="n">out</span>
 </span></code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -6766,10 +6766,10 @@ served by stations</em>. Straight-line (great-circle) proximity only; no routing
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.instant", "navigation.instant.progress", "navigation.tracking", "navigation.sections", "navigation.tabs", "navigation.tabs.sticky", "navigation.top", "navigation.indexes", "navigation.footer", "toc.follow", "search.suggest", "search.highlight", "search.share", "content.code.copy", "content.code.annotate", "content.tooltips"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.instant", "navigation.instant.progress", "navigation.tracking", "navigation.sections", "navigation.tabs", "navigation.tabs.sticky", "navigation.top", "navigation.indexes", "navigation.footer", "toc.follow", "search.suggest", "search.highlight", "search.share", "content.code.copy", "content.code.annotate", "content.tooltips"], "search": "../../../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
     
     
-      <script src="../../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../../../assets/javascripts/bundle.c21346df.min.js"></script>
       
         <script src="../../../javascripts/mathjax.js"></script>
       

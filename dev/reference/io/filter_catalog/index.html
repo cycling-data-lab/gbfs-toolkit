@@ -25,7 +25,7 @@
       
       
       <link rel="icon" href="../../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-ProperDocs 1.6.7, mkdocs-material-9.7.6">
+      <meta name="generator" content="mkdocs-ProperDocs 1.6.7, mkdocs-material-9.8.0">
     
     
       
@@ -33,10 +33,10 @@
       
     
     
-      <link rel="stylesheet" href="../../../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.57a0d79d.min.css">
       
         
-        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.fb2fffe2.min.css">
       
       
 
@@ -1146,7 +1146,7 @@
   <span class="md-ellipsis">
     
   
-    __version__
+    _version_
   
 
     
@@ -6440,59 +6440,59 @@ the catalogue's <code>location</code> / <code>name</code> columns (whichever are
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/gbfs_toolkit/io/catalog.py</code></summary>
-              <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-155">155</a></span>
-<span class="normal"><a href="#__codelineno-0-156">156</a></span>
-<span class="normal"><a href="#__codelineno-0-157">157</a></span>
-<span class="normal"><a href="#__codelineno-0-158">158</a></span>
-<span class="normal"><a href="#__codelineno-0-159">159</a></span>
-<span class="normal"><a href="#__codelineno-0-160">160</a></span>
-<span class="normal"><a href="#__codelineno-0-161">161</a></span>
-<span class="normal"><a href="#__codelineno-0-162">162</a></span>
-<span class="normal"><a href="#__codelineno-0-163">163</a></span>
-<span class="normal"><a href="#__codelineno-0-164">164</a></span>
-<span class="normal"><a href="#__codelineno-0-165">165</a></span>
-<span class="normal"><a href="#__codelineno-0-166">166</a></span>
-<span class="normal"><a href="#__codelineno-0-167">167</a></span>
-<span class="normal"><a href="#__codelineno-0-168">168</a></span>
-<span class="normal"><a href="#__codelineno-0-169">169</a></span>
-<span class="normal"><a href="#__codelineno-0-170">170</a></span>
-<span class="normal"><a href="#__codelineno-0-171">171</a></span>
-<span class="normal"><a href="#__codelineno-0-172">172</a></span>
-<span class="normal"><a href="#__codelineno-0-173">173</a></span>
-<span class="normal"><a href="#__codelineno-0-174">174</a></span>
-<span class="normal"><a href="#__codelineno-0-175">175</a></span>
-<span class="normal"><a href="#__codelineno-0-176">176</a></span>
-<span class="normal"><a href="#__codelineno-0-177">177</a></span>
-<span class="normal"><a href="#__codelineno-0-178">178</a></span>
-<span class="normal"><a href="#__codelineno-0-179">179</a></span>
-<span class="normal"><a href="#__codelineno-0-180">180</a></span>
-<span class="normal"><a href="#__codelineno-0-181">181</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-155"><a id="__codelineno-0-155" name="__codelineno-0-155"></a><span class="k">def</span><span class="w"> </span><span class="nf">filter_catalog</span><span class="p">(</span>
-</span><span id="__span-0-156"><a id="__codelineno-0-156" name="__codelineno-0-156"></a>    <span class="n">catalog</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
-</span><span id="__span-0-157"><a id="__codelineno-0-157" name="__codelineno-0-157"></a>    <span class="o">*</span><span class="p">,</span>
-</span><span id="__span-0-158"><a id="__codelineno-0-158" name="__codelineno-0-158"></a>    <span class="n">country_code</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-</span><span id="__span-0-159"><a id="__codelineno-0-159" name="__codelineno-0-159"></a>    <span class="n">city</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-</span><span id="__span-0-160"><a id="__codelineno-0-160" name="__codelineno-0-160"></a>    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-</span><span id="__span-0-161"><a id="__codelineno-0-161" name="__codelineno-0-161"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
-</span><span id="__span-0-162"><a id="__codelineno-0-162" name="__codelineno-0-162"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Filter the systems catalogue, because you know &quot;Paris&quot;, not the system_id.</span>
-</span><span id="__span-0-163"><a id="__codelineno-0-163" name="__codelineno-0-163"></a>
-</span><span id="__span-0-164"><a id="__codelineno-0-164" name="__codelineno-0-164"></a><span class="sd">    All filters are case-insensitive; ``city`` / ``name`` match as substrings against</span>
-</span><span id="__span-0-165"><a id="__codelineno-0-165" name="__codelineno-0-165"></a><span class="sd">    the catalogue&#39;s ``location`` / ``name`` columns (whichever are present).</span>
-</span><span id="__span-0-166"><a id="__codelineno-0-166" name="__codelineno-0-166"></a>
-</span><span id="__span-0-167"><a id="__codelineno-0-167" name="__codelineno-0-167"></a><span class="sd">    See Also</span>
-</span><span id="__span-0-168"><a id="__codelineno-0-168" name="__codelineno-0-168"></a><span class="sd">    --------</span>
-</span><span id="__span-0-169"><a id="__codelineno-0-169" name="__codelineno-0-169"></a><span class="sd">    [`systems_catalog`][gbfs_toolkit.systems_catalog] : The full catalogue this filters.</span>
-</span><span id="__span-0-170"><a id="__codelineno-0-170" name="__codelineno-0-170"></a><span class="sd">    [`resolve`][gbfs_toolkit.resolve] : Resolve a filtered system.</span>
-</span><span id="__span-0-171"><a id="__codelineno-0-171" name="__codelineno-0-171"></a><span class="sd">    &quot;&quot;&quot;</span>
-</span><span id="__span-0-172"><a id="__codelineno-0-172" name="__codelineno-0-172"></a>    <span class="n">out</span> <span class="o">=</span> <span class="n">catalog</span>
-</span><span id="__span-0-173"><a id="__codelineno-0-173" name="__codelineno-0-173"></a>    <span class="k">if</span> <span class="n">country_code</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="s2">&quot;country_code&quot;</span> <span class="ow">in</span> <span class="n">out</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
-</span><span id="__span-0-174"><a id="__codelineno-0-174" name="__codelineno-0-174"></a>        <span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="p">[</span><span class="n">out</span><span class="p">[</span><span class="s2">&quot;country_code&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="n">country_code</span><span class="o">.</span><span class="n">lower</span><span class="p">()]</span>
-</span><span id="__span-0-175"><a id="__codelineno-0-175" name="__codelineno-0-175"></a>    <span class="k">if</span> <span class="n">city</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-</span><span id="__span-0-176"><a id="__codelineno-0-176" name="__codelineno-0-176"></a>        <span class="n">col</span> <span class="o">=</span> <span class="nb">next</span><span class="p">((</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;location&quot;</span><span class="p">,</span> <span class="s2">&quot;city&quot;</span><span class="p">,</span> <span class="s2">&quot;name&quot;</span><span class="p">)</span> <span class="k">if</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">out</span><span class="o">.</span><span class="n">columns</span><span class="p">),</span> <span class="kc">None</span><span class="p">)</span>
-</span><span id="__span-0-177"><a id="__codelineno-0-177" name="__codelineno-0-177"></a>        <span class="k">if</span> <span class="n">col</span><span class="p">:</span>
-</span><span id="__span-0-178"><a id="__codelineno-0-178" name="__codelineno-0-178"></a>            <span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="p">[</span><span class="n">out</span><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="n">city</span><span class="p">,</span> <span class="n">case</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">na</span><span class="o">=</span><span class="kc">False</span><span class="p">)]</span>
-</span><span id="__span-0-179"><a id="__codelineno-0-179" name="__codelineno-0-179"></a>    <span class="k">if</span> <span class="n">name</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="s2">&quot;name&quot;</span> <span class="ow">in</span> <span class="n">out</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
-</span><span id="__span-0-180"><a id="__codelineno-0-180" name="__codelineno-0-180"></a>        <span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="p">[</span><span class="n">out</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">case</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">na</span><span class="o">=</span><span class="kc">False</span><span class="p">)]</span>
-</span><span id="__span-0-181"><a id="__codelineno-0-181" name="__codelineno-0-181"></a>    <span class="k">return</span> <span class="n">out</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+              <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#gbfs_toolkit.filter_catalog--source--__codelineno-0-155">155</a></span>
+<span class="normal"><a href="#gbfs_toolkit.filter_catalog--source--__codelineno-0-156">156</a></span>
+<span class="normal"><a href="#gbfs_toolkit.filter_catalog--source--__codelineno-0-157">157</a></span>
+<span class="normal"><a href="#gbfs_toolkit.filter_catalog--source--__codelineno-0-158">158</a></span>
+<span class="normal"><a href="#gbfs_toolkit.filter_catalog--source--__codelineno-0-159">159</a></span>
+<span class="normal"><a href="#gbfs_toolkit.filter_catalog--source--__codelineno-0-160">160</a></span>
+<span class="normal"><a href="#gbfs_toolkit.filter_catalog--source--__codelineno-0-161">161</a></span>
+<span class="normal"><a href="#gbfs_toolkit.filter_catalog--source--__codelineno-0-162">162</a></span>
+<span class="normal"><a href="#gbfs_toolkit.filter_catalog--source--__codelineno-0-163">163</a></span>
+<span class="normal"><a href="#gbfs_toolkit.filter_catalog--source--__codelineno-0-164">164</a></span>
+<span class="normal"><a href="#gbfs_toolkit.filter_catalog--source--__codelineno-0-165">165</a></span>
+<span class="normal"><a href="#gbfs_toolkit.filter_catalog--source--__codelineno-0-166">166</a></span>
+<span class="normal"><a href="#gbfs_toolkit.filter_catalog--source--__codelineno-0-167">167</a></span>
+<span class="normal"><a href="#gbfs_toolkit.filter_catalog--source--__codelineno-0-168">168</a></span>
+<span class="normal"><a href="#gbfs_toolkit.filter_catalog--source--__codelineno-0-169">169</a></span>
+<span class="normal"><a href="#gbfs_toolkit.filter_catalog--source--__codelineno-0-170">170</a></span>
+<span class="normal"><a href="#gbfs_toolkit.filter_catalog--source--__codelineno-0-171">171</a></span>
+<span class="normal"><a href="#gbfs_toolkit.filter_catalog--source--__codelineno-0-172">172</a></span>
+<span class="normal"><a href="#gbfs_toolkit.filter_catalog--source--__codelineno-0-173">173</a></span>
+<span class="normal"><a href="#gbfs_toolkit.filter_catalog--source--__codelineno-0-174">174</a></span>
+<span class="normal"><a href="#gbfs_toolkit.filter_catalog--source--__codelineno-0-175">175</a></span>
+<span class="normal"><a href="#gbfs_toolkit.filter_catalog--source--__codelineno-0-176">176</a></span>
+<span class="normal"><a href="#gbfs_toolkit.filter_catalog--source--__codelineno-0-177">177</a></span>
+<span class="normal"><a href="#gbfs_toolkit.filter_catalog--source--__codelineno-0-178">178</a></span>
+<span class="normal"><a href="#gbfs_toolkit.filter_catalog--source--__codelineno-0-179">179</a></span>
+<span class="normal"><a href="#gbfs_toolkit.filter_catalog--source--__codelineno-0-180">180</a></span>
+<span class="normal"><a href="#gbfs_toolkit.filter_catalog--source--__codelineno-0-181">181</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="gbfs_toolkit.filter_catalog--source--__span-0-155"><a id="gbfs_toolkit.filter_catalog--source--__codelineno-0-155" name="gbfs_toolkit.filter_catalog--source--__codelineno-0-155"></a><span class="k">def</span><span class="w"> </span><span class="nf">filter_catalog</span><span class="p">(</span>
+</span><span id="gbfs_toolkit.filter_catalog--source--__span-0-156"><a id="gbfs_toolkit.filter_catalog--source--__codelineno-0-156" name="gbfs_toolkit.filter_catalog--source--__codelineno-0-156"></a>    <span class="n">catalog</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+</span><span id="gbfs_toolkit.filter_catalog--source--__span-0-157"><a id="gbfs_toolkit.filter_catalog--source--__codelineno-0-157" name="gbfs_toolkit.filter_catalog--source--__codelineno-0-157"></a>    <span class="o">*</span><span class="p">,</span>
+</span><span id="gbfs_toolkit.filter_catalog--source--__span-0-158"><a id="gbfs_toolkit.filter_catalog--source--__codelineno-0-158" name="gbfs_toolkit.filter_catalog--source--__codelineno-0-158"></a>    <span class="n">country_code</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+</span><span id="gbfs_toolkit.filter_catalog--source--__span-0-159"><a id="gbfs_toolkit.filter_catalog--source--__codelineno-0-159" name="gbfs_toolkit.filter_catalog--source--__codelineno-0-159"></a>    <span class="n">city</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+</span><span id="gbfs_toolkit.filter_catalog--source--__span-0-160"><a id="gbfs_toolkit.filter_catalog--source--__codelineno-0-160" name="gbfs_toolkit.filter_catalog--source--__codelineno-0-160"></a>    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+</span><span id="gbfs_toolkit.filter_catalog--source--__span-0-161"><a id="gbfs_toolkit.filter_catalog--source--__codelineno-0-161" name="gbfs_toolkit.filter_catalog--source--__codelineno-0-161"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+</span><span id="gbfs_toolkit.filter_catalog--source--__span-0-162"><a id="gbfs_toolkit.filter_catalog--source--__codelineno-0-162" name="gbfs_toolkit.filter_catalog--source--__codelineno-0-162"></a><span class="w">    </span><span class="sd">"""Filter the systems catalogue, because you know "Paris", not the system_id.</span>
+</span><span id="gbfs_toolkit.filter_catalog--source--__span-0-163"><a id="gbfs_toolkit.filter_catalog--source--__codelineno-0-163" name="gbfs_toolkit.filter_catalog--source--__codelineno-0-163"></a>
+</span><span id="gbfs_toolkit.filter_catalog--source--__span-0-164"><a id="gbfs_toolkit.filter_catalog--source--__codelineno-0-164" name="gbfs_toolkit.filter_catalog--source--__codelineno-0-164"></a><span class="sd">    All filters are case-insensitive; ``city`` / ``name`` match as substrings against</span>
+</span><span id="gbfs_toolkit.filter_catalog--source--__span-0-165"><a id="gbfs_toolkit.filter_catalog--source--__codelineno-0-165" name="gbfs_toolkit.filter_catalog--source--__codelineno-0-165"></a><span class="sd">    the catalogue's ``location`` / ``name`` columns (whichever are present).</span>
+</span><span id="gbfs_toolkit.filter_catalog--source--__span-0-166"><a id="gbfs_toolkit.filter_catalog--source--__codelineno-0-166" name="gbfs_toolkit.filter_catalog--source--__codelineno-0-166"></a>
+</span><span id="gbfs_toolkit.filter_catalog--source--__span-0-167"><a id="gbfs_toolkit.filter_catalog--source--__codelineno-0-167" name="gbfs_toolkit.filter_catalog--source--__codelineno-0-167"></a><span class="sd">    See Also</span>
+</span><span id="gbfs_toolkit.filter_catalog--source--__span-0-168"><a id="gbfs_toolkit.filter_catalog--source--__codelineno-0-168" name="gbfs_toolkit.filter_catalog--source--__codelineno-0-168"></a><span class="sd">    --------</span>
+</span><span id="gbfs_toolkit.filter_catalog--source--__span-0-169"><a id="gbfs_toolkit.filter_catalog--source--__codelineno-0-169" name="gbfs_toolkit.filter_catalog--source--__codelineno-0-169"></a><span class="sd">    [`systems_catalog`][gbfs_toolkit.systems_catalog] : The full catalogue this filters.</span>
+</span><span id="gbfs_toolkit.filter_catalog--source--__span-0-170"><a id="gbfs_toolkit.filter_catalog--source--__codelineno-0-170" name="gbfs_toolkit.filter_catalog--source--__codelineno-0-170"></a><span class="sd">    [`resolve`][gbfs_toolkit.resolve] : Resolve a filtered system.</span>
+</span><span id="gbfs_toolkit.filter_catalog--source--__span-0-171"><a id="gbfs_toolkit.filter_catalog--source--__codelineno-0-171" name="gbfs_toolkit.filter_catalog--source--__codelineno-0-171"></a><span class="sd">    """</span>
+</span><span id="gbfs_toolkit.filter_catalog--source--__span-0-172"><a id="gbfs_toolkit.filter_catalog--source--__codelineno-0-172" name="gbfs_toolkit.filter_catalog--source--__codelineno-0-172"></a>    <span class="n">out</span> <span class="o">=</span> <span class="n">catalog</span>
+</span><span id="gbfs_toolkit.filter_catalog--source--__span-0-173"><a id="gbfs_toolkit.filter_catalog--source--__codelineno-0-173" name="gbfs_toolkit.filter_catalog--source--__codelineno-0-173"></a>    <span class="k">if</span> <span class="n">country_code</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="s2">"country_code"</span> <span class="ow">in</span> <span class="n">out</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+</span><span id="gbfs_toolkit.filter_catalog--source--__span-0-174"><a id="gbfs_toolkit.filter_catalog--source--__codelineno-0-174" name="gbfs_toolkit.filter_catalog--source--__codelineno-0-174"></a>        <span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="p">[</span><span class="n">out</span><span class="p">[</span><span class="s2">"country_code"</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="n">country_code</span><span class="o">.</span><span class="n">lower</span><span class="p">()]</span>
+</span><span id="gbfs_toolkit.filter_catalog--source--__span-0-175"><a id="gbfs_toolkit.filter_catalog--source--__codelineno-0-175" name="gbfs_toolkit.filter_catalog--source--__codelineno-0-175"></a>    <span class="k">if</span> <span class="n">city</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="gbfs_toolkit.filter_catalog--source--__span-0-176"><a id="gbfs_toolkit.filter_catalog--source--__codelineno-0-176" name="gbfs_toolkit.filter_catalog--source--__codelineno-0-176"></a>        <span class="n">col</span> <span class="o">=</span> <span class="nb">next</span><span class="p">((</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">"location"</span><span class="p">,</span> <span class="s2">"city"</span><span class="p">,</span> <span class="s2">"name"</span><span class="p">)</span> <span class="k">if</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">out</span><span class="o">.</span><span class="n">columns</span><span class="p">),</span> <span class="kc">None</span><span class="p">)</span>
+</span><span id="gbfs_toolkit.filter_catalog--source--__span-0-177"><a id="gbfs_toolkit.filter_catalog--source--__codelineno-0-177" name="gbfs_toolkit.filter_catalog--source--__codelineno-0-177"></a>        <span class="k">if</span> <span class="n">col</span><span class="p">:</span>
+</span><span id="gbfs_toolkit.filter_catalog--source--__span-0-178"><a id="gbfs_toolkit.filter_catalog--source--__codelineno-0-178" name="gbfs_toolkit.filter_catalog--source--__codelineno-0-178"></a>            <span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="p">[</span><span class="n">out</span><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="n">city</span><span class="p">,</span> <span class="n">case</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">na</span><span class="o">=</span><span class="kc">False</span><span class="p">)]</span>
+</span><span id="gbfs_toolkit.filter_catalog--source--__span-0-179"><a id="gbfs_toolkit.filter_catalog--source--__codelineno-0-179" name="gbfs_toolkit.filter_catalog--source--__codelineno-0-179"></a>    <span class="k">if</span> <span class="n">name</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="s2">"name"</span> <span class="ow">in</span> <span class="n">out</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+</span><span id="gbfs_toolkit.filter_catalog--source--__span-0-180"><a id="gbfs_toolkit.filter_catalog--source--__codelineno-0-180" name="gbfs_toolkit.filter_catalog--source--__codelineno-0-180"></a>        <span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="p">[</span><span class="n">out</span><span class="p">[</span><span class="s2">"name"</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">case</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">na</span><span class="o">=</span><span class="kc">False</span><span class="p">)]</span>
+</span><span id="gbfs_toolkit.filter_catalog--source--__span-0-181"><a id="gbfs_toolkit.filter_catalog--source--__codelineno-0-181" name="gbfs_toolkit.filter_catalog--source--__codelineno-0-181"></a>    <span class="k">return</span> <span class="n">out</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </span></code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -6623,10 +6623,10 @@ the catalogue's <code>location</code> / <code>name</code> columns (whichever are
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.instant", "navigation.instant.progress", "navigation.tracking", "navigation.sections", "navigation.tabs", "navigation.tabs.sticky", "navigation.top", "navigation.indexes", "navigation.footer", "toc.follow", "search.suggest", "search.highlight", "search.share", "content.code.copy", "content.code.annotate", "content.tooltips"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.instant", "navigation.instant.progress", "navigation.tracking", "navigation.sections", "navigation.tabs", "navigation.tabs.sticky", "navigation.top", "navigation.indexes", "navigation.footer", "toc.follow", "search.suggest", "search.highlight", "search.share", "content.code.copy", "content.code.annotate", "content.tooltips"], "search": "../../../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
     
     
-      <script src="../../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../../../assets/javascripts/bundle.c21346df.min.js"></script>
       
         <script src="../../../javascripts/mathjax.js"></script>
       

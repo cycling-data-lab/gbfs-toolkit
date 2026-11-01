@@ -25,7 +25,7 @@
       
       
       <link rel="icon" href="../../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-ProperDocs 1.6.7, mkdocs-material-9.7.6">
+      <meta name="generator" content="mkdocs-ProperDocs 1.6.7, mkdocs-material-9.8.0">
     
     
       
@@ -33,10 +33,10 @@
       
     
     
-      <link rel="stylesheet" href="../../../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.57a0d79d.min.css">
       
         
-        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.fb2fffe2.min.css">
       
       
 
@@ -1146,7 +1146,7 @@
   <span class="md-ellipsis">
     
   
-    __version__
+    _version_
   
 
     
@@ -6440,68 +6440,68 @@ avoid clashes.</p>
 
 <p><span class="doc-section-title">Examples:</span></p>
     <div class="language-pycon highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="gp">&gt;&gt;&gt; </span><span class="n">vehicles</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s2">&quot;bike_id&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;v1&quot;</span><span class="p">],</span> <span class="s2">&quot;pricing_plan_id&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;p1&quot;</span><span class="p">]})</span>
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="gp">&gt;&gt;&gt; </span><span class="n">plans</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s2">&quot;plan_id&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;p1&quot;</span><span class="p">],</span> <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;Day Pass&quot;</span><span class="p">],</span> <span class="s2">&quot;price&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">5.0</span><span class="p">]})</span>
-</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="gp">&gt;&gt;&gt; </span><span class="n">join_pricing</span><span class="p">(</span><span class="n">vehicles</span><span class="p">,</span> <span class="n">plans</span><span class="p">)[</span><span class="s2">&quot;plan_name&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
-</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="go">[&#39;Day Pass&#39;]</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="gp">&gt;&gt;&gt; </span><span class="n">vehicles</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s2">"bike_id"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"v1"</span><span class="p">],</span> <span class="s2">"pricing_plan_id"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"p1"</span><span class="p">]})</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="gp">&gt;&gt;&gt; </span><span class="n">plans</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s2">"plan_id"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"p1"</span><span class="p">],</span> <span class="s2">"name"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"Day Pass"</span><span class="p">],</span> <span class="s2">"price"</span><span class="p">:</span> <span class="p">[</span><span class="mf">5.0</span><span class="p">]})</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="gp">&gt;&gt;&gt; </span><span class="n">join_pricing</span><span class="p">(</span><span class="n">vehicles</span><span class="p">,</span> <span class="n">plans</span><span class="p">)[</span><span class="s2">"plan_name"</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="go">['Day Pass']</span>
 </span></code></pre></div>
 
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/gbfs_toolkit/analytics/frames.py</code></summary>
-              <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-318">318</a></span>
-<span class="normal"><a href="#__codelineno-0-319">319</a></span>
-<span class="normal"><a href="#__codelineno-0-320">320</a></span>
-<span class="normal"><a href="#__codelineno-0-321">321</a></span>
-<span class="normal"><a href="#__codelineno-0-322">322</a></span>
-<span class="normal"><a href="#__codelineno-0-323">323</a></span>
-<span class="normal"><a href="#__codelineno-0-324">324</a></span>
-<span class="normal"><a href="#__codelineno-0-325">325</a></span>
-<span class="normal"><a href="#__codelineno-0-326">326</a></span>
-<span class="normal"><a href="#__codelineno-0-327">327</a></span>
-<span class="normal"><a href="#__codelineno-0-328">328</a></span>
-<span class="normal"><a href="#__codelineno-0-329">329</a></span>
-<span class="normal"><a href="#__codelineno-0-330">330</a></span>
-<span class="normal"><a href="#__codelineno-0-331">331</a></span>
-<span class="normal"><a href="#__codelineno-0-332">332</a></span>
-<span class="normal"><a href="#__codelineno-0-333">333</a></span>
-<span class="normal"><a href="#__codelineno-0-334">334</a></span>
-<span class="normal"><a href="#__codelineno-0-335">335</a></span>
-<span class="normal"><a href="#__codelineno-0-336">336</a></span>
-<span class="normal"><a href="#__codelineno-0-337">337</a></span>
-<span class="normal"><a href="#__codelineno-0-338">338</a></span>
-<span class="normal"><a href="#__codelineno-0-339">339</a></span>
-<span class="normal"><a href="#__codelineno-0-340">340</a></span>
-<span class="normal"><a href="#__codelineno-0-341">341</a></span>
-<span class="normal"><a href="#__codelineno-0-342">342</a></span>
-<span class="normal"><a href="#__codelineno-0-343">343</a></span>
-<span class="normal"><a href="#__codelineno-0-344">344</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-318"><a id="__codelineno-0-318" name="__codelineno-0-318"></a><span class="k">def</span><span class="w"> </span><span class="nf">join_pricing</span><span class="p">(</span><span class="n">vehicles</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">plans</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
-</span><span id="__span-0-319"><a id="__codelineno-0-319" name="__codelineno-0-319"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Resolve ``pricing_plan_id`` → plan name / price / currency onto a vehicles frame.</span>
-</span><span id="__span-0-320"><a id="__codelineno-0-320" name="__codelineno-0-320"></a>
-</span><span id="__span-0-321"><a id="__codelineno-0-321" name="__codelineno-0-321"></a><span class="sd">    Left join of [`to_canonical_pricing_plans`][gbfs_toolkit.to_canonical_pricing_plans] (its ``plan_id`` matches the</span>
-</span><span id="__span-0-322"><a id="__codelineno-0-322" name="__codelineno-0-322"></a><span class="sd">    vehicle&#39;s ``pricing_plan_id``); plan ``name``/``description`` are prefixed ``plan_`` to</span>
-</span><span id="__span-0-323"><a id="__codelineno-0-323" name="__codelineno-0-323"></a><span class="sd">    avoid clashes.</span>
-</span><span id="__span-0-324"><a id="__codelineno-0-324" name="__codelineno-0-324"></a>
-</span><span id="__span-0-325"><a id="__codelineno-0-325" name="__codelineno-0-325"></a><span class="sd">    See Also</span>
-</span><span id="__span-0-326"><a id="__codelineno-0-326" name="__codelineno-0-326"></a><span class="sd">    --------</span>
-</span><span id="__span-0-327"><a id="__codelineno-0-327" name="__codelineno-0-327"></a><span class="sd">    [`join_vehicle_types`][gbfs_toolkit.join_vehicle_types] : Resolve type attributes onto vehicles.</span>
-</span><span id="__span-0-328"><a id="__codelineno-0-328" name="__codelineno-0-328"></a>
-</span><span id="__span-0-329"><a id="__codelineno-0-329" name="__codelineno-0-329"></a><span class="sd">    Examples</span>
-</span><span id="__span-0-330"><a id="__codelineno-0-330" name="__codelineno-0-330"></a><span class="sd">    --------</span>
-</span><span id="__span-0-331"><a id="__codelineno-0-331" name="__codelineno-0-331"></a><span class="sd">    &gt;&gt;&gt; import pandas as pd</span>
-</span><span id="__span-0-332"><a id="__codelineno-0-332" name="__codelineno-0-332"></a><span class="sd">    &gt;&gt;&gt; vehicles = pd.DataFrame({&quot;bike_id&quot;: [&quot;v1&quot;], &quot;pricing_plan_id&quot;: [&quot;p1&quot;]})</span>
-</span><span id="__span-0-333"><a id="__codelineno-0-333" name="__codelineno-0-333"></a><span class="sd">    &gt;&gt;&gt; plans = pd.DataFrame({&quot;plan_id&quot;: [&quot;p1&quot;], &quot;name&quot;: [&quot;Day Pass&quot;], &quot;price&quot;: [5.0]})</span>
-</span><span id="__span-0-334"><a id="__codelineno-0-334" name="__codelineno-0-334"></a><span class="sd">    &gt;&gt;&gt; join_pricing(vehicles, plans)[&quot;plan_name&quot;].tolist()</span>
-</span><span id="__span-0-335"><a id="__codelineno-0-335" name="__codelineno-0-335"></a><span class="sd">    [&#39;Day Pass&#39;]</span>
-</span><span id="__span-0-336"><a id="__codelineno-0-336" name="__codelineno-0-336"></a><span class="sd">    &quot;&quot;&quot;</span>
-</span><span id="__span-0-337"><a id="__codelineno-0-337" name="__codelineno-0-337"></a>    <span class="n">p</span> <span class="o">=</span> <span class="n">plans</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;system_id&quot;</span><span class="p">],</span> <span class="n">errors</span><span class="o">=</span><span class="s2">&quot;ignore&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span>
-</span><span id="__span-0-338"><a id="__codelineno-0-338" name="__codelineno-0-338"></a>        <span class="n">columns</span><span class="o">=</span><span class="p">{</span>
-</span><span id="__span-0-339"><a id="__codelineno-0-339" name="__codelineno-0-339"></a>            <span class="s2">&quot;plan_id&quot;</span><span class="p">:</span> <span class="s2">&quot;pricing_plan_id&quot;</span><span class="p">,</span>
-</span><span id="__span-0-340"><a id="__codelineno-0-340" name="__codelineno-0-340"></a>            <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;plan_name&quot;</span><span class="p">,</span>
-</span><span id="__span-0-341"><a id="__codelineno-0-341" name="__codelineno-0-341"></a>            <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;plan_description&quot;</span><span class="p">,</span>
-</span><span id="__span-0-342"><a id="__codelineno-0-342" name="__codelineno-0-342"></a>        <span class="p">}</span>
-</span><span id="__span-0-343"><a id="__codelineno-0-343" name="__codelineno-0-343"></a>    <span class="p">)</span>
-</span><span id="__span-0-344"><a id="__codelineno-0-344" name="__codelineno-0-344"></a>    <span class="k">return</span> <span class="n">vehicles</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="s2">&quot;pricing_plan_id&quot;</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s2">&quot;left&quot;</span><span class="p">)</span>
+              <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#gbfs_toolkit.join_pricing--source--__codelineno-0-318">318</a></span>
+<span class="normal"><a href="#gbfs_toolkit.join_pricing--source--__codelineno-0-319">319</a></span>
+<span class="normal"><a href="#gbfs_toolkit.join_pricing--source--__codelineno-0-320">320</a></span>
+<span class="normal"><a href="#gbfs_toolkit.join_pricing--source--__codelineno-0-321">321</a></span>
+<span class="normal"><a href="#gbfs_toolkit.join_pricing--source--__codelineno-0-322">322</a></span>
+<span class="normal"><a href="#gbfs_toolkit.join_pricing--source--__codelineno-0-323">323</a></span>
+<span class="normal"><a href="#gbfs_toolkit.join_pricing--source--__codelineno-0-324">324</a></span>
+<span class="normal"><a href="#gbfs_toolkit.join_pricing--source--__codelineno-0-325">325</a></span>
+<span class="normal"><a href="#gbfs_toolkit.join_pricing--source--__codelineno-0-326">326</a></span>
+<span class="normal"><a href="#gbfs_toolkit.join_pricing--source--__codelineno-0-327">327</a></span>
+<span class="normal"><a href="#gbfs_toolkit.join_pricing--source--__codelineno-0-328">328</a></span>
+<span class="normal"><a href="#gbfs_toolkit.join_pricing--source--__codelineno-0-329">329</a></span>
+<span class="normal"><a href="#gbfs_toolkit.join_pricing--source--__codelineno-0-330">330</a></span>
+<span class="normal"><a href="#gbfs_toolkit.join_pricing--source--__codelineno-0-331">331</a></span>
+<span class="normal"><a href="#gbfs_toolkit.join_pricing--source--__codelineno-0-332">332</a></span>
+<span class="normal"><a href="#gbfs_toolkit.join_pricing--source--__codelineno-0-333">333</a></span>
+<span class="normal"><a href="#gbfs_toolkit.join_pricing--source--__codelineno-0-334">334</a></span>
+<span class="normal"><a href="#gbfs_toolkit.join_pricing--source--__codelineno-0-335">335</a></span>
+<span class="normal"><a href="#gbfs_toolkit.join_pricing--source--__codelineno-0-336">336</a></span>
+<span class="normal"><a href="#gbfs_toolkit.join_pricing--source--__codelineno-0-337">337</a></span>
+<span class="normal"><a href="#gbfs_toolkit.join_pricing--source--__codelineno-0-338">338</a></span>
+<span class="normal"><a href="#gbfs_toolkit.join_pricing--source--__codelineno-0-339">339</a></span>
+<span class="normal"><a href="#gbfs_toolkit.join_pricing--source--__codelineno-0-340">340</a></span>
+<span class="normal"><a href="#gbfs_toolkit.join_pricing--source--__codelineno-0-341">341</a></span>
+<span class="normal"><a href="#gbfs_toolkit.join_pricing--source--__codelineno-0-342">342</a></span>
+<span class="normal"><a href="#gbfs_toolkit.join_pricing--source--__codelineno-0-343">343</a></span>
+<span class="normal"><a href="#gbfs_toolkit.join_pricing--source--__codelineno-0-344">344</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="gbfs_toolkit.join_pricing--source--__span-0-318"><a id="gbfs_toolkit.join_pricing--source--__codelineno-0-318" name="gbfs_toolkit.join_pricing--source--__codelineno-0-318"></a><span class="k">def</span><span class="w"> </span><span class="nf">join_pricing</span><span class="p">(</span><span class="n">vehicles</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">plans</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+</span><span id="gbfs_toolkit.join_pricing--source--__span-0-319"><a id="gbfs_toolkit.join_pricing--source--__codelineno-0-319" name="gbfs_toolkit.join_pricing--source--__codelineno-0-319"></a><span class="w">    </span><span class="sd">"""Resolve ``pricing_plan_id`` → plan name / price / currency onto a vehicles frame.</span>
+</span><span id="gbfs_toolkit.join_pricing--source--__span-0-320"><a id="gbfs_toolkit.join_pricing--source--__codelineno-0-320" name="gbfs_toolkit.join_pricing--source--__codelineno-0-320"></a>
+</span><span id="gbfs_toolkit.join_pricing--source--__span-0-321"><a id="gbfs_toolkit.join_pricing--source--__codelineno-0-321" name="gbfs_toolkit.join_pricing--source--__codelineno-0-321"></a><span class="sd">    Left join of [`to_canonical_pricing_plans`][gbfs_toolkit.to_canonical_pricing_plans] (its ``plan_id`` matches the</span>
+</span><span id="gbfs_toolkit.join_pricing--source--__span-0-322"><a id="gbfs_toolkit.join_pricing--source--__codelineno-0-322" name="gbfs_toolkit.join_pricing--source--__codelineno-0-322"></a><span class="sd">    vehicle's ``pricing_plan_id``); plan ``name``/``description`` are prefixed ``plan_`` to</span>
+</span><span id="gbfs_toolkit.join_pricing--source--__span-0-323"><a id="gbfs_toolkit.join_pricing--source--__codelineno-0-323" name="gbfs_toolkit.join_pricing--source--__codelineno-0-323"></a><span class="sd">    avoid clashes.</span>
+</span><span id="gbfs_toolkit.join_pricing--source--__span-0-324"><a id="gbfs_toolkit.join_pricing--source--__codelineno-0-324" name="gbfs_toolkit.join_pricing--source--__codelineno-0-324"></a>
+</span><span id="gbfs_toolkit.join_pricing--source--__span-0-325"><a id="gbfs_toolkit.join_pricing--source--__codelineno-0-325" name="gbfs_toolkit.join_pricing--source--__codelineno-0-325"></a><span class="sd">    See Also</span>
+</span><span id="gbfs_toolkit.join_pricing--source--__span-0-326"><a id="gbfs_toolkit.join_pricing--source--__codelineno-0-326" name="gbfs_toolkit.join_pricing--source--__codelineno-0-326"></a><span class="sd">    --------</span>
+</span><span id="gbfs_toolkit.join_pricing--source--__span-0-327"><a id="gbfs_toolkit.join_pricing--source--__codelineno-0-327" name="gbfs_toolkit.join_pricing--source--__codelineno-0-327"></a><span class="sd">    [`join_vehicle_types`][gbfs_toolkit.join_vehicle_types] : Resolve type attributes onto vehicles.</span>
+</span><span id="gbfs_toolkit.join_pricing--source--__span-0-328"><a id="gbfs_toolkit.join_pricing--source--__codelineno-0-328" name="gbfs_toolkit.join_pricing--source--__codelineno-0-328"></a>
+</span><span id="gbfs_toolkit.join_pricing--source--__span-0-329"><a id="gbfs_toolkit.join_pricing--source--__codelineno-0-329" name="gbfs_toolkit.join_pricing--source--__codelineno-0-329"></a><span class="sd">    Examples</span>
+</span><span id="gbfs_toolkit.join_pricing--source--__span-0-330"><a id="gbfs_toolkit.join_pricing--source--__codelineno-0-330" name="gbfs_toolkit.join_pricing--source--__codelineno-0-330"></a><span class="sd">    --------</span>
+</span><span id="gbfs_toolkit.join_pricing--source--__span-0-331"><a id="gbfs_toolkit.join_pricing--source--__codelineno-0-331" name="gbfs_toolkit.join_pricing--source--__codelineno-0-331"></a><span class="sd">    &gt;&gt;&gt; import pandas as pd</span>
+</span><span id="gbfs_toolkit.join_pricing--source--__span-0-332"><a id="gbfs_toolkit.join_pricing--source--__codelineno-0-332" name="gbfs_toolkit.join_pricing--source--__codelineno-0-332"></a><span class="sd">    &gt;&gt;&gt; vehicles = pd.DataFrame({"bike_id": ["v1"], "pricing_plan_id": ["p1"]})</span>
+</span><span id="gbfs_toolkit.join_pricing--source--__span-0-333"><a id="gbfs_toolkit.join_pricing--source--__codelineno-0-333" name="gbfs_toolkit.join_pricing--source--__codelineno-0-333"></a><span class="sd">    &gt;&gt;&gt; plans = pd.DataFrame({"plan_id": ["p1"], "name": ["Day Pass"], "price": [5.0]})</span>
+</span><span id="gbfs_toolkit.join_pricing--source--__span-0-334"><a id="gbfs_toolkit.join_pricing--source--__codelineno-0-334" name="gbfs_toolkit.join_pricing--source--__codelineno-0-334"></a><span class="sd">    &gt;&gt;&gt; join_pricing(vehicles, plans)["plan_name"].tolist()</span>
+</span><span id="gbfs_toolkit.join_pricing--source--__span-0-335"><a id="gbfs_toolkit.join_pricing--source--__codelineno-0-335" name="gbfs_toolkit.join_pricing--source--__codelineno-0-335"></a><span class="sd">    ['Day Pass']</span>
+</span><span id="gbfs_toolkit.join_pricing--source--__span-0-336"><a id="gbfs_toolkit.join_pricing--source--__codelineno-0-336" name="gbfs_toolkit.join_pricing--source--__codelineno-0-336"></a><span class="sd">    """</span>
+</span><span id="gbfs_toolkit.join_pricing--source--__span-0-337"><a id="gbfs_toolkit.join_pricing--source--__codelineno-0-337" name="gbfs_toolkit.join_pricing--source--__codelineno-0-337"></a>    <span class="n">p</span> <span class="o">=</span> <span class="n">plans</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">"system_id"</span><span class="p">],</span> <span class="n">errors</span><span class="o">=</span><span class="s2">"ignore"</span><span class="p">)</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span>
+</span><span id="gbfs_toolkit.join_pricing--source--__span-0-338"><a id="gbfs_toolkit.join_pricing--source--__codelineno-0-338" name="gbfs_toolkit.join_pricing--source--__codelineno-0-338"></a>        <span class="n">columns</span><span class="o">=</span><span class="p">{</span>
+</span><span id="gbfs_toolkit.join_pricing--source--__span-0-339"><a id="gbfs_toolkit.join_pricing--source--__codelineno-0-339" name="gbfs_toolkit.join_pricing--source--__codelineno-0-339"></a>            <span class="s2">"plan_id"</span><span class="p">:</span> <span class="s2">"pricing_plan_id"</span><span class="p">,</span>
+</span><span id="gbfs_toolkit.join_pricing--source--__span-0-340"><a id="gbfs_toolkit.join_pricing--source--__codelineno-0-340" name="gbfs_toolkit.join_pricing--source--__codelineno-0-340"></a>            <span class="s2">"name"</span><span class="p">:</span> <span class="s2">"plan_name"</span><span class="p">,</span>
+</span><span id="gbfs_toolkit.join_pricing--source--__span-0-341"><a id="gbfs_toolkit.join_pricing--source--__codelineno-0-341" name="gbfs_toolkit.join_pricing--source--__codelineno-0-341"></a>            <span class="s2">"description"</span><span class="p">:</span> <span class="s2">"plan_description"</span><span class="p">,</span>
+</span><span id="gbfs_toolkit.join_pricing--source--__span-0-342"><a id="gbfs_toolkit.join_pricing--source--__codelineno-0-342" name="gbfs_toolkit.join_pricing--source--__codelineno-0-342"></a>        <span class="p">}</span>
+</span><span id="gbfs_toolkit.join_pricing--source--__span-0-343"><a id="gbfs_toolkit.join_pricing--source--__codelineno-0-343" name="gbfs_toolkit.join_pricing--source--__codelineno-0-343"></a>    <span class="p">)</span>
+</span><span id="gbfs_toolkit.join_pricing--source--__span-0-344"><a id="gbfs_toolkit.join_pricing--source--__codelineno-0-344" name="gbfs_toolkit.join_pricing--source--__codelineno-0-344"></a>    <span class="k">return</span> <span class="n">vehicles</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="s2">"pricing_plan_id"</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s2">"left"</span><span class="p">)</span>
 </span></code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -6632,10 +6632,10 @@ avoid clashes.</p>
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.instant", "navigation.instant.progress", "navigation.tracking", "navigation.sections", "navigation.tabs", "navigation.tabs.sticky", "navigation.top", "navigation.indexes", "navigation.footer", "toc.follow", "search.suggest", "search.highlight", "search.share", "content.code.copy", "content.code.annotate", "content.tooltips"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.instant", "navigation.instant.progress", "navigation.tracking", "navigation.sections", "navigation.tabs", "navigation.tabs.sticky", "navigation.top", "navigation.indexes", "navigation.footer", "toc.follow", "search.suggest", "search.highlight", "search.share", "content.code.copy", "content.code.annotate", "content.tooltips"], "search": "../../../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
     
     
-      <script src="../../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../../../assets/javascripts/bundle.c21346df.min.js"></script>
       
         <script src="../../../javascripts/mathjax.js"></script>
       

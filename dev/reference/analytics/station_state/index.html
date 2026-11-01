@@ -25,7 +25,7 @@
       
       
       <link rel="icon" href="../../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-ProperDocs 1.6.7, mkdocs-material-9.7.6">
+      <meta name="generator" content="mkdocs-ProperDocs 1.6.7, mkdocs-material-9.8.0">
     
     
       
@@ -33,10 +33,10 @@
       
     
     
-      <link rel="stylesheet" href="../../../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.57a0d79d.min.css">
       
         
-        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.fb2fffe2.min.css">
       
       
 
@@ -1146,7 +1146,7 @@
   <span class="md-ellipsis">
     
   
-    __version__
+    _version_
   
 
     
@@ -6498,151 +6498,151 @@ because it reports zero docks.</p>
 <p><span class="doc-section-title">Examples:</span></p>
     <div class="language-pycon highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">gbfs_toolkit</span><span class="w"> </span><span class="kn">import</span> <span class="n">station_state</span>
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="gp">&gt;&gt;&gt; </span><span class="n">av</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s2">&quot;num_bikes_available&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="s2">&quot;num_docks_available&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">]})</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="gp">&gt;&gt;&gt; </span><span class="n">av</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s2">"num_bikes_available"</span><span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="s2">"num_docks_available"</span><span class="p">:</span> <span class="p">[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">]})</span>
 </span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="gp">&gt;&gt;&gt; </span><span class="nb">list</span><span class="p">(</span><span class="n">station_state</span><span class="p">(</span><span class="n">av</span><span class="p">))</span>
-</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="go">[&#39;empty&#39;, &#39;full&#39;, &#39;normal&#39;]</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="go">['empty', 'full', 'normal']</span>
 </span></code></pre></div>
 
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/gbfs_toolkit/analytics/frames.py</code></summary>
-              <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-152">152</a></span>
-<span class="normal"><a href="#__codelineno-0-153">153</a></span>
-<span class="normal"><a href="#__codelineno-0-154">154</a></span>
-<span class="normal"><a href="#__codelineno-0-155">155</a></span>
-<span class="normal"><a href="#__codelineno-0-156">156</a></span>
-<span class="normal"><a href="#__codelineno-0-157">157</a></span>
-<span class="normal"><a href="#__codelineno-0-158">158</a></span>
-<span class="normal"><a href="#__codelineno-0-159">159</a></span>
-<span class="normal"><a href="#__codelineno-0-160">160</a></span>
-<span class="normal"><a href="#__codelineno-0-161">161</a></span>
-<span class="normal"><a href="#__codelineno-0-162">162</a></span>
-<span class="normal"><a href="#__codelineno-0-163">163</a></span>
-<span class="normal"><a href="#__codelineno-0-164">164</a></span>
-<span class="normal"><a href="#__codelineno-0-165">165</a></span>
-<span class="normal"><a href="#__codelineno-0-166">166</a></span>
-<span class="normal"><a href="#__codelineno-0-167">167</a></span>
-<span class="normal"><a href="#__codelineno-0-168">168</a></span>
-<span class="normal"><a href="#__codelineno-0-169">169</a></span>
-<span class="normal"><a href="#__codelineno-0-170">170</a></span>
-<span class="normal"><a href="#__codelineno-0-171">171</a></span>
-<span class="normal"><a href="#__codelineno-0-172">172</a></span>
-<span class="normal"><a href="#__codelineno-0-173">173</a></span>
-<span class="normal"><a href="#__codelineno-0-174">174</a></span>
-<span class="normal"><a href="#__codelineno-0-175">175</a></span>
-<span class="normal"><a href="#__codelineno-0-176">176</a></span>
-<span class="normal"><a href="#__codelineno-0-177">177</a></span>
-<span class="normal"><a href="#__codelineno-0-178">178</a></span>
-<span class="normal"><a href="#__codelineno-0-179">179</a></span>
-<span class="normal"><a href="#__codelineno-0-180">180</a></span>
-<span class="normal"><a href="#__codelineno-0-181">181</a></span>
-<span class="normal"><a href="#__codelineno-0-182">182</a></span>
-<span class="normal"><a href="#__codelineno-0-183">183</a></span>
-<span class="normal"><a href="#__codelineno-0-184">184</a></span>
-<span class="normal"><a href="#__codelineno-0-185">185</a></span>
-<span class="normal"><a href="#__codelineno-0-186">186</a></span>
-<span class="normal"><a href="#__codelineno-0-187">187</a></span>
-<span class="normal"><a href="#__codelineno-0-188">188</a></span>
-<span class="normal"><a href="#__codelineno-0-189">189</a></span>
-<span class="normal"><a href="#__codelineno-0-190">190</a></span>
-<span class="normal"><a href="#__codelineno-0-191">191</a></span>
-<span class="normal"><a href="#__codelineno-0-192">192</a></span>
-<span class="normal"><a href="#__codelineno-0-193">193</a></span>
-<span class="normal"><a href="#__codelineno-0-194">194</a></span>
-<span class="normal"><a href="#__codelineno-0-195">195</a></span>
-<span class="normal"><a href="#__codelineno-0-196">196</a></span>
-<span class="normal"><a href="#__codelineno-0-197">197</a></span>
-<span class="normal"><a href="#__codelineno-0-198">198</a></span>
-<span class="normal"><a href="#__codelineno-0-199">199</a></span>
-<span class="normal"><a href="#__codelineno-0-200">200</a></span>
-<span class="normal"><a href="#__codelineno-0-201">201</a></span>
-<span class="normal"><a href="#__codelineno-0-202">202</a></span>
-<span class="normal"><a href="#__codelineno-0-203">203</a></span>
-<span class="normal"><a href="#__codelineno-0-204">204</a></span>
-<span class="normal"><a href="#__codelineno-0-205">205</a></span>
-<span class="normal"><a href="#__codelineno-0-206">206</a></span>
-<span class="normal"><a href="#__codelineno-0-207">207</a></span>
-<span class="normal"><a href="#__codelineno-0-208">208</a></span>
-<span class="normal"><a href="#__codelineno-0-209">209</a></span>
-<span class="normal"><a href="#__codelineno-0-210">210</a></span>
-<span class="normal"><a href="#__codelineno-0-211">211</a></span>
-<span class="normal"><a href="#__codelineno-0-212">212</a></span>
-<span class="normal"><a href="#__codelineno-0-213">213</a></span>
-<span class="normal"><a href="#__codelineno-0-214">214</a></span>
-<span class="normal"><a href="#__codelineno-0-215">215</a></span>
-<span class="normal"><a href="#__codelineno-0-216">216</a></span>
-<span class="normal"><a href="#__codelineno-0-217">217</a></span>
-<span class="normal"><a href="#__codelineno-0-218">218</a></span>
-<span class="normal"><a href="#__codelineno-0-219">219</a></span>
-<span class="normal"><a href="#__codelineno-0-220">220</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-152"><a id="__codelineno-0-152" name="__codelineno-0-152"></a><span class="k">def</span><span class="w"> </span><span class="nf">station_state</span><span class="p">(</span><span class="n">availability</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">:</span>
-</span><span id="__span-0-153"><a id="__codelineno-0-153" name="__codelineno-0-153"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Classify each station as ``disabled`` / ``virtual`` / ``empty`` / ``full`` / ``normal``.</span>
-</span><span id="__span-0-154"><a id="__codelineno-0-154" name="__codelineno-0-154"></a>
-</span><span id="__span-0-155"><a id="__codelineno-0-155" name="__codelineno-0-155"></a><span class="sd">    Resolves two edge cases researchers re-derive constantly:</span>
-</span><span id="__span-0-156"><a id="__codelineno-0-156" name="__codelineno-0-156"></a><span class="sd">    an ``is_renting=False`` (and not returning) station is *disabled*, not merely empty;</span>
-</span><span id="__span-0-157"><a id="__codelineno-0-157" name="__codelineno-0-157"></a><span class="sd">    a *virtual* station (painted box, capacity 0/NA) must not be read as &quot;full&quot; just</span>
-</span><span id="__span-0-158"><a id="__codelineno-0-158" name="__codelineno-0-158"></a><span class="sd">    because it reports zero docks.</span>
-</span><span id="__span-0-159"><a id="__codelineno-0-159" name="__codelineno-0-159"></a>
-</span><span id="__span-0-160"><a id="__codelineno-0-160" name="__codelineno-0-160"></a><span class="sd">    Parameters</span>
-</span><span id="__span-0-161"><a id="__codelineno-0-161" name="__codelineno-0-161"></a><span class="sd">    ----------</span>
-</span><span id="__span-0-162"><a id="__codelineno-0-162" name="__codelineno-0-162"></a><span class="sd">    availability : pandas.DataFrame</span>
-</span><span id="__span-0-163"><a id="__codelineno-0-163" name="__codelineno-0-163"></a><span class="sd">        Needs ``num_bikes_available`` and ``num_docks_available``; uses</span>
-</span><span id="__span-0-164"><a id="__codelineno-0-164" name="__codelineno-0-164"></a><span class="sd">        ``is_renting`` / ``is_returning`` / ``is_virtual_station`` / ``capacity`` when present.</span>
-</span><span id="__span-0-165"><a id="__codelineno-0-165" name="__codelineno-0-165"></a>
-</span><span id="__span-0-166"><a id="__codelineno-0-166" name="__codelineno-0-166"></a><span class="sd">    Returns</span>
-</span><span id="__span-0-167"><a id="__codelineno-0-167" name="__codelineno-0-167"></a><span class="sd">    -------</span>
-</span><span id="__span-0-168"><a id="__codelineno-0-168" name="__codelineno-0-168"></a><span class="sd">    pandas.Series</span>
-</span><span id="__span-0-169"><a id="__codelineno-0-169" name="__codelineno-0-169"></a><span class="sd">        Categorical (categories = `STATION_STATES`), aligned to the input index.</span>
-</span><span id="__span-0-170"><a id="__codelineno-0-170" name="__codelineno-0-170"></a>
-</span><span id="__span-0-171"><a id="__codelineno-0-171" name="__codelineno-0-171"></a><span class="sd">    See Also</span>
-</span><span id="__span-0-172"><a id="__codelineno-0-172" name="__codelineno-0-172"></a><span class="sd">    --------</span>
-</span><span id="__span-0-173"><a id="__codelineno-0-173" name="__codelineno-0-173"></a><span class="sd">    [`occupancy`][gbfs_toolkit.occupancy] : The continuous occupancy ratio.</span>
-</span><span id="__span-0-174"><a id="__codelineno-0-174" name="__codelineno-0-174"></a><span class="sd">    [`system_profile`][gbfs_toolkit.system_profile] : Per-state shares across the system.</span>
-</span><span id="__span-0-175"><a id="__codelineno-0-175" name="__codelineno-0-175"></a>
-</span><span id="__span-0-176"><a id="__codelineno-0-176" name="__codelineno-0-176"></a><span class="sd">    Examples</span>
-</span><span id="__span-0-177"><a id="__codelineno-0-177" name="__codelineno-0-177"></a><span class="sd">    --------</span>
-</span><span id="__span-0-178"><a id="__codelineno-0-178" name="__codelineno-0-178"></a><span class="sd">    &gt;&gt;&gt; import pandas as pd</span>
-</span><span id="__span-0-179"><a id="__codelineno-0-179" name="__codelineno-0-179"></a><span class="sd">    &gt;&gt;&gt; from gbfs_toolkit import station_state</span>
-</span><span id="__span-0-180"><a id="__codelineno-0-180" name="__codelineno-0-180"></a><span class="sd">    &gt;&gt;&gt; av = pd.DataFrame({&quot;num_bikes_available&quot;: [0, 5, 2], &quot;num_docks_available&quot;: [4, 0, 3]})</span>
-</span><span id="__span-0-181"><a id="__codelineno-0-181" name="__codelineno-0-181"></a><span class="sd">    &gt;&gt;&gt; list(station_state(av))</span>
-</span><span id="__span-0-182"><a id="__codelineno-0-182" name="__codelineno-0-182"></a><span class="sd">    [&#39;empty&#39;, &#39;full&#39;, &#39;normal&#39;]</span>
-</span><span id="__span-0-183"><a id="__codelineno-0-183" name="__codelineno-0-183"></a><span class="sd">    &quot;&quot;&quot;</span>
-</span><span id="__span-0-184"><a id="__codelineno-0-184" name="__codelineno-0-184"></a>    <span class="n">require_columns</span><span class="p">(</span>
-</span><span id="__span-0-185"><a id="__codelineno-0-185" name="__codelineno-0-185"></a>        <span class="n">availability</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;num_bikes_available&quot;</span><span class="p">,</span> <span class="s2">&quot;num_docks_available&quot;</span><span class="p">],</span> <span class="n">what</span><span class="o">=</span><span class="s2">&quot;station_state&quot;</span>
-</span><span id="__span-0-186"><a id="__codelineno-0-186" name="__codelineno-0-186"></a>    <span class="p">)</span>
-</span><span id="__span-0-187"><a id="__codelineno-0-187" name="__codelineno-0-187"></a>    <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">availability</span><span class="p">)</span>
-</span><span id="__span-0-188"><a id="__codelineno-0-188" name="__codelineno-0-188"></a>    <span class="n">bikes</span> <span class="o">=</span> <span class="p">(</span>
-</span><span id="__span-0-189"><a id="__codelineno-0-189" name="__codelineno-0-189"></a>        <span class="n">pd</span><span class="o">.</span><span class="n">to_numeric</span><span class="p">(</span><span class="n">availability</span><span class="p">[</span><span class="s2">&quot;num_bikes_available&quot;</span><span class="p">],</span> <span class="n">errors</span><span class="o">=</span><span class="s2">&quot;coerce&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
-</span><span id="__span-0-190"><a id="__codelineno-0-190" name="__codelineno-0-190"></a>    <span class="p">)</span>
-</span><span id="__span-0-191"><a id="__codelineno-0-191" name="__codelineno-0-191"></a>    <span class="n">docks</span> <span class="o">=</span> <span class="p">(</span>
-</span><span id="__span-0-192"><a id="__codelineno-0-192" name="__codelineno-0-192"></a>        <span class="n">pd</span><span class="o">.</span><span class="n">to_numeric</span><span class="p">(</span><span class="n">availability</span><span class="p">[</span><span class="s2">&quot;num_docks_available&quot;</span><span class="p">],</span> <span class="n">errors</span><span class="o">=</span><span class="s2">&quot;coerce&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
-</span><span id="__span-0-193"><a id="__codelineno-0-193" name="__codelineno-0-193"></a>    <span class="p">)</span>
-</span><span id="__span-0-194"><a id="__codelineno-0-194" name="__codelineno-0-194"></a>
-</span><span id="__span-0-195"><a id="__codelineno-0-195" name="__codelineno-0-195"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">_bool</span><span class="p">(</span><span class="n">col</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">default</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-</span><span id="__span-0-196"><a id="__codelineno-0-196" name="__codelineno-0-196"></a>        <span class="k">if</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">availability</span><span class="p">:</span>
-</span><span id="__span-0-197"><a id="__codelineno-0-197" name="__codelineno-0-197"></a>            <span class="k">return</span> <span class="n">availability</span><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s2">&quot;boolean&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="n">default</span><span class="p">)</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
-</span><span id="__span-0-198"><a id="__codelineno-0-198" name="__codelineno-0-198"></a>        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">default</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">bool</span><span class="p">)</span>
-</span><span id="__span-0-199"><a id="__codelineno-0-199" name="__codelineno-0-199"></a>
-</span><span id="__span-0-200"><a id="__codelineno-0-200" name="__codelineno-0-200"></a>    <span class="n">renting</span> <span class="o">=</span> <span class="n">_bool</span><span class="p">(</span><span class="s2">&quot;is_renting&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
-</span><span id="__span-0-201"><a id="__codelineno-0-201" name="__codelineno-0-201"></a>    <span class="n">returning</span> <span class="o">=</span> <span class="n">_bool</span><span class="p">(</span><span class="s2">&quot;is_returning&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
-</span><span id="__span-0-202"><a id="__codelineno-0-202" name="__codelineno-0-202"></a>    <span class="n">is_virtual</span> <span class="o">=</span> <span class="n">_bool</span><span class="p">(</span><span class="s2">&quot;is_virtual_station&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
-</span><span id="__span-0-203"><a id="__codelineno-0-203" name="__codelineno-0-203"></a>    <span class="k">if</span> <span class="s2">&quot;capacity&quot;</span> <span class="ow">in</span> <span class="n">availability</span><span class="p">:</span>
-</span><span id="__span-0-204"><a id="__codelineno-0-204" name="__codelineno-0-204"></a>        <span class="n">cap</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_numeric</span><span class="p">(</span><span class="n">availability</span><span class="p">[</span><span class="s2">&quot;capacity&quot;</span><span class="p">],</span> <span class="n">errors</span><span class="o">=</span><span class="s2">&quot;coerce&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
-</span><span id="__span-0-205"><a id="__codelineno-0-205" name="__codelineno-0-205"></a>        <span class="n">is_virtual</span> <span class="o">=</span> <span class="n">is_virtual</span> <span class="o">|</span> <span class="o">~</span><span class="p">(</span><span class="n">cap</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span>  <span class="c1"># no physical docks ⇒ treat as virtual</span>
-</span><span id="__span-0-206"><a id="__codelineno-0-206" name="__codelineno-0-206"></a>
-</span><span id="__span-0-207"><a id="__codelineno-0-207" name="__codelineno-0-207"></a>    <span class="n">state</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span>
-</span><span id="__span-0-208"><a id="__codelineno-0-208" name="__codelineno-0-208"></a>        <span class="o">~</span><span class="n">renting</span> <span class="o">&amp;</span> <span class="o">~</span><span class="n">returning</span><span class="p">,</span>
-</span><span id="__span-0-209"><a id="__codelineno-0-209" name="__codelineno-0-209"></a>        <span class="s2">&quot;disabled&quot;</span><span class="p">,</span>
-</span><span id="__span-0-210"><a id="__codelineno-0-210" name="__codelineno-0-210"></a>        <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span>
-</span><span id="__span-0-211"><a id="__codelineno-0-211" name="__codelineno-0-211"></a>            <span class="n">is_virtual</span><span class="p">,</span>
-</span><span id="__span-0-212"><a id="__codelineno-0-212" name="__codelineno-0-212"></a>            <span class="s2">&quot;virtual&quot;</span><span class="p">,</span>
-</span><span id="__span-0-213"><a id="__codelineno-0-213" name="__codelineno-0-213"></a>            <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">bikes</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;empty&quot;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">docks</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;full&quot;</span><span class="p">,</span> <span class="s2">&quot;normal&quot;</span><span class="p">)),</span>
-</span><span id="__span-0-214"><a id="__codelineno-0-214" name="__codelineno-0-214"></a>        <span class="p">),</span>
-</span><span id="__span-0-215"><a id="__codelineno-0-215" name="__codelineno-0-215"></a>    <span class="p">)</span>
-</span><span id="__span-0-216"><a id="__codelineno-0-216" name="__codelineno-0-216"></a>    <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span>
-</span><span id="__span-0-217"><a id="__codelineno-0-217" name="__codelineno-0-217"></a>        <span class="n">pd</span><span class="o">.</span><span class="n">Categorical</span><span class="p">(</span><span class="n">state</span><span class="p">,</span> <span class="n">categories</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="n">STATION_STATES</span><span class="p">)),</span>
-</span><span id="__span-0-218"><a id="__codelineno-0-218" name="__codelineno-0-218"></a>        <span class="n">index</span><span class="o">=</span><span class="n">availability</span><span class="o">.</span><span class="n">index</span><span class="p">,</span>
-</span><span id="__span-0-219"><a id="__codelineno-0-219" name="__codelineno-0-219"></a>        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;station_state&quot;</span><span class="p">,</span>
-</span><span id="__span-0-220"><a id="__codelineno-0-220" name="__codelineno-0-220"></a>    <span class="p">)</span>
+              <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#gbfs_toolkit.station_state--source--__codelineno-0-152">152</a></span>
+<span class="normal"><a href="#gbfs_toolkit.station_state--source--__codelineno-0-153">153</a></span>
+<span class="normal"><a href="#gbfs_toolkit.station_state--source--__codelineno-0-154">154</a></span>
+<span class="normal"><a href="#gbfs_toolkit.station_state--source--__codelineno-0-155">155</a></span>
+<span class="normal"><a href="#gbfs_toolkit.station_state--source--__codelineno-0-156">156</a></span>
+<span class="normal"><a href="#gbfs_toolkit.station_state--source--__codelineno-0-157">157</a></span>
+<span class="normal"><a href="#gbfs_toolkit.station_state--source--__codelineno-0-158">158</a></span>
+<span class="normal"><a href="#gbfs_toolkit.station_state--source--__codelineno-0-159">159</a></span>
+<span class="normal"><a href="#gbfs_toolkit.station_state--source--__codelineno-0-160">160</a></span>
+<span class="normal"><a href="#gbfs_toolkit.station_state--source--__codelineno-0-161">161</a></span>
+<span class="normal"><a href="#gbfs_toolkit.station_state--source--__codelineno-0-162">162</a></span>
+<span class="normal"><a href="#gbfs_toolkit.station_state--source--__codelineno-0-163">163</a></span>
+<span class="normal"><a href="#gbfs_toolkit.station_state--source--__codelineno-0-164">164</a></span>
+<span class="normal"><a href="#gbfs_toolkit.station_state--source--__codelineno-0-165">165</a></span>
+<span class="normal"><a href="#gbfs_toolkit.station_state--source--__codelineno-0-166">166</a></span>
+<span class="normal"><a href="#gbfs_toolkit.station_state--source--__codelineno-0-167">167</a></span>
+<span class="normal"><a href="#gbfs_toolkit.station_state--source--__codelineno-0-168">168</a></span>
+<span class="normal"><a href="#gbfs_toolkit.station_state--source--__codelineno-0-169">169</a></span>
+<span class="normal"><a href="#gbfs_toolkit.station_state--source--__codelineno-0-170">170</a></span>
+<span class="normal"><a href="#gbfs_toolkit.station_state--source--__codelineno-0-171">171</a></span>
+<span class="normal"><a href="#gbfs_toolkit.station_state--source--__codelineno-0-172">172</a></span>
+<span class="normal"><a href="#gbfs_toolkit.station_state--source--__codelineno-0-173">173</a></span>
+<span class="normal"><a href="#gbfs_toolkit.station_state--source--__codelineno-0-174">174</a></span>
+<span class="normal"><a href="#gbfs_toolkit.station_state--source--__codelineno-0-175">175</a></span>
+<span class="normal"><a href="#gbfs_toolkit.station_state--source--__codelineno-0-176">176</a></span>
+<span class="normal"><a href="#gbfs_toolkit.station_state--source--__codelineno-0-177">177</a></span>
+<span class="normal"><a href="#gbfs_toolkit.station_state--source--__codelineno-0-178">178</a></span>
+<span class="normal"><a href="#gbfs_toolkit.station_state--source--__codelineno-0-179">179</a></span>
+<span class="normal"><a href="#gbfs_toolkit.station_state--source--__codelineno-0-180">180</a></span>
+<span class="normal"><a href="#gbfs_toolkit.station_state--source--__codelineno-0-181">181</a></span>
+<span class="normal"><a href="#gbfs_toolkit.station_state--source--__codelineno-0-182">182</a></span>
+<span class="normal"><a href="#gbfs_toolkit.station_state--source--__codelineno-0-183">183</a></span>
+<span class="normal"><a href="#gbfs_toolkit.station_state--source--__codelineno-0-184">184</a></span>
+<span class="normal"><a href="#gbfs_toolkit.station_state--source--__codelineno-0-185">185</a></span>
+<span class="normal"><a href="#gbfs_toolkit.station_state--source--__codelineno-0-186">186</a></span>
+<span class="normal"><a href="#gbfs_toolkit.station_state--source--__codelineno-0-187">187</a></span>
+<span class="normal"><a href="#gbfs_toolkit.station_state--source--__codelineno-0-188">188</a></span>
+<span class="normal"><a href="#gbfs_toolkit.station_state--source--__codelineno-0-189">189</a></span>
+<span class="normal"><a href="#gbfs_toolkit.station_state--source--__codelineno-0-190">190</a></span>
+<span class="normal"><a href="#gbfs_toolkit.station_state--source--__codelineno-0-191">191</a></span>
+<span class="normal"><a href="#gbfs_toolkit.station_state--source--__codelineno-0-192">192</a></span>
+<span class="normal"><a href="#gbfs_toolkit.station_state--source--__codelineno-0-193">193</a></span>
+<span class="normal"><a href="#gbfs_toolkit.station_state--source--__codelineno-0-194">194</a></span>
+<span class="normal"><a href="#gbfs_toolkit.station_state--source--__codelineno-0-195">195</a></span>
+<span class="normal"><a href="#gbfs_toolkit.station_state--source--__codelineno-0-196">196</a></span>
+<span class="normal"><a href="#gbfs_toolkit.station_state--source--__codelineno-0-197">197</a></span>
+<span class="normal"><a href="#gbfs_toolkit.station_state--source--__codelineno-0-198">198</a></span>
+<span class="normal"><a href="#gbfs_toolkit.station_state--source--__codelineno-0-199">199</a></span>
+<span class="normal"><a href="#gbfs_toolkit.station_state--source--__codelineno-0-200">200</a></span>
+<span class="normal"><a href="#gbfs_toolkit.station_state--source--__codelineno-0-201">201</a></span>
+<span class="normal"><a href="#gbfs_toolkit.station_state--source--__codelineno-0-202">202</a></span>
+<span class="normal"><a href="#gbfs_toolkit.station_state--source--__codelineno-0-203">203</a></span>
+<span class="normal"><a href="#gbfs_toolkit.station_state--source--__codelineno-0-204">204</a></span>
+<span class="normal"><a href="#gbfs_toolkit.station_state--source--__codelineno-0-205">205</a></span>
+<span class="normal"><a href="#gbfs_toolkit.station_state--source--__codelineno-0-206">206</a></span>
+<span class="normal"><a href="#gbfs_toolkit.station_state--source--__codelineno-0-207">207</a></span>
+<span class="normal"><a href="#gbfs_toolkit.station_state--source--__codelineno-0-208">208</a></span>
+<span class="normal"><a href="#gbfs_toolkit.station_state--source--__codelineno-0-209">209</a></span>
+<span class="normal"><a href="#gbfs_toolkit.station_state--source--__codelineno-0-210">210</a></span>
+<span class="normal"><a href="#gbfs_toolkit.station_state--source--__codelineno-0-211">211</a></span>
+<span class="normal"><a href="#gbfs_toolkit.station_state--source--__codelineno-0-212">212</a></span>
+<span class="normal"><a href="#gbfs_toolkit.station_state--source--__codelineno-0-213">213</a></span>
+<span class="normal"><a href="#gbfs_toolkit.station_state--source--__codelineno-0-214">214</a></span>
+<span class="normal"><a href="#gbfs_toolkit.station_state--source--__codelineno-0-215">215</a></span>
+<span class="normal"><a href="#gbfs_toolkit.station_state--source--__codelineno-0-216">216</a></span>
+<span class="normal"><a href="#gbfs_toolkit.station_state--source--__codelineno-0-217">217</a></span>
+<span class="normal"><a href="#gbfs_toolkit.station_state--source--__codelineno-0-218">218</a></span>
+<span class="normal"><a href="#gbfs_toolkit.station_state--source--__codelineno-0-219">219</a></span>
+<span class="normal"><a href="#gbfs_toolkit.station_state--source--__codelineno-0-220">220</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="gbfs_toolkit.station_state--source--__span-0-152"><a id="gbfs_toolkit.station_state--source--__codelineno-0-152" name="gbfs_toolkit.station_state--source--__codelineno-0-152"></a><span class="k">def</span><span class="w"> </span><span class="nf">station_state</span><span class="p">(</span><span class="n">availability</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">:</span>
+</span><span id="gbfs_toolkit.station_state--source--__span-0-153"><a id="gbfs_toolkit.station_state--source--__codelineno-0-153" name="gbfs_toolkit.station_state--source--__codelineno-0-153"></a><span class="w">    </span><span class="sd">"""Classify each station as ``disabled`` / ``virtual`` / ``empty`` / ``full`` / ``normal``.</span>
+</span><span id="gbfs_toolkit.station_state--source--__span-0-154"><a id="gbfs_toolkit.station_state--source--__codelineno-0-154" name="gbfs_toolkit.station_state--source--__codelineno-0-154"></a>
+</span><span id="gbfs_toolkit.station_state--source--__span-0-155"><a id="gbfs_toolkit.station_state--source--__codelineno-0-155" name="gbfs_toolkit.station_state--source--__codelineno-0-155"></a><span class="sd">    Resolves two edge cases researchers re-derive constantly:</span>
+</span><span id="gbfs_toolkit.station_state--source--__span-0-156"><a id="gbfs_toolkit.station_state--source--__codelineno-0-156" name="gbfs_toolkit.station_state--source--__codelineno-0-156"></a><span class="sd">    an ``is_renting=False`` (and not returning) station is *disabled*, not merely empty;</span>
+</span><span id="gbfs_toolkit.station_state--source--__span-0-157"><a id="gbfs_toolkit.station_state--source--__codelineno-0-157" name="gbfs_toolkit.station_state--source--__codelineno-0-157"></a><span class="sd">    a *virtual* station (painted box, capacity 0/NA) must not be read as "full" just</span>
+</span><span id="gbfs_toolkit.station_state--source--__span-0-158"><a id="gbfs_toolkit.station_state--source--__codelineno-0-158" name="gbfs_toolkit.station_state--source--__codelineno-0-158"></a><span class="sd">    because it reports zero docks.</span>
+</span><span id="gbfs_toolkit.station_state--source--__span-0-159"><a id="gbfs_toolkit.station_state--source--__codelineno-0-159" name="gbfs_toolkit.station_state--source--__codelineno-0-159"></a>
+</span><span id="gbfs_toolkit.station_state--source--__span-0-160"><a id="gbfs_toolkit.station_state--source--__codelineno-0-160" name="gbfs_toolkit.station_state--source--__codelineno-0-160"></a><span class="sd">    Parameters</span>
+</span><span id="gbfs_toolkit.station_state--source--__span-0-161"><a id="gbfs_toolkit.station_state--source--__codelineno-0-161" name="gbfs_toolkit.station_state--source--__codelineno-0-161"></a><span class="sd">    ----------</span>
+</span><span id="gbfs_toolkit.station_state--source--__span-0-162"><a id="gbfs_toolkit.station_state--source--__codelineno-0-162" name="gbfs_toolkit.station_state--source--__codelineno-0-162"></a><span class="sd">    availability : pandas.DataFrame</span>
+</span><span id="gbfs_toolkit.station_state--source--__span-0-163"><a id="gbfs_toolkit.station_state--source--__codelineno-0-163" name="gbfs_toolkit.station_state--source--__codelineno-0-163"></a><span class="sd">        Needs ``num_bikes_available`` and ``num_docks_available``; uses</span>
+</span><span id="gbfs_toolkit.station_state--source--__span-0-164"><a id="gbfs_toolkit.station_state--source--__codelineno-0-164" name="gbfs_toolkit.station_state--source--__codelineno-0-164"></a><span class="sd">        ``is_renting`` / ``is_returning`` / ``is_virtual_station`` / ``capacity`` when present.</span>
+</span><span id="gbfs_toolkit.station_state--source--__span-0-165"><a id="gbfs_toolkit.station_state--source--__codelineno-0-165" name="gbfs_toolkit.station_state--source--__codelineno-0-165"></a>
+</span><span id="gbfs_toolkit.station_state--source--__span-0-166"><a id="gbfs_toolkit.station_state--source--__codelineno-0-166" name="gbfs_toolkit.station_state--source--__codelineno-0-166"></a><span class="sd">    Returns</span>
+</span><span id="gbfs_toolkit.station_state--source--__span-0-167"><a id="gbfs_toolkit.station_state--source--__codelineno-0-167" name="gbfs_toolkit.station_state--source--__codelineno-0-167"></a><span class="sd">    -------</span>
+</span><span id="gbfs_toolkit.station_state--source--__span-0-168"><a id="gbfs_toolkit.station_state--source--__codelineno-0-168" name="gbfs_toolkit.station_state--source--__codelineno-0-168"></a><span class="sd">    pandas.Series</span>
+</span><span id="gbfs_toolkit.station_state--source--__span-0-169"><a id="gbfs_toolkit.station_state--source--__codelineno-0-169" name="gbfs_toolkit.station_state--source--__codelineno-0-169"></a><span class="sd">        Categorical (categories = `STATION_STATES`), aligned to the input index.</span>
+</span><span id="gbfs_toolkit.station_state--source--__span-0-170"><a id="gbfs_toolkit.station_state--source--__codelineno-0-170" name="gbfs_toolkit.station_state--source--__codelineno-0-170"></a>
+</span><span id="gbfs_toolkit.station_state--source--__span-0-171"><a id="gbfs_toolkit.station_state--source--__codelineno-0-171" name="gbfs_toolkit.station_state--source--__codelineno-0-171"></a><span class="sd">    See Also</span>
+</span><span id="gbfs_toolkit.station_state--source--__span-0-172"><a id="gbfs_toolkit.station_state--source--__codelineno-0-172" name="gbfs_toolkit.station_state--source--__codelineno-0-172"></a><span class="sd">    --------</span>
+</span><span id="gbfs_toolkit.station_state--source--__span-0-173"><a id="gbfs_toolkit.station_state--source--__codelineno-0-173" name="gbfs_toolkit.station_state--source--__codelineno-0-173"></a><span class="sd">    [`occupancy`][gbfs_toolkit.occupancy] : The continuous occupancy ratio.</span>
+</span><span id="gbfs_toolkit.station_state--source--__span-0-174"><a id="gbfs_toolkit.station_state--source--__codelineno-0-174" name="gbfs_toolkit.station_state--source--__codelineno-0-174"></a><span class="sd">    [`system_profile`][gbfs_toolkit.system_profile] : Per-state shares across the system.</span>
+</span><span id="gbfs_toolkit.station_state--source--__span-0-175"><a id="gbfs_toolkit.station_state--source--__codelineno-0-175" name="gbfs_toolkit.station_state--source--__codelineno-0-175"></a>
+</span><span id="gbfs_toolkit.station_state--source--__span-0-176"><a id="gbfs_toolkit.station_state--source--__codelineno-0-176" name="gbfs_toolkit.station_state--source--__codelineno-0-176"></a><span class="sd">    Examples</span>
+</span><span id="gbfs_toolkit.station_state--source--__span-0-177"><a id="gbfs_toolkit.station_state--source--__codelineno-0-177" name="gbfs_toolkit.station_state--source--__codelineno-0-177"></a><span class="sd">    --------</span>
+</span><span id="gbfs_toolkit.station_state--source--__span-0-178"><a id="gbfs_toolkit.station_state--source--__codelineno-0-178" name="gbfs_toolkit.station_state--source--__codelineno-0-178"></a><span class="sd">    &gt;&gt;&gt; import pandas as pd</span>
+</span><span id="gbfs_toolkit.station_state--source--__span-0-179"><a id="gbfs_toolkit.station_state--source--__codelineno-0-179" name="gbfs_toolkit.station_state--source--__codelineno-0-179"></a><span class="sd">    &gt;&gt;&gt; from gbfs_toolkit import station_state</span>
+</span><span id="gbfs_toolkit.station_state--source--__span-0-180"><a id="gbfs_toolkit.station_state--source--__codelineno-0-180" name="gbfs_toolkit.station_state--source--__codelineno-0-180"></a><span class="sd">    &gt;&gt;&gt; av = pd.DataFrame({"num_bikes_available": [0, 5, 2], "num_docks_available": [4, 0, 3]})</span>
+</span><span id="gbfs_toolkit.station_state--source--__span-0-181"><a id="gbfs_toolkit.station_state--source--__codelineno-0-181" name="gbfs_toolkit.station_state--source--__codelineno-0-181"></a><span class="sd">    &gt;&gt;&gt; list(station_state(av))</span>
+</span><span id="gbfs_toolkit.station_state--source--__span-0-182"><a id="gbfs_toolkit.station_state--source--__codelineno-0-182" name="gbfs_toolkit.station_state--source--__codelineno-0-182"></a><span class="sd">    ['empty', 'full', 'normal']</span>
+</span><span id="gbfs_toolkit.station_state--source--__span-0-183"><a id="gbfs_toolkit.station_state--source--__codelineno-0-183" name="gbfs_toolkit.station_state--source--__codelineno-0-183"></a><span class="sd">    """</span>
+</span><span id="gbfs_toolkit.station_state--source--__span-0-184"><a id="gbfs_toolkit.station_state--source--__codelineno-0-184" name="gbfs_toolkit.station_state--source--__codelineno-0-184"></a>    <span class="n">require_columns</span><span class="p">(</span>
+</span><span id="gbfs_toolkit.station_state--source--__span-0-185"><a id="gbfs_toolkit.station_state--source--__codelineno-0-185" name="gbfs_toolkit.station_state--source--__codelineno-0-185"></a>        <span class="n">availability</span><span class="p">,</span> <span class="p">[</span><span class="s2">"num_bikes_available"</span><span class="p">,</span> <span class="s2">"num_docks_available"</span><span class="p">],</span> <span class="n">what</span><span class="o">=</span><span class="s2">"station_state"</span>
+</span><span id="gbfs_toolkit.station_state--source--__span-0-186"><a id="gbfs_toolkit.station_state--source--__codelineno-0-186" name="gbfs_toolkit.station_state--source--__codelineno-0-186"></a>    <span class="p">)</span>
+</span><span id="gbfs_toolkit.station_state--source--__span-0-187"><a id="gbfs_toolkit.station_state--source--__codelineno-0-187" name="gbfs_toolkit.station_state--source--__codelineno-0-187"></a>    <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">availability</span><span class="p">)</span>
+</span><span id="gbfs_toolkit.station_state--source--__span-0-188"><a id="gbfs_toolkit.station_state--source--__codelineno-0-188" name="gbfs_toolkit.station_state--source--__codelineno-0-188"></a>    <span class="n">bikes</span> <span class="o">=</span> <span class="p">(</span>
+</span><span id="gbfs_toolkit.station_state--source--__span-0-189"><a id="gbfs_toolkit.station_state--source--__codelineno-0-189" name="gbfs_toolkit.station_state--source--__codelineno-0-189"></a>        <span class="n">pd</span><span class="o">.</span><span class="n">to_numeric</span><span class="p">(</span><span class="n">availability</span><span class="p">[</span><span class="s2">"num_bikes_available"</span><span class="p">],</span> <span class="n">errors</span><span class="o">=</span><span class="s2">"coerce"</span><span class="p">)</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
+</span><span id="gbfs_toolkit.station_state--source--__span-0-190"><a id="gbfs_toolkit.station_state--source--__codelineno-0-190" name="gbfs_toolkit.station_state--source--__codelineno-0-190"></a>    <span class="p">)</span>
+</span><span id="gbfs_toolkit.station_state--source--__span-0-191"><a id="gbfs_toolkit.station_state--source--__codelineno-0-191" name="gbfs_toolkit.station_state--source--__codelineno-0-191"></a>    <span class="n">docks</span> <span class="o">=</span> <span class="p">(</span>
+</span><span id="gbfs_toolkit.station_state--source--__span-0-192"><a id="gbfs_toolkit.station_state--source--__codelineno-0-192" name="gbfs_toolkit.station_state--source--__codelineno-0-192"></a>        <span class="n">pd</span><span class="o">.</span><span class="n">to_numeric</span><span class="p">(</span><span class="n">availability</span><span class="p">[</span><span class="s2">"num_docks_available"</span><span class="p">],</span> <span class="n">errors</span><span class="o">=</span><span class="s2">"coerce"</span><span class="p">)</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
+</span><span id="gbfs_toolkit.station_state--source--__span-0-193"><a id="gbfs_toolkit.station_state--source--__codelineno-0-193" name="gbfs_toolkit.station_state--source--__codelineno-0-193"></a>    <span class="p">)</span>
+</span><span id="gbfs_toolkit.station_state--source--__span-0-194"><a id="gbfs_toolkit.station_state--source--__codelineno-0-194" name="gbfs_toolkit.station_state--source--__codelineno-0-194"></a>
+</span><span id="gbfs_toolkit.station_state--source--__span-0-195"><a id="gbfs_toolkit.station_state--source--__codelineno-0-195" name="gbfs_toolkit.station_state--source--__codelineno-0-195"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">_bool</span><span class="p">(</span><span class="n">col</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">default</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+</span><span id="gbfs_toolkit.station_state--source--__span-0-196"><a id="gbfs_toolkit.station_state--source--__codelineno-0-196" name="gbfs_toolkit.station_state--source--__codelineno-0-196"></a>        <span class="k">if</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">availability</span><span class="p">:</span>
+</span><span id="gbfs_toolkit.station_state--source--__span-0-197"><a id="gbfs_toolkit.station_state--source--__codelineno-0-197" name="gbfs_toolkit.station_state--source--__codelineno-0-197"></a>            <span class="k">return</span> <span class="n">availability</span><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s2">"boolean"</span><span class="p">)</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="n">default</span><span class="p">)</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
+</span><span id="gbfs_toolkit.station_state--source--__span-0-198"><a id="gbfs_toolkit.station_state--source--__codelineno-0-198" name="gbfs_toolkit.station_state--source--__codelineno-0-198"></a>        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">default</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">bool</span><span class="p">)</span>
+</span><span id="gbfs_toolkit.station_state--source--__span-0-199"><a id="gbfs_toolkit.station_state--source--__codelineno-0-199" name="gbfs_toolkit.station_state--source--__codelineno-0-199"></a>
+</span><span id="gbfs_toolkit.station_state--source--__span-0-200"><a id="gbfs_toolkit.station_state--source--__codelineno-0-200" name="gbfs_toolkit.station_state--source--__codelineno-0-200"></a>    <span class="n">renting</span> <span class="o">=</span> <span class="n">_bool</span><span class="p">(</span><span class="s2">"is_renting"</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+</span><span id="gbfs_toolkit.station_state--source--__span-0-201"><a id="gbfs_toolkit.station_state--source--__codelineno-0-201" name="gbfs_toolkit.station_state--source--__codelineno-0-201"></a>    <span class="n">returning</span> <span class="o">=</span> <span class="n">_bool</span><span class="p">(</span><span class="s2">"is_returning"</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+</span><span id="gbfs_toolkit.station_state--source--__span-0-202"><a id="gbfs_toolkit.station_state--source--__codelineno-0-202" name="gbfs_toolkit.station_state--source--__codelineno-0-202"></a>    <span class="n">is_virtual</span> <span class="o">=</span> <span class="n">_bool</span><span class="p">(</span><span class="s2">"is_virtual_station"</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+</span><span id="gbfs_toolkit.station_state--source--__span-0-203"><a id="gbfs_toolkit.station_state--source--__codelineno-0-203" name="gbfs_toolkit.station_state--source--__codelineno-0-203"></a>    <span class="k">if</span> <span class="s2">"capacity"</span> <span class="ow">in</span> <span class="n">availability</span><span class="p">:</span>
+</span><span id="gbfs_toolkit.station_state--source--__span-0-204"><a id="gbfs_toolkit.station_state--source--__codelineno-0-204" name="gbfs_toolkit.station_state--source--__codelineno-0-204"></a>        <span class="n">cap</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_numeric</span><span class="p">(</span><span class="n">availability</span><span class="p">[</span><span class="s2">"capacity"</span><span class="p">],</span> <span class="n">errors</span><span class="o">=</span><span class="s2">"coerce"</span><span class="p">)</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
+</span><span id="gbfs_toolkit.station_state--source--__span-0-205"><a id="gbfs_toolkit.station_state--source--__codelineno-0-205" name="gbfs_toolkit.station_state--source--__codelineno-0-205"></a>        <span class="n">is_virtual</span> <span class="o">=</span> <span class="n">is_virtual</span> <span class="o">|</span> <span class="o">~</span><span class="p">(</span><span class="n">cap</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span>  <span class="c1"># no physical docks ⇒ treat as virtual</span>
+</span><span id="gbfs_toolkit.station_state--source--__span-0-206"><a id="gbfs_toolkit.station_state--source--__codelineno-0-206" name="gbfs_toolkit.station_state--source--__codelineno-0-206"></a>
+</span><span id="gbfs_toolkit.station_state--source--__span-0-207"><a id="gbfs_toolkit.station_state--source--__codelineno-0-207" name="gbfs_toolkit.station_state--source--__codelineno-0-207"></a>    <span class="n">state</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span>
+</span><span id="gbfs_toolkit.station_state--source--__span-0-208"><a id="gbfs_toolkit.station_state--source--__codelineno-0-208" name="gbfs_toolkit.station_state--source--__codelineno-0-208"></a>        <span class="o">~</span><span class="n">renting</span> <span class="o">&amp;</span> <span class="o">~</span><span class="n">returning</span><span class="p">,</span>
+</span><span id="gbfs_toolkit.station_state--source--__span-0-209"><a id="gbfs_toolkit.station_state--source--__codelineno-0-209" name="gbfs_toolkit.station_state--source--__codelineno-0-209"></a>        <span class="s2">"disabled"</span><span class="p">,</span>
+</span><span id="gbfs_toolkit.station_state--source--__span-0-210"><a id="gbfs_toolkit.station_state--source--__codelineno-0-210" name="gbfs_toolkit.station_state--source--__codelineno-0-210"></a>        <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span>
+</span><span id="gbfs_toolkit.station_state--source--__span-0-211"><a id="gbfs_toolkit.station_state--source--__codelineno-0-211" name="gbfs_toolkit.station_state--source--__codelineno-0-211"></a>            <span class="n">is_virtual</span><span class="p">,</span>
+</span><span id="gbfs_toolkit.station_state--source--__span-0-212"><a id="gbfs_toolkit.station_state--source--__codelineno-0-212" name="gbfs_toolkit.station_state--source--__codelineno-0-212"></a>            <span class="s2">"virtual"</span><span class="p">,</span>
+</span><span id="gbfs_toolkit.station_state--source--__span-0-213"><a id="gbfs_toolkit.station_state--source--__codelineno-0-213" name="gbfs_toolkit.station_state--source--__codelineno-0-213"></a>            <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">bikes</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">"empty"</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">docks</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">"full"</span><span class="p">,</span> <span class="s2">"normal"</span><span class="p">)),</span>
+</span><span id="gbfs_toolkit.station_state--source--__span-0-214"><a id="gbfs_toolkit.station_state--source--__codelineno-0-214" name="gbfs_toolkit.station_state--source--__codelineno-0-214"></a>        <span class="p">),</span>
+</span><span id="gbfs_toolkit.station_state--source--__span-0-215"><a id="gbfs_toolkit.station_state--source--__codelineno-0-215" name="gbfs_toolkit.station_state--source--__codelineno-0-215"></a>    <span class="p">)</span>
+</span><span id="gbfs_toolkit.station_state--source--__span-0-216"><a id="gbfs_toolkit.station_state--source--__codelineno-0-216" name="gbfs_toolkit.station_state--source--__codelineno-0-216"></a>    <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span>
+</span><span id="gbfs_toolkit.station_state--source--__span-0-217"><a id="gbfs_toolkit.station_state--source--__codelineno-0-217" name="gbfs_toolkit.station_state--source--__codelineno-0-217"></a>        <span class="n">pd</span><span class="o">.</span><span class="n">Categorical</span><span class="p">(</span><span class="n">state</span><span class="p">,</span> <span class="n">categories</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="n">STATION_STATES</span><span class="p">)),</span>
+</span><span id="gbfs_toolkit.station_state--source--__span-0-218"><a id="gbfs_toolkit.station_state--source--__codelineno-0-218" name="gbfs_toolkit.station_state--source--__codelineno-0-218"></a>        <span class="n">index</span><span class="o">=</span><span class="n">availability</span><span class="o">.</span><span class="n">index</span><span class="p">,</span>
+</span><span id="gbfs_toolkit.station_state--source--__span-0-219"><a id="gbfs_toolkit.station_state--source--__codelineno-0-219" name="gbfs_toolkit.station_state--source--__codelineno-0-219"></a>        <span class="n">name</span><span class="o">=</span><span class="s2">"station_state"</span><span class="p">,</span>
+</span><span id="gbfs_toolkit.station_state--source--__span-0-220"><a id="gbfs_toolkit.station_state--source--__codelineno-0-220" name="gbfs_toolkit.station_state--source--__codelineno-0-220"></a>    <span class="p">)</span>
 </span></code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -6773,10 +6773,10 @@ because it reports zero docks.</p>
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.instant", "navigation.instant.progress", "navigation.tracking", "navigation.sections", "navigation.tabs", "navigation.tabs.sticky", "navigation.top", "navigation.indexes", "navigation.footer", "toc.follow", "search.suggest", "search.highlight", "search.share", "content.code.copy", "content.code.annotate", "content.tooltips"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.instant", "navigation.instant.progress", "navigation.tracking", "navigation.sections", "navigation.tabs", "navigation.tabs.sticky", "navigation.top", "navigation.indexes", "navigation.footer", "toc.follow", "search.suggest", "search.highlight", "search.share", "content.code.copy", "content.code.annotate", "content.tooltips"], "search": "../../../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
     
     
-      <script src="../../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../../../assets/javascripts/bundle.c21346df.min.js"></script>
       
         <script src="../../../javascripts/mathjax.js"></script>
       
