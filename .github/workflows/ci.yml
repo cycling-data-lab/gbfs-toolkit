@@ -20,6 +20,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
       - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         with:
           python-version: "3.12"
@@ -39,6 +41,9 @@ jobs:
           tests/test_v170_consistency.py
           tests/test_v170_io_consistency.py
           tests/test_input_purity.py
+          tests/test_no_optional_dep_leak.py
+          tests/test_version.py
+          tests/test_public_api.py
 
   test:
     name: Test (${{ matrix.os }}, py${{ matrix.python-version }})
@@ -47,7 +52,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-latest]
-        python-version: ["3.10", "3.11", "3.12", "3.13"]
+        python-version: ["3.10", "3.11", "3.12", "3.13", "3.14"]
         # Also check the geospatial extras compile on Windows and macOS.
         include:
           - os: windows-latest
@@ -56,6 +61,8 @@ jobs:
             python-version: "3.12"
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
       - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         with:
           python-version: ${{ matrix.python-version }}
@@ -73,26 +80,9 @@ jobs:
         run: deptry src
       - name: Tests
         run: pytest -q --cov=gbfs_toolkit --cov-report=term-missing --cov-fail-under=85
+      # Every docstring example in the package (network-only illustrations carry no `>>>`).
       - name: Doctests
-        run: >
-          pytest -q --doctest-modules
-          src/gbfs_toolkit/interfaces/datasets.py
-          src/gbfs_toolkit/analytics/frames.py
-          src/gbfs_toolkit/analytics/temporal.py
-          src/gbfs_toolkit/analytics/distribution.py
-          src/gbfs_toolkit/analytics/dynamics.py
-          src/gbfs_toolkit/analytics/resampling.py
-          src/gbfs_toolkit/analytics/service.py
-          src/gbfs_toolkit/analytics/agreement.py
-          src/gbfs_toolkit/analytics/fleet.py
-          src/gbfs_toolkit/analytics/clustering.py
-          src/gbfs_toolkit/audit/static.py
-          src/gbfs_toolkit/audit/dynamic.py
-          src/gbfs_toolkit/audit/__init__.py
-          src/gbfs_toolkit/audit/governance.py
-          src/gbfs_toolkit/io/timeseries.py
-          src/gbfs_toolkit/spatial/analytics.py
-          src/gbfs_toolkit/spatial/geometry.py
+        run: pytest -q --doctest-modules src/gbfs_toolkit
       - name: Type check (mypy)
         if: runner.os == 'Linux' && matrix.python-version == '3.12'
         run: mypy
@@ -108,6 +98,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
       - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         with:
           python-version: "3.10"
@@ -121,7 +113,7 @@ jobs:
           pytest -q
           tests/test_v160.py tests/test_v162_fixes.py tests/test_v170_consistency.py
           tests/test_v170_io_consistency.py tests/test_input_purity.py
-          tests/test_no_optional_dep_leak.py
+          tests/test_no_optional_dep_leak.py tests/test_version.py
 
   nightly-deps:
     name: Nightly numpy/pandas/scipy (informational)
@@ -129,6 +121,8 @@ jobs:
     continue-on-error: true  # an early warning of future breakage, not a gate
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
       - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         with:
           python-version: "3.13"
@@ -148,6 +142,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
       - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         with:
           python-version: "3.12"
@@ -162,16 +158,49 @@ jobs:
           name: benchmark-results
           path: benchmark.json
 
+  docs:
+    name: Docs (strict build)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.12"
+      - run: pip install -e ".[docs]"
+      # Broken cross-references, missing pages and unresolved API objects fail the PR,
+      # not the deploy that follows the merge.
+      - run: mkdocs build --strict
+        env:
+          NO_MKDOCS_2_WARNING: "1"
+          DISABLE_MKDOCS_2_WARNING: "true"
+
   build:
     name: Build sdist + wheel
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
       - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         with:
           python-version: "3.12"
-      - run: pip install build
+      - run: pip install build twine
       - run: python -m build
+      - name: Check the distributions (metadata, README rendering, wheel content)
+        run: |
+          twine check --strict dist/*
+          python scripts/check_dist.py dist
+      # Install the wheel alone in a fresh environment, from outside the source tree, and
+      # check what a user gets: the version from metadata, py.typed, the CLI entry point.
+      - name: Install the wheel and import it
+        run: |
+          python -m venv /tmp/wheel-env
+          /tmp/wheel-env/bin/pip install dist/*.whl
+          cd /tmp
+          /tmp/wheel-env/bin/python -I -c "import importlib.metadata as m, pathlib, gbfs_toolkit as gb; assert gb.__version__ == m.version('gbfs-toolkit'), gb.__version__; assert (pathlib.Path(gb.__file__).parent / 'py.typed').is_file(); print(gb.__version__)"
+          /tmp/wheel-env/bin/gbfs --help > /dev/null
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: dist
