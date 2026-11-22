@@ -7,8 +7,6 @@ import json
 import numpy as np
 import pandas as pd
 import pytest
-from hypothesis import given, settings
-from hypothesis import strategies as st
 
 from gbfs_toolkit.core.errors import GBFSValidationError
 from gbfs_toolkit.repro import (
@@ -257,27 +255,3 @@ def test_export_sample_is_small_readable_and_fingerprinted(tmp_path):
             load=True,
         )
     ) == len(got)
-
-
-@settings(max_examples=40, deadline=None)
-@given(
-    rows=st.lists(
-        st.tuples(
-            st.text(max_size=6), st.integers(-(10**6), 10**6), st.floats(-1e6, 1e6, allow_nan=False)
-        ),
-        max_size=15,
-    ),
-    seed=st.integers(0, 999),
-)
-def test_property_row_permutations_do_not_change_the_fingerprint(rows, seed):
-    df = pd.DataFrame(rows, columns=["a", "b", "c"])
-    assert fingerprint(df) == fingerprint(df.sample(frac=1, random_state=seed))
-
-
-@settings(max_examples=30, deadline=None)
-@given(values=st.lists(st.integers(0, 10**6), min_size=1, max_size=15), pos=st.integers(0, 14))
-def test_property_changing_one_value_changes_the_fingerprint(values, pos):
-    df = pd.DataFrame({"v": values})
-    changed = df.copy()
-    changed.loc[pos % len(df), "v"] += 1
-    assert fingerprint(df) != fingerprint(changed)

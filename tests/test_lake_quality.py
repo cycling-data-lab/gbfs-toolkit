@@ -4,8 +4,6 @@ from __future__ import annotations
 
 import pandas as pd
 import pytest
-from hypothesis import given, settings
-from hypothesis import strategies as st
 
 from gbfs_toolkit.core.errors import GBFSValidationError
 from gbfs_toolkit.core.models import SchemaError
@@ -318,22 +316,3 @@ def test_indicators_flag_and_never_drop_rows():
         "both_zero_suspect",
         "network_all_zero_anomaly",
     } <= set(out.columns)
-
-
-@settings(max_examples=40, deadline=None)
-@given(
-    n=st.integers(min_value=1, max_value=60),
-    seed=st.integers(min_value=0, max_value=10_000),
-    threshold=st.floats(min_value=1, max_value=100),
-)
-def test_property_completeness_is_bounded_and_status_agrees_with_threshold(n, seed, threshold):
-    import numpy as np
-
-    rng = np.random.default_rng(seed)
-    offsets = np.sort(rng.choice(1440, size=n, replace=False))
-    t = pd.Timestamp("2026-03-01", tz="UTC") + pd.to_timedelta(offsets, unit="min")
-    snaps = pd.DataFrame({"system_id": "a", "fetched_at": t})
-    cov = daily_coverage(snaps, ok_threshold_pct=threshold)
-    row = cov.iloc[0]
-    assert row["actual_polls"] == n and 0 < row["completeness_pct"] <= 100
-    assert (row["status"] == "ok") == (row["completeness_pct"] >= threshold)

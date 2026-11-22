@@ -62,7 +62,10 @@ def test_missing_values_stay_missing_and_typed():
         "4",
     ]
     # never a 0 nor a True invented for a station that published nothing
-    assert not (out.loc[1, ["num_bikes_available", "num_docks_available"]].fillna(-1) >= 0).any()
+    nothing = out.loc[1]
+    assert all(
+        pd.isna(nothing[c]) for c in ("num_bikes_available", "num_docks_available", "is_renting")
+    )
 
 
 def test_missing_flags_are_not_defaulted_for_vehicles_either():
