@@ -164,7 +164,7 @@ ALERT_COLUMNS: list[str] = [
 STATION_TYPES: tuple[str, ...] = ("docked_bike", "free_floating", "carsharing")
 
 # ---------------------------------------------------------------------------
-# The semantic-audit taxonomy (audit-catalogue pipeline).
+# The semantic-audit taxonomy (Fossé & Pallares, gbfs-audit-catalogue).
 # Row-level: A1, A3, A4 (this particular station).
 # System-level: A2, A5, A6, A7 (every row of a flagged system carries the flag).
 # ---------------------------------------------------------------------------
