@@ -12,31 +12,31 @@
         <meta name="author" content="Rohan Fossé, Gaël Pallares">
       
       
-        <link rel="canonical" href="https://cycling-data-lab.github.io/gbfs-toolkit/dev/reference/core/generate_gbfs_parquet/">
+        <link rel="canonical" href="https://cycling-data-lab.github.io/gbfs-toolkit/dev/api-policy/">
       
       
-        <link rel="prev" href="../GBFSValidationError/">
+        <link rel="prev" href="../glossary/">
       
       
-        <link rel="next" href="../models/">
+        <link rel="next" href="../citing/">
       
       
         
       
       
-      <link rel="icon" href="../../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-ProperDocs 1.6.7, mkdocs-material-9.8.0">
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-ProperDocs 1.6.7, mkdocs-material-9.8.2">
     
     
       
-        <title>generate_gbfs_parquet - gbfs-toolkit</title>
+        <title>API policy - gbfs-toolkit</title>
       
     
     
-      <link rel="stylesheet" href="../../../assets/stylesheets/main.57a0d79d.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.57a0d79d.min.css">
       
         
-        <link rel="stylesheet" href="../../../assets/stylesheets/palette.fb2fffe2.min.css">
+        <link rel="stylesheet" href="../assets/stylesheets/palette.fb2fffe2.min.css">
       
       
 
@@ -55,11 +55,11 @@
       
     
     
-      <link rel="stylesheet" href="../../../assets/_mkdocstrings.css">
+      <link rel="stylesheet" href="../assets/_mkdocstrings.css">
     
-      <link rel="stylesheet" href="../../../stylesheets/extra.css">
+      <link rel="stylesheet" href="../stylesheets/extra.css">
     
-    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
 
@@ -84,7 +84,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#generate_gbfs_parquet" class="md-skip">
+        <a href="#api-policy" class="md-skip">
           Skip to content
         </a>
       
@@ -104,7 +104,7 @@
 
 <header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="../../.." title="gbfs-toolkit" class="md-header__button md-logo" aria-label="gbfs-toolkit" data-md-component="logo">
+    <a href=".." title="gbfs-toolkit" class="md-header__button md-logo" aria-label="gbfs-toolkit" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M5 20.5A3.5 3.5 0 0 1 1.5 17 3.5 3.5 0 0 1 5 13.5 3.5 3.5 0 0 1 8.5 17 3.5 3.5 0 0 1 5 20.5M5 12a5 5 0 0 0-5 5 5 5 0 0 0 5 5 5 5 0 0 0 5-5 5 5 0 0 0-5-5m9.8-2H19V8.2h-3.2l-1.94-3.27c-.29-.5-.86-.83-1.46-.83-.47 0-.9.19-1.2.5L7.5 8.29C7.19 8.6 7 9 7 9.5c0 .63.33 1.16.85 1.47L11.2 13v5H13v-6.5l-2.25-1.65 2.32-2.35m5.93 13a3.5 3.5 0 0 1-3.5-3.5 3.5 3.5 0 0 1 3.5-3.5 3.5 3.5 0 0 1 3.5 3.5 3.5 3.5 0 0 1-3.5 3.5m0-8.5a5 5 0 0 0-5 5 5 5 0 0 0 5 5 5 5 0 0 0 5-5 5 5 0 0 0-5-5m-3-7.2c1 0 1.8-.8 1.8-1.8S17 1.2 16 1.2 14.2 2 14.2 3 15 4.8 16 4.8"/></svg>
@@ -124,7 +124,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              generate_gbfs_parquet
+              API policy
             
           </span>
         </div>
@@ -236,7 +236,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="../../.." class="md-tabs__link">
+      <a href=".." class="md-tabs__link">
         
   
   
@@ -257,7 +257,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../../../getting-started/" class="md-tabs__link">
+        <a href="../getting-started/" class="md-tabs__link">
           
   
   
@@ -279,7 +279,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../../../examples/" class="md-tabs__link">
+        <a href="../examples/" class="md-tabs__link">
           
   
   
@@ -297,13 +297,74 @@
   
   
   
+  
+    <li class="md-tabs__item">
+      <a href="../tutorial/" class="md-tabs__link">
+        
+  
+  
     
+  
+  Tutorial
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
   
   
     
     
-      <li class="md-tabs__item md-tabs__item--active">
-        <a href="../../" class="md-tabs__link">
+      <li class="md-tabs__item">
+        <a href="../recipes/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Recipes
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../lake/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Data lake (experimental)
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../reference/" class="md-tabs__link">
           
   
   
@@ -321,11 +382,13 @@
   
   
   
+    
+  
   
     
     
-      <li class="md-tabs__item">
-        <a href="../../../methodology/" class="md-tabs__link">
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../methodology/" class="md-tabs__link">
           
   
   
@@ -347,7 +410,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../../../citing/" class="md-tabs__link">
+        <a href="../citing/" class="md-tabs__link">
           
   
   
@@ -389,7 +452,7 @@
 
 <nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="../../.." title="gbfs-toolkit" class="md-nav__button md-logo" aria-label="gbfs-toolkit" data-md-component="logo">
+    <a href=".." title="gbfs-toolkit" class="md-nav__button md-logo" aria-label="gbfs-toolkit" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M5 20.5A3.5 3.5 0 0 1 1.5 17 3.5 3.5 0 0 1 5 13.5 3.5 3.5 0 0 1 8.5 17 3.5 3.5 0 0 1 5 20.5M5 12a5 5 0 0 0-5 5 5 5 0 0 0 5 5 5 5 0 0 0 5-5 5 5 0 0 0-5-5m9.8-2H19V8.2h-3.2l-1.94-3.27c-.29-.5-.86-.83-1.46-.83-.47 0-.9.19-1.2.5L7.5 8.29C7.19 8.6 7 9 7 9.5c0 .63.33 1.16.85 1.47L11.2 13v5H13v-6.5l-2.25-1.65 2.32-2.35m5.93 13a3.5 3.5 0 0 1-3.5-3.5 3.5 3.5 0 0 1 3.5-3.5 3.5 3.5 0 0 1 3.5 3.5 3.5 3.5 0 0 1-3.5 3.5m0-8.5a5 5 0 0 0-5 5 5 5 0 0 0 5 5 5 5 0 0 0 5-5 5 5 0 0 0-5-5m-3-7.2c1 0 1.8-.8 1.8-1.8S17 1.2 16 1.2 14.2 2 14.2 3 15 4.8 16 4.8"/></svg>
@@ -419,7 +482,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../.." class="md-nav__link">
+      <a href=".." class="md-nav__link">
         
   
   
@@ -504,7 +567,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../getting-started/" class="md-nav__link">
+      <a href="../getting-started/" class="md-nav__link">
         
   
   
@@ -532,7 +595,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../guide/" class="md-nav__link">
+      <a href="../guide/" class="md-nav__link">
         
   
   
@@ -641,7 +704,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../examples/" class="md-nav__link">
+      <a href="../examples/" class="md-nav__link">
         
   
   
@@ -669,7 +732,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../examples/01-audit-a-feed/" class="md-nav__link">
+      <a href="../examples/01-audit-a-feed/" class="md-nav__link">
         
   
   
@@ -697,7 +760,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../examples/02-collect-a-snapshot/" class="md-nav__link">
+      <a href="../examples/02-collect-a-snapshot/" class="md-nav__link">
         
   
   
@@ -725,7 +788,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../examples/03-analyze-history/" class="md-nav__link">
+      <a href="../examples/03-analyze-history/" class="md-nav__link">
         
   
   
@@ -753,7 +816,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../examples/04-equity-and-coverage/" class="md-nav__link">
+      <a href="../examples/04-equity-and-coverage/" class="md-nav__link">
         
   
   
@@ -781,7 +844,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../examples/05-rigorous-audit/" class="md-nav__link">
+      <a href="../examples/05-rigorous-audit/" class="md-nav__link">
         
   
   
@@ -809,7 +872,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../examples/07-free-floating-fleets/" class="md-nav__link">
+      <a href="../examples/07-free-floating-fleets/" class="md-nav__link">
         
   
   
@@ -837,7 +900,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../examples/08-service-reliability/" class="md-nav__link">
+      <a href="../examples/08-service-reliability/" class="md-nav__link">
         
   
   
@@ -865,7 +928,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../examples/09-contextualize/" class="md-nav__link">
+      <a href="../examples/09-contextualize/" class="md-nav__link">
         
   
   
@@ -893,7 +956,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../examples/10-macro-scale-audit/" class="md-nav__link">
+      <a href="../examples/10-macro-scale-audit/" class="md-nav__link">
         
   
   
@@ -925,7 +988,32 @@
       
   
   
+  
+  
+    <li class="md-nav__item">
+      <a href="../tutorial/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
     
+  
+    Tutorial
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
   
   
   
@@ -944,33 +1032,600 @@
       
         
       
-        
-      
-        
-      
-        
-      
     
     
     
-      
-        
-        
       
       
         
       
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../" class="md-nav__link ">
+            <a href="../recipes/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Recipes
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_5" id="__nav_5_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Recipes
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../recipes/check-collection-quality/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Check the quality of a collection
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../recipes/aggregate-a-month/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Aggregate a month of snapshots
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../recipes/freeze-for-zenodo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Freeze a version for Zenodo
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../recipes/read-published-trips/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Read published trips
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../lake/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Data lake (experimental)
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_6" id="__nav_6_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Data lake (experimental)
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lake/collect/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    collect
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lake/store/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    store
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lake/quality/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    quality
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lake/aggregate/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    aggregate
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lake/history/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    history
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lake/stations-match/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    stations.match
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lake/trips/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    trips
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lake/release/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    release
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lake/repro/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    repro
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lake/cli/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Command line
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../reference/" class="md-nav__link ">
               
   
   
@@ -988,14 +1643,14 @@
             </a>
             
               
-              <label class="md-nav__link " for="__nav_4" id="__nav_4_label" tabindex="">
+              <label class="md-nav__link " for="__nav_7" id="__nav_7_label" tabindex="0">
                 <span class="md-nav__icon md-icon"></span>
               </label>
             
           </div>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
-          <label class="md-nav__title" for="__nav_4">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -1014,7 +1669,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../data-model/" class="md-nav__link">
+      <a href="../data-model/" class="md-nav__link">
         
   
   
@@ -1039,24 +1694,10 @@
                 
   
   
-    
   
   
-  
     
     
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
       
         
       
@@ -1091,21 +1732,18 @@
     
       
       
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_3" >
         
           
-          
-        
-      
-    
-    
-    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
-      
-        
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_3" checked>
-        
-          
-          <label class="md-nav__link" for="__nav_4_3" id="__nav_4_3_label" tabindex="">
+          <label class="md-nav__link" for="__nav_7_3" id="__nav_7_3_label" tabindex="0">
             
   
   
@@ -1123,8 +1761,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_3_label" aria-expanded="true">
-          <label class="md-nav__title" for="__nav_4_3">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_7_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_3">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -1141,7 +1779,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../__version__/" class="md-nav__link">
+      <a href="../reference/core/__version__/" class="md-nav__link">
         
   
   
@@ -1169,7 +1807,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../AUDIT_FLAGS/" class="md-nav__link">
+      <a href="../reference/core/AUDIT_FLAGS/" class="md-nav__link">
         
   
   
@@ -1197,35 +1835,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../calibrate_city/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    calibrate_city
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../coerce_schema/" class="md-nav__link">
+      <a href="../reference/core/coerce_schema/" class="md-nav__link">
         
   
   
@@ -1253,63 +1863,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../compute_footprint/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    compute_footprint
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../export_ml_dataset/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    export_ml_dataset
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../GBFSDiscoveryError/" class="md-nav__link">
+      <a href="../reference/core/GBFSDiscoveryError/" class="md-nav__link">
         
   
   
@@ -1337,7 +1891,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../GBFSError/" class="md-nav__link">
+      <a href="../reference/core/GBFSError/" class="md-nav__link">
         
   
   
@@ -1365,7 +1919,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../GBFSFetchError/" class="md-nav__link">
+      <a href="../reference/core/GBFSFetchError/" class="md-nav__link">
         
   
   
@@ -1393,7 +1947,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../GBFSNotModified/" class="md-nav__link">
+      <a href="../reference/core/GBFSNotModified/" class="md-nav__link">
         
   
   
@@ -1421,7 +1975,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../GBFSValidationError/" class="md-nav__link">
+      <a href="../reference/core/GBFSValidationError/" class="md-nav__link">
         
   
   
@@ -1446,96 +2000,10 @@
                 
   
   
-    
-  
-  
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    generate_gbfs_parquet
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    generate_gbfs_parquet
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#gbfs_toolkit.generate_gbfs_parquet" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;generate_gbfs_parquet
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
   
   
     <li class="md-nav__item">
-      <a href="../models/" class="md-nav__link">
+      <a href="../reference/core/models/" class="md-nav__link">
         
   
   
@@ -1563,7 +2031,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../require_columns/" class="md-nav__link">
+      <a href="../reference/core/require_columns/" class="md-nav__link">
         
   
   
@@ -1591,7 +2059,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../RULES/" class="md-nav__link">
+      <a href="../reference/core/RULES/" class="md-nav__link">
         
   
   
@@ -1619,7 +2087,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../SchemaError/" class="md-nav__link">
+      <a href="../reference/core/SchemaError/" class="md-nav__link">
         
   
   
@@ -1647,7 +2115,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../SCHEMAS/" class="md-nav__link">
+      <a href="../reference/core/SCHEMAS/" class="md-nav__link">
         
   
   
@@ -1675,63 +2143,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../SimConfig/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    SimConfig
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../simulate_city_flows/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    simulate_city_flows
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../validate_schema/" class="md-nav__link">
+      <a href="../reference/core/validate_schema/" class="md-nav__link">
         
   
   
@@ -1845,20 +2257,17 @@
       
       
         
-          
-          
-        
       
     
     
-    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_4" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_4" >
         
           
-          <label class="md-nav__link" for="__nav_4_4" id="__nav_4_4_label" tabindex="">
+          <label class="md-nav__link" for="__nav_7_4" id="__nav_7_4_label" tabindex="0">
             
   
   
@@ -1876,8 +2285,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_4_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_4_4">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_7_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_4">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -1894,7 +2303,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../io/add_local_time/" class="md-nav__link">
+      <a href="../reference/io/add_local_time/" class="md-nav__link">
         
   
   
@@ -1922,7 +2331,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../io/append_to_parquet/" class="md-nav__link">
+      <a href="../reference/io/append_to_parquet/" class="md-nav__link">
         
   
   
@@ -1950,7 +2359,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../io/audit_feed/" class="md-nav__link">
+      <a href="../reference/io/audit_feed/" class="md-nav__link">
         
   
   
@@ -1978,7 +2387,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../io/availability/" class="md-nav__link">
+      <a href="../reference/io/availability/" class="md-nav__link">
         
   
   
@@ -2006,7 +2415,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../io/build_availability_panel/" class="md-nav__link">
+      <a href="../reference/io/build_availability_panel/" class="md-nav__link">
         
   
   
@@ -2034,7 +2443,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../io/build_session/" class="md-nav__link">
+      <a href="../reference/io/build_session/" class="md-nav__link">
         
   
   
@@ -2062,7 +2471,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../io/calculate_net_flow/" class="md-nav__link">
+      <a href="../reference/io/calculate_net_flow/" class="md-nav__link">
         
   
   
@@ -2090,7 +2499,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../io/coverage_report/" class="md-nav__link">
+      <a href="../reference/io/coverage_report/" class="md-nav__link">
         
   
   
@@ -2118,7 +2527,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../io/detect_frozen_stations/" class="md-nav__link">
+      <a href="../reference/io/detect_frozen_stations/" class="md-nav__link">
         
   
   
@@ -2146,7 +2555,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../io/extract_snapshot_asof/" class="md-nav__link">
+      <a href="../reference/io/extract_snapshot_asof/" class="md-nav__link">
         
   
   
@@ -2174,7 +2583,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../io/FeedResponse/" class="md-nav__link">
+      <a href="../reference/io/FeedResponse/" class="md-nav__link">
         
   
   
@@ -2202,7 +2611,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../io/fetch_feed_json/" class="md-nav__link">
+      <a href="../reference/io/fetch_feed_json/" class="md-nav__link">
         
   
   
@@ -2230,7 +2639,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../io/fetch_multiple/" class="md-nav__link">
+      <a href="../reference/io/fetch_multiple/" class="md-nav__link">
         
   
   
@@ -2258,7 +2667,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../io/filter_catalog/" class="md-nav__link">
+      <a href="../reference/io/filter_catalog/" class="md-nav__link">
         
   
   
@@ -2286,7 +2695,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../io/flow_balance/" class="md-nav__link">
+      <a href="../reference/io/flow_balance/" class="md-nav__link">
         
   
   
@@ -2314,7 +2723,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../io/GBFSFeed/" class="md-nav__link">
+      <a href="../reference/io/GBFSFeed/" class="md-nav__link">
         
   
   
@@ -2342,7 +2751,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../io/generate_manifest/" class="md-nav__link">
+      <a href="../reference/io/generate_manifest/" class="md-nav__link">
         
   
   
@@ -2370,7 +2779,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../io/insert_explicit_gaps/" class="md-nav__link">
+      <a href="../reference/io/insert_explicit_gaps/" class="md-nav__link">
         
   
   
@@ -2398,7 +2807,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../io/normalize_operator/" class="md-nav__link">
+      <a href="../reference/io/normalize_operator/" class="md-nav__link">
         
   
   
@@ -2426,7 +2835,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../io/parse_discovery/" class="md-nav__link">
+      <a href="../reference/io/parse_discovery/" class="md-nav__link">
         
   
   
@@ -2454,7 +2863,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../io/resample_panel/" class="md-nav__link">
+      <a href="../reference/io/resample_panel/" class="md-nav__link">
         
   
   
@@ -2482,7 +2891,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../io/resolve/" class="md-nav__link">
+      <a href="../reference/io/resolve/" class="md-nav__link">
         
   
   
@@ -2510,7 +2919,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../io/stockout_episodes/" class="md-nav__link">
+      <a href="../reference/io/stockout_episodes/" class="md-nav__link">
         
   
   
@@ -2538,7 +2947,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../io/systems_catalog/" class="md-nav__link">
+      <a href="../reference/io/systems_catalog/" class="md-nav__link">
         
   
   
@@ -2566,7 +2975,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../io/to_canonical_alerts/" class="md-nav__link">
+      <a href="../reference/io/to_canonical_alerts/" class="md-nav__link">
         
   
   
@@ -2594,7 +3003,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../io/to_canonical_pricing_plans/" class="md-nav__link">
+      <a href="../reference/io/to_canonical_pricing_plans/" class="md-nav__link">
         
   
   
@@ -2622,7 +3031,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../io/to_canonical_station_info/" class="md-nav__link">
+      <a href="../reference/io/to_canonical_station_info/" class="md-nav__link">
         
   
   
@@ -2650,7 +3059,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../io/to_canonical_station_status/" class="md-nav__link">
+      <a href="../reference/io/to_canonical_station_status/" class="md-nav__link">
         
   
   
@@ -2678,7 +3087,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../io/to_canonical_station_vehicle_counts/" class="md-nav__link">
+      <a href="../reference/io/to_canonical_station_vehicle_counts/" class="md-nav__link">
         
   
   
@@ -2706,7 +3115,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../io/to_canonical_system_information/" class="md-nav__link">
+      <a href="../reference/io/to_canonical_system_information/" class="md-nav__link">
         
   
   
@@ -2734,7 +3143,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../io/to_canonical_system_regions/" class="md-nav__link">
+      <a href="../reference/io/to_canonical_system_regions/" class="md-nav__link">
         
   
   
@@ -2762,7 +3171,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../io/to_canonical_vehicle_types/" class="md-nav__link">
+      <a href="../reference/io/to_canonical_vehicle_types/" class="md-nav__link">
         
   
   
@@ -2790,7 +3199,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../io/to_canonical_vehicles/" class="md-nav__link">
+      <a href="../reference/io/to_canonical_vehicles/" class="md-nav__link">
         
   
   
@@ -2818,7 +3227,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../io/to_wide_matrix/" class="md-nav__link">
+      <a href="../reference/io/to_wide_matrix/" class="md-nav__link">
         
   
   
@@ -2846,7 +3255,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../io/turnover/" class="md-nav__link">
+      <a href="../reference/io/turnover/" class="md-nav__link">
         
   
   
@@ -2990,20 +3399,17 @@
       
       
         
-          
-          
-        
       
     
     
-    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_5" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_5" >
         
           
-          <label class="md-nav__link" for="__nav_4_5" id="__nav_4_5_label" tabindex="">
+          <label class="md-nav__link" for="__nav_7_5" id="__nav_7_5_label" tabindex="0">
             
   
   
@@ -3021,8 +3427,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_5_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_4_5">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_7_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_5">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -3039,7 +3445,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../analytics/aliasing_vulnerability/" class="md-nav__link">
+      <a href="../reference/analytics/aliasing_vulnerability/" class="md-nav__link">
         
   
   
@@ -3067,7 +3473,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../analytics/availability_stats/" class="md-nav__link">
+      <a href="../reference/analytics/availability_stats/" class="md-nav__link">
         
   
   
@@ -3095,7 +3501,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../analytics/availability_synchrony/" class="md-nav__link">
+      <a href="../reference/analytics/availability_synchrony/" class="md-nav__link">
         
   
   
@@ -3123,7 +3529,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../analytics/block_bootstrap_ci/" class="md-nav__link">
+      <a href="../reference/analytics/block_bootstrap_ci/" class="md-nav__link">
         
   
   
@@ -3151,7 +3557,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../analytics/boundary_stress/" class="md-nav__link">
+      <a href="../reference/analytics/boundary_stress/" class="md-nav__link">
         
   
   
@@ -3179,7 +3585,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../analytics/capacity_utilization/" class="md-nav__link">
+      <a href="../reference/analytics/capacity_utilization/" class="md-nav__link">
         
   
   
@@ -3207,7 +3613,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../analytics/censored_time_ratio/" class="md-nav__link">
+      <a href="../reference/analytics/censored_time_ratio/" class="md-nav__link">
         
   
   
@@ -3235,7 +3641,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../analytics/cluster_diurnal_profiles/" class="md-nav__link">
+      <a href="../reference/analytics/cluster_diurnal_profiles/" class="md-nav__link">
         
   
   
@@ -3263,7 +3669,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../analytics/cluster_spatial/" class="md-nav__link">
+      <a href="../reference/analytics/cluster_spatial/" class="md-nav__link">
         
   
   
@@ -3291,7 +3697,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../analytics/cluster_spectral/" class="md-nav__link">
+      <a href="../reference/analytics/cluster_spectral/" class="md-nav__link">
         
   
   
@@ -3319,7 +3725,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../analytics/cohen_kappa/" class="md-nav__link">
+      <a href="../reference/analytics/cohen_kappa/" class="md-nav__link">
         
   
   
@@ -3347,7 +3753,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../analytics/compare_systems/" class="md-nav__link">
+      <a href="../reference/analytics/compare_systems/" class="md-nav__link">
         
   
   
@@ -3375,7 +3781,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../analytics/concentration_metrics/" class="md-nav__link">
+      <a href="../reference/analytics/concentration_metrics/" class="md-nav__link">
         
   
   
@@ -3403,7 +3809,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../analytics/cumulative_imbalance/" class="md-nav__link">
+      <a href="../reference/analytics/cumulative_imbalance/" class="md-nav__link">
         
   
   
@@ -3431,7 +3837,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../analytics/cyclical_time_features/" class="md-nav__link">
+      <a href="../reference/analytics/cyclical_time_features/" class="md-nav__link">
         
   
   
@@ -3459,7 +3865,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../analytics/detect_ghost_vehicles/" class="md-nav__link">
+      <a href="../reference/analytics/detect_ghost_vehicles/" class="md-nav__link">
         
   
   
@@ -3487,7 +3893,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../analytics/diurnal_bimodality/" class="md-nav__link">
+      <a href="../reference/analytics/diurnal_bimodality/" class="md-nav__link">
         
   
   
@@ -3515,7 +3921,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../analytics/diurnal_profiles/" class="md-nav__link">
+      <a href="../reference/analytics/diurnal_profiles/" class="md-nav__link">
         
   
   
@@ -3543,7 +3949,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../analytics/diurnal_summary_stats/" class="md-nav__link">
+      <a href="../reference/analytics/diurnal_summary_stats/" class="md-nav__link">
         
   
   
@@ -3571,7 +3977,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../analytics/docking_pressure/" class="md-nav__link">
+      <a href="../reference/analytics/docking_pressure/" class="md-nav__link">
         
   
   
@@ -3599,7 +4005,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../analytics/dynamic_gini_index/" class="md-nav__link">
+      <a href="../reference/analytics/dynamic_gini_index/" class="md-nav__link">
         
   
   
@@ -3627,7 +4033,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../analytics/ebikes/" class="md-nav__link">
+      <a href="../reference/analytics/ebikes/" class="md-nav__link">
         
   
   
@@ -3655,7 +4061,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../analytics/effective_sample_size/" class="md-nav__link">
+      <a href="../reference/analytics/effective_sample_size/" class="md-nav__link">
         
   
   
@@ -3683,7 +4089,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../analytics/filter_vehicles/" class="md-nav__link">
+      <a href="../reference/analytics/filter_vehicles/" class="md-nav__link">
         
   
   
@@ -3711,7 +4117,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../analytics/fleet_turnover_proxy/" class="md-nav__link">
+      <a href="../reference/analytics/fleet_turnover_proxy/" class="md-nav__link">
         
   
   
@@ -3739,7 +4145,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../analytics/flow_asymmetry_ratio/" class="md-nav__link">
+      <a href="../reference/analytics/flow_asymmetry_ratio/" class="md-nav__link">
         
   
   
@@ -3767,7 +4173,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../analytics/format_paper_summary/" class="md-nav__link">
+      <a href="../reference/analytics/format_paper_summary/" class="md-nav__link">
         
   
   
@@ -3795,7 +4201,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../analytics/join_availability/" class="md-nav__link">
+      <a href="../reference/analytics/join_availability/" class="md-nav__link">
         
   
   
@@ -3823,7 +4229,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../analytics/join_exogenous_timeseries/" class="md-nav__link">
+      <a href="../reference/analytics/join_exogenous_timeseries/" class="md-nav__link">
         
   
   
@@ -3851,7 +4257,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../analytics/join_pricing/" class="md-nav__link">
+      <a href="../reference/analytics/join_pricing/" class="md-nav__link">
         
   
   
@@ -3879,7 +4285,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../analytics/join_vehicle_types/" class="md-nav__link">
+      <a href="../reference/analytics/join_vehicle_types/" class="md-nav__link">
         
   
   
@@ -3907,7 +4313,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../analytics/krippendorff_alpha/" class="md-nav__link">
+      <a href="../reference/analytics/krippendorff_alpha/" class="md-nav__link">
         
   
   
@@ -3935,7 +4341,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../analytics/label_diurnal_typology/" class="md-nav__link">
+      <a href="../reference/analytics/label_diurnal_typology/" class="md-nav__link">
         
   
   
@@ -3963,7 +4369,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../analytics/lorenz_curve/" class="md-nav__link">
+      <a href="../reference/analytics/lorenz_curve/" class="md-nav__link">
         
   
   
@@ -3991,7 +4397,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../analytics/network_changes/" class="md-nav__link">
+      <a href="../reference/analytics/network_changes/" class="md-nav__link">
         
   
   
@@ -4019,7 +4425,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../analytics/occupancy/" class="md-nav__link">
+      <a href="../reference/analytics/occupancy/" class="md-nav__link">
         
   
   
@@ -4047,7 +4453,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../analytics/outage_survival/" class="md-nav__link">
+      <a href="../reference/analytics/outage_survival/" class="md-nav__link">
         
   
   
@@ -4075,7 +4481,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../analytics/palma_ratio/" class="md-nav__link">
+      <a href="../reference/analytics/palma_ratio/" class="md-nav__link">
         
   
   
@@ -4103,7 +4509,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../analytics/rebalancing_tension/" class="md-nav__link">
+      <a href="../reference/analytics/rebalancing_tension/" class="md-nav__link">
         
   
   
@@ -4131,7 +4537,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../analytics/reconcile_fleet_state/" class="md-nav__link">
+      <a href="../reference/analytics/reconcile_fleet_state/" class="md-nav__link">
         
   
   
@@ -4159,7 +4565,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../analytics/service_reliability_index/" class="md-nav__link">
+      <a href="../reference/analytics/service_reliability_index/" class="md-nav__link">
         
   
   
@@ -4187,7 +4593,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../analytics/station_outage_rates/" class="md-nav__link">
+      <a href="../reference/analytics/station_outage_rates/" class="md-nav__link">
         
   
   
@@ -4215,7 +4621,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../analytics/station_state/" class="md-nav__link">
+      <a href="../reference/analytics/station_state/" class="md-nav__link">
         
   
   
@@ -4243,7 +4649,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../analytics/system_profile/" class="md-nav__link">
+      <a href="../reference/analytics/system_profile/" class="md-nav__link">
         
   
   
@@ -4271,7 +4677,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../analytics/temporal_autocorrelation/" class="md-nav__link">
+      <a href="../reference/analytics/temporal_autocorrelation/" class="md-nav__link">
         
   
   
@@ -4299,7 +4705,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../analytics/temporal_concentration/" class="md-nav__link">
+      <a href="../reference/analytics/temporal_concentration/" class="md-nav__link">
         
   
   
@@ -4327,7 +4733,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../analytics/temporal_context_features/" class="md-nav__link">
+      <a href="../reference/analytics/temporal_context_features/" class="md-nav__link">
         
   
   
@@ -4355,7 +4761,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../analytics/theil_index/" class="md-nav__link">
+      <a href="../reference/analytics/theil_index/" class="md-nav__link">
         
   
   
@@ -4383,7 +4789,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../analytics/vehicle_idle_time/" class="md-nav__link">
+      <a href="../reference/analytics/vehicle_idle_time/" class="md-nav__link">
         
   
   
@@ -4411,7 +4817,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../analytics/wilson_interval/" class="md-nav__link">
+      <a href="../reference/analytics/wilson_interval/" class="md-nav__link">
         
   
   
@@ -4477,26 +4883,25 @@
       
         
       
+        
+      
     
     
     
       
       
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_6" >
         
           
-          
-        
-      
-    
-    
-    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
-      
-        
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_6" >
-        
-          
-          <label class="md-nav__link" for="__nav_4_6" id="__nav_4_6_label" tabindex="">
+          <label class="md-nav__link" for="__nav_7_6" id="__nav_7_6_label" tabindex="0">
             
   
   
@@ -4514,8 +4919,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_6_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_4_6">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_7_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_6">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -4532,7 +4937,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../audit/audit_catalogue/" class="md-nav__link">
+      <a href="../reference/audit/audit_catalogue/" class="md-nav__link">
         
   
   
@@ -4560,7 +4965,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../audit/audit_dynamic/" class="md-nav__link">
+      <a href="../reference/audit/audit_dynamic/" class="md-nav__link">
         
   
   
@@ -4588,7 +4993,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../audit/audit_frames/" class="md-nav__link">
+      <a href="../reference/audit/audit_frames/" class="md-nav__link">
         
   
   
@@ -4616,7 +5021,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../audit/audit_sensitivity/" class="md-nav__link">
+      <a href="../reference/audit/audit_sensitivity/" class="md-nav__link">
         
   
   
@@ -4644,7 +5049,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../audit/audit_static/" class="md-nav__link">
+      <a href="../reference/audit/audit_static/" class="md-nav__link">
         
   
   
@@ -4672,7 +5077,35 @@
   
   
     <li class="md-nav__item">
-      <a href="../../audit/capacity_convention/" class="md-nav__link">
+      <a href="../reference/audit/AuditReport/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AuditReport
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reference/audit/capacity_convention/" class="md-nav__link">
         
   
   
@@ -4700,7 +5133,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../audit/classify_from_vehicle_types/" class="md-nav__link">
+      <a href="../reference/audit/classify_from_vehicle_types/" class="md-nav__link">
         
   
   
@@ -4728,7 +5161,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../audit/classify_from_virtual_station/" class="md-nav__link">
+      <a href="../reference/audit/classify_from_virtual_station/" class="md-nav__link">
         
   
   
@@ -4756,7 +5189,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../audit/drop_flagged/" class="md-nav__link">
+      <a href="../reference/audit/drop_flagged/" class="md-nav__link">
         
   
   
@@ -4784,7 +5217,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../audit/flag_rate_ci/" class="md-nav__link">
+      <a href="../reference/audit/flag_rate_ci/" class="md-nav__link">
         
   
   
@@ -4812,7 +5245,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../audit/flag_sentinel_coordinates/" class="md-nav__link">
+      <a href="../reference/audit/flag_sentinel_coordinates/" class="md-nav__link">
         
   
   
@@ -4840,7 +5273,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../audit/overcapacity_ratio/" class="md-nav__link">
+      <a href="../reference/audit/overcapacity_ratio/" class="md-nav__link">
         
   
   
@@ -4868,7 +5301,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../audit/reclassify_overcapacity/" class="md-nav__link">
+      <a href="../reference/audit/reclassify_overcapacity/" class="md-nav__link">
         
   
   
@@ -4896,7 +5329,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../audit/vehicle_id_persistence/" class="md-nav__link">
+      <a href="../reference/audit/vehicle_id_persistence/" class="md-nav__link">
         
   
   
@@ -5000,20 +5433,17 @@
       
       
         
-          
-          
-        
       
     
     
-    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_7" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_7" >
         
           
-          <label class="md-nav__link" for="__nav_4_7" id="__nav_4_7_label" tabindex="">
+          <label class="md-nav__link" for="__nav_7_7" id="__nav_7_7_label" tabindex="0">
             
   
   
@@ -5031,8 +5461,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_7_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_4_7">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_7_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_7">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -5049,7 +5479,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../spatial/band_limited_signal/" class="md-nav__link">
+      <a href="../reference/spatial/band_limited_signal/" class="md-nav__link">
         
   
   
@@ -5077,7 +5507,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../spatial/coverage_stats/" class="md-nav__link">
+      <a href="../reference/spatial/coverage_stats/" class="md-nav__link">
         
   
   
@@ -5105,7 +5535,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../spatial/degree_preserving_rewire/" class="md-nav__link">
+      <a href="../reference/spatial/degree_preserving_rewire/" class="md-nav__link">
         
   
   
@@ -5133,7 +5563,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../spatial/enrich_with_osm/" class="md-nav__link">
+      <a href="../reference/spatial/enrich_with_osm/" class="md-nav__link">
         
   
   
@@ -5161,7 +5591,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../spatial/fdr_adjust/" class="md-nav__link">
+      <a href="../reference/spatial/fdr_adjust/" class="md-nav__link">
         
   
   
@@ -5189,7 +5619,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../spatial/features_within/" class="md-nav__link">
+      <a href="../reference/spatial/features_within/" class="md-nav__link">
         
   
   
@@ -5217,7 +5647,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../spatial/filter_by_bbox/" class="md-nav__link">
+      <a href="../reference/spatial/filter_by_bbox/" class="md-nav__link">
         
   
   
@@ -5245,7 +5675,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../spatial/find_nearest_stations/" class="md-nav__link">
+      <a href="../reference/spatial/find_nearest_stations/" class="md-nav__link">
         
   
   
@@ -5273,7 +5703,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../spatial/GeoKDTree/" class="md-nav__link">
+      <a href="../reference/spatial/GeoKDTree/" class="md-nav__link">
         
   
   
@@ -5301,7 +5731,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../spatial/haversine_m/" class="md-nav__link">
+      <a href="../reference/spatial/haversine_m/" class="md-nav__link">
         
   
   
@@ -5329,7 +5759,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../spatial/knn_adjacency/" class="md-nav__link">
+      <a href="../reference/spatial/knn_adjacency/" class="md-nav__link">
         
   
   
@@ -5357,7 +5787,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../spatial/link_transit_stops/" class="md-nav__link">
+      <a href="../reference/spatial/link_transit_stops/" class="md-nav__link">
         
   
   
@@ -5385,7 +5815,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../spatial/local_morans_i/" class="md-nav__link">
+      <a href="../reference/spatial/local_morans_i/" class="md-nav__link">
         
   
   
@@ -5413,7 +5843,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../spatial/low_freq_basis/" class="md-nav__link">
+      <a href="../reference/spatial/low_freq_basis/" class="md-nav__link">
         
   
   
@@ -5441,7 +5871,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../spatial/morans_i/" class="md-nav__link">
+      <a href="../reference/spatial/morans_i/" class="md-nav__link">
         
   
   
@@ -5469,7 +5899,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../spatial/normalized_laplacian/" class="md-nav__link">
+      <a href="../reference/spatial/normalized_laplacian/" class="md-nav__link">
         
   
   
@@ -5497,7 +5927,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../spatial/permute_signal/" class="md-nav__link">
+      <a href="../reference/spatial/permute_signal/" class="md-nav__link">
         
   
   
@@ -5525,7 +5955,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../spatial/ripley_k/" class="md-nav__link">
+      <a href="../reference/spatial/ripley_k/" class="md-nav__link">
         
   
   
@@ -5553,7 +5983,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../spatial/spatial_center_of_mass/" class="md-nav__link">
+      <a href="../reference/spatial/spatial_center_of_mass/" class="md-nav__link">
         
   
   
@@ -5581,7 +6011,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../spatial/spatial_entropy/" class="md-nav__link">
+      <a href="../reference/spatial/spatial_entropy/" class="md-nav__link">
         
   
   
@@ -5609,7 +6039,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../spatial/spatial_outage_redundancy/" class="md-nav__link">
+      <a href="../reference/spatial/spatial_outage_redundancy/" class="md-nav__link">
         
   
   
@@ -5637,7 +6067,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../spatial/spectral_projection_r2/" class="md-nav__link">
+      <a href="../reference/spatial/spectral_projection_r2/" class="md-nav__link">
         
   
   
@@ -5665,7 +6095,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../spatial/station_surroundings/" class="md-nav__link">
+      <a href="../reference/spatial/station_surroundings/" class="md-nav__link">
         
   
   
@@ -5693,7 +6123,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../spatial/stations_near/" class="md-nav__link">
+      <a href="../reference/spatial/stations_near/" class="md-nav__link">
         
   
   
@@ -5721,7 +6151,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../spatial/to_canonical_geofencing/" class="md-nav__link">
+      <a href="../reference/spatial/to_canonical_geofencing/" class="md-nav__link">
         
   
   
@@ -5749,7 +6179,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../spatial/to_gdf/" class="md-nav__link">
+      <a href="../reference/spatial/to_gdf/" class="md-nav__link">
         
   
   
@@ -5777,7 +6207,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../spatial/to_geojson/" class="md-nav__link">
+      <a href="../reference/spatial/to_geojson/" class="md-nav__link">
         
   
   
@@ -5805,7 +6235,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../spatial/two_step_fca/" class="md-nav__link">
+      <a href="../reference/spatial/two_step_fca/" class="md-nav__link">
         
   
   
@@ -5833,7 +6263,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../spatial/zone_area_km2/" class="md-nav__link">
+      <a href="../reference/spatial/zone_area_km2/" class="md-nav__link">
         
   
   
@@ -5861,7 +6291,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../spatial/zones_for_points/" class="md-nav__link">
+      <a href="../reference/spatial/zones_for_points/" class="md-nav__link">
         
   
   
@@ -5905,26 +6335,265 @@
       
         
       
+        
+      
+        
+      
+        
+      
     
     
     
       
       
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_8" >
         
           
-          
+          <label class="md-nav__link" for="__nav_7_8" id="__nav_7_8_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Simulation (experimental)
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_7_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Simulation (experimental)
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reference/sim/calibrate_city/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    calibrate_city
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reference/sim/compute_footprint/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    compute_footprint
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reference/sim/export_ml_dataset/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    export_ml_dataset
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reference/sim/generate_gbfs_parquet/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    generate_gbfs_parquet
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reference/sim/SimConfig/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SimConfig
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reference/sim/simulate_city_flows/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    simulate_city_flows
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
         
       
     
     
-    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_8" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_9" >
         
           
-          <label class="md-nav__link" for="__nav_4_8" id="__nav_4_8_label" tabindex="">
+          <label class="md-nav__link" for="__nav_7_9" id="__nav_7_9_label" tabindex="0">
             
   
   
@@ -5942,8 +6611,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_8_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_4_8">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_7_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_9">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -5960,7 +6629,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../interfaces/load_example/" class="md-nav__link">
+      <a href="../reference/interfaces/load_example/" class="md-nav__link">
         
   
   
@@ -5988,7 +6657,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../interfaces/show_versions/" class="md-nav__link">
+      <a href="../reference/interfaces/show_versions/" class="md-nav__link">
         
   
   
@@ -6016,7 +6685,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../interfaces/simulate_city/" class="md-nav__link">
+      <a href="../reference/interfaces/simulate_city/" class="md-nav__link">
         
   
   
@@ -6056,8 +6725,10 @@
       
   
   
+    
   
   
+  
     
     
       
@@ -6067,23 +6738,28 @@
       
         
       
+        
+      
     
     
     
+      
+        
+        
       
       
         
       
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" checked>
         
           
-          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="">
             
   
   
@@ -6101,8 +6777,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_5">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_8">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -6119,7 +6795,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../methodology/" class="md-nav__link">
+      <a href="../methodology/" class="md-nav__link">
         
   
   
@@ -6147,7 +6823,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../human-validation/" class="md-nav__link">
+      <a href="../human-validation/" class="md-nav__link">
         
   
   
@@ -6175,7 +6851,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../glossary/" class="md-nav__link">
+      <a href="../glossary/" class="md-nav__link">
         
   
   
@@ -6191,6 +6867,147 @@
   
 
       </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API policy
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API policy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#what-is-public" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What is public
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#stability-levels" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Stability levels
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#deprecation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Deprecation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#errors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Errors
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#logging-and-output" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Logging and output
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#versions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Versions
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -6218,6 +7035,10 @@
       
         
       
+        
+      
+        
+      
     
     
     
@@ -6231,10 +7052,10 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" >
         
           
-          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="0">
             
   
   
@@ -6252,8 +7073,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_6">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -6270,7 +7091,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../citing/" class="md-nav__link">
+      <a href="../citing/" class="md-nav__link">
         
   
   
@@ -6298,7 +7119,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../contributing/" class="md-nav__link">
+      <a href="../contributing/" class="md-nav__link">
         
   
   
@@ -6326,7 +7147,63 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../changelog/" class="md-nav__link">
+      <a href="../releasing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Releasing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../roadmap/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Roadmap
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../changelog/" class="md-nav__link">
         
   
   
@@ -6381,10 +7258,65 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#gbfs_toolkit.generate_gbfs_parquet" class="md-nav__link">
+  <a href="#what-is-public" class="md-nav__link">
     <span class="md-ellipsis">
       
-        <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;generate_gbfs_parquet
+        What is public
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#stability-levels" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Stability levels
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#deprecation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Deprecation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#errors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Errors
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#logging-and-output" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Logging and output
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#versions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Versions
       
     </span>
   </a>
@@ -6411,117 +7343,120 @@
   
 
 
-<h1 id="generate_gbfs_parquet">generate_gbfs_parquet<a class="headerlink" href="#generate_gbfs_parquet" title="Permanent link">&para;</a></h1>
-
-
-<div class="doc doc-object doc-function">
-
-
-<h2 id="gbfs_toolkit.generate_gbfs_parquet" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <span class="doc doc-object-name doc-function-name">generate_gbfs_parquet</span>
-
-
-<a href="#gbfs_toolkit.generate_gbfs_parquet" class="headerlink" title="Permanent link">&para;</a></h2>
-<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">generate_gbfs_parquet</span><span class="p">(</span><span class="n">cfg</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-internal" title="&lt;code class=&quot;doc-symbol doc-symbol-heading doc-symbol-class&quot;&gt;&lt;/code&gt;            &lt;span class=&quot;doc doc-object-name doc-class-name&quot;&gt;SimConfig&lt;/span&gt;
-
-
-  &lt;span class=&quot;doc doc-labels&quot;&gt;
-      &lt;small class=&quot;doc doc-label doc-label-dataclass&quot;&gt;&lt;code&gt;dataclass&lt;/code&gt;&lt;/small&gt;
-  &lt;/span&gt; (&lt;code&gt;gbfs_toolkit.sim.flows.SimConfig&lt;/code&gt;)" href="../SimConfig/#gbfs_toolkit.SimConfig">SimConfig</a></span><span class="p">,</span> <span class="n">filepath</span><span class="p">:</span> <span class="n"><span title="str">str</span></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n"><span title="dict">dict</span></span>
+<h1 id="api-policy">API policy<a class="headerlink" href="#api-policy" title="Permanent link">&para;</a></h1>
+<p>What a release promises, how a change is announced, and what the library does when
+something goes wrong. The tests in <code>tests/test_public_api.py</code> and
+<code>tests/test_api_policy.py</code> guard it.</p>
+<h2 id="what-is-public">What is public<a class="headerlink" href="#what-is-public" title="Permanent link">&para;</a></h2>
+<p>The public API is every name in <code>gbfs_toolkit.__all__</code>, importable as <code>gbfs_toolkit.&lt;name&gt;</code>
+(<code>import gbfs_toolkit as gb</code>), plus the <code>gbfs</code> command line. The submodules
+(<code>gbfs_toolkit.io.timeseries</code>, <code>gbfs_toolkit.spatial.graph</code>, ...) are organised for the
+reader of the reference, and each declares its own <code>__all__</code>; the top-level names are the
+supported entry points. Anything else is internal and may change in any release:</p>
+<ul>
+<li>a name that starts with an underscore (<code>_stability</code>, <code>_require_pyarrow</code>, ...);</li>
+<li>the module <code>gbfs_toolkit.core.utils</code> (its helpers are shared plumbing, not API);</li>
+<li>the column order of a returned frame beyond the documented columns, and the exact text
+  of warnings and error messages.</li>
+</ul>
+<h2 id="stability-levels">Stability levels<a class="headerlink" href="#stability-levels" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Level</th>
+<th>Names</th>
+<th>Promise</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Stable</strong></td>
+<td>every public name not listed below</td>
+<td>Within a major version: same name, same parameters (an added keyword-only parameter with a default is allowed), same documented behaviour, same results on the same inputs. A change of result is announced in the changelog; a change of a documented contract waits for the next major version.</td>
+</tr>
+<tr>
+<td><strong>Experimental</strong></td>
+<td>the flow simulator and its compiler: <code>SimConfig</code>, <code>simulate_city_flows</code>, <code>generate_gbfs_parquet</code>, <code>export_ml_dataset</code>, <code>calibrate_city</code>, <code>compute_footprint</code></td>
+<td>May change, or go, in a minor release. Their docstrings carry an "Experimental" note. Simulated numbers have no external reference yet.</td>
+</tr>
+<tr>
+<td><strong>Experimental modules</strong></td>
+<td>the data-lake modules added in 2.1.0: <code>collect</code>, <code>history</code>, <code>quality</code>, <code>aggregate</code>, <code>store</code>, <code>stations.match</code>, <code>trips</code>, <code>release</code>, <code>repro</code>, and the <code>gbfs collect</code>, <code>quality</code>, <code>release</code> and <code>verify</code> commands</td>
+<td>Public, tested and documented, but names, parameters and output columns may change in a minor release while they are used on more systems. Import them by path (<code>from gbfs_toolkit import quality</code>): they are not re-exported at the top level. Their module docstrings carry an "Experimental" note. See the <a href="../roadmap/">roadmap</a> for how a module becomes stable.</td>
+</tr>
+</tbody>
+</table>
+<p>The experimental names are listed once, in <code>gbfs_toolkit/_stability.py</code> (<code>EXPERIMENTAL</code> for names,
+<code>EXPERIMENTAL_MODULES</code> for modules); a test checks that each one carries the note in its docstring.</p>
+<p>A <strong>change of default</strong> that the changelog lists under <em>Open points</em> follows the same road: the
+corrected behaviour is added as an option (off by default) in a minor release; a call whose result
+would differ and which leaves the option unset emits a <code>FutureWarning</code> that says the default changes in
+the next major release and how to choose now (<code>warn_default_change</code>, internal); the default changes in
+that major release. The warning is raised only where the two behaviours differ, and never when the option
+is given. <code>tests/test_open_points.py</code> checks it for each.</p>
+<p>A <strong>typed result</strong> (<code>AuditReport</code>) is a subclass of the type it replaces, so code written for the old
+type keeps working; the exception is an identity check on the exact class.</p>
+<p>A bug fix is not a breaking change, even when it changes a result: if a function's
+docstring promises something and the code did otherwise, the code is corrected. The
+changelog says so under <em>Fixed</em>, with the inputs for which the result moves. When
+correcting a result would break a verdict that published work already relies on, the
+default is kept, the behaviour is documented, and the correct one is offered as an
+option that is off by default (see the <em>Open points</em> in the changelog).</p>
+<h2 id="deprecation">Deprecation<a class="headerlink" href="#deprecation" title="Permanent link">&para;</a></h2>
+<p>A public name, parameter or behaviour is removed in three steps:</p>
+<ol>
+<li>A <strong>minor</strong> release deprecates it. The old way keeps working and emits a
+   <code>FutureWarning</code> that names the version that deprecated it, the removal and the
+   replacement. The changelog lists it under <em>Deprecated</em>.</li>
+<li>It stays for <strong>at least one further minor release</strong> and at least <strong>six months</strong>.</li>
+<li>The next <strong>major</strong> release removes it.</li>
+</ol>
+<p><code>FutureWarning</code> rather than <code>DeprecationWarning</code>, as in pandas: the second is hidden
+from end users by default, and the people who run an audit are rarely the ones who
+write the code.</p>
+<p>Inside the library, a deprecation is written with two helpers (from
+<code>gbfs_toolkit.core.utils</code>, internal): <code>warn_deprecated(...)</code> for a parameter or a
+behaviour, and the <code>@deprecated(since=..., alternative=...)</code> decorator for a function.
+Both produce the same message and add a "Deprecated" note to the reference page. To make
+a deprecation an error in your own test suite:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="n">warnings</span><span class="o">.</span><span class="n">simplefilter</span><span class="p">(</span><span class="s2">"error"</span><span class="p">,</span> <span class="ne">FutureWarning</span><span class="p">)</span>
 </span></code></pre></div>
-
-    <div class="doc doc-contents first">
-
-        <p>Run the simulation and export a compressed, canonical GBFS <code>station_status</code> Parquet.</p>
-<p>Ghost bikes are split into <code>num_bikes_disabled</code> (rentable count goes to
-<code>num_bikes_available</code>); a scraper failure drops the snapshot (a real gap), not a null value.
-Counts are downcast to nullable <code>Int16</code> and <code>station_id</code> to <code>category</code>.</p>
-
-
-            <details class="mkdocstrings-source">
-              <summary>Source code in <code>src/gbfs_toolkit/sim/export.py</code></summary>
-              <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-20">20</a></span>
-<span class="normal"><a href="#gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-21">21</a></span>
-<span class="normal"><a href="#gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-22">22</a></span>
-<span class="normal"><a href="#gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-23">23</a></span>
-<span class="normal"><a href="#gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-24">24</a></span>
-<span class="normal"><a href="#gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-25">25</a></span>
-<span class="normal"><a href="#gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-26">26</a></span>
-<span class="normal"><a href="#gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-27">27</a></span>
-<span class="normal"><a href="#gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-28">28</a></span>
-<span class="normal"><a href="#gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-29">29</a></span>
-<span class="normal"><a href="#gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-30">30</a></span>
-<span class="normal"><a href="#gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-31">31</a></span>
-<span class="normal"><a href="#gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-32">32</a></span>
-<span class="normal"><a href="#gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-33">33</a></span>
-<span class="normal"><a href="#gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-34">34</a></span>
-<span class="normal"><a href="#gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-35">35</a></span>
-<span class="normal"><a href="#gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-36">36</a></span>
-<span class="normal"><a href="#gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-37">37</a></span>
-<span class="normal"><a href="#gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-38">38</a></span>
-<span class="normal"><a href="#gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-39">39</a></span>
-<span class="normal"><a href="#gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-40">40</a></span>
-<span class="normal"><a href="#gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-41">41</a></span>
-<span class="normal"><a href="#gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-42">42</a></span>
-<span class="normal"><a href="#gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-43">43</a></span>
-<span class="normal"><a href="#gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-44">44</a></span>
-<span class="normal"><a href="#gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-45">45</a></span>
-<span class="normal"><a href="#gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-46">46</a></span>
-<span class="normal"><a href="#gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-47">47</a></span>
-<span class="normal"><a href="#gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-48">48</a></span>
-<span class="normal"><a href="#gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-49">49</a></span>
-<span class="normal"><a href="#gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-50">50</a></span>
-<span class="normal"><a href="#gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-51">51</a></span>
-<span class="normal"><a href="#gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-52">52</a></span>
-<span class="normal"><a href="#gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-53">53</a></span>
-<span class="normal"><a href="#gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-54">54</a></span>
-<span class="normal"><a href="#gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-55">55</a></span>
-<span class="normal"><a href="#gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-56">56</a></span>
-<span class="normal"><a href="#gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-57">57</a></span>
-<span class="normal"><a href="#gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-58">58</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="gbfs_toolkit.generate_gbfs_parquet--source--__span-0-20"><a id="gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-20" name="gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-20"></a><span class="k">def</span><span class="w"> </span><span class="nf">generate_gbfs_parquet</span><span class="p">(</span><span class="n">cfg</span><span class="p">:</span> <span class="n">SimConfig</span><span class="p">,</span> <span class="n">filepath</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
-</span><span id="gbfs_toolkit.generate_gbfs_parquet--source--__span-0-21"><a id="gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-21" name="gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-21"></a><span class="w">    </span><span class="sd">"""Run the simulation and export a compressed, canonical GBFS ``station_status`` Parquet.</span>
-</span><span id="gbfs_toolkit.generate_gbfs_parquet--source--__span-0-22"><a id="gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-22" name="gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-22"></a>
-</span><span id="gbfs_toolkit.generate_gbfs_parquet--source--__span-0-23"><a id="gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-23" name="gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-23"></a><span class="sd">    Ghost bikes are split into ``num_bikes_disabled`` (rentable count goes to</span>
-</span><span id="gbfs_toolkit.generate_gbfs_parquet--source--__span-0-24"><a id="gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-24" name="gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-24"></a><span class="sd">    ``num_bikes_available``); a scraper failure drops the snapshot (a real gap), not a null value.</span>
-</span><span id="gbfs_toolkit.generate_gbfs_parquet--source--__span-0-25"><a id="gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-25" name="gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-25"></a><span class="sd">    Counts are downcast to nullable ``Int16`` and ``station_id`` to ``category``.</span>
-</span><span id="gbfs_toolkit.generate_gbfs_parquet--source--__span-0-26"><a id="gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-26" name="gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-26"></a><span class="sd">    """</span>
-</span><span id="gbfs_toolkit.generate_gbfs_parquet--source--__span-0-27"><a id="gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-27" name="gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-27"></a>    <span class="n">info</span><span class="p">,</span> <span class="n">status</span> <span class="o">=</span> <span class="n">simulate_city_flows</span><span class="p">(</span><span class="n">cfg</span><span class="p">)</span>
-</span><span id="gbfs_toolkit.generate_gbfs_parquet--source--__span-0-28"><a id="gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-28" name="gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-28"></a>    <span class="n">ghost</span> <span class="o">=</span> <span class="n">info</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s2">"station_id"</span><span class="p">)[</span><span class="s2">"ghost_bikes"</span><span class="p">]</span>
-</span><span id="gbfs_toolkit.generate_gbfs_parquet--source--__span-0-29"><a id="gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-29" name="gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-29"></a>    <span class="n">df</span> <span class="o">=</span> <span class="n">status</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-</span><span id="gbfs_toolkit.generate_gbfs_parquet--source--__span-0-30"><a id="gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-30" name="gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-30"></a>    <span class="n">g</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">"station_id"</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">ghost</span><span class="p">)</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
-</span><span id="gbfs_toolkit.generate_gbfs_parquet--source--__span-0-31"><a id="gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-31" name="gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-31"></a>    <span class="n">total</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">"num_bikes_available"</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">(</span>
-</span><span id="gbfs_toolkit.generate_gbfs_parquet--source--__span-0-32"><a id="gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-32" name="gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-32"></a>        <span class="n">dtype</span><span class="o">=</span><span class="s2">"float64"</span>
-</span><span id="gbfs_toolkit.generate_gbfs_parquet--source--__span-0-33"><a id="gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-33" name="gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-33"></a>    <span class="p">)</span>  <span class="c1"># physical (incl. ghost), may be NaN</span>
-</span><span id="gbfs_toolkit.generate_gbfs_parquet--source--__span-0-34"><a id="gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-34" name="gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-34"></a>    <span class="n">capv</span> <span class="o">=</span> <span class="n">info</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s2">"station_id"</span><span class="p">)[</span><span class="s2">"capacity"</span><span class="p">]</span><span class="o">.</span><span class="n">reindex</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">"station_id"</span><span class="p">])</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
-</span><span id="gbfs_toolkit.generate_gbfs_parquet--source--__span-0-35"><a id="gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-35" name="gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-35"></a>    <span class="n">df</span><span class="p">[</span><span class="s2">"num_bikes_available"</span><span class="p">]</span> <span class="o">=</span> <span class="n">total</span> <span class="o">-</span> <span class="n">g</span>  <span class="c1"># rentable</span>
-</span><span id="gbfs_toolkit.generate_gbfs_parquet--source--__span-0-36"><a id="gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-36" name="gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-36"></a>    <span class="n">df</span><span class="p">[</span><span class="s2">"num_bikes_disabled"</span><span class="p">]</span> <span class="o">=</span> <span class="n">g</span>
-</span><span id="gbfs_toolkit.generate_gbfs_parquet--source--__span-0-37"><a id="gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-37" name="gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-37"></a>    <span class="n">df</span><span class="p">[</span><span class="s2">"num_docks_available"</span><span class="p">]</span> <span class="o">=</span> <span class="n">capv</span> <span class="o">-</span> <span class="n">total</span>
-</span><span id="gbfs_toolkit.generate_gbfs_parquet--source--__span-0-38"><a id="gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-38" name="gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-38"></a>    <span class="n">df</span><span class="p">[</span><span class="s2">"fetched_at"</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">"fetched_at"</span><span class="p">],</span> <span class="n">utc</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-</span><span id="gbfs_toolkit.generate_gbfs_parquet--source--__span-0-39"><a id="gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-39" name="gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-39"></a>    <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s2">"num_bikes_available"</span><span class="p">]</span><span class="o">.</span><span class="n">notna</span><span class="p">()]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>  <span class="c1"># scraper failure = missing snapshot</span>
-</span><span id="gbfs_toolkit.generate_gbfs_parquet--source--__span-0-40"><a id="gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-40" name="gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-40"></a>    <span class="n">df</span><span class="p">[</span><span class="s2">"station_id"</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">"station_id"</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s2">"category"</span><span class="p">)</span>
-</span><span id="gbfs_toolkit.generate_gbfs_parquet--source--__span-0-41"><a id="gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-41" name="gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-41"></a>    <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">"num_bikes_available"</span><span class="p">,</span> <span class="s2">"num_bikes_disabled"</span><span class="p">,</span> <span class="s2">"num_docks_available"</span><span class="p">):</span>
-</span><span id="gbfs_toolkit.generate_gbfs_parquet--source--__span-0-42"><a id="gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-42" name="gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-42"></a>        <span class="n">df</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">round</span><span class="p">()</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s2">"Int16"</span><span class="p">)</span>
-</span><span id="gbfs_toolkit.generate_gbfs_parquet--source--__span-0-43"><a id="gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-43" name="gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-43"></a>    <span class="n">keep</span> <span class="o">=</span> <span class="p">[</span>
-</span><span id="gbfs_toolkit.generate_gbfs_parquet--source--__span-0-44"><a id="gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-44" name="gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-44"></a>        <span class="s2">"system_id"</span><span class="p">,</span>
-</span><span id="gbfs_toolkit.generate_gbfs_parquet--source--__span-0-45"><a id="gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-45" name="gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-45"></a>        <span class="s2">"station_id"</span><span class="p">,</span>
-</span><span id="gbfs_toolkit.generate_gbfs_parquet--source--__span-0-46"><a id="gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-46" name="gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-46"></a>        <span class="s2">"fetched_at"</span><span class="p">,</span>
-</span><span id="gbfs_toolkit.generate_gbfs_parquet--source--__span-0-47"><a id="gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-47" name="gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-47"></a>        <span class="s2">"num_bikes_available"</span><span class="p">,</span>
-</span><span id="gbfs_toolkit.generate_gbfs_parquet--source--__span-0-48"><a id="gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-48" name="gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-48"></a>        <span class="s2">"num_bikes_disabled"</span><span class="p">,</span>
-</span><span id="gbfs_toolkit.generate_gbfs_parquet--source--__span-0-49"><a id="gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-49" name="gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-49"></a>        <span class="s2">"num_docks_available"</span><span class="p">,</span>
-</span><span id="gbfs_toolkit.generate_gbfs_parquet--source--__span-0-50"><a id="gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-50" name="gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-50"></a>        <span class="s2">"is_renting"</span><span class="p">,</span>
-</span><span id="gbfs_toolkit.generate_gbfs_parquet--source--__span-0-51"><a id="gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-51" name="gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-51"></a>        <span class="s2">"is_returning"</span><span class="p">,</span>
-</span><span id="gbfs_toolkit.generate_gbfs_parquet--source--__span-0-52"><a id="gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-52" name="gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-52"></a>        <span class="s2">"is_installed"</span><span class="p">,</span>
-</span><span id="gbfs_toolkit.generate_gbfs_parquet--source--__span-0-53"><a id="gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-53" name="gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-53"></a>        <span class="s2">"last_reported"</span><span class="p">,</span>
-</span><span id="gbfs_toolkit.generate_gbfs_parquet--source--__span-0-54"><a id="gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-54" name="gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-54"></a>        <span class="s2">"gbfs_version"</span><span class="p">,</span>
-</span><span id="gbfs_toolkit.generate_gbfs_parquet--source--__span-0-55"><a id="gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-55" name="gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-55"></a>    <span class="p">]</span>
-</span><span id="gbfs_toolkit.generate_gbfs_parquet--source--__span-0-56"><a id="gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-56" name="gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-56"></a>    <span class="n">df</span><span class="p">[</span><span class="n">keep</span><span class="p">]</span><span class="o">.</span><span class="n">to_parquet</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="n">engine</span><span class="o">=</span><span class="s2">"pyarrow"</span><span class="p">,</span> <span class="n">compression</span><span class="o">=</span><span class="s2">"snappy"</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-</span><span id="gbfs_toolkit.generate_gbfs_parquet--source--__span-0-57"><a id="gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-57" name="gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-57"></a>    <span class="n">info</span><span class="o">.</span><span class="n">to_parquet</span><span class="p">(</span><span class="n">filepath</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">".parquet"</span><span class="p">,</span> <span class="s2">"_meta.parquet"</span><span class="p">),</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-</span><span id="gbfs_toolkit.generate_gbfs_parquet--source--__span-0-58"><a id="gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-58" name="gbfs_toolkit.generate_gbfs_parquet--source--__codelineno-0-58"></a>    <span class="k">return</span> <span class="p">{</span><span class="s2">"rows"</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">),</span> <span class="s2">"bytes"</span><span class="p">:</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">getsize</span><span class="p">(</span><span class="n">filepath</span><span class="p">)}</span>
-</span></code></pre></div></td></tr></table></div>
-            </details>
-    </div>
-
-</div>
+<h2 id="errors">Errors<a class="headerlink" href="#errors" title="Permanent link">&para;</a></h2>
+<ul>
+<li><code>GBFSError</code> is the base of every problem with a feed or a frame: <code>GBFSFetchError</code>
+  (network, HTTP status), <code>GBFSDiscoveryError</code> (no usable <code>gbfs.json</code>),
+  <code>GBFSValidationError</code> (a frame that breaks the data model; <code>SchemaError</code> is its
+  subclass for a missing column or a wrong type, and is also a <code>ValueError</code>) and
+  <code>GBFSNotModified</code> (a conditional fetch that returned 304). <code>except GBFSError</code> catches
+  all of them.</li>
+<li>A column that a function needs and the frame lacks raises <code>SchemaError</code>. Where the
+  library once raised a bare <code>KeyError</code>, the error is still a <code>KeyError</code> as well, so
+  existing handlers keep working.</li>
+<li>An invalid argument value (an unknown <code>method=</code>, a <code>freq</code> that is not a fixed
+  frequency) raises <code>ValueError</code>, as in pandas and numpy.</li>
+<li>A missing optional dependency raises <code>ImportError</code> naming the extra to install
+  (<code>pip install gbfs-toolkit[cluster]</code>).</li>
+<li>A problem with one feed in a batch (<code>fetch_multiple</code>, <code>audit_catalogue</code>) is logged and
+  reported in the result, not raised, so one bad feed does not stop the others.</li>
+</ul>
+<h2 id="logging-and-output">Logging and output<a class="headerlink" href="#logging-and-output" title="Permanent link">&para;</a></h2>
+<p>The library never prints, except the <code>gbfs</code> command line and <code>show_versions</code>, whose job
+is to print. Everything else reports through the standard <code>logging</code> module,
+under the logger <code>gbfs_toolkit</code> (and its children, one per module). A library installs
+no handler of its own: nothing appears until your application asks.</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">)</span>        <span class="c1"># fetch progress, skipped feeds</span>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">"gbfs_toolkit"</span><span class="p">)</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">)</span>
+</span></code></pre></div>
+<p>Levels: <code>INFO</code> for progress, <code>WARNING</code> for a feed that was skipped or a result that is
+degraded, <code>DEBUG</code> for details such as a cache that could not be written. Data-quality
+findings are never logged: they are in the returned frames (the A1 to A7 flags).
+Standard <code>warnings</code> are used for what the caller's code should change (a deprecation, a
+suspicious argument).</p>
+<h2 id="versions">Versions<a class="headerlink" href="#versions" title="Permanent link">&para;</a></h2>
+<p>Versioning follows <a href="https://semver.org">SemVer</a>. Which Python and dependency versions a
+release supports is in <a href="https://github.com/cycling-data-lab/gbfs-toolkit/blob/main/RELEASING.md#supported-versions">Releasing</a>.</p>
 
 
 
@@ -6557,7 +7492,7 @@ Counts are downcast to nullable <code>Int16</code> and <code>station_id</code> t
       <nav class="md-footer__inner md-grid" aria-label="Footer" >
         
           
-          <a href="../GBFSValidationError/" class="md-footer__link md-footer__link--prev" aria-label="Previous: GBFSValidationError">
+          <a href="../glossary/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Glossary">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
@@ -6567,20 +7502,20 @@ Counts are downcast to nullable <code>Int16</code> and <code>station_id</code> t
                 Previous
               </span>
               <div class="md-ellipsis">
-                GBFSValidationError
+                Glossary
               </div>
             </div>
           </a>
         
         
           
-          <a href="../models/" class="md-footer__link md-footer__link--next" aria-label="Next: models">
+          <a href="../citing/" class="md-footer__link md-footer__link--next" aria-label="Next: Citing this work">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                models
+                Citing this work
               </div>
             </div>
             <div class="md-footer__button md-icon">
@@ -6647,12 +7582,12 @@ Counts are downcast to nullable <code>Int16</code> and <code>station_id</code> t
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.instant", "navigation.instant.progress", "navigation.tracking", "navigation.sections", "navigation.tabs", "navigation.tabs.sticky", "navigation.top", "navigation.indexes", "navigation.footer", "toc.follow", "search.suggest", "search.highlight", "search.share", "content.code.copy", "content.code.annotate", "content.tooltips"], "search": "../../../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.instant", "navigation.instant.progress", "navigation.tracking", "navigation.sections", "navigation.tabs", "navigation.tabs.sticky", "navigation.top", "navigation.indexes", "navigation.footer", "toc.follow", "search.suggest", "search.highlight", "search.share", "content.code.copy", "content.code.annotate", "content.tooltips"], "search": "../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"alias": true, "default": "latest", "provider": "mike"}}</script>
     
     
-      <script src="../../../assets/javascripts/bundle.c21346df.min.js"></script>
+      <script src="../assets/javascripts/bundle.a5f9d56c.min.js"></script>
       
-        <script src="../../../javascripts/mathjax.js"></script>
+        <script src="../javascripts/mathjax.js"></script>
       
         <script src="https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js"></script>
       

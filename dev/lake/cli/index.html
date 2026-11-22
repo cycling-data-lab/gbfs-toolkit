@@ -12,31 +12,31 @@
         <meta name="author" content="Rohan Fossé, Gaël Pallares">
       
       
-        <link rel="canonical" href="https://cycling-data-lab.github.io/gbfs-toolkit/dev/reference/core/SimConfig/">
+        <link rel="canonical" href="https://cycling-data-lab.github.io/gbfs-toolkit/dev/lake/cli/">
       
       
-        <link rel="prev" href="../SCHEMAS/">
+        <link rel="prev" href="../repro/">
       
       
-        <link rel="next" href="../simulate_city_flows/">
+        <link rel="next" href="../../reference/">
       
       
         
       
       
-      <link rel="icon" href="../../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-ProperDocs 1.6.7, mkdocs-material-9.8.0">
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-ProperDocs 1.6.7, mkdocs-material-9.8.2">
     
     
       
-        <title>SimConfig - gbfs-toolkit</title>
+        <title>Command line - gbfs-toolkit</title>
       
     
     
-      <link rel="stylesheet" href="../../../assets/stylesheets/main.57a0d79d.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.57a0d79d.min.css">
       
         
-        <link rel="stylesheet" href="../../../assets/stylesheets/palette.fb2fffe2.min.css">
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.fb2fffe2.min.css">
       
       
 
@@ -55,11 +55,11 @@
       
     
     
-      <link rel="stylesheet" href="../../../assets/_mkdocstrings.css">
+      <link rel="stylesheet" href="../../assets/_mkdocstrings.css">
     
-      <link rel="stylesheet" href="../../../stylesheets/extra.css">
+      <link rel="stylesheet" href="../../stylesheets/extra.css">
     
-    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
 
@@ -84,7 +84,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#simconfig" class="md-skip">
+        <a href="#command-line-collect-compact-quality-release-verify" class="md-skip">
           Skip to content
         </a>
       
@@ -104,7 +104,7 @@
 
 <header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="../../.." title="gbfs-toolkit" class="md-header__button md-logo" aria-label="gbfs-toolkit" data-md-component="logo">
+    <a href="../.." title="gbfs-toolkit" class="md-header__button md-logo" aria-label="gbfs-toolkit" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M5 20.5A3.5 3.5 0 0 1 1.5 17 3.5 3.5 0 0 1 5 13.5 3.5 3.5 0 0 1 8.5 17 3.5 3.5 0 0 1 5 20.5M5 12a5 5 0 0 0-5 5 5 5 0 0 0 5 5 5 5 0 0 0 5-5 5 5 0 0 0-5-5m9.8-2H19V8.2h-3.2l-1.94-3.27c-.29-.5-.86-.83-1.46-.83-.47 0-.9.19-1.2.5L7.5 8.29C7.19 8.6 7 9 7 9.5c0 .63.33 1.16.85 1.47L11.2 13v5H13v-6.5l-2.25-1.65 2.32-2.35m5.93 13a3.5 3.5 0 0 1-3.5-3.5 3.5 3.5 0 0 1 3.5-3.5 3.5 3.5 0 0 1 3.5 3.5 3.5 3.5 0 0 1-3.5 3.5m0-8.5a5 5 0 0 0-5 5 5 5 0 0 0 5 5 5 5 0 0 0 5-5 5 5 0 0 0-5-5m-3-7.2c1 0 1.8-.8 1.8-1.8S17 1.2 16 1.2 14.2 2 14.2 3 15 4.8 16 4.8"/></svg>
@@ -124,7 +124,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              SimConfig
+              Command line
             
           </span>
         </div>
@@ -236,7 +236,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="../../.." class="md-tabs__link">
+      <a href="../.." class="md-tabs__link">
         
   
   
@@ -257,7 +257,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../../../getting-started/" class="md-tabs__link">
+        <a href="../../getting-started/" class="md-tabs__link">
           
   
   
@@ -279,7 +279,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../../../examples/" class="md-tabs__link">
+        <a href="../../examples/" class="md-tabs__link">
           
   
   
@@ -297,13 +297,76 @@
   
   
   
+  
+    <li class="md-tabs__item">
+      <a href="../../tutorial/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Tutorial
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../recipes/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Recipes
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
     
   
   
     
     
       <li class="md-tabs__item md-tabs__item--active">
-        <a href="../../" class="md-tabs__link">
+        <a href="../" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Data lake (experimental)
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../reference/" class="md-tabs__link">
           
   
   
@@ -325,7 +388,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../../../methodology/" class="md-tabs__link">
+        <a href="../../methodology/" class="md-tabs__link">
           
   
   
@@ -347,7 +410,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../../../citing/" class="md-tabs__link">
+        <a href="../../citing/" class="md-tabs__link">
           
   
   
@@ -389,7 +452,7 @@
 
 <nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="../../.." title="gbfs-toolkit" class="md-nav__button md-logo" aria-label="gbfs-toolkit" data-md-component="logo">
+    <a href="../.." title="gbfs-toolkit" class="md-nav__button md-logo" aria-label="gbfs-toolkit" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M5 20.5A3.5 3.5 0 0 1 1.5 17 3.5 3.5 0 0 1 5 13.5 3.5 3.5 0 0 1 8.5 17 3.5 3.5 0 0 1 5 20.5M5 12a5 5 0 0 0-5 5 5 5 0 0 0 5 5 5 5 0 0 0 5-5 5 5 0 0 0-5-5m9.8-2H19V8.2h-3.2l-1.94-3.27c-.29-.5-.86-.83-1.46-.83-.47 0-.9.19-1.2.5L7.5 8.29C7.19 8.6 7 9 7 9.5c0 .63.33 1.16.85 1.47L11.2 13v5H13v-6.5l-2.25-1.65 2.32-2.35m5.93 13a3.5 3.5 0 0 1-3.5-3.5 3.5 3.5 0 0 1 3.5-3.5 3.5 3.5 0 0 1 3.5 3.5 3.5 3.5 0 0 1-3.5 3.5m0-8.5a5 5 0 0 0-5 5 5 5 0 0 0 5 5 5 5 0 0 0 5-5 5 5 0 0 0-5-5m-3-7.2c1 0 1.8-.8 1.8-1.8S17 1.2 16 1.2 14.2 2 14.2 3 15 4.8 16 4.8"/></svg>
@@ -419,7 +482,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../.." class="md-nav__link">
+      <a href="../.." class="md-nav__link">
         
   
   
@@ -504,7 +567,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../getting-started/" class="md-nav__link">
+      <a href="../../getting-started/" class="md-nav__link">
         
   
   
@@ -532,7 +595,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../guide/" class="md-nav__link">
+      <a href="../../guide/" class="md-nav__link">
         
   
   
@@ -641,7 +704,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../examples/" class="md-nav__link">
+      <a href="../../examples/" class="md-nav__link">
         
   
   
@@ -669,7 +732,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../examples/01-audit-a-feed/" class="md-nav__link">
+      <a href="../../examples/01-audit-a-feed/" class="md-nav__link">
         
   
   
@@ -697,7 +760,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../examples/02-collect-a-snapshot/" class="md-nav__link">
+      <a href="../../examples/02-collect-a-snapshot/" class="md-nav__link">
         
   
   
@@ -725,7 +788,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../examples/03-analyze-history/" class="md-nav__link">
+      <a href="../../examples/03-analyze-history/" class="md-nav__link">
         
   
   
@@ -753,7 +816,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../examples/04-equity-and-coverage/" class="md-nav__link">
+      <a href="../../examples/04-equity-and-coverage/" class="md-nav__link">
         
   
   
@@ -781,7 +844,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../examples/05-rigorous-audit/" class="md-nav__link">
+      <a href="../../examples/05-rigorous-audit/" class="md-nav__link">
         
   
   
@@ -809,7 +872,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../examples/07-free-floating-fleets/" class="md-nav__link">
+      <a href="../../examples/07-free-floating-fleets/" class="md-nav__link">
         
   
   
@@ -837,7 +900,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../examples/08-service-reliability/" class="md-nav__link">
+      <a href="../../examples/08-service-reliability/" class="md-nav__link">
         
   
   
@@ -865,7 +928,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../examples/09-contextualize/" class="md-nav__link">
+      <a href="../../examples/09-contextualize/" class="md-nav__link">
         
   
   
@@ -893,7 +956,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../examples/10-macro-scale-audit/" class="md-nav__link">
+      <a href="../../examples/10-macro-scale-audit/" class="md-nav__link">
         
   
   
@@ -901,6 +964,227 @@
     
   
     Compare systems at scale (live)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorial/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tutorial
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../recipes/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Recipes
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_5" id="__nav_5_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Recipes
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../recipes/check-collection-quality/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Check the quality of a collection
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../recipes/aggregate-a-month/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Aggregate a month of snapshots
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../recipes/freeze-for-zenodo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Freeze a version for Zenodo
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../recipes/read-published-trips/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Read published trips
   
 
     
@@ -950,6 +1234,12 @@
       
         
       
+        
+      
+        
+      
+        
+      
     
     
     
@@ -966,18 +1256,18 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" checked>
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../" class="md-nav__link ">
+            <a href="../" class="md-nav__link ">
               
   
   
   <span class="md-ellipsis">
     
   
-    API reference
+    Data lake (experimental)
   
 
     
@@ -988,18 +1278,18 @@
             </a>
             
               
-              <label class="md-nav__link " for="__nav_4" id="__nav_4_label" tabindex="">
+              <label class="md-nav__link " for="__nav_6" id="__nav_6_label" tabindex="">
                 <span class="md-nav__icon md-icon"></span>
               </label>
             
           </div>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
-          <label class="md-nav__title" for="__nav_4">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_6">
             <span class="md-nav__icon md-icon"></span>
             
   
-    API reference
+    Data lake (experimental)
   
 
           </label>
@@ -1014,141 +1304,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../data-model/" class="md-nav__link">
+      <a href="../collect/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Data model & schemas
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-    
-  
-  
-  
-    
-    
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-    
-    
-    
-      
-      
-        
-          
-          
-        
-      
-    
-    
-    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
-      
-        
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_3" checked>
-        
-          
-          <label class="md-nav__link" for="__nav_4_3" id="__nav_4_3_label" tabindex="">
-            
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Core & schema
-  
-
-    
-  </span>
-  
-  
-
-            <span class="md-nav__icon md-icon"></span>
-          </label>
-        
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_3_label" aria-expanded="true">
-          <label class="md-nav__title" for="__nav_4_3">
-            <span class="md-nav__icon md-icon"></span>
-            
-  
-    Core & schema
-  
-
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../__version__/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    _version_
+    collect
   
 
     
@@ -1169,14 +1332,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../AUDIT_FLAGS/" class="md-nav__link">
+      <a href="../store/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    AUDIT_FLAGS
+    store
   
 
     
@@ -1197,14 +1360,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../calibrate_city/" class="md-nav__link">
+      <a href="../quality/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    calibrate_city
+    quality
   
 
     
@@ -1225,14 +1388,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../coerce_schema/" class="md-nav__link">
+      <a href="../aggregate/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    coerce_schema
+    aggregate
   
 
     
@@ -1253,14 +1416,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../compute_footprint/" class="md-nav__link">
+      <a href="../history/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    compute_footprint
+    history
   
 
     
@@ -1281,14 +1444,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../export_ml_dataset/" class="md-nav__link">
+      <a href="../stations-match/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    export_ml_dataset
+    stations.match
   
 
     
@@ -1309,14 +1472,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../GBFSDiscoveryError/" class="md-nav__link">
+      <a href="../trips/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    GBFSDiscoveryError
+    trips
   
 
     
@@ -1337,14 +1500,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../GBFSError/" class="md-nav__link">
+      <a href="../release/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    GBFSError
+    release
   
 
     
@@ -1365,238 +1528,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../GBFSFetchError/" class="md-nav__link">
+      <a href="../repro/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    GBFSFetchError
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../GBFSNotModified/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    GBFSNotModified
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../GBFSValidationError/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    GBFSValidationError
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../generate_gbfs_parquet/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    generate_gbfs_parquet
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../models/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    models
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../require_columns/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    require_columns
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../RULES/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    RULES
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../SchemaError/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    SchemaError
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../SCHEMAS/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    SCHEMAS
+    repro
   
 
     
@@ -1633,7 +1572,7 @@
   <span class="md-ellipsis">
     
   
-    SimConfig
+    Command line
   
 
     
@@ -1651,7 +1590,7 @@
   <span class="md-ellipsis">
     
   
-    SimConfig
+    Command line
   
 
     
@@ -1677,10 +1616,54 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#gbfs_toolkit.SimConfig" class="md-nav__link">
+  <a href="#gbfs-collect" class="md-nav__link">
     <span class="md-ellipsis">
       
-        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;SimConfig
+        gbfs collect
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#gbfs-compact" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        gbfs compact
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#gbfs-quality" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        gbfs quality
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#gbfs-release" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        gbfs release
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#gbfs-verify" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        gbfs verify
       
     </span>
   </a>
@@ -1696,6 +1679,96 @@
 
               
             
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../reference/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API reference
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_7" id="__nav_7_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    API reference
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
               
                 
   
@@ -1703,14 +1776,124 @@
   
   
     <li class="md-nav__item">
-      <a href="../simulate_city_flows/" class="md-nav__link">
+      <a href="../../data-model/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    simulate_city_flows
+    Data model & schemas
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_7_3" id="__nav_7_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Core & schema
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_7_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Core & schema
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/core/__version__/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    _version_
   
 
     
@@ -1731,7 +1914,343 @@
   
   
     <li class="md-nav__item">
-      <a href="../validate_schema/" class="md-nav__link">
+      <a href="../../reference/core/AUDIT_FLAGS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AUDIT_FLAGS
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/core/coerce_schema/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    coerce_schema
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/core/GBFSDiscoveryError/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GBFSDiscoveryError
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/core/GBFSError/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GBFSError
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/core/GBFSFetchError/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GBFSFetchError
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/core/GBFSNotModified/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GBFSNotModified
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/core/GBFSValidationError/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GBFSValidationError
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/core/models/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    models
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/core/require_columns/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    require_columns
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/core/RULES/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RULES
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/core/SchemaError/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SchemaError
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/core/SCHEMAS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SCHEMAS
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/core/validate_schema/" class="md-nav__link">
         
   
   
@@ -1845,20 +2364,17 @@
       
       
         
-          
-          
-        
       
     
     
-    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_4" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_4" >
         
           
-          <label class="md-nav__link" for="__nav_4_4" id="__nav_4_4_label" tabindex="">
+          <label class="md-nav__link" for="__nav_7_4" id="__nav_7_4_label" tabindex="0">
             
   
   
@@ -1876,8 +2392,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_4_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_4_4">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_7_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_4">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -1894,7 +2410,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../io/add_local_time/" class="md-nav__link">
+      <a href="../../reference/io/add_local_time/" class="md-nav__link">
         
   
   
@@ -1922,7 +2438,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../io/append_to_parquet/" class="md-nav__link">
+      <a href="../../reference/io/append_to_parquet/" class="md-nav__link">
         
   
   
@@ -1950,7 +2466,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../io/audit_feed/" class="md-nav__link">
+      <a href="../../reference/io/audit_feed/" class="md-nav__link">
         
   
   
@@ -1978,7 +2494,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../io/availability/" class="md-nav__link">
+      <a href="../../reference/io/availability/" class="md-nav__link">
         
   
   
@@ -2006,7 +2522,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../io/build_availability_panel/" class="md-nav__link">
+      <a href="../../reference/io/build_availability_panel/" class="md-nav__link">
         
   
   
@@ -2034,7 +2550,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../io/build_session/" class="md-nav__link">
+      <a href="../../reference/io/build_session/" class="md-nav__link">
         
   
   
@@ -2062,7 +2578,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../io/calculate_net_flow/" class="md-nav__link">
+      <a href="../../reference/io/calculate_net_flow/" class="md-nav__link">
         
   
   
@@ -2090,7 +2606,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../io/coverage_report/" class="md-nav__link">
+      <a href="../../reference/io/coverage_report/" class="md-nav__link">
         
   
   
@@ -2118,7 +2634,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../io/detect_frozen_stations/" class="md-nav__link">
+      <a href="../../reference/io/detect_frozen_stations/" class="md-nav__link">
         
   
   
@@ -2146,7 +2662,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../io/extract_snapshot_asof/" class="md-nav__link">
+      <a href="../../reference/io/extract_snapshot_asof/" class="md-nav__link">
         
   
   
@@ -2174,7 +2690,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../io/FeedResponse/" class="md-nav__link">
+      <a href="../../reference/io/FeedResponse/" class="md-nav__link">
         
   
   
@@ -2202,7 +2718,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../io/fetch_feed_json/" class="md-nav__link">
+      <a href="../../reference/io/fetch_feed_json/" class="md-nav__link">
         
   
   
@@ -2230,7 +2746,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../io/fetch_multiple/" class="md-nav__link">
+      <a href="../../reference/io/fetch_multiple/" class="md-nav__link">
         
   
   
@@ -2258,7 +2774,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../io/filter_catalog/" class="md-nav__link">
+      <a href="../../reference/io/filter_catalog/" class="md-nav__link">
         
   
   
@@ -2286,7 +2802,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../io/flow_balance/" class="md-nav__link">
+      <a href="../../reference/io/flow_balance/" class="md-nav__link">
         
   
   
@@ -2314,7 +2830,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../io/GBFSFeed/" class="md-nav__link">
+      <a href="../../reference/io/GBFSFeed/" class="md-nav__link">
         
   
   
@@ -2342,7 +2858,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../io/generate_manifest/" class="md-nav__link">
+      <a href="../../reference/io/generate_manifest/" class="md-nav__link">
         
   
   
@@ -2370,7 +2886,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../io/insert_explicit_gaps/" class="md-nav__link">
+      <a href="../../reference/io/insert_explicit_gaps/" class="md-nav__link">
         
   
   
@@ -2398,7 +2914,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../io/normalize_operator/" class="md-nav__link">
+      <a href="../../reference/io/normalize_operator/" class="md-nav__link">
         
   
   
@@ -2426,7 +2942,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../io/parse_discovery/" class="md-nav__link">
+      <a href="../../reference/io/parse_discovery/" class="md-nav__link">
         
   
   
@@ -2454,7 +2970,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../io/resample_panel/" class="md-nav__link">
+      <a href="../../reference/io/resample_panel/" class="md-nav__link">
         
   
   
@@ -2482,7 +2998,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../io/resolve/" class="md-nav__link">
+      <a href="../../reference/io/resolve/" class="md-nav__link">
         
   
   
@@ -2510,7 +3026,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../io/stockout_episodes/" class="md-nav__link">
+      <a href="../../reference/io/stockout_episodes/" class="md-nav__link">
         
   
   
@@ -2538,7 +3054,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../io/systems_catalog/" class="md-nav__link">
+      <a href="../../reference/io/systems_catalog/" class="md-nav__link">
         
   
   
@@ -2566,7 +3082,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../io/to_canonical_alerts/" class="md-nav__link">
+      <a href="../../reference/io/to_canonical_alerts/" class="md-nav__link">
         
   
   
@@ -2594,7 +3110,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../io/to_canonical_pricing_plans/" class="md-nav__link">
+      <a href="../../reference/io/to_canonical_pricing_plans/" class="md-nav__link">
         
   
   
@@ -2622,7 +3138,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../io/to_canonical_station_info/" class="md-nav__link">
+      <a href="../../reference/io/to_canonical_station_info/" class="md-nav__link">
         
   
   
@@ -2650,7 +3166,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../io/to_canonical_station_status/" class="md-nav__link">
+      <a href="../../reference/io/to_canonical_station_status/" class="md-nav__link">
         
   
   
@@ -2678,7 +3194,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../io/to_canonical_station_vehicle_counts/" class="md-nav__link">
+      <a href="../../reference/io/to_canonical_station_vehicle_counts/" class="md-nav__link">
         
   
   
@@ -2706,7 +3222,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../io/to_canonical_system_information/" class="md-nav__link">
+      <a href="../../reference/io/to_canonical_system_information/" class="md-nav__link">
         
   
   
@@ -2734,7 +3250,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../io/to_canonical_system_regions/" class="md-nav__link">
+      <a href="../../reference/io/to_canonical_system_regions/" class="md-nav__link">
         
   
   
@@ -2762,7 +3278,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../io/to_canonical_vehicle_types/" class="md-nav__link">
+      <a href="../../reference/io/to_canonical_vehicle_types/" class="md-nav__link">
         
   
   
@@ -2790,7 +3306,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../io/to_canonical_vehicles/" class="md-nav__link">
+      <a href="../../reference/io/to_canonical_vehicles/" class="md-nav__link">
         
   
   
@@ -2818,7 +3334,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../io/to_wide_matrix/" class="md-nav__link">
+      <a href="../../reference/io/to_wide_matrix/" class="md-nav__link">
         
   
   
@@ -2846,7 +3362,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../io/turnover/" class="md-nav__link">
+      <a href="../../reference/io/turnover/" class="md-nav__link">
         
   
   
@@ -2990,20 +3506,17 @@
       
       
         
-          
-          
-        
       
     
     
-    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_5" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_5" >
         
           
-          <label class="md-nav__link" for="__nav_4_5" id="__nav_4_5_label" tabindex="">
+          <label class="md-nav__link" for="__nav_7_5" id="__nav_7_5_label" tabindex="0">
             
   
   
@@ -3021,8 +3534,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_5_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_4_5">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_7_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_5">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -3039,7 +3552,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../analytics/aliasing_vulnerability/" class="md-nav__link">
+      <a href="../../reference/analytics/aliasing_vulnerability/" class="md-nav__link">
         
   
   
@@ -3067,7 +3580,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../analytics/availability_stats/" class="md-nav__link">
+      <a href="../../reference/analytics/availability_stats/" class="md-nav__link">
         
   
   
@@ -3095,7 +3608,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../analytics/availability_synchrony/" class="md-nav__link">
+      <a href="../../reference/analytics/availability_synchrony/" class="md-nav__link">
         
   
   
@@ -3123,7 +3636,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../analytics/block_bootstrap_ci/" class="md-nav__link">
+      <a href="../../reference/analytics/block_bootstrap_ci/" class="md-nav__link">
         
   
   
@@ -3151,7 +3664,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../analytics/boundary_stress/" class="md-nav__link">
+      <a href="../../reference/analytics/boundary_stress/" class="md-nav__link">
         
   
   
@@ -3179,7 +3692,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../analytics/capacity_utilization/" class="md-nav__link">
+      <a href="../../reference/analytics/capacity_utilization/" class="md-nav__link">
         
   
   
@@ -3207,7 +3720,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../analytics/censored_time_ratio/" class="md-nav__link">
+      <a href="../../reference/analytics/censored_time_ratio/" class="md-nav__link">
         
   
   
@@ -3235,7 +3748,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../analytics/cluster_diurnal_profiles/" class="md-nav__link">
+      <a href="../../reference/analytics/cluster_diurnal_profiles/" class="md-nav__link">
         
   
   
@@ -3263,7 +3776,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../analytics/cluster_spatial/" class="md-nav__link">
+      <a href="../../reference/analytics/cluster_spatial/" class="md-nav__link">
         
   
   
@@ -3291,7 +3804,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../analytics/cluster_spectral/" class="md-nav__link">
+      <a href="../../reference/analytics/cluster_spectral/" class="md-nav__link">
         
   
   
@@ -3319,7 +3832,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../analytics/cohen_kappa/" class="md-nav__link">
+      <a href="../../reference/analytics/cohen_kappa/" class="md-nav__link">
         
   
   
@@ -3347,7 +3860,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../analytics/compare_systems/" class="md-nav__link">
+      <a href="../../reference/analytics/compare_systems/" class="md-nav__link">
         
   
   
@@ -3375,7 +3888,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../analytics/concentration_metrics/" class="md-nav__link">
+      <a href="../../reference/analytics/concentration_metrics/" class="md-nav__link">
         
   
   
@@ -3403,7 +3916,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../analytics/cumulative_imbalance/" class="md-nav__link">
+      <a href="../../reference/analytics/cumulative_imbalance/" class="md-nav__link">
         
   
   
@@ -3431,7 +3944,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../analytics/cyclical_time_features/" class="md-nav__link">
+      <a href="../../reference/analytics/cyclical_time_features/" class="md-nav__link">
         
   
   
@@ -3459,7 +3972,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../analytics/detect_ghost_vehicles/" class="md-nav__link">
+      <a href="../../reference/analytics/detect_ghost_vehicles/" class="md-nav__link">
         
   
   
@@ -3487,7 +4000,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../analytics/diurnal_bimodality/" class="md-nav__link">
+      <a href="../../reference/analytics/diurnal_bimodality/" class="md-nav__link">
         
   
   
@@ -3515,7 +4028,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../analytics/diurnal_profiles/" class="md-nav__link">
+      <a href="../../reference/analytics/diurnal_profiles/" class="md-nav__link">
         
   
   
@@ -3543,7 +4056,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../analytics/diurnal_summary_stats/" class="md-nav__link">
+      <a href="../../reference/analytics/diurnal_summary_stats/" class="md-nav__link">
         
   
   
@@ -3571,7 +4084,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../analytics/docking_pressure/" class="md-nav__link">
+      <a href="../../reference/analytics/docking_pressure/" class="md-nav__link">
         
   
   
@@ -3599,7 +4112,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../analytics/dynamic_gini_index/" class="md-nav__link">
+      <a href="../../reference/analytics/dynamic_gini_index/" class="md-nav__link">
         
   
   
@@ -3627,7 +4140,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../analytics/ebikes/" class="md-nav__link">
+      <a href="../../reference/analytics/ebikes/" class="md-nav__link">
         
   
   
@@ -3655,7 +4168,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../analytics/effective_sample_size/" class="md-nav__link">
+      <a href="../../reference/analytics/effective_sample_size/" class="md-nav__link">
         
   
   
@@ -3683,7 +4196,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../analytics/filter_vehicles/" class="md-nav__link">
+      <a href="../../reference/analytics/filter_vehicles/" class="md-nav__link">
         
   
   
@@ -3711,7 +4224,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../analytics/fleet_turnover_proxy/" class="md-nav__link">
+      <a href="../../reference/analytics/fleet_turnover_proxy/" class="md-nav__link">
         
   
   
@@ -3739,7 +4252,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../analytics/flow_asymmetry_ratio/" class="md-nav__link">
+      <a href="../../reference/analytics/flow_asymmetry_ratio/" class="md-nav__link">
         
   
   
@@ -3767,7 +4280,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../analytics/format_paper_summary/" class="md-nav__link">
+      <a href="../../reference/analytics/format_paper_summary/" class="md-nav__link">
         
   
   
@@ -3795,7 +4308,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../analytics/join_availability/" class="md-nav__link">
+      <a href="../../reference/analytics/join_availability/" class="md-nav__link">
         
   
   
@@ -3823,7 +4336,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../analytics/join_exogenous_timeseries/" class="md-nav__link">
+      <a href="../../reference/analytics/join_exogenous_timeseries/" class="md-nav__link">
         
   
   
@@ -3851,7 +4364,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../analytics/join_pricing/" class="md-nav__link">
+      <a href="../../reference/analytics/join_pricing/" class="md-nav__link">
         
   
   
@@ -3879,7 +4392,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../analytics/join_vehicle_types/" class="md-nav__link">
+      <a href="../../reference/analytics/join_vehicle_types/" class="md-nav__link">
         
   
   
@@ -3907,7 +4420,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../analytics/krippendorff_alpha/" class="md-nav__link">
+      <a href="../../reference/analytics/krippendorff_alpha/" class="md-nav__link">
         
   
   
@@ -3935,7 +4448,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../analytics/label_diurnal_typology/" class="md-nav__link">
+      <a href="../../reference/analytics/label_diurnal_typology/" class="md-nav__link">
         
   
   
@@ -3963,7 +4476,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../analytics/lorenz_curve/" class="md-nav__link">
+      <a href="../../reference/analytics/lorenz_curve/" class="md-nav__link">
         
   
   
@@ -3991,7 +4504,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../analytics/network_changes/" class="md-nav__link">
+      <a href="../../reference/analytics/network_changes/" class="md-nav__link">
         
   
   
@@ -4019,7 +4532,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../analytics/occupancy/" class="md-nav__link">
+      <a href="../../reference/analytics/occupancy/" class="md-nav__link">
         
   
   
@@ -4047,7 +4560,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../analytics/outage_survival/" class="md-nav__link">
+      <a href="../../reference/analytics/outage_survival/" class="md-nav__link">
         
   
   
@@ -4075,7 +4588,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../analytics/palma_ratio/" class="md-nav__link">
+      <a href="../../reference/analytics/palma_ratio/" class="md-nav__link">
         
   
   
@@ -4103,7 +4616,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../analytics/rebalancing_tension/" class="md-nav__link">
+      <a href="../../reference/analytics/rebalancing_tension/" class="md-nav__link">
         
   
   
@@ -4131,7 +4644,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../analytics/reconcile_fleet_state/" class="md-nav__link">
+      <a href="../../reference/analytics/reconcile_fleet_state/" class="md-nav__link">
         
   
   
@@ -4159,7 +4672,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../analytics/service_reliability_index/" class="md-nav__link">
+      <a href="../../reference/analytics/service_reliability_index/" class="md-nav__link">
         
   
   
@@ -4187,7 +4700,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../analytics/station_outage_rates/" class="md-nav__link">
+      <a href="../../reference/analytics/station_outage_rates/" class="md-nav__link">
         
   
   
@@ -4215,7 +4728,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../analytics/station_state/" class="md-nav__link">
+      <a href="../../reference/analytics/station_state/" class="md-nav__link">
         
   
   
@@ -4243,7 +4756,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../analytics/system_profile/" class="md-nav__link">
+      <a href="../../reference/analytics/system_profile/" class="md-nav__link">
         
   
   
@@ -4271,7 +4784,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../analytics/temporal_autocorrelation/" class="md-nav__link">
+      <a href="../../reference/analytics/temporal_autocorrelation/" class="md-nav__link">
         
   
   
@@ -4299,7 +4812,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../analytics/temporal_concentration/" class="md-nav__link">
+      <a href="../../reference/analytics/temporal_concentration/" class="md-nav__link">
         
   
   
@@ -4327,7 +4840,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../analytics/temporal_context_features/" class="md-nav__link">
+      <a href="../../reference/analytics/temporal_context_features/" class="md-nav__link">
         
   
   
@@ -4355,7 +4868,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../analytics/theil_index/" class="md-nav__link">
+      <a href="../../reference/analytics/theil_index/" class="md-nav__link">
         
   
   
@@ -4383,7 +4896,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../analytics/vehicle_idle_time/" class="md-nav__link">
+      <a href="../../reference/analytics/vehicle_idle_time/" class="md-nav__link">
         
   
   
@@ -4411,7 +4924,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../analytics/wilson_interval/" class="md-nav__link">
+      <a href="../../reference/analytics/wilson_interval/" class="md-nav__link">
         
   
   
@@ -4477,26 +4990,25 @@
       
         
       
+        
+      
     
     
     
       
       
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_6" >
         
           
-          
-        
-      
-    
-    
-    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
-      
-        
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_6" >
-        
-          
-          <label class="md-nav__link" for="__nav_4_6" id="__nav_4_6_label" tabindex="">
+          <label class="md-nav__link" for="__nav_7_6" id="__nav_7_6_label" tabindex="0">
             
   
   
@@ -4514,8 +5026,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_6_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_4_6">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_7_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_6">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -4532,7 +5044,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../audit/audit_catalogue/" class="md-nav__link">
+      <a href="../../reference/audit/audit_catalogue/" class="md-nav__link">
         
   
   
@@ -4560,7 +5072,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../audit/audit_dynamic/" class="md-nav__link">
+      <a href="../../reference/audit/audit_dynamic/" class="md-nav__link">
         
   
   
@@ -4588,7 +5100,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../audit/audit_frames/" class="md-nav__link">
+      <a href="../../reference/audit/audit_frames/" class="md-nav__link">
         
   
   
@@ -4616,7 +5128,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../audit/audit_sensitivity/" class="md-nav__link">
+      <a href="../../reference/audit/audit_sensitivity/" class="md-nav__link">
         
   
   
@@ -4644,7 +5156,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../audit/audit_static/" class="md-nav__link">
+      <a href="../../reference/audit/audit_static/" class="md-nav__link">
         
   
   
@@ -4672,7 +5184,35 @@
   
   
     <li class="md-nav__item">
-      <a href="../../audit/capacity_convention/" class="md-nav__link">
+      <a href="../../reference/audit/AuditReport/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AuditReport
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/audit/capacity_convention/" class="md-nav__link">
         
   
   
@@ -4700,7 +5240,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../audit/classify_from_vehicle_types/" class="md-nav__link">
+      <a href="../../reference/audit/classify_from_vehicle_types/" class="md-nav__link">
         
   
   
@@ -4728,7 +5268,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../audit/classify_from_virtual_station/" class="md-nav__link">
+      <a href="../../reference/audit/classify_from_virtual_station/" class="md-nav__link">
         
   
   
@@ -4756,7 +5296,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../audit/drop_flagged/" class="md-nav__link">
+      <a href="../../reference/audit/drop_flagged/" class="md-nav__link">
         
   
   
@@ -4784,7 +5324,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../audit/flag_rate_ci/" class="md-nav__link">
+      <a href="../../reference/audit/flag_rate_ci/" class="md-nav__link">
         
   
   
@@ -4812,7 +5352,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../audit/flag_sentinel_coordinates/" class="md-nav__link">
+      <a href="../../reference/audit/flag_sentinel_coordinates/" class="md-nav__link">
         
   
   
@@ -4840,7 +5380,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../audit/overcapacity_ratio/" class="md-nav__link">
+      <a href="../../reference/audit/overcapacity_ratio/" class="md-nav__link">
         
   
   
@@ -4868,7 +5408,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../audit/reclassify_overcapacity/" class="md-nav__link">
+      <a href="../../reference/audit/reclassify_overcapacity/" class="md-nav__link">
         
   
   
@@ -4896,7 +5436,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../audit/vehicle_id_persistence/" class="md-nav__link">
+      <a href="../../reference/audit/vehicle_id_persistence/" class="md-nav__link">
         
   
   
@@ -5000,20 +5540,17 @@
       
       
         
-          
-          
-        
       
     
     
-    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_7" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_7" >
         
           
-          <label class="md-nav__link" for="__nav_4_7" id="__nav_4_7_label" tabindex="">
+          <label class="md-nav__link" for="__nav_7_7" id="__nav_7_7_label" tabindex="0">
             
   
   
@@ -5031,8 +5568,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_7_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_4_7">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_7_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_7">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -5049,7 +5586,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../spatial/band_limited_signal/" class="md-nav__link">
+      <a href="../../reference/spatial/band_limited_signal/" class="md-nav__link">
         
   
   
@@ -5077,7 +5614,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../spatial/coverage_stats/" class="md-nav__link">
+      <a href="../../reference/spatial/coverage_stats/" class="md-nav__link">
         
   
   
@@ -5105,7 +5642,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../spatial/degree_preserving_rewire/" class="md-nav__link">
+      <a href="../../reference/spatial/degree_preserving_rewire/" class="md-nav__link">
         
   
   
@@ -5133,7 +5670,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../spatial/enrich_with_osm/" class="md-nav__link">
+      <a href="../../reference/spatial/enrich_with_osm/" class="md-nav__link">
         
   
   
@@ -5161,7 +5698,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../spatial/fdr_adjust/" class="md-nav__link">
+      <a href="../../reference/spatial/fdr_adjust/" class="md-nav__link">
         
   
   
@@ -5189,7 +5726,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../spatial/features_within/" class="md-nav__link">
+      <a href="../../reference/spatial/features_within/" class="md-nav__link">
         
   
   
@@ -5217,7 +5754,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../spatial/filter_by_bbox/" class="md-nav__link">
+      <a href="../../reference/spatial/filter_by_bbox/" class="md-nav__link">
         
   
   
@@ -5245,7 +5782,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../spatial/find_nearest_stations/" class="md-nav__link">
+      <a href="../../reference/spatial/find_nearest_stations/" class="md-nav__link">
         
   
   
@@ -5273,7 +5810,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../spatial/GeoKDTree/" class="md-nav__link">
+      <a href="../../reference/spatial/GeoKDTree/" class="md-nav__link">
         
   
   
@@ -5301,7 +5838,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../spatial/haversine_m/" class="md-nav__link">
+      <a href="../../reference/spatial/haversine_m/" class="md-nav__link">
         
   
   
@@ -5329,7 +5866,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../spatial/knn_adjacency/" class="md-nav__link">
+      <a href="../../reference/spatial/knn_adjacency/" class="md-nav__link">
         
   
   
@@ -5357,7 +5894,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../spatial/link_transit_stops/" class="md-nav__link">
+      <a href="../../reference/spatial/link_transit_stops/" class="md-nav__link">
         
   
   
@@ -5385,7 +5922,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../spatial/local_morans_i/" class="md-nav__link">
+      <a href="../../reference/spatial/local_morans_i/" class="md-nav__link">
         
   
   
@@ -5413,7 +5950,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../spatial/low_freq_basis/" class="md-nav__link">
+      <a href="../../reference/spatial/low_freq_basis/" class="md-nav__link">
         
   
   
@@ -5441,7 +5978,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../spatial/morans_i/" class="md-nav__link">
+      <a href="../../reference/spatial/morans_i/" class="md-nav__link">
         
   
   
@@ -5469,7 +6006,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../spatial/normalized_laplacian/" class="md-nav__link">
+      <a href="../../reference/spatial/normalized_laplacian/" class="md-nav__link">
         
   
   
@@ -5497,7 +6034,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../spatial/permute_signal/" class="md-nav__link">
+      <a href="../../reference/spatial/permute_signal/" class="md-nav__link">
         
   
   
@@ -5525,7 +6062,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../spatial/ripley_k/" class="md-nav__link">
+      <a href="../../reference/spatial/ripley_k/" class="md-nav__link">
         
   
   
@@ -5553,7 +6090,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../spatial/spatial_center_of_mass/" class="md-nav__link">
+      <a href="../../reference/spatial/spatial_center_of_mass/" class="md-nav__link">
         
   
   
@@ -5581,7 +6118,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../spatial/spatial_entropy/" class="md-nav__link">
+      <a href="../../reference/spatial/spatial_entropy/" class="md-nav__link">
         
   
   
@@ -5609,7 +6146,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../spatial/spatial_outage_redundancy/" class="md-nav__link">
+      <a href="../../reference/spatial/spatial_outage_redundancy/" class="md-nav__link">
         
   
   
@@ -5637,7 +6174,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../spatial/spectral_projection_r2/" class="md-nav__link">
+      <a href="../../reference/spatial/spectral_projection_r2/" class="md-nav__link">
         
   
   
@@ -5665,7 +6202,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../spatial/station_surroundings/" class="md-nav__link">
+      <a href="../../reference/spatial/station_surroundings/" class="md-nav__link">
         
   
   
@@ -5693,7 +6230,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../spatial/stations_near/" class="md-nav__link">
+      <a href="../../reference/spatial/stations_near/" class="md-nav__link">
         
   
   
@@ -5721,7 +6258,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../spatial/to_canonical_geofencing/" class="md-nav__link">
+      <a href="../../reference/spatial/to_canonical_geofencing/" class="md-nav__link">
         
   
   
@@ -5749,7 +6286,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../spatial/to_gdf/" class="md-nav__link">
+      <a href="../../reference/spatial/to_gdf/" class="md-nav__link">
         
   
   
@@ -5777,7 +6314,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../spatial/to_geojson/" class="md-nav__link">
+      <a href="../../reference/spatial/to_geojson/" class="md-nav__link">
         
   
   
@@ -5805,7 +6342,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../spatial/two_step_fca/" class="md-nav__link">
+      <a href="../../reference/spatial/two_step_fca/" class="md-nav__link">
         
   
   
@@ -5833,7 +6370,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../spatial/zone_area_km2/" class="md-nav__link">
+      <a href="../../reference/spatial/zone_area_km2/" class="md-nav__link">
         
   
   
@@ -5861,7 +6398,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../spatial/zones_for_points/" class="md-nav__link">
+      <a href="../../reference/spatial/zones_for_points/" class="md-nav__link">
         
   
   
@@ -5905,26 +6442,265 @@
       
         
       
+        
+      
+        
+      
+        
+      
     
     
     
       
       
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_8" >
         
           
-          
+          <label class="md-nav__link" for="__nav_7_8" id="__nav_7_8_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Simulation (experimental)
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_7_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Simulation (experimental)
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/sim/calibrate_city/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    calibrate_city
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/sim/compute_footprint/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    compute_footprint
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/sim/export_ml_dataset/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    export_ml_dataset
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/sim/generate_gbfs_parquet/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    generate_gbfs_parquet
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/sim/SimConfig/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SimConfig
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/sim/simulate_city_flows/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    simulate_city_flows
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
         
       
     
     
-    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_8" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_9" >
         
           
-          <label class="md-nav__link" for="__nav_4_8" id="__nav_4_8_label" tabindex="">
+          <label class="md-nav__link" for="__nav_7_9" id="__nav_7_9_label" tabindex="0">
             
   
   
@@ -5942,8 +6718,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_8_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_4_8">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_7_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_9">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -5960,7 +6736,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../interfaces/load_example/" class="md-nav__link">
+      <a href="../../reference/interfaces/load_example/" class="md-nav__link">
         
   
   
@@ -5988,7 +6764,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../interfaces/show_versions/" class="md-nav__link">
+      <a href="../../reference/interfaces/show_versions/" class="md-nav__link">
         
   
   
@@ -6016,7 +6792,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../interfaces/simulate_city/" class="md-nav__link">
+      <a href="../../reference/interfaces/simulate_city/" class="md-nav__link">
         
   
   
@@ -6067,6 +6843,8 @@
       
         
       
+        
+      
     
     
     
@@ -6080,10 +6858,10 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
         
           
-          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
             
   
   
@@ -6101,8 +6879,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_5">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -6119,7 +6897,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../methodology/" class="md-nav__link">
+      <a href="../../methodology/" class="md-nav__link">
         
   
   
@@ -6147,7 +6925,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../human-validation/" class="md-nav__link">
+      <a href="../../human-validation/" class="md-nav__link">
         
   
   
@@ -6175,7 +6953,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../glossary/" class="md-nav__link">
+      <a href="../../glossary/" class="md-nav__link">
         
   
   
@@ -6183,6 +6961,34 @@
     
   
     Glossary
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api-policy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API policy
   
 
     
@@ -6218,6 +7024,10 @@
       
         
       
+        
+      
+        
+      
     
     
     
@@ -6231,10 +7041,10 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" >
         
           
-          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="0">
             
   
   
@@ -6252,8 +7062,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_6">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -6270,7 +7080,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../citing/" class="md-nav__link">
+      <a href="../../citing/" class="md-nav__link">
         
   
   
@@ -6298,7 +7108,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../contributing/" class="md-nav__link">
+      <a href="../../contributing/" class="md-nav__link">
         
   
   
@@ -6326,7 +7136,63 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../changelog/" class="md-nav__link">
+      <a href="../../releasing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Releasing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../roadmap/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Roadmap
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../changelog/" class="md-nav__link">
         
   
   
@@ -6381,10 +7247,54 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#gbfs_toolkit.SimConfig" class="md-nav__link">
+  <a href="#gbfs-collect" class="md-nav__link">
     <span class="md-ellipsis">
       
-        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;SimConfig
+        gbfs collect
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#gbfs-compact" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        gbfs compact
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#gbfs-quality" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        gbfs quality
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#gbfs-release" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        gbfs release
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#gbfs-verify" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        gbfs verify
       
     </span>
   </a>
@@ -6411,57 +7321,63 @@
   
 
 
-<h1 id="simconfig">SimConfig<a class="headerlink" href="#simconfig" title="Permanent link">&para;</a></h1>
-
-
-<div class="doc doc-object doc-class">
-
-
-
-<h2 id="gbfs_toolkit.SimConfig" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">SimConfig</span>
-
-
-  <span class="doc doc-labels">
-      <small class="doc doc-label doc-label-dataclass"><code>dataclass</code></small>
-  </span>
-
-<a href="#gbfs_toolkit.SimConfig" class="headerlink" title="Permanent link">&para;</a></h2>
-<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">SimConfig</span><span class="p">(</span><span class="n">n_stations</span><span class="p">:</span> <span class="n"><span title="int">int</span></span> <span class="o">=</span> <span class="mi">200</span><span class="p">,</span> <span class="n">days</span><span class="p">:</span> <span class="n"><span title="int">int</span></span> <span class="o">=</span> <span class="mi">14</span><span class="p">,</span> <span class="n">freq</span><span class="p">:</span> <span class="n"><span title="str">str</span></span> <span class="o">=</span> <span class="s1">'1h'</span><span class="p">,</span> <span class="n">internal_minutes</span><span class="p">:</span> <span class="n"><span title="int">int</span></span> <span class="o">=</span> <span class="mi">15</span><span class="p">,</span> <span class="n">seed</span><span class="p">:</span> <span class="n"><span title="int">int</span></span> <span class="o">=</span> <span class="mi">42</span><span class="p">,</span> <span class="n">center</span><span class="p">:</span> <span class="n"><span title="tuple">tuple</span></span><span class="p">[</span><span class="n"><span title="float">float</span></span><span class="p">,</span> <span class="n"><span title="float">float</span></span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mf">48.86</span><span class="p">,</span> <span class="mf">2.35</span><span class="p">),</span> <span class="n">spread_km</span><span class="p">:</span> <span class="n"><span title="float">float</span></span> <span class="o">=</span> <span class="mf">4.0</span><span class="p">,</span> <span class="n">n_clusters</span><span class="p">:</span> <span class="n"><span title="int">int</span></span> <span class="o">=</span> <span class="mi">8</span><span class="p">,</span> <span class="n">role_mix</span><span class="p">:</span> <span class="n"><span title="tuple">tuple</span></span><span class="p">[</span><span class="n"><span title="float">float</span></span><span class="p">,</span> <span class="n"><span title="float">float</span></span><span class="p">,</span> <span class="n"><span title="float">float</span></span><span class="p">,</span> <span class="n"><span title="float">float</span></span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mf">0.55</span><span class="p">,</span> <span class="mf">0.27</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.08</span><span class="p">),</span> <span class="n">trip_rate</span><span class="p">:</span> <span class="n"><span title="float">float</span></span> <span class="o">=</span> <span class="mf">12.0</span><span class="p">,</span> <span class="n">base_demand</span><span class="p">:</span> <span class="n"><span title="float">float</span></span> <span class="o">=</span> <span class="mf">0.6</span><span class="p">,</span> <span class="n">mass_tail</span><span class="p">:</span> <span class="n"><span title="float">float</span></span> <span class="o">=</span> <span class="mf">1.6</span><span class="p">,</span> <span class="n">beta_km</span><span class="p">:</span> <span class="n"><span title="float">float</span></span> <span class="o">=</span> <span class="mf">1.5</span><span class="p">,</span> <span class="n">max_trip_km</span><span class="p">:</span> <span class="n"><span title="float">float</span></span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="mf">5.0</span><span class="p">,</span> <span class="n">speed_kmh</span><span class="p">:</span> <span class="n"><span title="float">float</span></span> <span class="o">=</span> <span class="mf">15.0</span><span class="p">,</span> <span class="n">heavy_period_min</span><span class="p">:</span> <span class="n"><span title="float">float</span></span> <span class="o">=</span> <span class="mf">45.0</span><span class="p">,</span> <span class="n">heavy_spike</span><span class="p">:</span> <span class="n"><span title="float">float</span></span> <span class="o">=</span> <span class="mf">10.0</span><span class="p">,</span> <span class="n">light_period_min</span><span class="p">:</span> <span class="n"><span title="float">float</span></span> <span class="o">=</span> <span class="mf">5.0</span><span class="p">,</span> <span class="n">light_spike</span><span class="p">:</span> <span class="n"><span title="float">float</span></span> <span class="o">=</span> <span class="mf">1.5</span><span class="p">,</span> <span class="n">topography</span><span class="p">:</span> <span class="n"><span title="bool">bool</span></span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">climb_penalty</span><span class="p">:</span> <span class="n"><span title="float">float</span></span> <span class="o">=</span> <span class="mf">1.2</span><span class="p">,</span> <span class="n">rebalancing</span><span class="p">:</span> <span class="n"><span title="bool">bool</span></span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">rebalancing_hour</span><span class="p">:</span> <span class="n"><span title="int">int</span></span> <span class="o">=</span> <span class="mi">4</span><span class="p">,</span> <span class="n">rebalancing_strength</span><span class="p">:</span> <span class="n"><span title="float">float</span></span> <span class="o">=</span> <span class="mf">0.6</span><span class="p">,</span> <span class="n">ghost_rate</span><span class="p">:</span> <span class="n"><span title="float">float</span></span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">scraper_cell_nan</span><span class="p">:</span> <span class="n"><span title="float">float</span></span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">scraper_station_outages</span><span class="p">:</span> <span class="n"><span title="int">int</span></span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">weather_events</span><span class="p">:</span> <span class="n"><span title="int">int</span></span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">weather_drop</span><span class="p">:</span> <span class="n"><span title="float">float</span></span> <span class="o">=</span> <span class="mf">0.1</span><span class="p">,</span> <span class="n">weather_len_min</span><span class="p">:</span> <span class="n"><span title="float">float</span></span> <span class="o">=</span> <span class="mf">90.0</span><span class="p">,</span> <span class="n">inject_lat</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-external" title="&lt;code&gt;numpy.ndarray&lt;/code&gt;" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray">ndarray</a></span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">inject_lon</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-external" title="&lt;code&gt;numpy.ndarray&lt;/code&gt;" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray">ndarray</a></span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">inject_capacity</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-external" title="&lt;code&gt;numpy.ndarray&lt;/code&gt;" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray">ndarray</a></span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">inject_role</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-external" title="&lt;code&gt;numpy.ndarray&lt;/code&gt;" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray">ndarray</a></span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span>
-</span></code></pre></div>
-
-    <div class="doc doc-contents first">
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div class="doc doc-children">
-
-
-
-
-
-
-
-
-
-
-
-
-  </div>
-
-    </div>
-
+<h1 id="command-line-collect-compact-quality-release-verify">Command line: collect, compact, quality, release, verify<a class="headerlink" href="#command-line-collect-compact-quality-release-verify" title="Permanent link">&para;</a></h1>
+<div class="admonition warning">
+<p class="admonition-title">Experimental</p>
+<p>The commands below were added in 2.1.0 and may change in a minor release. <code>gbfs audit</code>
+is stable. See the <a href="../">overview</a>.</p>
 </div>
+<p>Needs the extras of the library calls behind them: <code>pip install "gbfs-toolkit[fetch,parquet]"</code> (and
+<code>[cli]</code> for coloured audit tables). Exit codes: <code>0</code> success, <code>1</code> a check failed (a failed poll, a
+mismatching release), <code>2</code> bad arguments, missing input or a refusal.</p>
+<h2 id="gbfs-collect"><code>gbfs collect</code><a class="headerlink" href="#gbfs-collect" title="Permanent link">&para;</a></h2>
+<p>Polls feeds politely and writes one fragment per poll under <code>OUT/&lt;feed&gt;/&lt;system&gt;/_fragments/&lt;day&gt;/</code>
+(<a href="../collect/">collect</a>); <code>--compact</code> gathers the fragments of closed days into <code>OUT/&lt;feed&gt;/&lt;system&gt;/&lt;day&gt;.parquet</code>
+when it is done, and <code>--write day</code> rewrites the day file at each poll instead. With none of <code>--interval</code>,
+<code>--duration</code> and <code>--iterations</code> it polls <strong>once</strong>.</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>gbfs<span class="w"> </span>collect<span class="w"> </span>--system<span class="w"> </span><span class="nv">harbor</span><span class="o">=</span>https://example.org/gbfs/gbfs.json<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">             </span>--out<span class="w"> </span>data/collected<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">             </span>--user-agent<span class="w"> </span><span class="s2">"my-lab-gbfs/1.0 (mailto:me@example.org)"</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c1"># a poll a minute for an hour, vehicles too, and the dated metadata</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>gbfs<span class="w"> </span>collect<span class="w"> </span>--systems-file<span class="w"> </span>systems.csv<span class="w"> </span>--out<span class="w"> </span>data/collected<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">             </span>--user-agent<span class="w"> </span><span class="s2">"my-lab-gbfs/1.0 (mailto:me@example.org)"</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">             </span>--feeds<span class="w"> </span>station_status<span class="w"> </span>vehicle_status<span class="w"> </span>--metadata<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">             </span>--interval<span class="w"> </span><span class="m">60</span><span class="w"> </span>--duration<span class="w"> </span><span class="m">3600</span>
+</span></code></pre></div>
+<p><code>--systems-file</code> is a CSV (<code>system_id</code> plus <code>auto_discovery_url</code>, <code>gbfs_url</code> or <code>url</code>; the output of
+<code>gbfs_toolkit.systems_catalog</code> works) or a JSON object <code>{system_id: url}</code>. <code>--user-agent</code> is required.
+<code>--min-interval</code> (seconds, default 1) and the feed's <code>ttl</code> are never undercut; <code>--no-ttl</code> ignores the
+<code>ttl</code> and you then own the load.</p>
+<h2 id="gbfs-compact"><code>gbfs compact</code><a class="headerlink" href="#gbfs-compact" title="Permanent link">&para;</a></h2>
+<p>Gathers the fragments of closed days into one file per system and day, atomically and idempotently
+(running it again changes nothing). Today's fragments (UTC) are left alone unless <code>--include-today</code>.</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>gbfs<span class="w"> </span>compact<span class="w"> </span>data/collected<span class="w">                    </span><span class="c1"># both feeds</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>gbfs<span class="w"> </span>compact<span class="w"> </span>data/collected<span class="w"> </span>--kind<span class="w"> </span>station_status<span class="w"> </span>--systems<span class="w"> </span>harbor
+</span></code></pre></div>
+<h2 id="gbfs-quality"><code>gbfs quality</code><a class="headerlink" href="#gbfs-quality" title="Permanent link">&para;</a></h2>
+<p>Daily coverage and incidents of a collection (<a href="../quality/">quality</a>). <code>PATH</code> is a <code>collect</code> folder or a
+lake, read in place (not loaded whole) unless <code>--systems</code> is given.</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>gbfs<span class="w"> </span>quality<span class="w"> </span>data/collected<span class="w"> </span>--end<span class="w"> </span><span class="m">2026</span>-03-31<span class="w"> </span>--incidents<span class="w"> </span>known-incidents.json<span class="w"> </span>--out<span class="w"> </span>reports/march
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>gbfs<span class="w"> </span>quality<span class="w"> </span>data/lake<span class="w"> </span>--layout<span class="w"> </span>lake<span class="w"> </span>--expected-polls<span class="w"> </span><span class="m">96</span><span class="w"> </span>--poll-resolution<span class="w"> </span>15min<span class="w"> </span>--strict
+</span></code></pre></div>
+<p>It prints, per system, the days in each status and the mean completeness, then the incident counts;
+<code>--json</code> prints the same as JSON, <code>--out DIR</code> writes <code>daily_coverage.csv</code> and <code>incidents.json</code>, and
+<code>--strict</code> exits <code>1</code> if any system-day is not <code>ok</code>. Leave today out with <code>--end</code> (it is still being
+collected).</p>
+<h2 id="gbfs-release"><code>gbfs release</code><a class="headerlink" href="#gbfs-release" title="Permanent link">&para;</a></h2>
+<p>Freezes a closed period of a lake into a new folder (<a href="../release/">release</a>). It uploads nothing and
+has no default licence.</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>gbfs<span class="w"> </span>release<span class="w"> </span>data/lake<span class="w"> </span>releases/demo-2026-03<span class="w"> </span>--name<span class="w"> </span>demo-2026-03<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">             </span>--start<span class="w"> </span><span class="m">2026</span>-03-01<span class="w"> </span>--end<span class="w"> </span><span class="m">2026</span>-03-31<span class="w"> </span>--license<span class="w"> </span>CC-BY-4.0<span class="w"> </span>--systems<span class="w"> </span>harbor<span class="w"> </span>lakeside
+</span></code></pre></div>
+<h2 id="gbfs-verify"><code>gbfs verify</code><a class="headerlink" href="#gbfs-verify" title="Permanent link">&para;</a></h2>
+<p>Checks a release folder against its <code>SHA256SUMS</code>, or a data manifest against data
+(<a href="../repro/">repro</a>).</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>gbfs<span class="w"> </span>verify<span class="w"> </span>releases/demo-2026-03<span class="w">            </span><span class="c1"># every file matches, none unlisted</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>gbfs<span class="w"> </span>verify<span class="w"> </span>releases/demo-2026-03<span class="w"> </span>--deep<span class="w">     </span><span class="c1"># and the content fingerprint matches</span>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>gbfs<span class="w"> </span>verify<span class="w"> </span>data_manifest.json<span class="w"> </span>--data<span class="w"> </span>data/lake/
+</span></code></pre></div>
 
 
 
@@ -6497,7 +7413,7 @@
       <nav class="md-footer__inner md-grid" aria-label="Footer" >
         
           
-          <a href="../SCHEMAS/" class="md-footer__link md-footer__link--prev" aria-label="Previous: SCHEMAS">
+          <a href="../repro/" class="md-footer__link md-footer__link--prev" aria-label="Previous: repro">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
@@ -6507,20 +7423,20 @@
                 Previous
               </span>
               <div class="md-ellipsis">
-                SCHEMAS
+                repro
               </div>
             </div>
           </a>
         
         
           
-          <a href="../simulate_city_flows/" class="md-footer__link md-footer__link--next" aria-label="Next: simulate_city_flows">
+          <a href="../../reference/" class="md-footer__link md-footer__link--next" aria-label="Next: Overview">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                simulate_city_flows
+                Overview
               </div>
             </div>
             <div class="md-footer__button md-icon">
@@ -6587,12 +7503,12 @@
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.instant", "navigation.instant.progress", "navigation.tracking", "navigation.sections", "navigation.tabs", "navigation.tabs.sticky", "navigation.top", "navigation.indexes", "navigation.footer", "toc.follow", "search.suggest", "search.highlight", "search.share", "content.code.copy", "content.code.annotate", "content.tooltips"], "search": "../../../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.instant", "navigation.instant.progress", "navigation.tracking", "navigation.sections", "navigation.tabs", "navigation.tabs.sticky", "navigation.top", "navigation.indexes", "navigation.footer", "toc.follow", "search.suggest", "search.highlight", "search.share", "content.code.copy", "content.code.annotate", "content.tooltips"], "search": "../../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"alias": true, "default": "latest", "provider": "mike"}}</script>
     
     
-      <script src="../../../assets/javascripts/bundle.c21346df.min.js"></script>
+      <script src="../../assets/javascripts/bundle.a5f9d56c.min.js"></script>
       
-        <script src="../../../javascripts/mathjax.js"></script>
+        <script src="../../javascripts/mathjax.js"></script>
       
         <script src="https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js"></script>
       
