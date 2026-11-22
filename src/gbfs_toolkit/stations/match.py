@@ -59,6 +59,7 @@ __all__ = [
     "normalize_station_name",
     "match_stations",
     "id_continuity",
+    "MATCH_DTYPES",
 ]
 
 _log = logging.getLogger(__name__)
@@ -73,6 +74,16 @@ MATCH_COLUMNS: list[str] = [
     "name_old",
     "name_new",
 ]
+#: The logical type of each column of `match_stations`.
+MATCH_DTYPES: dict[str, str] = {
+    "system_id": "string",
+    "station_id_old": "string",
+    "station_id_new": "string",
+    "match_method": "string",
+    "distance_m": "float64",
+    "name_old": "string",
+    "name_new": "string",
+}
 #: The values of ``match_method``.
 METHODS: tuple[str, ...] = ("same_id", "same_id_far", "same_name", "nearest", "none", "only_new")
 

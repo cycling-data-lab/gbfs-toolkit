@@ -89,6 +89,7 @@ from gbfs_toolkit.analytics.temporal import (
     temporal_context_features,
 )
 from gbfs_toolkit.audit import (
+    AuditReport,
     audit_catalogue,
     audit_dynamic,
     audit_frames,
@@ -228,6 +229,7 @@ except PackageNotFoundError:  # pragma: no cover (a source tree imported without
 __all__ = [
     # audit (the flagship)
     "audit_static",
+    "AuditReport",
     "audit_catalogue",
     "audit_sensitivity",
     "flag_rate_ci",

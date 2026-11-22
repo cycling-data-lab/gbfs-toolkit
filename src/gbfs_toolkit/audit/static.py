@@ -34,6 +34,9 @@ from gbfs_toolkit.core.models import (
 from gbfs_toolkit.core.utils import EARTH_RADIUS_M, project_meters
 
 __all__ = [
+    "AUDIT_REPORT_COLUMNS",
+    "AUDIT_REPORT_DTYPES",
+    "AuditReport",
     "overcapacity_ratio",
     "reclassify_overcapacity",
     "capacity_convention",
@@ -46,6 +49,76 @@ __all__ = [
 ]
 
 _REQUIRED = ["system_id", "station_id", "station_type", "capacity", "lat", "lon"]
+
+#: Columns of the frame `audit_static` returns, in order: the two keys, one boolean per rule
+#: (``AUDIT_FLAGS``), ``flagged`` (any rule) and ``reason`` (the names of the rules that fired).
+AUDIT_REPORT_COLUMNS: list[str] = ["system_id", "station_id", *AUDIT_FLAGS, "flagged", "reason"]
+
+#: The dtype each column of an `AuditReport` has (the keys keep the dtype of the input).
+AUDIT_REPORT_DTYPES: dict[str, str] = {
+    **dict.fromkeys(AUDIT_FLAGS, "bool"),
+    "flagged": "bool",
+    "reason": "string",
+}
+
+
+class AuditReport(pd.DataFrame):
+    """The verdict of `audit_static`: a DataFrame with declared columns and a few readers.
+
+    It **is** a ``pandas.DataFrame`` (one row per station; ``verdict["A4"]``, ``verdict.loc``,
+    ``groupby``, ``to_csv`` and the rest work exactly as before), so existing code is unchanged;
+    what is added is a contract (`AUDIT_REPORT_COLUMNS`, `AUDIT_REPORT_DTYPES`) and shortcuts for
+    what is usually done next. Any operation that builds a new frame (a selection, a merge)
+    returns a plain ``DataFrame``; `to_frame` does so explicitly.
+
+    Examples
+    --------
+    >>> import pandas as pd
+    >>> from gbfs_toolkit import audit_static
+    >>> stations = pd.DataFrame({"system_id": "s", "station_id": ["a", "b"],
+    ...                          "station_type": "docked_bike", "capacity": [10.0, 12.0],
+    ...                          "lat": [48.85, 48.86], "lon": [2.35, 2.36]})
+    >>> report = audit_static(stations)
+    >>> type(report).__name__, report.n_flagged, report.flag_counts["A1"]
+    ('AuditReport', 0, 0)
+    >>> report.to_frame().equals(pd.DataFrame(report))
+    True
+    """
+
+    @property
+    def _constructor(self) -> Any:
+        return pd.DataFrame
+
+    @property
+    def rule_flags(self) -> pd.DataFrame:
+        """The A1 to A7 columns (booleans), indexed like the report."""
+        return pd.DataFrame(self[list(AUDIT_FLAGS)])
+
+    @property
+    def flag_counts(self) -> pd.Series:
+        """How many stations each rule flagged: a ``Series`` indexed by the rule (A1 to A7)."""
+        return pd.Series(self[list(AUDIT_FLAGS)].sum(), dtype="int64")
+
+    @property
+    def n_flagged(self) -> int:
+        """Number of stations flagged by at least one rule."""
+        return int(self["flagged"].sum())
+
+    def flagged_stations(self) -> pd.DataFrame:
+        """The rows of the stations at least one rule flagged."""
+        return pd.DataFrame(self.loc[self["flagged"].to_numpy()])
+
+    def by_system(self) -> pd.DataFrame:
+        """Per system: ``n_stations``, ``n_flagged`` and the count of each rule."""
+        grouped = self.groupby("system_id", sort=True)
+        out = grouped[list(AUDIT_FLAGS)].sum().astype("int64")
+        out.insert(0, "n_flagged", grouped["flagged"].sum().astype("int64"))
+        out.insert(0, "n_stations", grouped.size().astype("int64"))
+        return out
+
+    def to_frame(self) -> pd.DataFrame:
+        """A plain ``pandas.DataFrame`` copy (what ``audit_static`` returned before 2.1)."""
+        return pd.DataFrame(self).copy()
 
 
 def overcapacity_ratio(info: pd.DataFrame, *, n_min: int = 20) -> pd.Series:
@@ -509,7 +582,7 @@ def audit_static(
     a7_tau: float = A7_RATE_THRESHOLD,
     n_min: int | None = None,
     a4_projection: str = "global",
-) -> pd.DataFrame:
+) -> AuditReport:
     """Run the A1–A7 semantic audit on a canonical station-information frame.
 
     All policy thresholds are exposed so the audit can be swept for sensitivity
@@ -550,10 +623,10 @@ def audit_static(
 
     Returns
     -------
-    pandas.DataFrame
-        One row per input station with boolean columns ``A1 … A7``, a
-        ``flagged`` column (any rule fired) and a human-readable ``reason``
-        (comma-separated rule names).
+    AuditReport
+        A ``pandas.DataFrame`` subclass: one row per input station with boolean columns
+        ``A1 … A7``, a ``flagged`` column (any rule fired) and a human-readable ``reason``
+        (comma-separated rule names), plus shortcuts (``flag_counts``, ``by_system()``...).
 
     See Also
     --------
@@ -605,7 +678,7 @@ def audit_static(
         ", ".join(RULES[f]["name"] for f, fired in zip(AUDIT_FLAGS, row, strict=True) if fired)
         for row in flags
     ]
-    return out
+    return AuditReport(out)
 
 
 def _jaccard(a: set, b: set) -> float:
