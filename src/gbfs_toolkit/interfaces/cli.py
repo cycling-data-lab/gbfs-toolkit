@@ -1,10 +1,11 @@
 """Command-line interface: ``gbfs audit`` and the experimental data-lake commands.
 
 ``gbfs audit <station_information.json>`` is the semantic counterpart to MobilityData's syntactic
-``gbfs-validator``. Four experimental commands work on collected data: ``gbfs collect`` (poll
-feeds politely and write day files), ``gbfs quality`` (daily coverage and incidents),
-``gbfs release`` (freeze a closed period into a depositable folder) and ``gbfs verify`` (check a
-release or a data manifest). Run ``gbfs <command> --help`` for each.
+``gbfs-validator``. Five experimental commands work on collected data: ``gbfs collect`` (poll
+feeds politely and write fragments), ``gbfs compact`` (gather them into day files),
+``gbfs quality`` (daily coverage and incidents), ``gbfs release`` (freeze a closed period into a
+depositable folder) and ``gbfs verify`` (check a release or a data manifest). Run
+``gbfs <command> --help`` for each.
 
 Output adapts to context: a coloured table when ``rich`` is installed and the
 output is an interactive terminal, plain text otherwise, or machine-readable
@@ -185,6 +186,7 @@ def _cmd_collect(args: argparse.Namespace) -> int:
         min_interval=args.min_interval,
         respect_ttl=not args.no_ttl,
         max_workers=args.workers,
+        write=args.write,
     )
     bounded = args.duration is not None or args.iterations is not None
     failed = 0
@@ -218,22 +220,53 @@ def _cmd_collect(args: argparse.Namespace) -> int:
             on_poll=show,
         )
         print(f"done: {summary['iterations']} poll(s), {summary['rows']} row(s)")
+    if args.compact:
+        done = collector.compact()
+        print(f"compacted {len(done)} day file(s) from {int(done['fragments'].sum())} fragment(s)")
     return 1 if failed else 0
+
+
+def _cmd_compact(args: argparse.Namespace) -> int:
+    import pandas as pd
+
+    from gbfs_toolkit.collect import FEED_KINDS, compact_collected
+
+    kinds = FEED_KINDS if args.kind == "all" else (args.kind,)
+    done = pd.concat(
+        [
+            compact_collected(args.path, k, systems=args.systems, include_today=args.include_today)
+            for k in kinds
+        ],
+        ignore_index=True,
+    )
+    print(
+        f"compacted {len(done)} day file(s) from {int(done['fragments'].sum())} fragment(s) "
+        f"under {args.path}"
+    )
+    return 0
 
 
 def _load_snapshots(args: argparse.Namespace):
     from gbfs_toolkit.collect import read_collected
+    from gbfs_toolkit.core._tabular import open_table
     from gbfs_toolkit.store import read_lake
 
     root = Path(args.path)
     layout = args.layout
     if layout == "auto":
         layout = "lake" if any(root.glob("system_id=*")) else "collected"
+    # Without a system filter the folder itself is the source: nothing is loaded whole, and the
+    # window (--start, --end) is applied by the coverage computation.
     if layout == "lake":
+        if args.systems is None and any(root.glob("system_id=*/year=*/month=*/*.parquet")):
+            return open_table(root, what="gbfs quality"), "observed_at_utc"
         import pandas as pd
 
         end = None if args.end is None else pd.Timestamp(args.end, tz="UTC") + pd.Timedelta(days=1)
         return read_lake(root, systems=args.systems, start=args.start, end=end), "observed_at_utc"
+    folder = root / args.kind
+    if args.systems is None and folder.is_dir() and any(folder.rglob("*.parquet")):
+        return open_table(folder, what="gbfs quality"), "fetched_at"
     return (
         read_collected(root, args.kind, systems=args.systems, start=args.start, end=args.end),
         "fetched_at",
@@ -241,10 +274,12 @@ def _load_snapshots(args: argparse.Namespace):
 
 
 def _cmd_quality(args: argparse.Namespace) -> int:
+    import pandas as pd
+
     from gbfs_toolkit.quality import STATUSES, assess, read_incidents, write_incidents
 
     snaps, time_col = _load_snapshots(args)
-    if snaps.empty:
+    if isinstance(snaps, pd.DataFrame) and snaps.empty:
         print(f"gbfs: no snapshots found under {args.path}", file=sys.stderr)
         return 2
     known = read_incidents(args.incidents) if args.incidents else None
@@ -396,7 +431,32 @@ def _add_data_commands(sub: argparse._SubParsersAction) -> None:
     p.add_argument(
         "--metadata", action="store_true", help="also keep dated versions of the metadata feeds"
     )
+    p.add_argument(
+        "--write",
+        choices=("fragments", "day"),
+        default="fragments",
+        help="fragments (default): one small file per poll, gathered by `gbfs compact`; "
+        "day: rewrite the day file at each poll",
+    )
+    p.add_argument(
+        "--compact",
+        action="store_true",
+        help="when done, gather the fragments of closed days into day files",
+    )
     p.set_defaults(func=_cmd_collect)
+
+    c = sub.add_parser(
+        "compact",
+        help="gather the fragments of collected days into one file per system and day (experimental)",
+        description="(Experimental.) Combine the fragments a collector wrote into OUT/<feed>/<system>/<day>.parquet, "
+        "atomically and idempotently: running it again changes nothing. Today's fragments (UTC) are left "
+        "alone unless --include-today.",
+    )
+    c.add_argument("path", help="the folder given to `gbfs collect --out`")
+    c.add_argument("--kind", choices=("station_status", "vehicle_status", "all"), default="all")
+    c.add_argument("--systems", nargs="+", help="only these systems")
+    c.add_argument("--include-today", action="store_true", dest="include_today")
+    c.set_defaults(func=_cmd_compact)
 
     q = sub.add_parser(
         "quality",

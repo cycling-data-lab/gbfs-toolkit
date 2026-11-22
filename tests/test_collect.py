@@ -12,6 +12,7 @@ import pytest
 from gbfs_toolkit.collect import (
     FEED_KINDS,
     Collector,
+    compact_collected,
     parse_station_status,
     parse_vehicle_status,
     read_collected,
@@ -307,7 +308,9 @@ def test_day_files_split_by_utc_day_and_keep_types(tmp_path):
     times = iter(
         pd.to_datetime(["2026-03-01T23:59:00Z", "2026-03-01T23:59:30Z", "2026-03-02T00:00:10Z"])
     )
-    c, _, _ = make(tmp_path, docs, clock=clock, min_interval=0, now=lambda: next(times))
+    c, _, _ = make(
+        tmp_path, docs, clock=clock, min_interval=0, now=lambda: next(times), write="day"
+    )
     for _ in range(3):
         c.poll_once()
     assert sorted(p.name for p in (tmp_path / "station_status" / "sys").glob("*.parquet")) == [
@@ -332,6 +335,7 @@ def test_unreadable_day_file_is_skipped_or_raised(tmp_path, caplog):
         tmp_path,
         {"https://x/gbfs.json": DISCOVERY, "https://x/status.json": status_doc(ttl=0)},
         min_interval=0,
+        write="day",
     )
     c.poll_once()
     good = next((tmp_path / "station_status" / "sys").glob("*.parquet"))
@@ -508,3 +512,123 @@ def test_live_feed_smoke(tmp_path):  # skipped unless --run-network
         user_agent="gbfs-toolkit-tests (+https://github.com/cycling-data-lab/gbfs-toolkit)",
     )
     assert c.poll_once()["outcome"].tolist() in (["collected"], ["unavailable"])
+
+
+# --- fragments and compaction --------------------------------------------------------------
+
+
+def polls(tmp_path, instants, **kw):
+    """A collector whose clock walks through ``instants``; polls once per instant."""
+    docs = {"https://x/gbfs.json": DISCOVERY, "https://x/status.json": status_doc(ttl=0)}
+    times = iter(pd.to_datetime(instants))
+    c, _, _ = make(tmp_path, docs, min_interval=0, now=lambda: next(times), **kw)
+    for _ in instants:
+        c.poll_once()
+    return c
+
+
+def frag_files(tmp_path):
+    return sorted((tmp_path / "station_status" / "sys" / "_fragments").rglob("*.parquet"))
+
+
+def test_a_poll_writes_a_new_fragment_and_never_touches_the_earlier_ones(tmp_path):
+    docs = {"https://x/gbfs.json": DISCOVERY, "https://x/status.json": status_doc(ttl=0)}
+    times = iter(pd.to_datetime(["2026-03-01T10:00:00Z", "2026-03-01T10:01:00Z"]))
+    c, _, _ = make(tmp_path, docs, min_interval=0, now=lambda: next(times))
+    c.poll_once()
+    first = frag_files(tmp_path)
+    stamps = {f: f.stat().st_mtime_ns for f in first}
+    c.poll_once()
+    after = frag_files(tmp_path)
+    assert len(first) == 1 and len(after) == 2 and set(first) <= set(after)
+    assert all(f.stat().st_mtime_ns == stamps[f] for f in first)  # not rewritten
+    assert not list((tmp_path / "station_status" / "sys").glob("*.parquet"))  # no day file yet
+    assert len(read_collected(tmp_path)) == 4  # but it reads them all
+    assert not list(tmp_path.rglob("*.tmp"))
+
+
+def test_write_mode_is_validated(tmp_path):
+    with pytest.raises(ValueError, match="write"):
+        Collector({"s": "https://x"}, tmp_path, user_agent="t (mailto:t@x.org)", write="rows")
+
+
+def test_compaction_gathers_closed_days_atomically_and_is_idempotent(tmp_path):
+    instants = [
+        "2026-03-01T23:58:00Z",
+        "2026-03-01T23:59:00Z",
+        "2026-03-02T00:01:00Z",
+        "2026-03-02T00:02:00Z",
+    ]
+    polls(tmp_path, instants)
+    before = read_collected(tmp_path)
+    clock = lambda: pd.Timestamp("2026-03-02T12:00:00Z")  # noqa: E731
+    done = compact_collected(tmp_path, now=clock)
+    assert done[["system_id", "day", "fragments", "rows"]].values.tolist() == [
+        ["sys", "2026-03-01", 2, 4]
+    ]
+    day = tmp_path / "station_status" / "sys" / "2026-03-01.parquet"
+    assert day.exists() and len(frag_files(tmp_path)) == 2  # today's two are left alone
+    assert read_collected(tmp_path).equals(before)  # nothing lost or invented
+    stamp = day.stat().st_mtime_ns
+    again = compact_collected(tmp_path, now=clock)
+    assert again.empty and day.stat().st_mtime_ns == stamp  # idempotent: no rewrite
+    done = compact_collected(tmp_path, now=clock, include_today=True)
+    assert done["rows"].tolist() == [4] and not frag_files(tmp_path)
+    assert not (tmp_path / "station_status" / "sys" / "_fragments").exists()
+    assert read_collected(tmp_path).equals(before)
+    assert not list(tmp_path.rglob("*.tmp"))
+    types = pd.read_parquet(day)
+    assert types["num_bikes_available"].dtype == "Int64" and types["is_renting"].dtype == "boolean"
+
+
+def test_an_interrupted_compaction_loses_nothing_and_counts_nothing_twice(tmp_path):
+    polls(tmp_path, ["2026-03-01T10:00:00Z", "2026-03-01T10:01:00Z"])
+    before = read_collected(tmp_path)
+    saved = {f: f.read_bytes() for f in frag_files(tmp_path)}
+    clock = lambda: pd.Timestamp("2026-03-05T00:00:00Z")  # noqa: E731
+    compact_collected(tmp_path, now=clock)
+    for f, data in saved.items():  # as if the process died before removing the fragments
+        f.parent.mkdir(parents=True, exist_ok=True)
+        f.write_bytes(data)
+    assert read_collected(tmp_path).equals(before)  # read: exact duplicates counted once
+    done = compact_collected(tmp_path, now=clock)
+    assert done["rows"].tolist() == [4]  # compaction: the day file, deduplicated
+    assert read_collected(tmp_path).equals(before) and not frag_files(tmp_path)
+
+
+def test_compaction_leaves_an_unreadable_fragment_and_a_late_fragment_alone(tmp_path, caplog):
+    polls(tmp_path, ["2026-03-01T10:00:00Z", "2026-03-01T10:01:00Z"])
+    bad = frag_files(tmp_path)[0].parent / "000000000000-bad.parquet"
+    bad.write_bytes(b"PAR1 truncated")
+    clock = lambda: pd.Timestamp("2026-03-05T00:00:00Z")  # noqa: E731
+    with caplog.at_level("WARNING", logger="gbfs_toolkit"):
+        done = compact_collected(tmp_path, now=clock)
+    assert done["fragments"].tolist() == [2] and bad.exists()
+    assert "unreadable" in caplog.text
+    assert len(read_collected(tmp_path)) == 4
+
+
+def test_compaction_options_and_an_empty_folder(tmp_path):
+    assert compact_collected(tmp_path / "none").empty
+    polls(tmp_path, ["2026-03-01T10:00:00Z"])
+    clock = lambda: pd.Timestamp("2026-03-05T00:00:00Z")  # noqa: E731
+    assert compact_collected(tmp_path, systems=["other"], now=clock).empty
+    assert compact_collected(tmp_path, "vehicle_status", now=clock).empty
+    with pytest.raises(ValueError, match="kind"):
+        compact_collected(tmp_path, "alerts")
+    c = polls(tmp_path / "second", ["2026-03-01T10:00:00Z"])
+    assert len(c.compact(include_today=True, now=clock)) == 1
+
+
+def test_collected_folder_is_a_path_source_for_quality_and_aggregate(tmp_path):
+    pytest.importorskip("duckdb")
+    from gbfs_toolkit.aggregate import aggregate_availability
+    from gbfs_toolkit.quality import daily_coverage
+
+    polls(tmp_path, ["2026-03-01T10:00:00Z", "2026-03-01T10:01:00Z", "2026-03-02T10:00:00Z"])
+    compact_collected(tmp_path, now=lambda: pd.Timestamp("2026-03-02T12:00:00Z"))
+    folder = tmp_path / "station_status"  # one day file and one fragment
+    agg = aggregate_availability(folder, "1D", time_col="fetched_at")
+    assert int(agg["n_obs"].sum()) == 6
+    cov = daily_coverage(folder)
+    assert cov["actual_polls"].tolist() == [2, 1]

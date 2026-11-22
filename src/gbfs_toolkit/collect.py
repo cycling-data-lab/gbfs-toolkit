@@ -19,14 +19,22 @@ iterations), or the ``gbfs collect`` command. What it does, and refuses to do:
   ``True``. A station that publishes nothing must not look like an empty or an open station.
   (This is stricter than `gbfs_toolkit.to_canonical_station_status`, which defaults a
   missing ``is_renting`` to ``True``.)
-* **It writes atomically**, one Parquet file per system and UTC day::
+* **It writes atomically, and never rewrites what it has already written.** Each poll of a
+  system is one small *fragment* file, written to a temporary name and renamed::
+
+      <out_dir>/station_status/<system_id>/_fragments/2026-03-01/<time>-<id>.parquet
+
+  `compact_collected` gathers the fragments of each closed day into one file per system and
+  UTC day, atomically and idempotently (running it again changes nothing, and an interruption
+  loses nothing)::
 
       <out_dir>/station_status/<system_id>/2026-03-01.parquet
       <out_dir>/vehicle_status/<system_id>/2026-03-01.parquet
 
-  (a day file is rewritten as a whole at each poll, which is simple and safe for a few hundred
-  stations at a one-minute cadence; for much larger volumes use the lake of
-  `gbfs_toolkit.store`.)
+  `read_collected` reads day files and fragments alike, and so does a path given to
+  `gbfs_toolkit.aggregate` or `gbfs_toolkit.quality`. ``write="day"`` restores the earlier
+  behaviour (the day file is rewritten as a whole at each poll: simple, and fine for a few
+  hundred stations at a one-minute cadence, but its cost grows with the day).
 
 Networking needs the ``fetch`` extra and Parquet the ``parquet`` extra. For offline work,
 pass ``get_json`` (a ``url -> dict`` function): the tests of this module use a local server.
@@ -56,6 +64,7 @@ from __future__ import annotations
 import logging
 import threading
 import time
+import uuid
 from collections import Counter
 from collections.abc import Callable, Iterable, Mapping, Sequence
 from concurrent.futures import ThreadPoolExecutor
@@ -74,7 +83,9 @@ __all__ = [
     "FEED_KINDS",
     "METADATA_FEEDS",
     "OUTCOMES",
+    "WRITE_MODES",
     "Collector",
+    "compact_collected",
     "parse_station_status",
     "parse_vehicle_status",
     "read_collected",
@@ -89,6 +100,10 @@ _FEED_NAMES = {
     "station_status": ("station_status",),
     "vehicle_status": ("vehicle_status", "free_bike_status"),
 }
+#: How a `Collector` writes: ``"fragments"`` (one small file per poll, compacted later) or
+#: ``"day"`` (the day file is rewritten at each poll).
+WRITE_MODES: tuple[str, ...] = ("fragments", "day")
+_FRAGMENTS = "_fragments"
 #: The outcome of one (system, feed) at one poll.
 OUTCOMES: tuple[str, ...] = (
     "collected",  # rows written
@@ -346,6 +361,10 @@ class Collector:
         Longest wait after repeated failures, in seconds.
     max_workers : int, default 4
         Systems polled in parallel.
+    write : {"fragments", "day"}, default "fragments"
+        ``"fragments"`` writes one new small file per poll and system (nothing already written
+        is touched; run `compact_collected` to gather a closed day into one file);
+        ``"day"`` rewrites the day file as a whole at each poll.
     get_json : callable, optional
         ``url -> dict``, replacing HTTP (no ``requests`` needed). The offline path.
     session, clock, now : optional
@@ -371,6 +390,7 @@ class Collector:
         respect_ttl: bool = True,
         max_backoff: float = 3600.0,
         max_workers: int = 4,
+        write: str = "fragments",
         get_json: Callable[[str], dict[str, Any]] | None = None,
         session: Any = None,
         clock: Callable[[], float] = time.monotonic,
@@ -381,6 +401,8 @@ class Collector:
                 "user_agent is required: tell the operators who is polling them, "
                 "e.g. 'my-lab-gbfs/1.0 (mailto:me@example.org)'"
             )
+        if write not in WRITE_MODES:
+            raise ValueError(f"write must be one of {WRITE_MODES}, got {write!r}")
         bad = [f for f in feeds if f not in FEED_KINDS]
         if bad or not feeds:
             raise ValueError(f"feeds must be a non-empty subset of {FEED_KINDS}, got {list(feeds)}")
@@ -392,6 +414,7 @@ class Collector:
                 "user_agent %r has no contact (e-mail or URL); operators prefer one", user_agent
             )
         self.out_dir = Path(out_dir)
+        self.write = write
         self.user_agent = user_agent.strip()
         self.feeds = tuple(dict.fromkeys(feeds))
         self.timeout = float(timeout)
@@ -513,7 +536,13 @@ class Collector:
 
     def _append(self, kind: str, system: str, frame: pd.DataFrame) -> None:
         require_pyarrow("Collector")
-        day = frame["fetched_at"].iloc[0].strftime("%Y-%m-%d")
+        stamp = frame["fetched_at"].iloc[0]
+        day = stamp.strftime("%Y-%m-%d")
+        if self.write == "fragments":
+            name = f"{stamp.strftime('%H%M%S%f')}-{uuid.uuid4().hex[:8]}.parquet"
+            path = self.out_dir / kind / system / _FRAGMENTS / day / name
+            atomic_write(path, lambda tmp: frame.to_parquet(tmp, index=False, compression="zstd"))
+            return
         path = self.out_dir / kind / system / f"{day}.parquet"
         with self._lock:
             guard = self._locks.setdefault(path, threading.Lock())
@@ -525,6 +554,25 @@ class Collector:
             atomic_write(
                 path, lambda tmp: combined.to_parquet(tmp, index=False, compression="zstd")
             )
+
+    def compact(
+        self,
+        *,
+        include_today: bool = False,
+        now: Callable[[], pd.Timestamp] | None = None,
+    ) -> pd.DataFrame:
+        """Gather the fragments of this collector's feeds into day files (`compact_collected`)."""
+        parts = [
+            compact_collected(
+                self.out_dir,
+                kind,
+                systems=list(self.systems),
+                include_today=include_today,
+                now=now or self._now,
+            )
+            for kind in self.feeds
+        ]
+        return pd.concat(parts, ignore_index=True)
 
     def poll_once(self) -> pd.DataFrame:
         """Poll every system and feed once (those still fresh or backing off are skipped).
@@ -665,6 +713,18 @@ class _NotModified(Exception):  # noqa: N818 (internal control flow)
     """Internal: the server answered 304 to a conditional request."""
 
 
+def _day_files(folder: Path) -> dict[str, tuple[list[Path], list[Path]]]:
+    """The files of one system folder by UTC day: (day file as a list of 0 or 1, fragments)."""
+    days: dict[str, tuple[list[Path], list[Path]]] = {}
+    for f in sorted(folder.glob("????-??-??.parquet")):
+        days.setdefault(f.stem, ([], []))[0].append(f)
+    frag = folder / _FRAGMENTS
+    if frag.is_dir():
+        for sub in sorted(p for p in frag.iterdir() if p.is_dir()):
+            days.setdefault(sub.name, ([], []))[1].extend(sorted(sub.glob("*.parquet")))
+    return dict(sorted(days.items()))
+
+
 def read_collected(
     out_dir: str | Path,
     kind: str = "station_status",
@@ -674,11 +734,13 @@ def read_collected(
     end: str | pd.Timestamp | None = None,
     on_error: str = "skip",
 ) -> pd.DataFrame:
-    """Read the day files a `Collector` wrote, for some systems and days.
+    """Read what a `Collector` wrote (day files and fragments), for some systems and days.
 
     ``start`` and ``end`` are UTC days (both inclusive, compared with the file names). An
     unreadable file (a truncated write, a copy cut short) is skipped with a warning
-    (``on_error="skip"``) or raised (``on_error="raise"``). The result is sorted by time.
+    (``on_error="skip"``) or raised (``on_error="raise"``). The result is sorted by time. If a
+    day has both a day file and fragments (a compaction that was interrupted), rows that are
+    identical in every column are counted once.
 
     Examples
     --------
@@ -700,15 +762,20 @@ def read_collected(
         for folder in sorted(p for p in base.iterdir() if p.is_dir()):
             if wanted is not None and folder.name not in wanted:
                 continue
-            for f in sorted(folder.glob("????-??-??.parquet")):
-                if (lo and f.stem < lo) or (hi and f.stem > hi):
+            for day, (whole, pieces) in _day_files(folder).items():
+                if (lo and day < lo) or (hi and day > hi):
                     continue
-                try:
-                    frames.append(pd.read_parquet(f).astype(_DTYPES[kind], errors="ignore"))
-                except Exception as exc:  # noqa: BLE001 (pyarrow raises several types)
-                    if on_error == "raise":
-                        raise
-                    _log.warning("skipping unreadable file %s: %s", f, exc)
+                day_frames = []
+                for f in [*whole, *pieces]:
+                    try:
+                        day_frames.append(pd.read_parquet(f).astype(_DTYPES[kind], errors="ignore"))
+                    except Exception as exc:  # noqa: BLE001 (pyarrow raises several types)
+                        if on_error == "raise":
+                            raise
+                        _log.warning("skipping unreadable file %s: %s", f, exc)
+                if whole and pieces and len(day_frames) > 1:  # an interrupted compaction
+                    day_frames = [pd.concat(day_frames, ignore_index=True).drop_duplicates()]
+                frames.extend(day_frames)
     if not frames:
         return pd.DataFrame(
             columns=_STATION_COLUMNS if kind == "station_status" else _VEHICLE_COLUMNS
@@ -716,3 +783,116 @@ def read_collected(
     out = pd.concat(frames, ignore_index=True)
     sort = ["fetched_at", "system_id", "station_id" if kind == "station_status" else "vehicle_id"]
     return out.sort_values(sort).reset_index(drop=True)
+
+
+def compact_collected(
+    out_dir: str | Path,
+    kind: str = "station_status",
+    *,
+    systems: Iterable[str] | None = None,
+    include_today: bool = False,
+    now: Callable[[], pd.Timestamp] | None = None,
+    compression: str = "zstd",
+) -> pd.DataFrame:
+    """Gather the fragments of each closed UTC day into one file per system and day.
+
+    For every (system, day) that has fragments, the existing day file (if any) and the fragments
+    are combined, rows identical in every column are kept once, the rows are sorted by time and
+    station (or vehicle), and ``<day>.parquet`` is written atomically; only then are the
+    fragments that were read removed. The result is therefore safe against an interruption (at
+    worst a fragment is read twice, and its rows are deduplicated by the next compaction),
+    **idempotent** (nothing left to gather: nothing changes and no file is rewritten), and safe
+    next to a running `Collector` (a fragment written meanwhile is not read, so it is not
+    removed; it joins the next compaction). A fragment that cannot be read is left in place
+    with a warning. Two compactions at once give the same day file.
+
+    Parameters
+    ----------
+    out_dir : str or Path
+        The folder a `Collector` writes to.
+    kind : {"station_status", "vehicle_status"}
+    systems : iterable of str, optional
+        Only these systems.
+    include_today : bool, default False
+        Today's (UTC) fragments are left alone by default: that day is still being collected.
+    now : callable, optional
+        A UTC clock, for tests.
+
+    Returns
+    -------
+    pandas.DataFrame
+        One row per compacted (system, day): ``kind, system_id, day, fragments, rows, path``;
+        empty when there is nothing to do.
+
+    Examples
+    --------
+    >>> import pandas as pd
+    >>> compact_collected("/nonexistent/folder").empty
+    True
+    """
+    require_pyarrow("compact_collected")
+    import pyarrow as pa
+    import pyarrow.parquet as pq
+
+    from gbfs_toolkit.store import _drop_duplicate_rows
+
+    if kind not in FEED_KINDS:
+        raise ValueError(f"kind must be one of {FEED_KINDS}, got {kind!r}")
+    today = (now or (lambda: pd.Timestamp.now(tz="UTC")))().strftime("%Y-%m-%d")
+    wanted = None if systems is None else {str(s) for s in systems}
+    id_col = "station_id" if kind == "station_status" else "vehicle_id"
+    base = Path(out_dir) / kind
+    rows_out: list[dict[str, Any]] = []
+    if not base.is_dir():
+        return pd.DataFrame(columns=["kind", "system_id", "day", "fragments", "rows", "path"])
+    for folder in sorted(p for p in base.iterdir() if p.is_dir()):
+        if wanted is not None and folder.name not in wanted:
+            continue
+        frag_root = folder / _FRAGMENTS
+        if not frag_root.is_dir():
+            continue
+        for day_dir in sorted(p for p in frag_root.iterdir() if p.is_dir()):
+            day = day_dir.name
+            fragments = sorted(day_dir.glob("*.parquet"))
+            if not fragments or (day >= today and not include_today):
+                continue
+            target = folder / f"{day}.parquet"
+            tables, read = [], []
+            for f in fragments:
+                try:
+                    tables.append(pq.ParquetFile(f).read())
+                    read.append(f)
+                except Exception as exc:  # noqa: BLE001 (pyarrow raises several types)
+                    _log.warning("compaction leaves unreadable fragment %s: %s", f, exc)
+            if not tables:
+                continue
+            if target.exists():
+                tables.insert(0, pq.ParquetFile(target).read())
+            combined = _drop_duplicate_rows(pa.concat_tables(tables, promote_options="default"))
+            order = [("fetched_at", "ascending")]
+            if id_col in combined.column_names:
+                order.append((id_col, "ascending"))
+            combined = combined.sort_by(order)
+
+            def write(tmp: Path, table: Any = combined) -> None:
+                pq.write_table(table, tmp, compression=compression)
+
+            atomic_write(target, write)
+            for f in read:
+                f.unlink(missing_ok=True)
+            try:
+                day_dir.rmdir()
+                frag_root.rmdir()
+            except OSError:
+                pass  # fragments that arrived meanwhile, or unreadable ones: leave them
+            rows_out.append(
+                {
+                    "kind": kind,
+                    "system_id": folder.name,
+                    "day": day,
+                    "fragments": len(read),
+                    "rows": int(combined.num_rows),
+                    "path": str(target.relative_to(Path(out_dir))),
+                }
+            )
+    return pd.DataFrame(rows_out, columns=["kind", "system_id", "day", "fragments", "rows", "path"])
