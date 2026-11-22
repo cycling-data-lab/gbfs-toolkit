@@ -70,7 +70,8 @@ def normalize_operator(value: str | None, *, default: str | None = None) -> str 
     """
     if value is None:
         return default
-    s = str(value).lower()
+    # "_" is a word character for `\b`, so "lime_paris" would never match r"\blime\b"
+    s = re.sub(r"[_\-]+", " ", str(value).lower())
     for pattern, brand in OPERATOR_PATTERNS:
         if re.search(pattern, s):
             return brand
@@ -185,9 +186,9 @@ def filter_catalog(
     if city is not None:
         col = next((c for c in ("location", "city", "name") if c in out.columns), None)
         if col:
-            out = out[out[col].astype(str).str.contains(city, case=False, na=False)]
+            out = out[out[col].astype(str).str.contains(city, case=False, regex=False, na=False)]
     if name is not None and "name" in out.columns:
-        out = out[out["name"].astype(str).str.contains(name, case=False, na=False)]
+        out = out[out["name"].astype(str).str.contains(name, case=False, regex=False, na=False)]
     return out.reset_index(drop=True)
 
 

@@ -113,8 +113,11 @@ def krippendorff_alpha(reliability_data, *, missing=np.nan) -> float:
         if v is missing:
             return True
         try:
-            return isinstance(v, float) and math.isnan(v)
-        except TypeError:
+            if isinstance(v, float) and math.isnan(v):
+                return True
+            # an equal sentinel built elsewhere (999, "NA") is not the same object
+            return bool(v == missing)
+        except (TypeError, ValueError):
             return False
 
     # Coincidence matrix over labels that share a unit with >= 2 ratings.
