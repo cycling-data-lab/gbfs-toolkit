@@ -15,10 +15,10 @@ pa = pytest.importorskip("pyarrow")
 pq = pytest.importorskip("pyarrow.parquet")
 pytest.importorskip("duckdb")
 
+from test_engines import assert_same, make_snapshots  # noqa: E402
+
 from gbfs_toolkit import quality  # noqa: E402
 from gbfs_toolkit.aggregate import aggregate_availability  # noqa: E402
-
-from test_engines import assert_same, make_snapshots  # noqa: E402
 
 
 def _write_nanoseconds(df: pd.DataFrame, path, *, tz: bool) -> None:
