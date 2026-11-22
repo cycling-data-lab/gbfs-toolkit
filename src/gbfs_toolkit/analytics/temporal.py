@@ -12,7 +12,14 @@ import numpy as np
 import pandas as pd
 
 from gbfs_toolkit.core.models import require_columns
-from gbfs_toolkit.core.utils import deprecated_kwarg, gini, num, panel_frame, time_of_day_minutes
+from gbfs_toolkit.core.utils import (
+    deprecated_kwarg,
+    floor_time,
+    gini,
+    num,
+    panel_frame,
+    time_of_day_minutes,
+)
 from gbfs_toolkit.io.timeseries import calculate_net_flow
 
 __all__ = [
@@ -206,6 +213,9 @@ def join_exogenous_timeseries(
     -------
     pandas.DataFrame
         The flattened panel with the exogenous columns merged in (unmatched rows carry ``NaN``).
+        Rows come back **sorted by time with a fresh ``RangeIndex``**, not in the input's order:
+        merge on a key, or sort the input by ``on_time`` first, before assigning a column back
+        to the original frame.
 
     See Also
     --------
@@ -492,7 +502,7 @@ def availability_synchrony(
     require_columns(df, ["station_id", "fetched_at", value_col], what="availability_synchrony")
     wide = pd.DataFrame(
         {
-            "_t": pd.to_datetime(df["fetched_at"]).dt.floor(freq).to_numpy(),
+            "_t": floor_time(pd.to_datetime(df["fetched_at"]), freq).to_numpy(),
             "station_id": df["station_id"].to_numpy(),
             "_v": pd.to_numeric(df[value_col], errors="coerce").to_numpy(),
         }
@@ -657,6 +667,9 @@ def temporal_context_features(
     out["is_weekend"] = pd.array(ts.day_of_week >= 5, dtype="boolean")
     out["time_block"] = pd.Categorical(block, categories=TIME_BLOCKS, ordered=True)
     if holidays is not None:
-        hol = set(pd.DatetimeIndex(pd.to_datetime(list(holidays))).normalize())
-        out["is_holiday"] = pd.array(pd.DatetimeIndex(ts.normalize()).isin(hol), dtype="boolean")
+        # compare calendar dates (in the panel's own zone): a naive holiday date never
+        # equals a tz-aware midnight, which left every row False
+        hol = pd.DatetimeIndex(pd.to_datetime(list(holidays))).normalize().tz_localize(None)
+        days = pd.DatetimeIndex(ts.normalize()).tz_localize(None)
+        out["is_holiday"] = pd.array(days.isin(hol), dtype="boolean")
     return out

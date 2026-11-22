@@ -25,7 +25,7 @@ import numpy as np
 import pandas as pd
 
 from gbfs_toolkit.core.models import require_columns
-from gbfs_toolkit.core.utils import panel_frame
+from gbfs_toolkit.core.utils import floor_time, panel_frame
 
 __all__ = [
     "append_to_parquet",
@@ -362,7 +362,7 @@ def turnover(
     if flow.empty:
         return pd.DataFrame(columns=["system_id", "station_id", "period", "turnover"])
     flow = flow.assign(
-        period=pd.to_datetime(flow["fetched_at"]).dt.floor(freq), activity=flow["net_flow"].abs()
+        period=floor_time(pd.to_datetime(flow["fetched_at"]), freq), activity=flow["net_flow"].abs()
     )
     out = (
         flow.groupby(["system_id", "station_id", "period"])["activity"]

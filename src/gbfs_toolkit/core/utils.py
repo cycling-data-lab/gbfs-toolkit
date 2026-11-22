@@ -40,6 +40,52 @@ def parse_gbfs_timestamp(value: Any) -> pd.Timestamp:
         return pd.to_datetime(value, errors="coerce", utc=True)
 
 
+def to_datetime_keep_tz(values: Any) -> pd.Series:
+    """Parse timestamps keeping their time zone: aware stays as is, naive is read as UTC.
+
+    ``pd.to_datetime(..., utc=True)`` converts a *local-time* panel back to UTC, which
+    silently shifts every hour-of-day and weekday computed afterwards. Mixed offsets, which
+    have no single zone, are converted to UTC.
+    """
+    try:
+        ts = pd.Series(pd.to_datetime(values))
+    except (ValueError, TypeError):
+        return pd.Series(pd.to_datetime(values, utc=True))
+    return ts.dt.tz_localize("UTC") if ts.dt.tz is None else ts
+
+
+def floor_time(ts: pd.Series, freq: str) -> pd.Series:
+    """``ts.dt.floor(freq)`` that also works on local time across a daylight-saving change.
+
+    pandas refuses to floor a local timestamp that is ambiguous (the repeated hour when
+    the clocks go back) or lands on a missing hour. The wall clock is floored as usual and
+    the repeated hour is resolved from each timestamp's own UTC offset (the first pass has
+    the larger offset), so the result is the same as the plain floor wherever that works.
+    """
+    ts = pd.Series(ts)
+    try:
+        return ts.dt.floor(freq)
+    except Exception:  # noqa: BLE001  (pytz's AmbiguousTimeError is not a ValueError)
+        if ts.dt.tz is None:
+            raise
+    offset = ts.dt.tz_localize(None) - ts.dt.tz_convert("UTC").dt.tz_localize(None)
+    first_pass = (offset == offset.max()).to_numpy()
+    return ts.dt.floor(freq, ambiguous=first_pass, nonexistent="shift_forward")
+
+
+def unix_seconds(index: Any) -> np.ndarray:
+    """Unix seconds (int64) of a datetime index or series, whatever its resolution.
+
+    ``DatetimeIndex.view("int64")`` is in the index's own unit (nanoseconds before
+    pandas 3, microseconds for a ``date_range`` of dates under pandas 3), so dividing it
+    by a fixed power of ten is only right on one of them. A naive index is read as UTC.
+    """
+    idx = pd.DatetimeIndex(index)
+    if idx.tz is None:
+        idx = idx.tz_localize("UTC")
+    return np.asarray((idx - pd.Timestamp(0, tz="UTC")) // pd.Timedelta(seconds=1), dtype="int64")
+
+
 def deprecated_kwarg(value: _T, *, old: str, new: str) -> _T:
     """Emit a ``FutureWarning`` for a renamed keyword and return its value unchanged.
 

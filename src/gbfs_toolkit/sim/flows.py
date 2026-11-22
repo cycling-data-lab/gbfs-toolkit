@@ -13,6 +13,8 @@ from dataclasses import dataclass, field
 import numpy as np
 import pandas as pd
 
+from gbfs_toolkit.core.utils import unix_seconds
+
 __all__ = [
     "SimConfig",
     "simulate_city_flows",
@@ -38,7 +40,10 @@ class SimConfig:
     topography (``topography``, ``climb_penalty``), GBFS data chaos (``ghost_rate``,
     ``scraper_cell_nan``, ``scraper_station_outages``) and weather shocks
     (``weather_events``, ``weather_drop``, ``weather_len_min``). Night rebalancing is on by
-    default (``rebalancing*``). The ``inject_*`` arrays replace the synthetic geometry with
+    default (``rebalancing*``): at a sub-hourly ``internal_minutes`` the truck acts at every
+    step whose rounded hour is ``rebalancing_hour`` (five steps at 15 minutes), not once.
+    ``scraper_cell_nan`` blanks the bike count of a cell but leaves its dock count at the
+    capacity. The ``inject_*`` arrays replace the synthetic geometry with
     real stations (used by [`calibrate_city`][gbfs_toolkit.calibrate_city]).
 
     Examples
@@ -301,7 +306,7 @@ def simulate_city_flows(cfg: SimConfig | None = None, *, return_extras: bool = F
             "is_renting": 1,
             "is_returning": 1,
             "is_installed": 1,
-            "last_reported": np.repeat(np.asarray(grid.view("int64")) // 1_000_000_000, n),
+            "last_reported": np.repeat(unix_seconds(grid), n),
             "fetched_at": np.repeat(grid.to_numpy(), n),
             "gbfs_version": "2.3",
         }

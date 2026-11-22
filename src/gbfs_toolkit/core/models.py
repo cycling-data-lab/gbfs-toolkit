@@ -359,7 +359,12 @@ def coerce_schema(df: pd.DataFrame, schema: str) -> pd.DataFrame:
         if col not in out.columns:
             continue
         if col in _DATETIME_COLUMNS:
-            out[col] = pd.to_datetime(out[col], utc=True, errors="coerce")
+            numeric = pd.api.types.is_numeric_dtype(out[col]) and not pd.api.types.is_bool_dtype(
+                out[col]
+            )
+            # numbers are unix seconds (GBFS 2.x), never nanoseconds
+            unit = {"unit": "s"} if numeric else {}
+            out[col] = pd.to_datetime(out[col], utc=True, errors="coerce", **unit)
         elif col in _CANONICAL_DTYPES:
             dtype = _CANONICAL_DTYPES[col]
             if dtype in ("Int64", "float64"):

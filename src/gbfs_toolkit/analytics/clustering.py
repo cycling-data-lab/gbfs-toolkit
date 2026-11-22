@@ -20,7 +20,7 @@ import numpy as np
 import pandas as pd
 
 from gbfs_toolkit.core.models import _SchemaKeyError
-from gbfs_toolkit.core.utils import panel_frame, project_meters
+from gbfs_toolkit.core.utils import panel_frame, project_meters, to_datetime_keep_tz
 
 __all__ = [
     "cluster_spatial",
@@ -199,7 +199,7 @@ def diurnal_profiles(
     df = panel_frame(panel)
     df = df.copy()
     df["_occ"] = _capacity_fill(df)
-    ts = pd.to_datetime(df[time_col], utc=True)
+    ts = to_datetime_keep_tz(df[time_col]).set_axis(df.index)  # local panel: local hours
     df["_hour"] = ts.dt.hour
     n_obs = df.groupby(["system_id", "station_id"])["_occ"].count()
 
@@ -227,7 +227,7 @@ def _select_k(x: np.ndarray, k_range: tuple[int, int], random_state: int) -> int
     lo, hi = k_range
     hi = min(hi, len(x) - 1)
     if hi < lo or len(x) <= 2:
-        return max(2, min(lo, len(x)))
+        return max(1, min(lo, len(x)))  # a single profile is one cluster, not two
     best_k, best_s = lo, -1.0
     for k in range(lo, hi + 1):
         labels = KMeans(n_clusters=k, n_init=10, random_state=random_state).fit_predict(x)
