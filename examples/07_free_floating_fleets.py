@@ -68,7 +68,7 @@ def main() -> None:
     print("Spatial entropy per snapshot:")
     print(
         ent[["fetched_at", "n_vehicles", "shannon_entropy", "evenness"]]
-        .round(3)
+        .round({"shannon_entropy": 3, "evenness": 3})
         .to_string(index=False)
     )
 

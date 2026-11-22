@@ -25,6 +25,10 @@ _CYCLE_PERIODS = {
     "dayofyear": 366,
 }
 
+#: pandas accessor behind each public field name (``dayofweek``/``dayofyear`` are deprecated
+#: spellings in pandas 3 and removed in pandas 4; the field names and output columns stay).
+_FIELD_ACCESSOR = {"dayofweek": "day_of_week", "dayofyear": "day_of_year"}
+
 #: Ordered time-of-day blocks added by [`temporal_context_features`][gbfs_toolkit.temporal_context_features].
 TIME_BLOCKS = ["night", "am_peak", "midday", "pm_peak", "evening"]
 
@@ -70,7 +74,8 @@ def cyclical_time_features(
     for f in fields:
         if f not in _CYCLE_PERIODS:
             raise ValueError(f"unknown field {f!r}; choose from {sorted(_CYCLE_PERIODS)}")
-        angle = 2 * np.pi * getattr(ts.dt, f).to_numpy() / _CYCLE_PERIODS[f]
+        values = getattr(ts.dt, _FIELD_ACCESSOR.get(f, f)).to_numpy()
+        angle = 2 * np.pi * values / _CYCLE_PERIODS[f]
         out[f"{f}_sin"] = np.sin(angle)
         out[f"{f}_cos"] = np.cos(angle)
     return pd.DataFrame(out)
@@ -636,7 +641,7 @@ def temporal_context_features(
         ["night", "am_peak", "midday", "pm_peak"],
         default="evening",
     )
-    out["is_weekend"] = pd.array(ts.dayofweek >= 5, dtype="boolean")
+    out["is_weekend"] = pd.array(ts.day_of_week >= 5, dtype="boolean")
     out["time_block"] = pd.Categorical(block, categories=TIME_BLOCKS, ordered=True)
     if holidays is not None:
         hol = set(pd.DatetimeIndex(pd.to_datetime(list(holidays))).normalize())

@@ -83,7 +83,8 @@ def cluster_spatial(
     if method == "hdbscan":
         from sklearn.cluster import HDBSCAN
 
-        labels = HDBSCAN(min_cluster_size=min_cluster_size).fit_predict(xy)
+        # copy=True: the scikit-learn 1.10 default, set explicitly (same labels, no warning).
+        labels = HDBSCAN(min_cluster_size=min_cluster_size, copy=True).fit_predict(xy)
     elif method == "dbscan":
         from sklearn.cluster import DBSCAN
 
@@ -193,7 +194,7 @@ def diurnal_profiles(
     n_obs = df.groupby(["system_id", "station_id"])["_occ"].count()
 
     if split_weekday:
-        df["_seg"] = np.where(ts.dt.dayofweek < 5, "wd", "we")
+        df["_seg"] = np.where(ts.dt.day_of_week < 5, "wd", "we")
         df["_col"] = df["_seg"] + df["_hour"].map(lambda h: f"{h:02d}")
         order = [f"{s}{h:02d}" for s in ("wd", "we") for h in range(24)]
     else:
