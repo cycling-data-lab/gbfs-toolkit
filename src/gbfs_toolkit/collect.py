@@ -4,8 +4,8 @@
     Part of the experimental data-lake modules added in 2.1.0: names, parameters and output
     columns may change in a minor release (see the API policy).
 
-Nothing here runs in the background: you call :meth:`Collector.poll_once`, or
-:meth:`Collector.run` (a loop in your own process, bounded by a duration or a number of
+Nothing here runs in the background: you call `Collector.poll_once`, or
+`Collector.run` (a loop in your own process, bounded by a duration or a number of
 iterations), or the ``gbfs collect`` command. What it does, and refuses to do:
 
 * **It identifies itself.** A ``user_agent`` is required (there is no default): give one that
@@ -17,7 +17,7 @@ iterations), or the ``gbfs collect`` command. What it does, and refuses to do:
 * **It never invents a value.** A field the feed leaves out is stored empty, typed
   (``Int64`` for counts, ``boolean`` for flags, ``float64`` for coordinates), never ``0`` nor
   ``True``. A station that publishes nothing must not look like an empty or an open station.
-  (This is stricter than :func:`gbfs_toolkit.to_canonical_station_status`, which defaults a
+  (This is stricter than `gbfs_toolkit.to_canonical_station_status`, which defaults a
   missing ``is_renting`` to ``True``.)
 * **It writes atomically**, one Parquet file per system and UTC day::
 
@@ -26,7 +26,7 @@ iterations), or the ``gbfs collect`` command. What it does, and refuses to do:
 
   (a day file is rewritten as a whole at each poll, which is simple and safe for a few hundred
   stations at a one-minute cadence; for much larger volumes use the lake of
-  :mod:`gbfs_toolkit.store`.)
+  `gbfs_toolkit.store`.)
 
 Networking needs the ``fetch`` extra and Parquet the ``parquet`` extra. For offline work,
 pass ``get_json`` (a ``url -> dict`` function): the tests of this module use a local server.
@@ -99,7 +99,7 @@ OUTCOMES: tuple[str, ...] = (
     "failed",  # network, HTTP or parsing error (logged)
 )
 _REDISCOVER_AFTER = 3600.0
-#: Slowly changing feeds that :meth:`Collector.poll_metadata` keeps a dated history of.
+#: Slowly changing feeds that `Collector.poll_metadata` keeps a dated history of.
 METADATA_FEEDS: tuple[str, ...] = (
     "system_information",
     "station_information",
@@ -325,7 +325,7 @@ class Collector:
     ----------
     systems : mapping or DataFrame
         ``{system_id: gbfs.json URL}``, or a frame with ``system_id`` and one of
-        ``auto_discovery_url`` (as :func:`gbfs_toolkit.systems_catalog` returns), ``gbfs_url``
+        ``auto_discovery_url`` (as `gbfs_toolkit.systems_catalog` returns), ``gbfs_url``
         or ``url``.
     out_dir : str or Path
         Where the day files go (created on demand).
@@ -532,7 +532,7 @@ class Collector:
         Returns
         -------
         pandas.DataFrame
-            One row per (system, feed): ``system_id, feed, outcome`` (one of :data:`OUTCOMES`),
+            One row per (system, feed): ``system_id, feed, outcome`` (one of `OUTCOMES`),
             ``rows`` written and ``error`` (text, for ``failed``). A failure never raises: it is
             logged and reported here, so one bad feed does not stop the others.
         """
@@ -559,7 +559,7 @@ class Collector:
         """Fetch the slowly changing feeds and keep a version only when their content changed.
 
         Each feed of each system is normalised (``to_canonical_*``), stamped with ``fetched_at``
-        and handed to :func:`gbfs_toolkit.history.record_version`, which stores it under
+        and handed to `gbfs_toolkit.history.record_version`, which stores it under
         ``<out_dir>/metadata/<system_id>/<feed>/<UTC day>.parquet`` only if it differs from the
         latest version. Call it once a day; it does not wait for a ``ttl``.
 
@@ -567,7 +567,7 @@ class Collector:
         -------
         pandas.DataFrame
             ``system_id, feed, outcome`` (``written``, ``unchanged``, ``unavailable``, ``failed``
-            or a :class:`~gbfs_toolkit.history.VersionResult` action) and ``error``.
+            or a `gbfs_toolkit.history.VersionResult` action) and ``error``.
         """
         from gbfs_toolkit.history import record_version
         from gbfs_toolkit.io import normalize as nz
@@ -674,7 +674,7 @@ def read_collected(
     end: str | pd.Timestamp | None = None,
     on_error: str = "skip",
 ) -> pd.DataFrame:
-    """Read the day files a :class:`Collector` wrote, for some systems and days.
+    """Read the day files a `Collector` wrote, for some systems and days.
 
     ``start`` and ``end`` are UTC days (both inclusive, compared with the file names). An
     unreadable file (a truncated write, a copy cut short) is skipped with a warning

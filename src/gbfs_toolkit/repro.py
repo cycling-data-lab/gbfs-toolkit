@@ -4,10 +4,10 @@
     Part of the experimental data-lake modules added in 2.1.0: names, parameters and output
     columns may change in a minor release (see the API policy).
 
-An analysis that cites "the stations of Lyon in March" is only reproducible if someone can check
+An analysis that cites "the stations of one city in March" is only reproducible if someone can check
 that the table they rebuilt is the table the authors used. The pieces here:
 
-:func:`fingerprint`
+`fingerprint`
     a SHA-256 of a table's *content*. It does not depend on the order of the rows, on the file
     format, or on the tool that wrote the file: columns are taken by name, numbers are written
     with 12 significant digits (so ``1`` and ``1.0``, or a float that went through another
@@ -15,17 +15,17 @@ that the table they rebuilt is the table the authors used. The pieces here:
     microseconds since 1970 UTC, booleans as 0 and 1, an empty value as ``∅``; each row is hashed
     (MD5), the hashes are sorted, and the sorted column names followed by the hashes are hashed
     again (SHA-256), so renaming a column changes the fingerprint.
-:func:`create_manifest` / :func:`write_manifest` / :func:`read_manifest`
+`create_manifest` / `write_manifest` / `read_manifest`
     a small JSON file naming the table, the systems, the UTC days, the columns, the number of
     rows and the fingerprint;
-:func:`verify_manifest`
-    the check, raising :class:`~gbfs_toolkit.core.errors.GBFSValidationError` when rows or
+`verify_manifest`
+    the check, raising `gbfs_toolkit.core.errors.GBFSValidationError` when rows or
     fingerprint differ;
-:func:`materialize`
-    read the data a manifest describes from a lake (:mod:`gbfs_toolkit.store`, a release's
+`materialize`
+    read the data a manifest describes from a lake (`gbfs_toolkit.store`, a release's
     ``data/`` folder, or your own ``reader``), verify it, and keep a Parquet copy in a cache
     folder that git ignores;
-:func:`export_sample`
+`export_sample`
     a few stations of a table, a few megabytes, for a continuous-integration run that cannot
     hold the real data.
 
@@ -122,7 +122,7 @@ def fingerprint(data: Any, *, exclude: Sequence[str] = ()) -> str:
     Parameters
     ----------
     data : DataFrame, path, or lake folder
-        A frame, a Parquet file, a folder of Parquet files, or a :mod:`~gbfs_toolkit.store` lake.
+        A frame, a Parquet file, a folder of Parquet files, or a `gbfs_toolkit.store` lake.
     exclude : sequence of str
         Columns to leave out (storage keys such as ``year`` and ``month``, say).
 
@@ -163,7 +163,7 @@ def create_manifest(
     """Describe ``data`` (what an analysis read) and fingerprint it.
 
     ``systems``, ``start`` and ``end`` (UTC days, both inclusive) and ``columns`` record how the
-    table was selected, so :func:`materialize` can select it again. ``source`` is free text: a
+    table was selected, so `materialize` can select it again. ``source`` is free text: a
     release name, a lake path, a DOI. Nothing in the manifest depends on a machine or a user.
 
     Examples
@@ -276,7 +276,7 @@ def materialize(
 ) -> Path | pd.DataFrame:
     """Read the data a manifest describes, check it, and keep a Parquet copy in ``cache_dir``.
 
-    The rows are read from ``lake`` (a :mod:`~gbfs_toolkit.store` lake, such as a release's
+    The rows are read from ``lake`` (a `gbfs_toolkit.store` lake, such as a release's
     ``data/<table>`` folder) restricted to the manifest's systems, days and columns, or from
     ``reader(manifest)`` if you pass one. With ``verify`` the copy must match the manifest's
     rows and fingerprint, or ``GBFSValidationError`` is raised and nothing is kept. A later call
@@ -348,8 +348,8 @@ def export_sample(
 
     The first ``stations`` identifiers (sorted) are kept; the set is halved until the Parquet
     files fit in ``max_bytes``. The sample is written as a lake under
-    ``<out_dir>/data/<table>/`` (so :func:`materialize` and
-    :func:`~gbfs_toolkit.store.read_lake` read it like the real one) next to a
+    ``<out_dir>/data/<table>/`` (so `materialize` and
+    `gbfs_toolkit.store.read_lake` read it like the real one) next to a
     ``data_manifest.json`` that fingerprints the sample itself and lists its stations.
 
     Returns

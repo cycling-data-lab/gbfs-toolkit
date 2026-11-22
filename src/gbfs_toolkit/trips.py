@@ -5,7 +5,7 @@
     columns may change in a minor release (see the API policy).
 
 Several operators publish one row per trip as open data, each in its own shape. This module
-reads the families below into the same table, :data:`TRIP_COLUMNS`:
+reads the families below into the same table, `TRIP_COLUMNS`:
 
 ``lyft``
     the Lyft / Motivate family (Citi Bike, Divvy, Bluebikes, Bay Wheels, Capital Bikeshare,
@@ -18,7 +18,7 @@ reads the families below into the same table, :data:`TRIP_COLUMNS`:
 ``bts``
     the Bicycle Transit Systems files (Indego, Metro Bike Share).
 
-Anything else: describe the columns once with :class:`TripFormat` and pass it as ``fmt``. No
+Anything else: describe the columns once with `TripFormat` and pass it as ``fmt``. No
 format is guessed beyond these; in particular the module reads no format it has not been shown.
 
 **Time zones are explicit.** Most files publish *local* wall-clock times without a zone, so
@@ -106,7 +106,7 @@ _COORDS = ("start_lat", "start_lng", "end_lat", "end_lng")
 
 @dataclass(frozen=True)
 class TripFormat:
-    """How the columns of one publisher's file map onto :data:`TRIP_COLUMNS`.
+    """How the columns of one publisher's file map onto `TRIP_COLUMNS`.
 
     Parameters
     ----------
@@ -281,7 +281,7 @@ def _present(fmt: TripFormat, lower: Mapping[str, str]) -> dict[str, str]:
 
 
 def detect_format(columns: Sequence[str]) -> str | None:
-    """The name of the :data:`FORMATS` entry whose columns these are, or ``None``.
+    """The name of the `FORMATS` entry whose columns these are, or ``None``.
 
     Examples
     --------
@@ -347,15 +347,15 @@ def normalize_trips(
     network: str | None = None,
     source_file: str | None = None,
 ) -> pd.DataFrame:
-    """Rows of one publisher's file, in the common schema :data:`TRIP_COLUMNS`.
+    """Rows of one publisher's file, in the common schema `TRIP_COLUMNS`.
 
     Parameters
     ----------
     df : pandas.DataFrame
         The file as read (any dtypes; ``dtype=str`` is the safest way to read it).
     fmt : str or TripFormat, default "auto"
-        A key of :data:`FORMATS`, a :class:`TripFormat`, or ``"auto"`` to use
-        :func:`detect_format`.
+        A key of `FORMATS`, a `TripFormat`, or ``"auto"`` to use
+        `detect_format`.
     tz : str, optional
         IANA zone of the file's local times. Required unless the format's times carry an offset.
     network, source_file : str, optional
@@ -515,7 +515,7 @@ def iter_trips(
 
     Memory stays bounded by ``chunksize`` rows, which matters for a year of a large system.
     ``source_file`` records the file (``archive.zip::inner.csv`` inside a zip). Arguments are
-    those of :func:`normalize_trips`.
+    those of `normalize_trips`.
 
     Examples
     --------
@@ -536,7 +536,7 @@ def read_trips(
     network: str | None = None,
     chunksize: int = 500_000,
 ) -> pd.DataFrame:
-    """All the trips of a CSV or zip file as one frame (see :func:`iter_trips` for huge files).
+    """All the trips of a CSV or zip file as one frame (see `iter_trips` for huge files).
 
     Examples
     --------

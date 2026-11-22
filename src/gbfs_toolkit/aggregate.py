@@ -5,16 +5,16 @@
     columns may change in a minor release (see the API policy).
 
 Minute-level snapshots are too many to plot or to join; what an analysis usually needs is a
-station-by-bucket table whose columns mean the same thing every time. :func:`aggregate_availability`
+station-by-bucket table whose columns mean the same thing every time. `aggregate_availability`
 produces one, with these definitions (they will not change silently):
 
 ``n_obs``
     rows in the bucket, all of them. Nothing is dropped or de-duplicated here, so
     **the sum of ``n_obs`` over all buckets is the number of input rows**, at every frequency
-    (:func:`check_conservation` verifies it, and :func:`aggregate_levels` does it for you);
+    (`check_conservation` verifies it, and `aggregate_levels` does it for you);
 ``n_valid``
     rows that carry a bike count and are not flagged ``both_zero_suspect`` (see
-    :mod:`gbfs_toolkit.quality`): the observations every other column is computed from;
+    `gbfs_toolkit.quality`): the observations every other column is computed from;
 ``bikes_mean``, ``bikes_min``, ``bikes_max``, ``bikes_first``, ``bikes_last``
     the bike count over the valid rows (first and last in time order);
 ``docks_mean``, ``docks_min``
@@ -145,7 +145,7 @@ def aggregate_availability(
     -------
     pandas.DataFrame
         One row per (system, station, bucket) that has at least one row, sorted; columns as in
-        :data:`AGGREGATE_COLUMNS`.
+        `AGGREGATE_COLUMNS`.
 
     Raises
     ------
@@ -298,7 +298,7 @@ def aggregate_levels(
     """The 15-minute, hourly and daily aggregates in one call, each checked for conservation.
 
     Returns ``{"15m": ..., "1h": ..., "1d": ...}`` (or the ``levels`` you give, name -> freq);
-    ``options`` go to :func:`aggregate_availability`. With ``verify`` (the default) each level
+    ``options`` go to `aggregate_availability`. With ``verify`` (the default) each level
     must conserve the observations, so the three tables describe the same rows.
 
     Examples

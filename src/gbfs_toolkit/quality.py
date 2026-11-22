@@ -19,7 +19,7 @@ labels the day:
     the collection was running, yet nothing came from this system.
 
 It also flags values that are ambiguous at the source, with three row-level indicators
-(:func:`add_quality_indicators`) that **flag and never remove**: nothing here drops a row, and
+(`add_quality_indicators`) that **flag and never remove**: nothing here drops a row, and
 there is no cleaning pipeline; what to do with a flagged row is the analysis's decision.
 
 ``field_unsupported_by_operator``
@@ -31,8 +31,8 @@ there is no cleaning pipeline; what to do with a flagged row is the analysis's d
 ``network_all_zero_anomaly``
     a poll in which (almost) every station of a system reports zero.
 
-Incidents are kept in a small registry (:data:`INCIDENT_COLUMNS`) that you can read, write and
-extend, and that :func:`detect_incidents` completes with the gaps and silent feeds it finds.
+Incidents are kept in a small registry (`INCIDENT_COLUMNS`) that you can read, write and
+extend, and that `detect_incidents` completes with the gaps and silent feeds it finds.
 
 Examples
 --------
@@ -114,7 +114,7 @@ CAUSES: tuple[str, ...] = (
     "ambiguous_missing_value",
 )
 
-#: Columns of :func:`daily_coverage`.
+#: Columns of `daily_coverage`.
 COVERAGE_COLUMNS: list[str] = [
     "date_utc",
     "system_id",
@@ -172,7 +172,7 @@ def _empty_registry() -> pd.DataFrame:
 def incident_registry(
     incidents: pd.DataFrame | Iterable[Mapping[str, Any]] | None = None,
 ) -> pd.DataFrame:
-    """Validate incidents and return them as a registry frame (:data:`INCIDENT_COLUMNS`).
+    """Validate incidents and return them as a registry frame (`INCIDENT_COLUMNS`).
 
     ``incidents`` is a frame or an iterable of dicts with the registry's keys. ``scope`` defaults
     to ``"all"`` and ``end_utc`` to *ongoing*; times are read as UTC. A problem raises
@@ -286,7 +286,7 @@ def write_incidents(registry: pd.DataFrame, path: str | Path) -> Path:
 
 
 def read_incidents(path: str | Path) -> pd.DataFrame:
-    """Read a registry written by :func:`write_incidents` (``.json`` or ``.csv``)."""
+    """Read a registry written by `write_incidents` (``.json`` or ``.csv``)."""
     p = Path(path)
     suffix = p.suffix.lower()
     if suffix == ".json":
@@ -483,7 +483,7 @@ def daily_coverage(
     Returns
     -------
     pandas.DataFrame
-        :data:`COVERAGE_COLUMNS`. ``units_reporting_median`` is the median number of rows per
+        `COVERAGE_COLUMNS`. ``units_reporting_median`` is the median number of rows per
         poll (stations or vehicles published); ``both_zero_pct`` the share of the day's rows at
         zero bikes and zero docks, in the raw values you passed.
 
@@ -653,8 +653,8 @@ def detect_incidents(
     """The registry completed with what the data shows: collection gaps and silent feeds.
 
     Your declared incidents (``known``) come first. With ``snapshots``, every
-    :func:`find_collector_gaps` stretch is added as ``collector-gap-<start>`` (cause
-    ``outage_collector``); every :func:`find_silent_feeds` run is added as
+    `find_collector_gaps` stretch is added as ``collector-gap-<start>`` (cause
+    ``outage_collector``); every `find_silent_feeds` run is added as
     ``silent-<system>-<day>`` (cause ``outage_operator``). Identifiers are stable: running it
     again on the same data gives the same registry.
     """
@@ -701,7 +701,7 @@ def detect_incidents(
 
 @dataclass(frozen=True)
 class QualityReport:
-    """What :func:`assess` returns: the coverage table and the incident registry."""
+    """What `assess` returns: the coverage table and the incident registry."""
 
     coverage: pd.DataFrame
     incidents: pd.DataFrame
@@ -724,9 +724,9 @@ def assess(
     time_col: str = "fetched_at",
     **coverage_options: Any,
 ) -> QualityReport:
-    """Coverage and incidents in one call: :func:`daily_coverage` then :func:`detect_incidents`.
+    """Coverage and incidents in one call: `daily_coverage` then `detect_incidents`.
 
-    ``coverage_options`` are the options of :func:`daily_coverage` (``expected_polls``,
+    ``coverage_options`` are the options of `daily_coverage` (``expected_polls``,
     ``ok_threshold_pct``, ``end`` ...).
 
     Examples
@@ -842,7 +842,7 @@ def add_quality_indicators(
 
     ``field_unsupported_by_operator``
         ``<NA>``, or the comma-separated fields the operator does not publish in the row's
-        period (see :func:`field_unsupported_by_operator`). With ``mask_unsupported`` (the
+        period (see `field_unsupported_by_operator`). With ``mask_unsupported`` (the
         default) those columns are set to missing in the returned frame, so a column of
         placeholders is not mistaken for data.
     ``both_zero_suspect``
