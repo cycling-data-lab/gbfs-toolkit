@@ -20,3 +20,21 @@ EXPERIMENTAL: frozenset[str] = frozenset(
         "compute_footprint",
     }
 )
+
+#: Modules added in 2.1.0 for collecting, checking, storing and releasing data. They are
+#: public (import them as ``gbfs_toolkit.<name>``) but experimental: their names,
+#: parameters and output columns may change in a minor release while they are used on
+#: more systems. Each carries an "Experimental" note in its docstring, which a test checks.
+EXPERIMENTAL_MODULES: frozenset[str] = frozenset(
+    {
+        "gbfs_toolkit.collect",
+        "gbfs_toolkit.history",
+        "gbfs_toolkit.quality",
+        "gbfs_toolkit.aggregate",
+        "gbfs_toolkit.store",
+        "gbfs_toolkit.stations.match",
+        "gbfs_toolkit.trips",
+        "gbfs_toolkit.release",
+        "gbfs_toolkit.repro",
+    }
+)
