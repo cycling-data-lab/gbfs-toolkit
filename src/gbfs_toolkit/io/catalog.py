@@ -17,6 +17,16 @@ import pandas as pd
 
 from gbfs_toolkit.core.errors import GBFSDiscoveryError, GBFSFetchError
 
+__all__ = [
+    "DEFAULT_CATALOG_URL",
+    "OPERATOR_PATTERNS",
+    "normalize_operator",
+    "CACHE_PATH",
+    "systems_catalog",
+    "filter_catalog",
+    "resolve",
+]
+
 #: MobilityData's canonical registry of GBFS systems.
 DEFAULT_CATALOG_URL = "https://raw.githubusercontent.com/MobilityData/gbfs/master/systems.csv"
 
@@ -69,7 +79,7 @@ def normalize_operator(value: str | None, *, default: str | None = None) -> str 
 
 #: Local cache of the last successfully-downloaded catalogue (offline fallback).
 CACHE_PATH = Path.home() / ".cache" / "gbfs-toolkit" / "systems.csv"
-_log = logging.getLogger("gbfs_toolkit")
+_log = logging.getLogger(__name__)
 _MEMO: dict[str, pd.DataFrame] = {}  # in-process parsed-catalogue cache (speed)
 
 

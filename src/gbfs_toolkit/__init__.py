@@ -19,6 +19,7 @@ From a feed of your own, ``gb.to_canonical_station_info(raw_json, system_id=...)
 builds the same canonical frame from a parsed ``station_information.json``.
 """
 
+import logging as _logging
 from importlib.metadata import PackageNotFoundError
 from importlib.metadata import version as _distribution_version
 
@@ -209,6 +210,10 @@ from gbfs_toolkit.spatial.graph import (
 )
 from gbfs_toolkit.spatial.multimodal import link_transit_stops
 from gbfs_toolkit.spatial.osm import enrich_with_osm, station_surroundings
+
+# A library configures no logging output of its own: its records (logger "gbfs_toolkit"
+# and children) go wherever the application routes them, and nowhere by default.
+_logging.getLogger(__name__).addHandler(_logging.NullHandler())
 
 #: Reported when the package is imported from a source tree that was never installed.
 _UNKNOWN_VERSION = "0+unknown"

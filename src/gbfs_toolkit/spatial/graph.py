@@ -32,6 +32,31 @@ def knn_adjacency(lat, lon, *, k: int = 10, gaussian: bool = True) -> np.ndarray
     """Symmetric weighted k-NN adjacency over lat/lon, great-circle distances (metres).
 
     Edges use a Gaussian kernel at the local median distance when ``gaussian`` (else binary).
+
+    Parameters
+    ----------
+    lat, lon : array-like
+        Station coordinates in degrees (EPSG:4326).
+    k : int, default 10
+        Neighbours per station (capped at ``n - 1``); the graph is symmetrised, so a
+        station can end up with more than ``k`` edges.
+    gaussian : bool, default True
+        Weight ``exp(-d^2 / (2 sigma^2))`` with ``sigma`` the median k-NN distance; if
+        ``False``, every edge weighs 1.
+
+    Returns
+    -------
+    numpy.ndarray
+        The ``(n, n)`` symmetric adjacency, zero diagonal.
+
+    Examples
+    --------
+    >>> import numpy as np
+    >>> lat = 43.6 + np.arange(6) * 0.003
+    >>> lon = np.full(6, 3.87)
+    >>> W = knn_adjacency(lat, lon, k=2)
+    >>> W.shape, bool(np.allclose(W, W.T)), float(W.diagonal().max())
+    ((6, 6), True, 0.0)
     """
     lat = np.asarray(lat, float)
     lon = np.asarray(lon, float)
@@ -48,14 +73,36 @@ def knn_adjacency(lat, lon, *, k: int = 10, gaussian: bool = True) -> np.ndarray
 
 
 def normalized_laplacian(W: np.ndarray) -> np.ndarray:
-    """Symmetric normalised Laplacian ``I - D^-1/2 W D^-1/2`` of a weighted adjacency."""
+    """Symmetric normalised Laplacian ``I - D^-1/2 W D^-1/2`` of a weighted adjacency.
+
+    Isolated nodes (zero degree) get a unit diagonal and no off-diagonal terms.
+
+    Examples
+    --------
+    >>> import numpy as np
+    >>> W = np.array([[0.0, 1.0], [1.0, 0.0]])
+    >>> normalized_laplacian(W).tolist()
+    [[1.0, -1.0], [-1.0, 1.0]]
+    """
     deg = np.asarray(W).sum(axis=1)
     dinv = 1.0 / np.sqrt(np.maximum(deg, 1e-12))
     return np.eye(W.shape[0]) - (dinv[:, None] * W * dinv[None, :])
 
 
 def low_freq_basis(L: np.ndarray, d: int) -> np.ndarray:
-    """The ``d`` lowest-frequency Laplacian eigenvectors, trivial constant mode excluded."""
+    """The ``d`` lowest-frequency Laplacian eigenvectors, trivial constant mode excluded.
+
+    Returns an ``(n, d)`` orthonormal basis (``d`` capped at ``n - 1``), the subspace
+    [`spectral_projection_r2`][gbfs_toolkit.spectral_projection_r2] projects onto.
+
+    Examples
+    --------
+    >>> import numpy as np
+    >>> W = np.ones((4, 4)) - np.eye(4)
+    >>> B = low_freq_basis(normalized_laplacian(W), 2)
+    >>> B.shape, bool(np.allclose(B.T @ B, np.eye(2)))
+    ((4, 2), True)
+    """
     w, V = eigh(L)
     order = np.argsort(w)
     d = int(min(d, L.shape[0] - 1))
@@ -63,7 +110,18 @@ def low_freq_basis(L: np.ndarray, d: int) -> np.ndarray:
 
 
 def spectral_projection_r2(y, basis: np.ndarray) -> float:
-    """R2_spec: fraction of the centred signal variance captured by ``basis`` (orthonormal)."""
+    """R2_spec: fraction of the centred signal variance captured by ``basis`` (orthonormal).
+
+    The signal is centred, ``NaN`` entries count as the mean, and a constant signal
+    returns ``0.0``. The result lies in ``[0, 1]``.
+
+    Examples
+    --------
+    >>> import numpy as np
+    >>> basis = np.array([[1.0], [-1.0], [0.0]]) / np.sqrt(2)
+    >>> round(spectral_projection_r2([1.0, -1.0, 0.0], basis), 6)
+    1.0
+    """
     y = np.asarray(y, float)
     y = y - np.nanmean(y)
     y = np.nan_to_num(y)
@@ -81,7 +139,16 @@ def degree_preserving_rewire(
 
     Operates on the binary structure of ``W`` (an edge exists where ``W > 0``). Returns a
     binary symmetric adjacency with the same per-node degree, the standard structural null
-    for "is this result graph structure or just degree".
+    for "is this result graph structure or just degree". Seeded, so reproducible.
+
+    Examples
+    --------
+    >>> import numpy as np
+    >>> W = (np.add.outer(np.arange(8), np.arange(8)) % 3 == 0).astype(float)
+    >>> np.fill_diagonal(W, 0)
+    >>> R = degree_preserving_rewire(W, seed=0)
+    >>> bool((R.sum(axis=1) == (W > 0).sum(axis=1)).all())
+    True
     """
     rng = np.random.default_rng(seed)
     A = (np.asarray(W) > 0).astype(int)
@@ -117,7 +184,13 @@ def degree_preserving_rewire(
 
 
 def permute_signal(y, *, seed: int = 42) -> np.ndarray:
-    """Permute a signal across nodes: the node-label null on a fixed graph."""
+    """Permute a signal across nodes: the node-label null on a fixed graph.
+
+    Examples
+    --------
+    >>> sorted(permute_signal([3, 1, 2], seed=0).tolist())
+    [1.0, 2.0, 3.0]
+    """
     rng = np.random.default_rng(seed)
     y = np.asarray(y, float).copy()
     return y[rng.permutation(y.size)]
@@ -132,6 +205,16 @@ def band_limited_signal(
     high-frequency one so that ``spectral_projection_r2(y, low_freq_basis(L, n_low))`` is
     approximately ``r2_target``. Use it to calibrate a spectral bound or to build adversarial
     high-frequency targets (``r2_target`` near 0) where the floor must be near zero.
+
+    Examples
+    --------
+    >>> import numpy as np
+    >>> lat = 43.6 + np.arange(12) * 0.003
+    >>> lon = 3.87 + (np.arange(12) % 4) * 0.004
+    >>> L = normalized_laplacian(knn_adjacency(lat, lon, k=3))
+    >>> y = band_limited_signal(L, r2_target=0.7, n_low=3, seed=0)
+    >>> round(spectral_projection_r2(y, low_freq_basis(L, 3)), 2)
+    0.7
     """
     rng = np.random.default_rng(seed)
     w, V = eigh(L)

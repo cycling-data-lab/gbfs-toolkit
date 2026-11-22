@@ -16,6 +16,10 @@ import pandas as pd
 from gbfs_toolkit.core.models import require_columns
 from gbfs_toolkit.core.utils import panel_frame
 
+__all__ = [
+    "vehicle_id_persistence",
+]
+
 
 def _mean_jaccard(sets: pd.Series, lag: pd.Timedelta) -> float:
     """Mean Jaccard similarity of the id-set ``lag`` apart, matched to the nearest snapshot."""

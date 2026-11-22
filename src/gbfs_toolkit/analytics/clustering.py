@@ -19,7 +19,17 @@ from typing import Any
 import numpy as np
 import pandas as pd
 
+from gbfs_toolkit.core.models import _SchemaKeyError
 from gbfs_toolkit.core.utils import panel_frame, project_meters
+
+__all__ = [
+    "cluster_spatial",
+    "cluster_spectral",
+    "diurnal_profiles",
+    "cluster_diurnal_profiles",
+    "DIURNAL_TYPOLOGIES",
+    "label_diurnal_typology",
+]
 
 
 def _require_sklearn():
@@ -328,7 +338,9 @@ def cluster_diurnal_profiles(
         try:
             from tslearn.clustering import TimeSeriesKMeans
         except ImportError as e:  # pragma: no cover
-            raise ImportError("method='dtw' requires tslearn (`pip install tslearn`).") from e
+            raise ImportError(
+                "method='dtw' requires tslearn. Install with `pip install gbfs-toolkit[dtw]`."
+            ) from e
         labels = TimeSeriesKMeans(
             n_clusters=k, metric="dtw", random_state=random_state
         ).fit_predict(x.reshape(x.shape[0], x.shape[1], 1))
@@ -402,7 +414,12 @@ def label_diurnal_typology(profiles: pd.DataFrame, *, amplitude: float = 0.15) -
     hours = [f"h{h:02d}" for h in range(24)]
     missing = [h for h in hours if h not in profiles.columns]
     if missing:
-        raise KeyError(f"label_diurnal_typology needs 24-hour columns; missing {missing[:3]}…")
+        raise _SchemaKeyError(
+            f"label_diurnal_typology needs 24-hour columns; missing {missing[:3]}…",
+            missing=missing,
+            present=[str(c) for c in profiles.columns],
+            what="label_diurnal_typology",
+        )
     p = profiles[hours].to_numpy(dtype="float64")
     night = p[:, list(range(0, 5))].mean(axis=1)
     morning = p[:, list(range(7, 11))].mean(axis=1)

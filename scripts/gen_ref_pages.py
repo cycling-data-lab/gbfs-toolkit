@@ -19,6 +19,7 @@ CATEGORIES = {
     "spatial": "Spatial",
     "io": "Ingestion & I/O",
     "interfaces": "Interfaces",
+    "sim": "Simulation (experimental)",
     "core": "Core & schema",
 }
 

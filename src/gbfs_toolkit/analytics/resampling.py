@@ -12,6 +12,11 @@ from collections.abc import Callable
 import numpy as np
 import pandas as pd
 
+__all__ = [
+    "effective_sample_size",
+    "block_bootstrap_ci",
+]
+
 
 def effective_sample_size(series) -> float:
     """Autocorrelation-adjusted effective sample size of a 1-D series.

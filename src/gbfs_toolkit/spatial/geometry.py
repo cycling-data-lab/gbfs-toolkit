@@ -19,6 +19,17 @@ from gbfs_toolkit.core.utils import EARTH_RADIUS_M
 if TYPE_CHECKING:  # pragma: no cover
     import geopandas as gpd
 
+__all__ = [
+    "haversine_m",
+    "GeoKDTree",
+    "find_nearest_stations",
+    "features_within",
+    "stations_near",
+    "to_gdf",
+    "to_geojson",
+    "filter_by_bbox",
+]
+
 
 def haversine_m(lat1: Any, lon1: Any, lat2: Any, lon2: Any) -> np.ndarray:
     """Vectorised great-circle distance in metres between two coordinate arrays.

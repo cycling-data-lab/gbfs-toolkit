@@ -11,6 +11,11 @@ import pandas as pd
 
 from gbfs_toolkit.io.normalize import to_canonical_station_info, to_canonical_station_status
 
+__all__ = [
+    "DATASETS",
+    "load_example",
+]
+
 # (station_id, name, lat, lon, capacity, bikes, docks): central Paris, hand-written.
 _PARIS = [
     ("16107", "Benjamin Godard - Victor Hugo", 48.865983, 2.275725, 35, 4, 31),

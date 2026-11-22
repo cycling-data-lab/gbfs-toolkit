@@ -19,6 +19,10 @@ from gbfs_toolkit.io import timeseries
 from gbfs_toolkit.spatial import analytics as spatial_analytics
 from gbfs_toolkit.spatial import geometry as geo
 
+__all__ = [
+    "GBFSAccessor",
+]
+
 
 @pd.api.extensions.register_dataframe_accessor("gbfs")
 class GBFSAccessor:

@@ -20,6 +20,12 @@ from gbfs_toolkit.core.models import GEOFENCING_COLUMNS
 if TYPE_CHECKING:  # pragma: no cover
     import geopandas as gpd
 
+__all__ = [
+    "to_canonical_geofencing",
+    "zones_for_points",
+    "zone_area_km2",
+]
+
 # A global (jurisdiction-wide) default rule has no vehicle_type_ids restriction.
 _NON_GEOM = [c for c in GEOFENCING_COLUMNS if c != "geometry"]
 

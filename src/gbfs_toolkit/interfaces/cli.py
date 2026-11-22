@@ -22,6 +22,10 @@ from gbfs_toolkit.core.errors import GBFSError
 from gbfs_toolkit.core.models import AUDIT_FLAGS, RULES
 from gbfs_toolkit.io.normalize import to_canonical_station_info
 
+__all__ = [
+    "main",
+]
+
 
 def _load(source: str) -> dict:
     if source.startswith(("http://", "https://")):

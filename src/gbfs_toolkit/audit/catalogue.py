@@ -19,6 +19,10 @@ import pandas as pd
 
 from gbfs_toolkit.audit.static import audit_static
 
+__all__ = [
+    "audit_catalogue",
+]
+
 _REQUIRED = ["system_id", "station_id", "station_type", "capacity", "lat", "lon"]
 
 
