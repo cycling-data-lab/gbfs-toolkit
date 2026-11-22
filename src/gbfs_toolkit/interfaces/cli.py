@@ -139,7 +139,7 @@ def main(argv: list[str] | None = None) -> int:
         choices=("docked", "all"),
         default="docked",
         dest="a7_scope",
-        help="A7 null-capacity scope ('all' reproduces the gbfs-audit-catalogue verdicts)",
+        help="A7 null-capacity scope ('all' reproduces the audit-catalogue verdicts)",
     )
     p_audit.add_argument("--out", help="write the per-station verdict to this CSV")
     p_audit.add_argument("--json", action="store_true", help="machine-readable JSON output")
