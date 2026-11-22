@@ -15,6 +15,9 @@ Quick start
     >>> clean = stations[~verdict["flagged"].to_numpy()]
 """
 
+from importlib.metadata import PackageNotFoundError
+from importlib.metadata import version as _distribution_version
+
 from gbfs_toolkit.analytics.agreement import (
     cohen_kappa,
     krippendorff_alpha,
@@ -203,7 +206,15 @@ from gbfs_toolkit.spatial.graph import (
 from gbfs_toolkit.spatial.multimodal import link_transit_stops
 from gbfs_toolkit.spatial.osm import enrich_with_osm, station_surroundings
 
-__version__ = "2.0.0"  # x-release-please-version
+#: Reported when the package is imported from a source tree that was never installed.
+_UNKNOWN_VERSION = "0+unknown"
+
+try:
+    # The installed distribution's metadata is the single source of the version: the build
+    # writes it from pyproject.toml, so the module, `pip show` and PyPI cannot disagree.
+    __version__ = _distribution_version("gbfs-toolkit")
+except PackageNotFoundError:  # pragma: no cover (a source tree imported without installing)
+    __version__ = _UNKNOWN_VERSION
 
 __all__ = [
     # audit (the flagship)
