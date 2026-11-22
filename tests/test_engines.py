@@ -190,3 +190,132 @@ def test_without_duckdb_auto_falls_back_to_the_windowed_pandas_engine(snaps, mon
         aggregate_availability(snaps, "1h"),
         aggregate_availability(table, "1h", chunk="4h"),
     )
+
+
+# ----------------------------------------------------------------------------- quality
+
+from gbfs_toolkit import quality  # noqa: E402
+
+
+def lake_snapshots(seed: int = 3):
+    """Three systems over eight days with a collector gap, a silent feed and a zero field."""
+    rng = np.random.default_rng(seed)
+    days = pd.date_range("2026-03-01", periods=8, freq="D", tz="UTC")
+    rows = []
+    for day in days:
+        minutes = np.arange(1440)
+        # a collection gap on day 3 for everyone, from 02:00 to 06:00
+        gap = (day == days[3]) & (minutes >= 120) & (minutes < 360)
+        for system in ("a", "b", "c"):
+            if system == "c" and day >= days[5]:
+                continue  # a silent feed
+            keep = ~gap & (rng.random(1440) < (0.97 if system != "b" else 0.7))
+            for st in range(3):
+                m = minutes[keep]
+                t = day + pd.to_timedelta(m, unit="min")
+                rows.append(
+                    pd.DataFrame(
+                        {
+                            "system_id": system,
+                            "station_id": f"s{st}",
+                            "fetched_at": t,
+                            "num_bikes_available": rng.integers(0, 6, len(m)),
+                            "num_docks_available": 0
+                            if system == "b"
+                            else rng.integers(0, 6, len(m)),
+                        }
+                    )
+                )
+    return pd.concat(rows, ignore_index=True).sample(frac=1.0, random_state=seed)
+
+
+@pytest.fixture(scope="module")
+def lake_df():
+    return lake_snapshots()
+
+
+def sources_of(df, tmp_path):
+    table = pa.Table.from_pandas(df.reset_index(drop=True), preserve_index=False)
+    lake = tmp_path / "lake"
+    write_lake(df.rename(columns={"fetched_at": "observed_at_utc"}), lake)
+    return {
+        "frame, duckdb": (df, "duckdb", "fetched_at"),
+        "arrow, duckdb": (table, "auto", "fetched_at"),
+        "relation": (duckdb.from_arrow(table), "auto", "fetched_at"),
+        "arrow, pandas batches": (table, "pandas", "fetched_at"),
+        "lake path, duckdb": (lake, "duckdb", "observed_at_utc"),
+        "lake path, pandas batches": (lake, "pandas", "observed_at_utc"),
+    }
+
+
+def test_coverage_is_the_same_on_every_source(lake_df, tmp_path):
+    reference = quality.daily_coverage(lake_df)
+    assert set(reference["status"]) >= {"ok", "partial", "outage_collector", "outage_operator"}
+    for name, (src, engine, tcol) in sources_of(lake_df, tmp_path).items():
+        got = quality.daily_coverage(src, engine=engine, time_col=tcol)
+        pd.testing.assert_frame_equal(reference, got, check_exact=False), name
+
+
+def test_coverage_window_options_are_the_same_on_every_source(lake_df, tmp_path):
+    kw = {
+        "start": "2026-03-02",
+        "end": "2026-03-07",
+        "ok_threshold_pct": 90,
+        "poll_resolution": "5min",
+    }
+    reference = quality.daily_coverage(lake_df, **kw)
+    for name, (src, engine, tcol) in sources_of(lake_df, tmp_path).items():
+        got = quality.daily_coverage(src, engine=engine, time_col=tcol, **kw)
+        pd.testing.assert_frame_equal(reference, got, check_exact=False), name
+
+
+def test_gaps_silent_feeds_and_unsupported_fields_agree(lake_df, tmp_path):
+    gaps = quality.find_collector_gaps(lake_df)
+    unsupported = quality.field_unsupported_by_operator(lake_df)
+    daily = quality.field_unsupported_by_operator(lake_df, period="D")
+    assert len(gaps) >= 1 and unsupported["field"].tolist() == ["num_docks_available"]
+    for name, (src, engine, tcol) in sources_of(lake_df, tmp_path).items():
+        (
+            pd.testing.assert_frame_equal(
+                gaps, quality.find_collector_gaps(src, engine=engine, time_col=tcol)
+            ),
+            name,
+        )
+        (
+            pd.testing.assert_frame_equal(
+                unsupported,
+                quality.field_unsupported_by_operator(src, engine=engine, time_col=tcol),
+            ),
+            name,
+        )
+        (
+            pd.testing.assert_frame_equal(
+                daily,
+                quality.field_unsupported_by_operator(
+                    src, period="D", engine=engine, time_col=tcol
+                ),
+            ),
+            name,
+        )
+
+
+def test_assess_reads_a_lake_path_and_agrees(lake_df, tmp_path):
+    reference = quality.assess(lake_df)
+    lake = tmp_path / "lake"
+    write_lake(lake_df.rename(columns={"fetched_at": "observed_at_utc"}), lake)
+    got = quality.assess(lake, time_col="observed_at_utc")
+    pd.testing.assert_frame_equal(reference.coverage, got.coverage)
+    pd.testing.assert_frame_equal(reference.incidents, got.incidents)
+    assert reference.summary() == got.summary()
+
+
+def test_row_level_indicators_ask_for_a_frame(lake_df):
+    table = pa.Table.from_pandas(lake_df, preserve_index=False)
+    with pytest.raises(TypeError, match="pandas DataFrame"):
+        quality.add_quality_indicators(table)
+
+
+def test_an_empty_or_out_of_window_source_gives_an_empty_coverage(lake_df):
+    table = pa.Table.from_pandas(lake_df, preserve_index=False)
+    assert quality.daily_coverage(table, start="2030-01-01").empty
+    assert quality.daily_coverage(table.slice(0, 0)).empty
