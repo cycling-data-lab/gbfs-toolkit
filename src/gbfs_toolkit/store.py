@@ -51,6 +51,14 @@ import numpy as np
 import pandas as pd
 
 from gbfs_toolkit.core._common import atomic_write, need_columns, require_pyarrow, to_utc
+from gbfs_toolkit.core._tabular import (
+    Table,
+    _PathTable,
+    is_pandas,
+    open_table,
+    sql_name,
+    sql_text,
+)
 from gbfs_toolkit.core.errors import GBFSValidationError
 
 __all__ = [
@@ -170,14 +178,16 @@ def harmonize(
     return out[lead + [c for c in out.columns if c not in lead]]
 
 
-def _time_column(df: pd.DataFrame, time_col: str | None) -> str:
+def _time_column(columns: list[str], time_col: str | None) -> str:
     if time_col is not None:
-        need_columns(df, [time_col], what="write_lake")
+        need_columns(pd.DataFrame(columns=columns), [time_col], what="write_lake")
         return time_col
     for c in ("observed_at_utc", "fetched_at"):
-        if c in df.columns:
+        if c in columns:
             return c
-    need_columns(df, ["observed_at_utc"], what="write_lake (or pass time_col=)")
+    need_columns(
+        pd.DataFrame(columns=columns), ["observed_at_utc"], what="write_lake (or pass time_col=)"
+    )
     raise AssertionError  # unreachable
 
 
@@ -187,8 +197,133 @@ def _partition_dir(root: Path, system: str, year: int, month: int) -> Path:
     return root / f"system_id={system}" / f"year={year:04d}" / f"month={month:02d}"
 
 
+def _utc_arrow(column: Any) -> Any:
+    """An Arrow timestamp column as tz-aware UTC (a naive one is read as UTC)."""
+    import pyarrow as pa
+    import pyarrow.compute as pc
+
+    if not pa.types.is_timestamp(column.type):
+        raise ValueError(
+            f"the time column is {column.type}; write_lake needs a timestamp "
+            "(tz-aware or UTC-naive) when the source is not a pandas frame"
+        )
+    if column.type.tz is None:
+        return pc.assume_timezone(column, "UTC")
+    return column.cast(pa.timestamp(column.type.unit, tz="UTC"))
+
+
+def _drop_duplicate_rows(table: Any) -> Any:
+    """The rows of an Arrow table without exact duplicates, first occurrence kept, in order."""
+    import numpy as np
+    import pyarrow as pa
+
+    position = pa.array(np.arange(table.num_rows, dtype="int64"))
+    grouped = table.append_column("__row", position).group_by(table.column_names, use_threads=False)
+    firsts = grouped.aggregate([("__row", "min")])["__row_min"].to_numpy()
+    return table.take(pa.array(np.sort(firsts)))
+
+
+def _write_partition(
+    root: Path, system: str, year: int, month: int, new: Any, mode: str, compression: str
+) -> tuple[Path, int]:
+    """Write ``new`` (an Arrow table without ``system_id``) into its partition; return the path."""
+    import pyarrow as pa
+    import pyarrow.parquet as pq
+
+    folder = _partition_dir(root, system, year, month)
+    target = folder / (f"part-{uuid.uuid4().hex}.parquet" if mode == "append" else "data.parquet")
+    combined = new
+    stale: list[Path] = []
+    if mode == "merge":
+        stale = sorted(folder.glob("*.parquet")) if folder.is_dir() else []
+        frames = [pq.ParquetFile(f).read() for f in stale]
+        combined = _drop_duplicate_rows(pa.concat_tables([*frames, new], promote_options="default"))
+    if mode == "replace" and folder.is_dir():
+        stale = [f for f in folder.glob("*.parquet") if f != target]
+
+    def write(tmp: Path) -> None:
+        pq.write_table(combined, tmp, compression=compression)
+
+    atomic_write(target, write)
+    for old in stale:
+        if old != target:
+            old.unlink(missing_ok=True)
+    return target, int(new.num_rows)
+
+
+def _partitions_of(table: Table, tcol: str) -> list[tuple[str, int, int]]:
+    """The (system, year, month) triples present in a non-pandas source."""
+    import pyarrow as pa
+    import pyarrow.compute as pc
+
+    if table.kind == "relation":
+        c = f"make_timestamp(epoch_us({sql_name(tcol)}))"
+        got = (
+            table.relation()
+            .query(
+                "src",
+                f"SELECT DISTINCT CAST({sql_name('system_id')} AS VARCHAR) AS s, year({c}) AS y, "
+                f"month({c}) AS m FROM src WHERE {sql_name(tcol)} IS NOT NULL ORDER BY s, y, m",
+            )
+            .df()
+        )
+        return [(str(r.s), int(r.y), int(r.m)) for r in got.itertuples(index=False)]
+    seen: set[tuple[str, int, int]] = set()
+    for frame in table.batches(["system_id", tcol]):
+        batch = pa.Table.from_pandas(frame, preserve_index=False)
+        t = _utc_arrow(batch[tcol])
+        keys = (
+            pa.table(
+                {
+                    "s": batch["system_id"].cast(pa.string()),
+                    "y": pc.year(t),
+                    "m": pc.month(t),
+                }
+            )
+            .group_by(["s", "y", "m"])
+            .aggregate([])
+        )
+        for r in keys.to_pylist():
+            if r["s"] is not None and r["y"] is not None:
+                seen.add((str(r["s"]), int(r["y"]), int(r["m"])))
+    return sorted(seen)
+
+
+def _partition_rows(table: Table, tcol: str, system: str, year: int, month: int) -> Any:
+    """The rows of one (system, year, month) of a non-pandas source, as an Arrow table."""
+    import pyarrow as pa
+    import pyarrow.compute as pc
+    import pyarrow.dataset as ds
+
+    if table.kind == "relation":
+        c = f"make_timestamp(epoch_us({sql_name(tcol)}))"
+        return table.arrow(
+            where=(
+                f"CAST({sql_name('system_id')} AS VARCHAR) = {sql_text(system)} "
+                f"AND year({c}) = {year} AND month({c}) = {month}"
+            )
+        )
+    lo = pd.Timestamp(year=year, month=month, day=1, tz="UTC")
+    hi = lo + pd.offsets.MonthBegin(1)
+    # a coarse filter by time pushed down to the files, then the exact test on the rows
+    names = table.columns()
+    kind = table._schema.field(tcol).type  # type: ignore[attr-defined]
+    from gbfs_toolkit.core._tabular import _timestamp_literal
+
+    flt = (ds.field(tcol) >= _timestamp_literal(lo - pd.Timedelta(days=1), kind)) & (
+        ds.field(tcol) < _timestamp_literal(hi + pd.Timedelta(days=1), kind)
+    )
+    part = table._select(names, flt)  # type: ignore[attr-defined]
+    t = _utc_arrow(part[tcol])
+    mask = pc.and_(
+        pc.equal(part["system_id"].cast(pa.string()), system),
+        pc.and_(pc.equal(pc.year(t), year), pc.equal(pc.month(t), month)),
+    )
+    return part.filter(mask)
+
+
 def write_lake(
-    df: pd.DataFrame,
+    df: Any,
     root: str | Path,
     *,
     mode: str = "append",
@@ -197,6 +332,12 @@ def write_lake(
     compression: str = "zstd",
 ) -> pd.DataFrame:
     """Write ``df`` into the lake under ``root``, one partition per (system, UTC year, UTC month).
+
+    ``df`` is a pandas frame or, for volumes that do not fit in memory, an Arrow table or
+    dataset, a DuckDB relation, or a path (a folder of Parquet files such as the day files of
+    `gbfs_toolkit.collect`, a file, a glob, or another lake). A table, relation or path is
+    written one partition at a time, so the memory used is one (system, month), not the source;
+    its time column must be a timestamp.
 
     ``mode`` says what happens to a partition that already holds data:
 
@@ -232,54 +373,58 @@ def write_lake(
     if mode not in ("append", "merge", "replace"):
         raise ValueError(f"mode must be 'append', 'merge' or 'replace', got {mode!r}")
     require_pyarrow("write_lake")
-    need_columns(df, ["system_id"], what="write_lake")
-    tcol = _time_column(df, time_col)
+    import pyarrow as pa
+
+    table = open_table(df, what="write_lake")
+    need_columns(pd.DataFrame(columns=table.columns()), ["system_id"], what="write_lake")
+    tcol = _time_column(table.columns(), time_col)
     root_path = Path(root)
-    times = to_utc(df[tcol], what=tcol)
-    work = df.copy()
-    work[tcol] = times.to_numpy()
-    system = work["system_id"].astype(str)
-    year, month = times.dt.year.to_numpy(), times.dt.month.to_numpy()
     summary: list[dict[str, Any]] = []
-    for (sys_id, y, m), idx in (
-        pd.DataFrame({"s": system.to_numpy(), "y": year, "m": month})
-        .groupby(["s", "y", "m"], sort=True)
-        .groups.items()
-    ):
-        part = work.iloc[np.asarray(idx)].drop(columns=["system_id"])
-        folder = _partition_dir(root_path, str(sys_id), int(y), int(m))
-        if mode == "append":
-            target = folder / f"part-{uuid.uuid4().hex}.parquet"
-        else:
-            target = folder / "data.parquet"
-        combined = part
-        stale: list[Path] = []
-        if mode == "merge" and folder.is_dir():
-            stale = sorted(folder.glob("*.parquet"))
-            frames = [pd.read_parquet(f) for f in stale]
-            combined = pd.concat([*frames, part], ignore_index=True).drop_duplicates()
-        if mode == "replace" and folder.is_dir():
-            stale = [f for f in folder.glob("*.parquet") if f != target]
-        flat = combined.reset_index(drop=True)
 
-        def write(tmp: Path, frame: pd.DataFrame = flat) -> None:
-            frame.to_parquet(tmp, index=False, compression=compression)
-
-        atomic_write(target, write)
-        for old in stale:
-            if old != target:
-                old.unlink(missing_ok=True)
+    def record(sys_id: str, y: int, m: int, target: Path, rows: int) -> None:
         summary.append(
             {
-                "system_id": str(sys_id),
-                "year": int(y),
-                "month": int(m),
-                "rows": int(len(part)),
+                "system_id": sys_id,
+                "year": y,
+                "month": m,
+                "rows": rows,
                 "path": str(target.relative_to(root_path)),
             }
         )
+
+    if is_pandas(df) or table.kind == "pandas":
+        frame = df if is_pandas(df) else table.df  # type: ignore[attr-defined]
+        times = to_utc(frame[tcol], what=tcol)
+        work = frame.copy()
+        work[tcol] = times
+        system = work["system_id"].astype(str)
+        year, month = times.dt.year.to_numpy(), times.dt.month.to_numpy()
+        groups = (
+            pd.DataFrame({"s": system.to_numpy(), "y": year, "m": month})
+            .groupby(["s", "y", "m"], sort=True)
+            .groups
+        )
+        for (sys_id, y, m), idx in groups.items():
+            part = work.iloc[np.asarray(idx)].drop(columns=["system_id"]).reset_index(drop=True)
+            new = pa.Table.from_pandas(part, preserve_index=False)
+            target, rows = _write_partition(
+                root_path, str(sys_id), int(y), int(m), new, mode, compression
+            )
+            record(str(sys_id), int(y), int(m), target, rows)
+        total = int(len(frame))
+    else:
+        total = 0
+        for sys_id, y, m in _partitions_of(table, tcol):
+            part = _partition_rows(table, tcol, sys_id, y, m)
+            hive = ("year", "month") if getattr(table, "lake", False) else ()
+            part = part.drop_columns([c for c in ("system_id", *hive) if c in part.column_names])
+            idx = part.column_names.index(tcol)
+            part = part.set_column(idx, tcol, _utc_arrow(part[tcol]))
+            target, rows = _write_partition(root_path, sys_id, y, m, part, mode, compression)
+            record(sys_id, y, m, target, rows)
+            total += rows
     _update_metadata(root_path, tcol, timezones)
-    _log.info("lake %s: %d row(s) in %d partition(s) (%s)", root_path, len(df), len(summary), mode)
+    _log.info("lake %s: %d row(s) in %d partition(s) (%s)", root_path, total, len(summary), mode)
     return pd.DataFrame(summary, columns=["system_id", "year", "month", "rows", "path"])
 
 
@@ -343,17 +488,26 @@ def read_lake(
     end: str | pd.Timestamp | None = None,
     columns: list[str] | None = None,
     time_col: str | None = None,
-) -> pd.DataFrame:
+    output: str = "pandas",
+) -> Any:
     """Read a lake back: ``systems`` and the window ``start <= time < end`` (UTC).
 
     Systems and months outside the window are skipped from the folder names, before any file
     is opened. ``columns`` limits what is loaded (the partition folders ``year`` and ``month``
     are returned only if you ask for them). An absent or empty lake returns an empty frame.
 
+    ``output`` chooses what comes back: ``"pandas"`` (a frame, the default), ``"arrow"`` (a
+    ``pyarrow.Table``, without the pandas copy) or ``"duckdb"`` (a lazy DuckDB relation over the
+    selected files, nothing loaded: query it, or pass it to `gbfs_toolkit.aggregate` and
+    `gbfs_toolkit.quality`). For a lake that does not fit in memory, pass the folder itself to
+    those functions instead of reading it.
+
     Raises
     ------
     GBFSValidationError
         If ``root`` exists but has no recognisable partition and no readable file.
+    ValueError
+        For an unknown ``output``.
 
     Examples
     --------
@@ -366,7 +520,11 @@ def read_lake(
     >>> only_b["system_id"].tolist()
     ['b']
     """
+    if output not in ("pandas", "arrow", "duckdb"):
+        raise ValueError(f"output must be 'pandas', 'arrow' or 'duckdb', got {output!r}")
     require_pyarrow("read_lake")
+    import pyarrow as pa
+    import pyarrow.compute as pc
     import pyarrow.dataset as ds
 
     base = Path(root)
@@ -377,8 +535,33 @@ def read_lake(
             raise GBFSValidationError(
                 f"{base} has Parquet files but not the system_id=/year=/month= layout"
             )
+        if output == "arrow":
+            return pa.table({c: pa.array([], pa.null()) for c in (columns or [])})
+        if output == "duckdb":
+            raise FileNotFoundError(f"no Parquet file under {base}")
         return pd.DataFrame(columns=columns or [])
     files = sorted(str(f) for f in base.glob("system_id=*/year=*/month=*/*.parquet"))
+    lo = None if start is None else to_utc([start]).iloc[0]
+    hi = None if end is None else to_utc([end]).iloc[0]
+    if output == "duckdb":
+        rel = _PathTable(files, lake=True, root=str(base)).relation()
+        conds = []
+        if systems is not None:
+            names = ", ".join(sql_text(str(x)) for x in systems) or "NULL"
+            conds.append(f"{sql_name('system_id')} IN ({names})")
+        c = f"epoch_us({sql_name(tcol)})"
+        if lo is not None:
+            conds.append(f"{c} >= {int(lo.value // 1000)}")
+        if hi is not None:
+            conds.append(f"{c} < {int(hi.value // 1000)}")
+        if conds:
+            rel = rel.filter(" AND ".join(conds))
+        cols = (
+            columns
+            if columns is not None
+            else [n for n in rel.columns if n not in ("year", "month")]
+        )
+        return rel.project(", ".join(sql_name(x) for x in cols))
     dataset = ds.dataset(
         files, format="parquet", partitioning=_partitioning(), partition_base_dir=str(base)
     )
@@ -389,8 +572,6 @@ def read_lake(
 
     if systems is not None:
         expr = both(expr, ds.field("system_id").isin([str(s) for s in systems]))
-    lo = None if start is None else to_utc([start]).iloc[0]
-    hi = None if end is None else to_utc([end]).iloc[0]
     if lo is not None:
         ym = lo.year * 100 + lo.month
         expr = both(expr, (ds.field("year") * 100 + ds.field("month")) >= ym)
@@ -402,6 +583,18 @@ def read_lake(
     if columns is not None and (lo is not None or hi is not None) and tcol not in columns:
         wanted = [*columns, tcol]
     table = dataset.to_table(columns=wanted, filter=expr)
+    if output == "arrow":
+        if (lo is not None or hi is not None) and tcol in table.column_names:
+            t = _utc_arrow(table[tcol])
+            keep = pc.is_valid(t)
+            if lo is not None:
+                keep = pc.and_(keep, pc.greater_equal(t, pa.scalar(lo.to_pydatetime(), t.type)))
+            if hi is not None:
+                keep = pc.and_(keep, pc.less(t, pa.scalar(hi.to_pydatetime(), t.type)))
+            table = table.filter(keep)
+        drop = [] if columns is not None else ["year", "month"]
+        keep_cols = [c for c in (columns or table.column_names) if c in table.column_names]
+        return table.select([c for c in keep_cols if c not in drop])
     out = table.to_pandas()
     if (lo is not None or hi is not None) and tcol in out.columns:
         t = to_utc(out[tcol], what=tcol)
