@@ -19,12 +19,14 @@ commits on main  ->  release PR (version, CHANGELOG)  ->  merge  ->  tag + GitHu
    the type (`feat!:`) or a `BREAKING CHANGE:` footer a major one. `docs:`, `perf:` and
    `refactor:` appear in the changelog; `test:`, `ci:`, `build:` and `chore:` do not. Pull
    requests are squash-merged, so the title of the pull request is the commit message:
-   write it in that format.
+   write it in that format. A pull request that holds several independent changes, each
+   with its own conventional commit, is rebase-merged instead, so that each commit counts.
 2. **release-please keeps one release PR open** (`.github/workflows/release-please.yml`,
    on every push to `main`). It bumps `pyproject.toml`, `.release-please-manifest.json`
-   and `CITATION.cff`, and prepends the changelog section. The changelog it generates is
-   the one in `CHANGELOG.md`: curate the "Unreleased" notes into the PR before merging
-   (headline fixes, *Open points*, anything a user must know).
+   and `CITATION.cff`, and prepends a generated changelog section. Between releases the
+   notes that matter to a user (headline fixes, *Open points*) are kept by hand under an
+   "Unreleased" heading: when the release PR opens, move them into the generated section
+   (edit the PR) and delete the "Unreleased" heading, so that the release has one entry.
 3. **Review the release PR.** Check that the version is the one you expect. A patch
    release should be a patch: if the proposal is wrong, a commit is mislabelled (a `feat:`
    that was a fix, or the reverse); fix the history with a `Release-As: X.Y.Z` footer on
