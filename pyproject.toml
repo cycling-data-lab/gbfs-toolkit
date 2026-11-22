@@ -48,6 +48,7 @@ fetch = ["requests>=2.31", "urllib3>=2.0"]  # build_session imports urllib3.util
 geo = ["geopandas>=0.14", "shapely>=2.0"]  # geofencing imports shapely.geometry directly
 osm = ["geopandas>=0.14"]  # enrich_with_osm (bring your own OSM GeoDataFrame)
 parquet = ["pyarrow>=15.0"]
+duckdb = ["duckdb>=1.0"]  # SQL views over a Parquet lake (gbfs_toolkit.store)
 cluster = ["scikit-learn>=1.4"]
 dtw = ["tslearn>=0.6"]  # shape-aware time-series clustering (method="dtw")
 cli = ["rich>=13.0", "tqdm>=4.0"]  # richer terminal output: coloured audit tables + progress bars
@@ -66,6 +67,7 @@ dev = [
     "ruff>=0.17,<0.18",  # formatter output changes between minors: bump with .pre-commit-config
     "requests>=2.31",
     "pyarrow>=15.0",
+    "duckdb>=1.0",  # the lake views and the fingerprint cross-check in the tests
     "scikit-learn>=1.4",
     "geopandas>=0.14",  # exercises geo / osm / geofencing paths in CI
     "rich>=13.0",  # exercises the CLI rich-rendering path in CI
