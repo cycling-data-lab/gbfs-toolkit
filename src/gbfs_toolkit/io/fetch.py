@@ -35,8 +35,20 @@ from gbfs_toolkit.io.normalize import (
     to_canonical_vehicles,
 )
 
+__all__ = [
+    "JsonGetter",
+    "FeedResponse",
+    "build_session",
+    "fetch_feed_json",
+    "parse_discovery",
+    "GBFSFeed",
+    "availability",
+    "audit_feed",
+    "fetch_multiple",
+]
+
 _USER_AGENT = "gbfs-toolkit (+https://github.com/cycling-data-lab/gbfs-toolkit)"
-_log = logging.getLogger("gbfs_toolkit")
+_log = logging.getLogger(__name__)
 
 JsonGetter = Callable[[str], dict]
 

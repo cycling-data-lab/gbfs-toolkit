@@ -13,6 +13,36 @@ import pandas as pd
 
 from gbfs_toolkit.core.errors import GBFSValidationError
 
+__all__ = [
+    "STATION_INFO_COLUMNS",
+    "VEHICLE_TYPE_COLUMNS",
+    "STATION_STATUS_COLUMNS",
+    "VEHICLE_STATUS_COLUMNS",
+    "GEOFENCING_COLUMNS",
+    "STATION_VEHICLE_COUNTS_COLUMNS",
+    "PRICING_PLAN_COLUMNS",
+    "SYSTEM_REGION_COLUMNS",
+    "ALERT_COLUMNS",
+    "STATION_TYPES",
+    "AUDIT_FLAGS",
+    "RULES",
+    "A2_MIN_STATIONS",
+    "A3_RATIO_THRESHOLD",
+    "A4_MIN_STATIONS",
+    "A4_SIGMA",
+    "A4_MIN_THRESHOLD_M",
+    "A5_BBOX_MAX_KM2",
+    "A6_RATE_THRESHOLD",
+    "A6_MIN_STATIONS",
+    "A7_RATE_THRESHOLD",
+    "A7_MIN_STATIONS",
+    "SchemaError",
+    "require_columns",
+    "SCHEMAS",
+    "validate_schema",
+    "coerce_schema",
+]
+
 #: Canonical station-information columns (static inventory of a docked system).
 STATION_INFO_COLUMNS: list[str] = [
     "system_id",
@@ -218,6 +248,17 @@ class SchemaError(GBFSValidationError, ValueError):
 
 #: Canonical data-model reference, cited in schema-error messages.
 _DATA_MODEL_URL = "https://cycling-data-lab.github.io/gbfs-toolkit/data-model/"
+
+
+class _SchemaKeyError(SchemaError, KeyError):
+    """A missing-column error raised where 2.0 raised a bare ``KeyError``.
+
+    Kept a ``KeyError`` so existing ``except KeyError`` handlers still work, and a
+    [`SchemaError`][gbfs_toolkit.SchemaError] so it is reported like every other missing
+    column (and caught by ``except GBFSError``).
+    """
+
+    __str__ = BaseException.__str__  # a plain message, not KeyError's quoted repr
 
 
 def require_columns(df: pd.DataFrame, columns: list[str], *, what: str) -> None:

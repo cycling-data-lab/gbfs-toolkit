@@ -1,6 +1,7 @@
 """Shared internal helpers.
 
-Private module (underscore-prefixed): not part of the public API and not re-exported.
+Internal module: not part of the public API and not re-exported (its names may change in
+any release).
 It exists so the same small primitives (earth radius, the equirectangular projection, the
 panel-flatten idiom, the Gini coefficient, fixed-frequency time-of-day bucketing) live in
 exactly one place instead of being re-derived in every analysis module.
@@ -8,13 +9,19 @@ exactly one place instead of being re-derived in every analysis module.
 
 from __future__ import annotations
 
+import functools
 import warnings
-from typing import Any, TypeVar
+from collections.abc import Callable
+from typing import Any, TypeVar, cast
 
 import numpy as np
 import pandas as pd
 
+# Internal helpers: nothing here is public API (see docs/api-policy.md).
+__all__: list[str] = []
+
 _T = TypeVar("_T")
+_F = TypeVar("_F", bound=Callable[..., Any])
 
 
 def parse_gbfs_timestamp(value: Any) -> pd.Timestamp:
@@ -46,6 +53,91 @@ def deprecated_kwarg(value: _T, *, old: str, new: str) -> _T:
         stacklevel=3,
     )
     return value
+
+
+def warn_deprecated(
+    what: str,
+    *,
+    since: str,
+    removal: str | None = None,
+    alternative: str | None = None,
+    stacklevel: int = 2,
+) -> None:
+    """Emit the library's standard deprecation warning (a ``FutureWarning``).
+
+    The deprecation policy (docs/api-policy.md) is: a public name or behaviour is
+    deprecated in a minor release, keeps working with this warning for at least one
+    further minor release, and is removed only in the next major release. The message
+    always names the version that deprecated it, the planned removal and the
+    replacement, so users can act on it. ``FutureWarning`` (not ``DeprecationWarning``)
+    is used, as in pandas, because it is shown to end users by default.
+
+    Parameters
+    ----------
+    what : str
+        What is deprecated, e.g. ``"gbfs_toolkit.old_name"`` or ``"`strict=True`"``.
+    since : str
+        The release that deprecated it, e.g. ``"2.1.0"``.
+    removal : str, optional
+        The release that will remove it (default: "the next major release").
+    alternative : str, optional
+        What to use instead.
+    stacklevel : int, default 2
+        Passed to `warnings.warn`; 2 points at the caller of the function that warns.
+
+    Examples
+    --------
+    >>> import warnings
+    >>> with warnings.catch_warnings(record=True) as caught:
+    ...     warnings.simplefilter("always")
+    ...     warn_deprecated("old_name", since="2.1.0", alternative="new_name")
+    >>> str(caught[0].message)
+    'old_name is deprecated since gbfs-toolkit 2.1.0 and will be removed in the next major release; use new_name instead.'
+    """
+    message = f"{what} is deprecated since gbfs-toolkit {since} and will be removed in "
+    message += f"gbfs-toolkit {removal}" if removal else "the next major release"
+    message += f"; use {alternative} instead." if alternative else "."
+    warnings.warn(message, FutureWarning, stacklevel=stacklevel + 1)
+
+
+def deprecated(
+    *, since: str, removal: str | None = None, alternative: str | None = None
+) -> Callable[[_F], _F]:
+    """Decorator marking a public function as deprecated (see `warn_deprecated`).
+
+    The wrapped function behaves exactly as before and warns at each call, pointing
+    at the caller's line; its docstring gains a ``Deprecated`` note so the API
+    reference shows it.
+
+    Examples
+    --------
+    >>> import warnings
+    >>> @deprecated(since="2.1.0", alternative="gbfs_toolkit.new_name")
+    ... def old_name(x):
+    ...     \"\"\"Double x.\"\"\"
+    ...     return 2 * x
+    >>> with warnings.catch_warnings(record=True) as caught:
+    ...     warnings.simplefilter("always")
+    ...     old_name(2)
+    4
+    >>> caught[0].category.__name__
+    'FutureWarning'
+    """
+
+    def decorate(func: _F) -> _F:
+        name = f"{func.__module__}.{func.__qualname__}"
+
+        @functools.wraps(func)
+        def wrapper(*args: Any, **kwargs: Any) -> Any:
+            warn_deprecated(name, since=since, removal=removal, alternative=alternative)
+            return func(*args, **kwargs)
+
+        note = f"Deprecated since {since}"
+        note += f"; use {alternative} instead." if alternative else "."
+        wrapper.__doc__ = f'{func.__doc__ or ""}\n\n    !!! warning "Deprecated"\n        {note}\n'
+        return cast(_F, wrapper)
+
+    return decorate
 
 
 #: Mean Earth radius in metres (spherical approximation), used by every distance/projection helper.

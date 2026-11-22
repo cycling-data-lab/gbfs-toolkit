@@ -19,6 +19,11 @@ from gbfs_toolkit.spatial.multimodal import link_transit_stops
 if TYPE_CHECKING:  # pragma: no cover
     import geopandas as gpd
 
+__all__ = [
+    "enrich_with_osm",
+    "station_surroundings",
+]
+
 # Common OSM tag columns to try as the category when none is given.
 _OSM_CATEGORY_GUESSES = ("amenity", "shop", "leisure", "highway", "railway", "public_transport")
 

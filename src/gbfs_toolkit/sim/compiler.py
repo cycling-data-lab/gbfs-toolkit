@@ -15,11 +15,24 @@ from scipy.spatial import cKDTree
 
 from gbfs_toolkit.sim.flows import SimConfig, simulate_city_flows
 
+__all__ = [
+    "EARTH_KM",
+    "extract_geometry",
+    "assign_roles",
+    "compute_footprint",
+    "calibrate_city",
+]
+
 EARTH_KM = 6371.0
 
 
 def extract_geometry(df_info: pd.DataFrame, radius_km: float = 6.0):
-    """Lat/lon -> Cartesian XYZ -> ``cKDTree``; return coords, capacity, ids and the sparse pairs."""
+    """Lat/lon -> Cartesian XYZ -> ``cKDTree``; return coords, capacity, ids and the sparse pairs.
+
+    !!! warning "Experimental"
+        Part of the experimental ``gbfs_toolkit.sim`` module: its outputs and parameters
+        may change in a minor release (see the API policy).
+    """
     info = df_info.dropna(subset=["lat", "lon", "capacity"]).reset_index(drop=True)
     phi, lam = np.radians(info["lat"].to_numpy()), np.radians(info["lon"].to_numpy())
     xyz = EARTH_KM * np.column_stack(
@@ -36,7 +49,12 @@ def extract_geometry(df_info: pd.DataFrame, radius_km: float = 6.0):
 
 
 def assign_roles(capacity: np.ndarray) -> np.ndarray:
-    """Heuristic land use from the capacity distribution (indices match ``flows._ROLES``)."""
+    """Heuristic land use from the capacity distribution (indices match ``flows._ROLES``).
+
+    !!! warning "Experimental"
+        Part of the experimental ``gbfs_toolkit.sim`` module: its outputs and parameters
+        may change in a minor release (see the API policy).
+    """
     q75, q95 = np.percentile(capacity, [75, 95])
     role = np.zeros(capacity.size, dtype=int)  # 0 = residential (<= 75th)
     role[capacity >= q75] = 1  # 1 = employment (75th-95th)
@@ -45,7 +63,12 @@ def assign_roles(capacity: np.ndarray) -> np.ndarray:
 
 
 def compute_footprint(df_panel: pd.DataFrame) -> np.ndarray:
-    """``[turnover/day, median ACF1(lag 1h), stockout_rate]`` from a GBFS station_status history."""
+    """``[turnover/day, median ACF1(lag 1h), stockout_rate]`` from a GBFS station_status history.
+
+    !!! warning "Experimental"
+        Part of the experimental ``gbfs_toolkit.sim`` module: its outputs and parameters
+        may change in a minor release (see the API policy).
+    """
     p = df_panel.copy()
     p["fetched_at"] = pd.to_datetime(p["fetched_at"], utc=True)
     cap = (
@@ -87,7 +110,12 @@ def calibrate_city(
     weights: tuple[float, float, float] = (1.0, 2.0, 1.0),
     seed: int = 0,
 ) -> dict:
-    """Grid-search ``SimConfig`` hyperparameters so the simulated footprint matches the real one."""
+    """Grid-search ``SimConfig`` hyperparameters so the simulated footprint matches the real one.
+
+    !!! warning "Experimental"
+        Part of the experimental ``gbfs_toolkit.sim`` module: its outputs and parameters
+        may change in a minor release (see the API policy).
+    """
     lat, lon, cap, _ids, _pairs = extract_geometry(df_info)
     role = assign_roles(cap)
     w = np.asarray(weights, dtype=float)

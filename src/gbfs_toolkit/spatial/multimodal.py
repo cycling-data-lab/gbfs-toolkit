@@ -12,8 +12,12 @@ from __future__ import annotations
 import numpy as np
 import pandas as pd
 
-from gbfs_toolkit.core.models import require_columns
+from gbfs_toolkit.core.models import _SchemaKeyError, require_columns
 from gbfs_toolkit.spatial.geometry import GeoKDTree
+
+__all__ = [
+    "link_transit_stops",
+]
 
 # GTFS stops.txt column aliases (lat/lon naming varies a little in the wild).
 _LAT_ALIASES = ("stop_lat", "lat", "latitude")
@@ -25,7 +29,12 @@ def _pick(df: pd.DataFrame, aliases: tuple[str, ...], what: str) -> str:
     for a in aliases:
         if a in df.columns:
             return a
-    raise KeyError(f"transit stops frame is missing a {what} column (tried {aliases})")
+    raise _SchemaKeyError(
+        f"transit stops frame is missing a {what} column (tried {aliases})",
+        missing=list(aliases),
+        present=[str(c) for c in df.columns],
+        what="link_transit_stops",
+    )
 
 
 def link_transit_stops(

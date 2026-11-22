@@ -16,9 +16,18 @@ import pandas as pd
 
 from gbfs_toolkit.sim.flows import SimConfig, simulate_city_flows
 
+__all__ = [
+    "generate_gbfs_parquet",
+    "export_ml_dataset",
+]
+
 
 def generate_gbfs_parquet(cfg: SimConfig, filepath: str) -> dict:
     """Run the simulation and export a compressed, canonical GBFS ``station_status`` Parquet.
+
+    !!! warning "Experimental"
+        Part of the experimental ``gbfs_toolkit.sim`` module: its outputs and parameters
+        may change in a minor release (see the API policy).
 
     Ghost bikes are split into ``num_bikes_disabled`` (rentable count goes to
     ``num_bikes_available``); a scraper failure drops the snapshot (a real gap), not a null value.
@@ -68,6 +77,10 @@ def export_ml_dataset(
     val_frac: float = 0.17,
 ) -> dict:
     """Write the analysis-ready ML folder for one simulated city.
+
+    !!! warning "Experimental"
+        Part of the experimental ``gbfs_toolkit.sim`` module: its outputs and parameters
+        may change in a minor release (see the API policy).
 
     Produces wide time-by-station matrices of absolute ``num_bikes_available`` (Int16, NaN at
     missing snapshots) and capacity, an explicit boolean observation mask, a ``graph_geometry.npz``

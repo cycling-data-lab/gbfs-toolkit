@@ -16,6 +16,12 @@ from gbfs_toolkit.core.models import require_columns
 from gbfs_toolkit.core.utils import panel_frame
 from gbfs_toolkit.spatial.geometry import haversine_m
 
+__all__ = [
+    "reconcile_fleet_state",
+    "detect_ghost_vehicles",
+    "vehicle_idle_time",
+]
+
 
 def _bool_col(df: pd.DataFrame, col: str) -> pd.Series:
     if col in df.columns:

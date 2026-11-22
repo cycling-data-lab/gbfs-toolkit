@@ -13,9 +13,21 @@ from __future__ import annotations
 import numpy as np
 import pandas as pd
 
-from gbfs_toolkit.core.models import require_columns
+from gbfs_toolkit.core.models import SchemaError, require_columns
 from gbfs_toolkit.core.utils import EARTH_RADIUS_M, num, panel_frame, project_meters
 from gbfs_toolkit.spatial.geometry import GeoKDTree, haversine_m
+
+__all__ = [
+    "morans_i",
+    "ripley_k",
+    "coverage_stats",
+    "spatial_entropy",
+    "spatial_center_of_mass",
+    "fdr_adjust",
+    "local_morans_i",
+    "two_step_fca",
+    "spatial_outage_redundancy",
+]
 
 
 def _knn_weights(lat: np.ndarray, lon: np.ndarray, k: int):
@@ -555,7 +567,12 @@ def _point_latlon(frame: pd.DataFrame) -> tuple[np.ndarray, np.ndarray]:
     if hasattr(frame, "geometry"):
         geom = frame.geometry
         return geom.y.to_numpy(dtype="float64"), geom.x.to_numpy(dtype="float64")
-    raise ValueError("demand needs 'lat'/'lon' columns or a GeoDataFrame point geometry")
+    raise SchemaError(
+        "demand needs 'lat'/'lon' columns or a GeoDataFrame point geometry",
+        missing=["lat", "lon"],
+        present=[str(c) for c in frame.columns],
+        what="two_step_fca",
+    )
 
 
 def two_step_fca(

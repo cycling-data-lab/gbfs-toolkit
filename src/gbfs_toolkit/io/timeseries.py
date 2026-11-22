@@ -27,6 +27,23 @@ import pandas as pd
 from gbfs_toolkit.core.models import require_columns
 from gbfs_toolkit.core.utils import panel_frame
 
+__all__ = [
+    "append_to_parquet",
+    "build_availability_panel",
+    "calculate_net_flow",
+    "stockout_episodes",
+    "turnover",
+    "flow_balance",
+    "detect_frozen_stations",
+    "coverage_report",
+    "generate_manifest",
+    "add_local_time",
+    "resample_panel",
+    "insert_explicit_gaps",
+    "extract_snapshot_asof",
+    "to_wide_matrix",
+]
+
 
 def _require_pyarrow():
     try:
@@ -465,6 +482,19 @@ def detect_frozen_stations(
     See Also
     --------
     [`stockout_episodes`][gbfs_toolkit.stockout_episodes] : Genuine outage episodes.
+
+    Examples
+    --------
+    >>> import pandas as pd
+    >>> t = pd.date_range("2026-03-02T06:00Z", periods=10, freq="1h")
+    >>> panel = pd.DataFrame({
+    ...     "system_id": "s",
+    ...     "station_id": ["stuck"] * 10 + ["live"] * 10,
+    ...     "fetched_at": list(t) * 2,
+    ...     "num_bikes_available": [4] * 10 + list(range(10)),
+    ... })
+    >>> detect_frozen_stations(panel)["is_frozen"].to_dict()
+    {('s', 'live'): False, ('s', 'stuck'): True}
     """
     cols = list(columns) if columns else [value_col]
     df = panel_frame(panel)

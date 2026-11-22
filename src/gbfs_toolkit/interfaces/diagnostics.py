@@ -6,6 +6,10 @@ import platform
 import sys
 from importlib.metadata import PackageNotFoundError, version
 
+__all__ = [
+    "show_versions",
+]
+
 _DEPS = (
     "gbfs-toolkit",
     "numpy",

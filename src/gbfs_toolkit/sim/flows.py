@@ -13,12 +13,41 @@ from dataclasses import dataclass, field
 import numpy as np
 import pandas as pd
 
+__all__ = [
+    "SimConfig",
+    "simulate_city_flows",
+]
+
 # residential, employment, hub_heavy (TGV/RER), hub_light (metro)
 _ROLES = ("residential", "employment", "hub_heavy", "hub_light")
 
 
 @dataclass
 class SimConfig:
+    """Parameters of one simulated city for [`simulate_city_flows`][gbfs_toolkit.simulate_city_flows].
+
+    !!! warning "Experimental"
+        Part of the experimental ``gbfs_toolkit.sim`` module: its outputs and parameters
+        may change in a minor release (see the API policy).
+
+    Every field has a default, so ``SimConfig()`` is a two-week, 200-station city. The
+    fields group into geography (``n_stations``, ``center``, ``spread_km``,
+    ``n_clusters``), demand (``role_mix``, ``trip_rate``, ``base_demand``, ``mass_tail``,
+    ``beta_km``, ``max_trip_km``, ``speed_kmh``), and four ablation axes that are off or
+    neutral unless set: heterogeneous multimodality (``heavy_*``/``light_*``), asymmetric
+    topography (``topography``, ``climb_penalty``), GBFS data chaos (``ghost_rate``,
+    ``scraper_cell_nan``, ``scraper_station_outages``) and weather shocks
+    (``weather_events``, ``weather_drop``, ``weather_len_min``). Night rebalancing is on by
+    default (``rebalancing*``). The ``inject_*`` arrays replace the synthetic geometry with
+    real stations (used by [`calibrate_city`][gbfs_toolkit.calibrate_city]).
+
+    Examples
+    --------
+    >>> cfg = SimConfig(n_stations=10, days=1, seed=7)
+    >>> cfg.freq, cfg.rebalancing
+    ('1h', True)
+    """
+
     n_stations: int = 200
     days: int = 14
     freq: str = "1h"
@@ -71,6 +100,47 @@ def _pairwise_km(lat, lon):
 
 
 def simulate_city_flows(cfg: SimConfig | None = None, *, return_extras: bool = False):
+    """Simulate a bike-share city from a mass-conserving gravity origin-destination flow.
+
+    !!! warning "Experimental"
+        Part of the experimental ``gbfs_toolkit.sim`` module: its outputs and parameters
+        may change in a minor release (see the API policy).
+
+    Departures follow each station's role and a time-of-day profile, destinations a
+    gravity model on great-circle distance, arrivals are delayed by travel time and
+    censored by free docks (rejected bikes re-dock elsewhere), so the fleet is conserved
+    and the true OD is known. The panel is then observed at ``cfg.freq`` like a scraper
+    would (with the optional data-chaos axes).
+
+    Parameters
+    ----------
+    cfg : SimConfig, optional
+        The city to simulate (default ``SimConfig()``).
+    return_extras : bool, default False
+        Also return a dict with the aggregated OD matrix (``od_aggregate``), the distance
+        matrix (``distance_km``), station ``altitude`` and the ``mass_conservation_error``.
+
+    Returns
+    -------
+    (info, status) or (info, status, extras)
+        ``info`` is a station-information frame (one row per station, with ``role``,
+        ``altitude`` and ``ghost_bikes``); ``status`` is a long station-status panel in the
+        canonical columns, ``fetched_at`` tz-aware UTC and ``last_reported`` in unix seconds.
+
+    See Also
+    --------
+    [`SimConfig`][gbfs_toolkit.SimConfig] : The parameters.
+    [`generate_gbfs_parquet`][gbfs_toolkit.generate_gbfs_parquet] : Write a run as a GBFS Parquet.
+    [`calibrate_city`][gbfs_toolkit.calibrate_city] : Fit the parameters to a real feed.
+
+    Examples
+    --------
+    >>> info, status = simulate_city_flows(SimConfig(n_stations=5, days=1))
+    >>> len(info), len(status)
+    (5, 120)
+    >>> bool((status["num_bikes_available"] <= info["capacity"].max()).all())
+    True
+    """
     if cfg is None:
         cfg = SimConfig()
     rng = np.random.default_rng(cfg.seed)

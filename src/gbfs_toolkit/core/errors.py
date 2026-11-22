@@ -1,13 +1,24 @@
 """Exception hierarchy, so orchestrators can catch and react precisely.
 
-A single base ([`GBFSError`][gbfs_toolkit.GBFSError]) lets a scraper ``except GBFSError`` to catch anything
-this library raises, while the specific subclasses let it branch (retry a fetch, skip a
-not-modified feed, surface a schema problem). [`SchemaError`][gbfs_toolkit.SchemaError] lives in
+A single base ([`GBFSError`][gbfs_toolkit.GBFSError]) lets a scraper ``except GBFSError`` to catch every
+problem with a feed or a frame (fetch, discovery, schema, not-modified), while the specific
+subclasses let it branch (retry a fetch, skip a not-modified feed, surface a schema problem).
+Two other kinds of error are standard Python, as in numpy and pandas: an invalid argument
+value (an unknown ``method=``, a non-fixed ``freq``) raises ``ValueError``, and a missing
+optional dependency raises ``ImportError`` naming the extra to install. [`SchemaError`][gbfs_toolkit.SchemaError] lives in
 [`models`][gbfs_toolkit.models] for backward compatibility but subclasses
 [`GBFSValidationError`][gbfs_toolkit.GBFSValidationError].
 """
 
 from __future__ import annotations
+
+__all__ = [
+    "GBFSError",
+    "GBFSFetchError",
+    "GBFSDiscoveryError",
+    "GBFSValidationError",
+    "GBFSNotModified",
+]
 
 
 class GBFSError(Exception):
