@@ -61,9 +61,9 @@ def test_help_lists_the_new_commands(capsys):
         main(["--help"])
     assert e.value.code == 0
     text = capsys.readouterr().out
-    for command in ("audit", "collect", "quality", "release", "verify"):
+    for command in ("audit", "collect", "compact", "quality", "release", "verify"):
         assert command in text
-    for command in ("collect", "quality", "release", "verify"):
+    for command in ("collect", "compact", "quality", "release", "verify"):
         with pytest.raises(SystemExit):
             main([command, "--help"])
         assert "experimental" in capsys.readouterr().out.lower()
@@ -239,6 +239,51 @@ def test_quality_reads_the_collect_layout(server, tmp_path, capsys):
     capsys.readouterr()
     assert main(["quality", str(tmp_path / "c"), "--layout", "collected"]) == 0
     assert "demo" in capsys.readouterr().out
+
+
+def test_collect_writes_fragments_and_compact_gathers_them(server, tmp_path, capsys):
+    url, _ = server
+    base = [
+        "--system",
+        f"demo={url}/gbfs.json",
+        "--out",
+        str(tmp_path / "c"),
+        "--user-agent",
+        "ua@x",
+        "--min-interval",
+        "0",
+    ]
+    assert main(["collect", *base]) == 0 and main(["collect", *base]) == 0
+    folder = tmp_path / "c" / "station_status" / "demo"
+    assert len(list(folder.rglob("*.parquet"))) == 2 and not list(folder.glob("*.parquet"))
+    capsys.readouterr()
+    assert main(["compact", str(tmp_path / "c")]) == 0
+    assert "compacted 0 day file(s)" in capsys.readouterr().out  # today is still open
+    assert main(["compact", str(tmp_path / "c"), "--include-today"]) == 0
+    assert "compacted 1 day file(s) from 2 fragment(s)" in capsys.readouterr().out
+    assert len(list(folder.glob("*.parquet"))) == 1
+    # the day file and the fragments of a `--compact` run are the same data
+    assert main(["collect", *base, "--compact"]) == 0
+    assert main(["quality", str(tmp_path / "c"), "--layout", "collected"]) == 0
+
+
+def test_collect_write_day_keeps_the_day_file(server, tmp_path):
+    url, _ = server
+    args = [
+        "collect",
+        "--system",
+        f"demo={url}/gbfs.json",
+        "--out",
+        str(tmp_path / "d"),
+        "--user-agent",
+        "ua@x",
+        "--min-interval",
+        "0",
+        "--write",
+        "day",
+    ]
+    assert main(args) == 0
+    assert len(list((tmp_path / "d" / "station_status" / "demo").glob("*.parquet"))) == 1
 
 
 def test_release_then_verify_and_a_tampered_copy(tmp_path, capsys):
