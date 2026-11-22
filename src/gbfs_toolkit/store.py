@@ -289,37 +289,43 @@ def _partitions_of(table: Table, tcol: str) -> list[tuple[str, int, int]]:
     return sorted(seen)
 
 
-def _partition_rows(table: Table, tcol: str, system: str, year: int, month: int) -> Any:
-    """The rows of one (system, year, month) of a non-pandas source, as an Arrow table."""
+def _partition_rows(
+    table: Table, tcol: str, system: str, lo: pd.Timestamp, hi: pd.Timestamp
+) -> Any:
+    """The rows of one system with ``lo <= time < hi`` of a non-pandas source, as Arrow."""
     import pyarrow as pa
-    import pyarrow.compute as pc
     import pyarrow.dataset as ds
 
     if table.kind == "relation":
-        c = f"make_timestamp(epoch_us({sql_name(tcol)}))"
+        c = f"epoch_us({sql_name(tcol)})"
         return table.arrow(
             where=(
                 f"CAST({sql_name('system_id')} AS VARCHAR) = {sql_text(system)} "
-                f"AND year({c}) = {year} AND month({c}) = {month}"
+                f"AND {c} >= {int(lo.value // 1000)} AND {c} < {int(hi.value // 1000)}"
             )
         )
-    lo = pd.Timestamp(year=year, month=month, day=1, tz="UTC")
-    hi = lo + pd.offsets.MonthBegin(1)
-    # a coarse filter by time pushed down to the files, then the exact test on the rows
-    names = table.columns()
-    kind = table._schema.field(tcol).type  # type: ignore[attr-defined]
     from gbfs_toolkit.core._tabular import _timestamp_literal
 
-    flt = (ds.field(tcol) >= _timestamp_literal(lo - pd.Timedelta(days=1), kind)) & (
-        ds.field(tcol) < _timestamp_literal(hi + pd.Timedelta(days=1), kind)
+    kind = table._schema.field(tcol).type  # type: ignore[attr-defined]
+    flt = (
+        (ds.field("system_id").cast(pa.string()) == system)
+        & (ds.field(tcol) >= _timestamp_literal(lo, kind))
+        & (ds.field(tcol) < _timestamp_literal(hi, kind))
     )
-    part = table._select(names, flt)  # type: ignore[attr-defined]
-    t = _utc_arrow(part[tcol])
-    mask = pc.and_(
-        pc.equal(part["system_id"].cast(pa.string()), system),
-        pc.and_(pc.equal(pc.year(t), year), pc.equal(pc.month(t), month)),
-    )
-    return part.filter(mask)
+    return table._select(table.columns(), flt)  # type: ignore[attr-defined]
+
+
+def _windows(
+    mode: str, year: int, month: int, span: tuple[pd.Timestamp, pd.Timestamp]
+) -> list[tuple[pd.Timestamp, pd.Timestamp]]:
+    """The time windows a partition is written in: its month, or each day of it in append mode."""
+    lo = pd.Timestamp(year=year, month=month, day=1, tz="UTC")
+    hi = lo + pd.offsets.MonthBegin(1)
+    if mode != "append":
+        return [(lo, hi)]  # merge and replace need the whole partition at once
+    first, last = max(lo, span[0].floor("D")), min(hi, span[1].floor("D") + pd.Timedelta(days=1))
+    days = pd.date_range(first, last, freq="D", inclusive="left")
+    return [(d, d + pd.Timedelta(days=1)) for d in days]
 
 
 def write_lake(
@@ -335,9 +341,11 @@ def write_lake(
 
     ``df`` is a pandas frame or, for volumes that do not fit in memory, an Arrow table or
     dataset, a DuckDB relation, or a path (a folder of Parquet files such as the day files of
-    `gbfs_toolkit.collect`, a file, a glob, or another lake). A table, relation or path is
-    written one partition at a time, so the memory used is one (system, month), not the source;
-    its time column must be a timestamp.
+    `gbfs_toolkit.collect`, a file, a glob, or another lake). Its time column must be a
+    timestamp. A table, relation or path is written piece by piece: in ``"append"`` mode one UTC
+    day at a time (one file per day and system, so the memory used is a day, not the source), in
+    the other two modes one (system, month) at a time, because merging or replacing needs the
+    whole partition.
 
     ``mode`` says what happens to a partition that already holds data:
 
@@ -358,7 +366,8 @@ def write_lake(
     Returns
     -------
     pandas.DataFrame
-        One row per touched partition: ``system_id, year, month, rows, path``.
+        One row per touched partition: ``system_id, year, month, rows, path`` (the file, or the
+        partition folder when a table was written in several files).
 
     Examples
     --------
@@ -414,15 +423,27 @@ def write_lake(
         total = int(len(frame))
     else:
         total = 0
-        for sys_id, y, m in _partitions_of(table, tcol):
-            part = _partition_rows(table, tcol, sys_id, y, m)
-            hive = ("year", "month") if getattr(table, "lake", False) else ()
-            part = part.drop_columns([c for c in ("system_id", *hive) if c in part.column_names])
-            idx = part.column_names.index(tcol)
-            part = part.set_column(idx, tcol, _utc_arrow(part[tcol]))
-            target, rows = _write_partition(root_path, sys_id, y, m, part, mode, compression)
-            record(sys_id, y, m, target, rows)
-            total += rows
+        span = table.time_range(tcol)
+        for sys_id, y, m in _partitions_of(table, tcol) if span is not None else []:
+            written: list[Path] = []
+            rows_here = 0
+            for lo, hi in _windows(mode, y, m, span):  # type: ignore[arg-type]
+                part = _partition_rows(table, tcol, sys_id, lo, hi)
+                if part.num_rows == 0:
+                    continue
+                hive = ("year", "month") if getattr(table, "lake", False) else ()
+                part = part.drop_columns(
+                    [c for c in ("system_id", *hive) if c in part.column_names]
+                )
+                idx = part.column_names.index(tcol)
+                part = part.set_column(idx, tcol, _utc_arrow(part[tcol]))
+                target, rows = _write_partition(root_path, sys_id, y, m, part, mode, compression)
+                written.append(target)
+                rows_here += rows
+            if written:
+                shown = written[0] if len(written) == 1 else written[0].parent
+                record(sys_id, y, m, shown, rows_here)
+                total += rows_here
     _update_metadata(root_path, tcol, timezones)
     _log.info("lake %s: %d row(s) in %d partition(s) (%s)", root_path, total, len(summary), mode)
     return pd.DataFrame(summary, columns=["system_id", "year", "month", "rows", "path"])
