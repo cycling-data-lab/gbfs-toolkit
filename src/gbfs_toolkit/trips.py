@@ -16,7 +16,14 @@ reads the families below into the same table, `TRIP_COLUMNS`:
     the Urban Sharing platform's files (Oslo, Bergen, Trondheim): ISO 8601 times with an
     offset, coordinates inline;
 ``bts``
-    the Bicycle Transit Systems files (Indego, Metro Bike Share).
+    the Bicycle Transit Systems files (Indego, Metro Bike Share);
+``velomagg``
+    the open-data trip file of the Vélomagg bike share (Montpellier Méditerranée Métropole,
+    ODbL; ``Departure``, ``Return``, ``Departure station`` ... with a three-digit station number
+    in front of each name). Times are local (``tz="Europe/Paris"``), the file's text may be
+    double-encoded (``ComÃ©die``) and is repaired, the station number becomes the station id,
+    ``Covered distance (m)`` becomes ``distance_m``, and the ``Manager`` column, which marks the
+    operator's own staff, becomes the boolean ``is_operator_staff``.
 
 Anything else: describe the columns once with `TripFormat` and pass it as ``fmt``. No
 format is guessed beyond these; in particular the module reads no format it has not been shown.
@@ -30,7 +37,12 @@ hour in autumn) is read as the second, standard-time occurrence; both are flagge
 guessed silently.
 
 **No personal data is carried over.** Birth year, gender and bike number are dropped, and the
-common schema has no user identifier; ``member_type`` is only ``member`` or ``casual``.
+common schema has no user identifier; ``member_type`` is only ``member`` or ``casual``. A column
+that is not in the format is never read into the result, so the account number of the Vélomagg
+file (``new_account``), which tells that two trips are by the same person, cannot come out, and
+there is no option to keep it. ``is_operator_staff`` says whether the operator marked the trip as
+made by its staff (for instance a vehicle moved for maintenance): it is the publisher's own flag,
+carried as published, and this module does nothing with it.
 
 Examples
 --------
@@ -60,6 +72,7 @@ import pandas as pd
 
 __all__ = [
     "TRIP_COLUMNS",
+    "TRIP_DTYPES",
     "FORMATS",
     "TripFormat",
     "detect_format",
@@ -91,7 +104,34 @@ TRIP_COLUMNS: list[str] = [
     "started_at_tz_flag",
     "ended_at_tz_flag",
     "source_file",
+    "distance_m",
+    "is_operator_staff",
 ]
+
+#: The logical type of each column of the result (``string``, ``float64``, ``boolean``,
+#: ``datetime64[UTC]``).
+TRIP_DTYPES: dict[str, str] = {
+    "network": "string",
+    "ride_id": "string",
+    "started_at": "datetime64[UTC]",
+    "ended_at": "datetime64[UTC]",
+    "duration_s": "float64",
+    "start_station_id": "string",
+    "start_station_name": "string",
+    "start_lat": "float64",
+    "start_lng": "float64",
+    "end_station_id": "string",
+    "end_station_name": "string",
+    "end_lat": "float64",
+    "end_lng": "float64",
+    "rideable_type": "string",
+    "member_type": "string",
+    "started_at_tz_flag": "string",
+    "ended_at_tz_flag": "string",
+    "source_file": "string",
+    "distance_m": "float64",
+    "is_operator_staff": "boolean",
+}
 _TEXT = (
     "ride_id",
     "start_station_id",
@@ -101,7 +141,7 @@ _TEXT = (
     "rideable_type",
     "member_type",
 )
-_COORDS = ("start_lat", "start_lng", "end_lat", "end_lng")
+_COORDS = ("start_lat", "start_lng", "end_lat", "end_lng", "distance_m")
 
 
 @dataclass(frozen=True)
@@ -131,6 +171,12 @@ class TripFormat:
     member_rule : callable, optional
         A function from the raw membership value to ``"member"``, ``"casual"`` or ``None``,
         used instead of ``member_map``.
+    split_station : bool, default False
+        The station columns hold ``"<number> <name>"`` (``"002 Place Exemple"``): the number is
+        the station id and the rest the name.
+    repair_text : bool, default False
+        The text is UTF-8 that was read as Latin-1 and encoded again (``"CafÃ©"``): repair it
+        where that gives valid text, leave it alone otherwise.
 
     Examples
     --------
@@ -151,6 +197,8 @@ class TripFormat:
     member_map: Mapping[str, str] = field(default_factory=dict)
     rideable_map: Mapping[str, str] = field(default_factory=dict)
     member_rule: Callable[[Any], str | None] | None = None
+    split_station: bool = False
+    repair_text: bool = False
 
     def __post_init__(self) -> None:
         unknown = set(self.columns) - set(TRIP_COLUMNS)
@@ -264,11 +312,27 @@ FORMATS: dict[str, TripFormat] = {
         rideable_map={"electric": "electric_bike", "standard": "classic_bike"},
         member_rule=_passholder,
     ),
+    "velomagg": TripFormat(
+        "velomagg",
+        {
+            "started_at": ["departure"],
+            "ended_at": ["return"],
+            "start_station_id": ["departure station"],
+            "start_station_name": ["departure station"],
+            "end_station_id": ["return station"],
+            "end_station_name": ["return station"],
+            "distance_m": ["covered distance (m)"],
+            "is_operator_staff": ["manager"],
+        },
+        duration_alias=("duration (sec.)",),
+        split_station=True,
+        repair_text=True,
+    ),
 }
 
 
 def _lookup(df: pd.DataFrame) -> dict[str, str]:
-    return {str(c).lower().strip(): c for c in df.columns}
+    return {str(c).lstrip("\ufeff").lower().strip(): c for c in df.columns}
 
 
 def _present(fmt: TripFormat, lower: Mapping[str, str]) -> dict[str, str]:
@@ -291,10 +355,14 @@ def detect_format(columns: Sequence[str]) -> str | None:
     'urban_sharing'
     >>> detect_format(["trip_id", "start_time", "end_time", "start_lon", "passholder_type"])
     'bts'
+    >>> detect_format(["Departure", "Return", "Departure station", "Return station"])
+    'velomagg'
     >>> detect_format(["a", "b"]) is None
     True
     """
-    low = {str(c).lower().strip() for c in columns}
+    low = {str(c).lstrip("\ufeff").lower().strip() for c in columns}
+    if {"departure", "return", "departure station", "return station"} <= low:
+        return "velomagg"
     if {"started_at", "start_station_latitude"} <= low:
         return "urban_sharing"
     if "start_lon" in low and "start_time" in low:
@@ -312,6 +380,41 @@ def _id_text(series: pd.Series) -> pd.Series:
         if whole.all():
             return series.astype("Int64").astype("string")
     return series.astype("string")
+
+
+def _repair_text(series: pd.Series) -> pd.Series:
+    """Undo UTF-8 read as Latin-1 (``"CafÃ©"`` to ``"Café"``), value by value and only if valid."""
+
+    def fix(value: Any) -> Any:
+        if not isinstance(value, str) or ("Ã" not in value and "Â" not in value):
+            return value
+        for codec in ("cp1252", "latin-1"):
+            try:
+                return value.encode(codec).decode("utf-8")
+            except (UnicodeEncodeError, UnicodeDecodeError):
+                continue
+        return value
+
+    uniques = series.dropna().unique()
+    return series.map({u: fix(u) for u in uniques}).astype("string")
+
+
+def _split_station(series: pd.Series) -> tuple[pd.Series, pd.Series]:
+    """``"002 Place Exemple"`` to (``"002"``, ``"Place Exemple"``); no number: id empty."""
+    text = series.astype("string").str.strip()
+    parts = text.str.extract(r"^(\d+)\s+(.*)$")
+    has_number = parts[0].notna()
+    names = parts[1].where(has_number, text)
+    return parts[0].astype("string"), names.astype("string")
+
+
+def _as_flag(series: pd.Series) -> pd.Series:
+    """A published true/false column as ``boolean``; anything else is missing."""
+    low = series.astype("string").str.lower().str.strip()
+    yes = low.isin(["true", "1", "yes", "y", "oui", "vrai"])
+    no = low.isin(["false", "0", "no", "n", "non", "faux"])
+    out = pd.Series(pd.NA, index=series.index, dtype="boolean")
+    return out.mask(yes, True).mask(no, False)
 
 
 def _localize(naive: pd.Series, tz: str) -> tuple[pd.Series, pd.Series]:
@@ -409,8 +512,18 @@ def normalize_trips(
 
     out = pd.DataFrame(index=df.index)
     for common in TRIP_COLUMNS:
-        if common in cols and common not in ("started_at", "ended_at"):
+        if common in cols and common not in ("started_at", "ended_at", "is_operator_staff"):
             out[common] = df[cols[common]]
+    if spec.split_station:
+        for side in ("start", "end"):
+            ids, names = f"{side}_station_id", f"{side}_station_name"
+            if ids in out or names in out:
+                source = out[names] if names in out else out[ids]
+                out[ids], out[names] = _split_station(source)
+    if spec.repair_text:
+        for common in _TEXT:
+            if common in out:
+                out[common] = _repair_text(out[common])
     for common in _TEXT:
         out[common] = (
             _id_text(out[common])
@@ -446,6 +559,11 @@ def normalize_trips(
     else:
         out["duration_s"] = computed.astype("float64")
 
+    out["is_operator_staff"] = (
+        _as_flag(df[cols["is_operator_staff"]])
+        if "is_operator_staff" in cols
+        else pd.Series(pd.NA, index=df.index, dtype="boolean")
+    )
     if "member_type" in cols:
         raw_member = df[cols["member_type"]]
         if spec.member_rule is not None:
@@ -475,12 +593,22 @@ def _csv_chunks(source: Any, label: str, chunksize: int) -> Iterator[tuple[str, 
                 yield from _zip_chunks(zf, f"{path.name}::", chunksize)
             return
         for chunk in pd.read_csv(
-            path, dtype=str, chunksize=chunksize, keep_default_na=False, na_values=[""]
+            path,
+            dtype=str,
+            chunksize=chunksize,
+            keep_default_na=False,
+            na_values=[""],
+            encoding="utf-8-sig",
         ):
             yield path.name, chunk
         return
     for chunk in pd.read_csv(
-        source, dtype=str, chunksize=chunksize, keep_default_na=False, na_values=[""]
+        source,
+        dtype=str,
+        chunksize=chunksize,
+        keep_default_na=False,
+        na_values=[""],
+        encoding="utf-8-sig",
     ):
         yield label, chunk
 
@@ -495,7 +623,12 @@ def _zip_chunks(
         if low.endswith(".csv"):
             with zf.open(name) as fh:
                 for chunk in pd.read_csv(
-                    fh, dtype=str, chunksize=chunksize, keep_default_na=False, na_values=[""]
+                    fh,
+                    dtype=str,
+                    chunksize=chunksize,
+                    keep_default_na=False,
+                    na_values=[""],
+                    encoding="utf-8-sig",
                 ):
                     yield prefix + name, chunk
         elif low.endswith(".zip"):
