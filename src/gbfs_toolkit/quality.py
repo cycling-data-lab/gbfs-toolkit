@@ -448,7 +448,7 @@ def _distinct_minutes(
 ) -> pd.Series:
     """Sorted distinct UTC minutes (the start of each) in which a row exists, in ``[lo, hi)``."""
     if engine == "duckdb":
-        c = f"epoch_us({sql_name(time_col)})"
+        c = f"(epoch_ns({sql_name(time_col)}) // 1000)"
         bounds = [f"{c} >= {lo_us}" if lo_us is not None else "true"]
         bounds.append(f"{c} < {hi_us}" if hi_us is not None else "true")
         sql = (
@@ -505,7 +505,7 @@ def _poll_counts(
     has_counts = all(c in cols for c in _COUNT_COLS)
     step_us = int(step.value // 1000)
     if engine == "duckdb":
-        c = f"epoch_us({sql_name(time_col)})"
+        c = f"(epoch_ns({sql_name(time_col)}) // 1000)"
         zero = (
             f"coalesce(TRY_CAST({sql_name(_COUNT_COLS[0])} AS DOUBLE) = 0 AND TRY_CAST({sql_name(_COUNT_COLS[1])} AS DOUBLE) = 0, false)"
             if has_counts
@@ -1002,7 +1002,7 @@ def _unsupported_counts(
     if period not in ("M", "D", "all"):
         raise ValueError(f"period must be 'M', 'D' or 'all', got {period!r}")
     if engine == "duckdb":
-        ts = f"make_timestamp(epoch_us({sql_name(time_col)}))"
+        ts = f"make_timestamp((epoch_ns({sql_name(time_col)}) // 1000))"
         key = {
             "M": f"year({ts}) * 100 + month({ts})",
             "D": f"year({ts}) * 10000 + month({ts}) * 100 + day({ts})",

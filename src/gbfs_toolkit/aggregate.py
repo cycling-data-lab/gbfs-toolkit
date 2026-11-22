@@ -286,7 +286,7 @@ def _duckdb_aggregate(
     WITH base AS (
         SELECT CAST({sql_name("system_id")} AS VARCHAR) AS system_id,
                CAST({sql_name("station_id")} AS VARCHAR) AS station_id,
-               epoch_us({sql_name(time_col)}) AS t,
+               (epoch_ns({sql_name(time_col)}) // 1000) AS t,
                {number("num_bikes_available")} AS b,
                {number("num_docks_available")} AS d,
                {number("capacity")} AS cap,
