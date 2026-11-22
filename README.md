@@ -70,12 +70,14 @@ Nine experimental modules take data from a feed to a dataset someone else can tr
 collector that keeps missing values missing (`collect`), a Parquet lake (`store`), coverage and
 incidents (`quality`), fixed-definition aggregates (`aggregate`), metadata versions (`history`),
 station-id continuity (`stations.match`), published trip files (`trips`), a frozen, checksummed release
-folder (`release`) and a content fingerprint (`repro`). Import them by path and see the *Data lake*
-pages of the manual; names may change in a minor release. Nothing runs in the background and nothing is
-uploaded.
+folder (`release`) and a content fingerprint (`repro`). They read a lake, a folder of Parquet files, an
+Arrow table or a DuckDB relation in place, so they work on collections larger than memory. Import them by
+path and see the *Tutorial*, the *Recipes* and the *Data lake* pages of the manual; names may change in a
+minor release. Nothing runs in the background and nothing is uploaded.
 
 ```bash
 gbfs collect --system harbor=https://example.org/gbfs.json --out data --user-agent "my-lab/1.0 (mailto:me@example.org)"
+gbfs compact data
 gbfs quality data --end 2026-03-31
 gbfs verify releases/demo-2026-03
 ```

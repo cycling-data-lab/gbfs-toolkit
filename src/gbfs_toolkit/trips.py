@@ -41,8 +41,8 @@ common schema has no user identifier; ``member_type`` is only ``member`` or ``ca
 that is not in the format is never read into the result, so the account number of the Vélomagg
 file (``new_account``), which tells that two trips are by the same person, cannot come out, and
 there is no option to keep it. ``is_operator_staff`` says whether the operator marked the trip as
-made by its staff (for instance a vehicle moved for maintenance): it is the publisher's own flag,
-carried as published, and this module does nothing with it.
+made by its staff: it is the publisher's own flag, carried as published, and this module does
+nothing with it.
 
 Examples
 --------

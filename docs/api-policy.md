@@ -28,6 +28,16 @@ supported entry points. Anything else is internal and may change in any release:
 The experimental names are listed once, in `gbfs_toolkit/_stability.py` (`EXPERIMENTAL` for names,
 `EXPERIMENTAL_MODULES` for modules); a test checks that each one carries the note in its docstring.
 
+A **change of default** that the changelog lists under *Open points* follows the same road: the
+corrected behaviour is added as an option (off by default) in a minor release; a call whose result
+would differ and which leaves the option unset emits a `FutureWarning` that says the default changes in
+the next major release and how to choose now (`warn_default_change`, internal); the default changes in
+that major release. The warning is raised only where the two behaviours differ, and never when the option
+is given. `tests/test_open_points.py` checks it for each.
+
+A **typed result** (`AuditReport`) is a subclass of the type it replaces, so code written for the old
+type keeps working; the exception is an identity check on the exact class.
+
 A bug fix is not a breaking change, even when it changes a result: if a function's
 docstring promises something and the code did otherwise, the code is corrected. The
 changelog says so under *Fixed*, with the inputs for which the result moves. When

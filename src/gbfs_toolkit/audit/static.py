@@ -79,7 +79,7 @@ class AuditReport(pd.DataFrame):
     ...                          "station_type": "docked_bike", "capacity": [10.0, 12.0],
     ...                          "lat": [48.85, 48.86], "lon": [2.35, 2.36]})
     >>> report = audit_static(stations)
-    >>> type(report).__name__, report.n_flagged, report.flag_counts["A1"]
+    >>> type(report).__name__, report.n_flagged, int(report.flag_counts["A1"])
     ('AuditReport', 0, 0)
     >>> report.to_frame().equals(pd.DataFrame(report))
     True

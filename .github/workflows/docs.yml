@@ -21,6 +21,11 @@ on:
         description: "Released version to (re)deploy as latest, e.g. 2.0.1 (empty: dev)"
         required: false
         type: string
+      dry_run:
+        description: "Build and run mike on the runner without pushing to gh-pages"
+        required: false
+        type: boolean
+        default: false
 
 permissions:
   contents: write
@@ -49,18 +54,27 @@ jobs:
         with:
           python-version: "3.12"
       - run: pip install -e ".[docs]"
+      # A broken page must never reach gh-pages: build strictly first, as the Docs job of CI does.
+      - name: Build the site (strict)
+        run: mkdocs build --strict
       - name: Configure git for mike
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
+      # With dry_run, mike commits to a local gh-pages branch on the runner and pushes nothing.
       - name: Deploy development docs
         if: ${{ !inputs.version }}
-        run: mike deploy --push dev
+        env:
+          PUSH: ${{ inputs.dry_run && ' ' || '--push' }}
+        run: mike deploy $PUSH dev
       - name: Deploy released docs
         if: ${{ inputs.version }}
         env:
           VERSION: ${{ inputs.version }}
+          PUSH: ${{ inputs.dry_run && ' ' || '--push' }}
         run: |
           MINOR="${VERSION%.*}"
-          mike deploy --push --update-aliases "$MINOR" latest
-          mike set-default --push latest
+          mike deploy $PUSH --update-aliases "$MINOR" latest
+          mike set-default $PUSH latest
+      - name: List the versions
+        run: mike list
