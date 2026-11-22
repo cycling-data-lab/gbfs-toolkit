@@ -50,8 +50,10 @@ the other columns differ by floating-point rounding at most. Tests compare them 
 station at the same instant are ordered as the source lists them. The time column of a table, relation or
 path must be a timestamp.
 
-On a synthetic lake of 42 million rows (1000 stations, one poll a minute, 30 days) the numbers are in
-`benchmarks/lake_volume.py`'s output; see the [roadmap](../roadmap.md) for the figures of the last run.
+Measured on a synthetic lake of 42 million rows (1000 stations, one poll a minute, 30 days; a laptop with
+16 logical CPUs, DuckDB capped at 6 GB): the three levels take 72 s with DuckDB, and 190 s window by window in
+pandas with about 2 GB; a pandas frame of just two days of that lake (2.9 million rows) already peaks at 6 GB.
+`benchmarks/lake_volume.py` reproduces the measure and `benchmarks/README.md` has the table.
 
 ## Example
 
