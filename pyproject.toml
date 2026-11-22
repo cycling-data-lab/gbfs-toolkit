@@ -1,5 +1,5 @@
 [build-system]
-requires = ["setuptools>=64"]
+requires = ["setuptools>=77"]  # 77: PEP 639 licence expression (`license = "MIT"`)
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -8,7 +8,8 @@ version = "2.0.0"
 description = "Research-grade ingestion and semantic quality audit (A1–A7) for GBFS bike-share feeds"
 readme = "README.md"
 requires-python = ">=3.10"
-license = {text = "MIT"}
+license = "MIT"
+license-files = ["LICENSE"]
 authors = [
     {name = "Rohan Fossé", email = "rfosse@cesi.fr"},
     {name = "Gaël Pallares"},
@@ -24,13 +25,17 @@ keywords = [
 classifiers = [
     "Development Status :: 5 - Production/Stable",
     "Intended Audience :: Science/Research",
-    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
     "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
     "Topic :: Scientific/Engineering :: GIS",
+    "Topic :: Scientific/Engineering :: Information Analysis",
+    "Typing :: Typed",
 ]
 dependencies = [
     "numpy>=1.26",
@@ -41,7 +46,7 @@ dependencies = [
 [project.optional-dependencies]
 fetch = ["requests>=2.31", "urllib3>=2.0"]  # build_session imports urllib3.util.Retry directly
 geo = ["geopandas>=0.14", "shapely>=2.0"]  # geofencing imports shapely.geometry directly
-osm = ["geopandas>=0.14"]  # enrich_with_osm (BYOG); fetch_osm_around also needs `osmnx`
+osm = ["geopandas>=0.14"]  # enrich_with_osm (bring your own OSM GeoDataFrame)
 parquet = ["pyarrow>=15.0"]
 cluster = ["scikit-learn>=1.4"]
 dtw = ["tslearn>=0.6"]  # shape-aware time-series clustering (method="dtw")
@@ -75,6 +80,8 @@ dev = [
     "nbmake>=1.5",  # execute the example notebook in CI
     "ipykernel>=6.0",  # kernel for nbmake
     "interrogate>=1.7",  # docstring-coverage gate (pre-commit + CI)
+    "build>=1.2",  # build the sdist and wheel that scripts/check_dist.py inspects
+    "twine>=6.1",  # `twine check --strict`: the README renders on PyPI before upload
 ]
 
 [project.scripts]
@@ -82,7 +89,11 @@ gbfs = "gbfs_toolkit.interfaces.cli:main"
 
 [project.urls]
 Homepage = "https://github.com/cycling-data-lab/gbfs-toolkit"
+Documentation = "https://cycling-data-lab.github.io/gbfs-toolkit/"
 Repository = "https://github.com/cycling-data-lab/gbfs-toolkit"
+Changelog = "https://github.com/cycling-data-lab/gbfs-toolkit/blob/main/CHANGELOG.md"
+Issues = "https://github.com/cycling-data-lab/gbfs-toolkit/issues"
+Citation = "https://doi.org/10.5281/zenodo.20992153"
 
 [tool.setuptools.package-data]
 gbfs_toolkit = ["py.typed"]
@@ -97,6 +108,17 @@ filterwarnings = [
     # generic-unit DeprecationWarning from pandas internals, independent of our usage. It will
     # be resolved by a pandas release; ignore it here so the real warnings stay visible.
     "ignore:The 'generic' unit for NumPy timedelta is deprecated:DeprecationWarning",
+]
+
+[tool.coverage.run]
+source = ["gbfs_toolkit"]
+
+[tool.coverage.report]
+show_missing = true
+skip_covered = true
+exclude_also = [
+    "if TYPE_CHECKING:",
+    "raise NotImplementedError",
 ]
 
 [tool.deptry]
