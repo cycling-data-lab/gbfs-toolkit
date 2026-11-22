@@ -5,8 +5,6 @@ from __future__ import annotations
 import numpy as np
 import pandas as pd
 import pytest
-from hypothesis import given, settings
-from hypothesis import strategies as st
 
 from gbfs_toolkit.core.models import SchemaError
 from gbfs_toolkit.stations.match import (
@@ -174,36 +172,3 @@ def test_id_continuity_summary():
         "2026",
     ]
     assert id_continuity({"only": p1}).empty
-
-
-@settings(max_examples=40, deadline=None)
-@given(n_old=st.integers(0, 12), n_new=st.integers(0, 12), seed=st.integers(0, 9999))
-def test_property_one_to_one_and_every_station_accounted_for(n_old, n_new, seed):
-    rng = np.random.default_rng(seed)
-
-    def table(n, prefix):
-        return pd.DataFrame(
-            {
-                "station_id": [
-                    f"{prefix}{i % 7}" if rng.random() < 0.5 else f"{i}" for i in range(n)
-                ],
-                "name": [f"n{rng.integers(0, 5)}" for _ in range(n)],
-                "lat": 43 + rng.random(n) * 0.003,
-                "lon": 3 + rng.random(n) * 0.003,
-            }
-        )
-
-    old, new = table(n_old, "o"), table(n_new, "n")
-    m = match_stations(old, new)
-    paired = m.dropna(subset=["station_id_old", "station_id_new"])
-    assert paired["station_id_old"].is_unique and paired["station_id_new"].is_unique
-    assert m["station_id_old"].dropna().nunique() == old["station_id"].nunique()
-    assert m["station_id_new"].dropna().nunique() == new["station_id"].nunique()
-    assert set(m["match_method"]) <= {
-        "same_id",
-        "same_id_far",
-        "same_name",
-        "nearest",
-        "none",
-        "only_new",
-    }

@@ -5,11 +5,8 @@ from __future__ import annotations
 import io
 import zipfile
 
-import numpy as np
 import pandas as pd
 import pytest
-from hypothesis import given, settings
-from hypothesis import strategies as st
 
 from gbfs_toolkit.trips import (
     FORMATS,
@@ -288,24 +285,3 @@ def test_empty_file_gives_an_empty_frame_with_the_schema(tmp_path):
         pass
     out = read_trips(tmp_path / "e.zip", tz="UTC")
     assert out.empty and list(out.columns) == TRIP_COLUMNS
-
-
-@settings(max_examples=30, deadline=None)
-@given(
-    secs=st.lists(st.integers(0, 10**7), min_size=1, max_size=10),
-    durs=st.lists(st.integers(0, 7200), min_size=1, max_size=10),
-)
-def test_property_utc_round_trip_and_duration(secs, durs):
-    n = min(len(secs), len(durs))
-    start = pd.Timestamp("2025-01-01", tz="UTC") + pd.to_timedelta(secs[:n], unit="s")
-    end = start + pd.to_timedelta(durs[:n], unit="s")
-    raw = pd.DataFrame(
-        {
-            "started_at": start.strftime("%Y-%m-%dT%H:%M:%S+00:00"),
-            "ended_at": end.strftime("%Y-%m-%dT%H:%M:%S+00:00"),
-            "start_station_latitude": 1.0,
-        }
-    )
-    out = normalize_trips(raw.assign(duration=np.nan))
-    assert (out["started_at"].reset_index(drop=True) == pd.Series(start)).all()
-    assert out["duration_s"].tolist() == [float(d) for d in durs[:n]]

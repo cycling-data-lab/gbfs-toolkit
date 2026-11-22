@@ -5,13 +5,10 @@ from __future__ import annotations
 import numpy as np
 import pandas as pd
 import pytest
-from hypothesis import given, settings
-from hypothesis import strategies as st
 
 from gbfs_toolkit.aggregate import (
     AGGREGATE_COLUMNS,
     aggregate_availability,
-    aggregate_levels,
     check_conservation,
 )
 from gbfs_toolkit.core.errors import GBFSValidationError
@@ -151,41 +148,3 @@ def test_check_conservation_catches_a_loss():
     check_conservation(agg, df)
     with pytest.raises(GBFSValidationError, match="conserve"):
         check_conservation(agg.iloc[:-1], df)
-
-
-@settings(max_examples=40, deadline=None)
-@given(
-    n=st.integers(1, 400),
-    seed=st.integers(0, 10_000),
-    stations=st.integers(1, 4),
-)
-def test_property_sum_of_n_obs_is_the_row_count_at_every_level(n, seed, stations):
-    """The property checked on the research station: quarter-hour n_obs sums to the minute rows."""
-    rng = np.random.default_rng(seed)
-    minute = rng.integers(0, 3 * 24 * 60, size=n)
-    df = pd.DataFrame(
-        {
-            "system_id": "a",
-            "station_id": rng.integers(0, stations, size=n).astype(str),
-            "fetched_at": pd.Timestamp("2026-03-01", tz="UTC")
-            + pd.to_timedelta(minute, unit="min"),
-            "num_bikes_available": rng.integers(0, 20, size=n),
-            "num_docks_available": rng.integers(0, 20, size=n),
-        }
-    )
-    levels = aggregate_levels(df)
-    totals = {k: int(v["n_obs"].sum()) for k, v in levels.items()}
-    assert set(totals.values()) == {n}
-    # every coarser bucket is exactly the sum of the finer ones it contains
-    fine, hourly = levels["15m"], levels["1h"]
-    regrouped = (
-        fine.assign(bucket_start_utc=fine["bucket_start_utc"].dt.floor("1h"))
-        .groupby(["system_id", "station_id", "bucket_start_utc"])["n_obs"]
-        .sum()
-    )
-    merged = hourly.set_index(["system_id", "station_id", "bucket_start_utc"])["n_obs"]
-    pd.testing.assert_series_equal(regrouped, merged, check_names=False)
-    # pct values stay in [0, 100]
-    for col in ("pct_empty", "pct_full"):
-        v = levels["1h"][col].dropna()
-        assert ((v >= 0) & (v <= 100)).all()

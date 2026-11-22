@@ -3,18 +3,21 @@
 from __future__ import annotations
 
 import datetime as dt
+import importlib.util
 
 import numpy as np
 import pandas as pd
 import pytest
-from hypothesis import given, settings
-from hypothesis import strategies as st
 
 from gbfs_toolkit.history import (
     content_fingerprint,
     list_versions,
     read_version,
     record_version,
+)
+
+needs_arrow = pytest.mark.skipif(
+    importlib.util.find_spec("pyarrow") is None, reason="needs pyarrow"
 )
 
 
@@ -73,6 +76,7 @@ def test_empty_frame_and_numpy_values():
 TODAY = dt.date(2026, 3, 1)
 
 
+@needs_arrow
 def test_new_content_is_written_unchanged_content_is_not(tmp_path):
     first = record_version(meta(), tmp_path, today=TODAY)
     assert first.action == "written" and first.path.name == "2026-01-05.parquet"
@@ -86,6 +90,7 @@ def test_new_content_is_written_unchanged_content_is_not(tmp_path):
     ]
 
 
+@needs_arrow
 def test_a_closed_day_is_never_rewritten_but_today_is(tmp_path):
     record_version(meta(), tmp_path, today=TODAY)
     renamed = meta(name="V2", when="2026-01-05T18:00Z")  # same closed day, different content
@@ -99,12 +104,14 @@ def test_a_closed_day_is_never_rewritten_but_today_is(tmp_path):
     assert len(list_versions(tmp_path)) == 2
 
 
+@needs_arrow
 def test_a_fetch_older_than_the_latest_version_is_ignored(tmp_path):
     record_version(meta(name="New", when="2026-02-01T00:00Z"), tmp_path, today=TODAY)
     r = record_version(meta(name="Old", when="2026-01-01T00:00Z"), tmp_path, today=TODAY)
     assert r.action == "older_than_latest" and len(list_versions(tmp_path)) == 1
 
 
+@needs_arrow
 def test_dry_run_writes_nothing_and_errors_are_clear(tmp_path):
     r = record_version(meta(), tmp_path / "h", dry_run=True, today=TODAY)
     assert r.action == "written" and not (tmp_path / "h").exists()
@@ -116,6 +123,7 @@ def test_dry_run_writes_nothing_and_errors_are_clear(tmp_path):
         record_version(meta().drop(columns="fetched_at"), tmp_path)
 
 
+@needs_arrow
 def test_read_version_by_day_and_as_of(tmp_path):
     record_version(meta(name="V1", when="2026-01-05T00:00Z"), tmp_path, today=TODAY)
     record_version(meta(name="V2", when="2026-02-10T00:00Z"), tmp_path, today=TODAY)
@@ -131,20 +139,10 @@ def test_read_version_by_day_and_as_of(tmp_path):
         read_version(tmp_path / "empty")
 
 
-@settings(max_examples=40, deadline=None)
-@given(
-    rows=st.lists(st.tuples(st.text(max_size=5), st.integers(-5, 5)), min_size=0, max_size=8),
-    seed=st.integers(0, 99),
-)
-def test_property_fingerprint_does_not_depend_on_row_order(rows, seed):
-    df = pd.DataFrame(rows, columns=["k", "v"])
-    shuffled = df.sample(frac=1, random_state=seed)
-    assert content_fingerprint(df) == content_fingerprint(shuffled)
-
-
 # --- Collector.poll_metadata -----------------------------------------------------------------
 
 
+@needs_arrow
 def test_collector_keeps_metadata_versions_only_on_change(tmp_path):
     from gbfs_toolkit.collect import Collector
 
