@@ -277,7 +277,7 @@ def simulate_city(
     steps = int(round(days * 24 * (pd.Timedelta("1h") / pd.Timedelta(freq))))
     grid = pd.date_range(start=start, periods=steps, freq=freq, tz="UTC")
     hod = grid.hour.to_numpy() + grid.minute.to_numpy() / 60.0
-    is_we = grid.dayofweek.to_numpy() >= 5
+    is_we = grid.day_of_week.to_numpy() >= 5
     profiles = _land_use_profiles(hod)
     prof = np.vstack([profiles[name] for name in _LAND_USES])  # (4, steps)
     is_leisure = use_idx == _LAND_USES.index("leisure")
