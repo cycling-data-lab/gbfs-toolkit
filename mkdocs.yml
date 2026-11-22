@@ -167,7 +167,9 @@ nav:
       - Methodology: methodology.md
       - Validating an audit by hand: human-validation.md
       - Glossary: glossary.md
+      - API policy: api-policy.md
   - About:
       - Citing this work: citing.md
       - Contributing: contributing.md
+      - Releasing: releasing.md
       - Changelog: changelog.md

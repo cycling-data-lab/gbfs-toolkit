@@ -7,7 +7,7 @@ that keep it that way are very welcome.
 
 ```bash
 pip install -e ".[dev]"
-pytest -q                       # 137 tests
+pytest -q                       # offline by default; --run-network adds the live-feed tests
 ruff check . && ruff format --check .
 ```
 
@@ -32,6 +32,17 @@ returns tidy `DataFrame`/`GeoDataFrame`; you bring the model and the map.
   results; if you touch a hot path (spatial neighbour queries, panel groupbys, the
   per-snapshot loops in `vehicle_id_persistence` / `spatial_outage_redundancy`), check the
   numbers before and after.
+
+## Commits, API and releases
+
+- Commit messages follow [Conventional Commits](https://www.conventionalcommits.org)
+  (`feat:`, `fix:`, `docs:`, `test:`, `ci:`...): release-please builds the changelog and the
+  next version from them. See [`RELEASING.md`](https://github.com/cycling-data-lab/gbfs-toolkit/blob/main/RELEASING.md).
+- A new public function goes in its module's `__all__` and in `gbfs_toolkit/__init__.py`.
+  Changing a signature or a documented result follows the [API policy](https://cycling-data-lab.github.io/gbfs-toolkit/api-policy/): add
+  keyword-only parameters with defaults, deprecate (with `warn_deprecated` or `@deprecated`
+  from `gbfs_toolkit.core.utils`) before removing.
+- Library code does not `print`: use `logging.getLogger(__name__)`.
 
 ## Docstring standard
 
