@@ -55,6 +55,7 @@ SIGNATURES = {
         ("min_run_hours", KW, 6.0),
         ("active_hours", KW, (6, 22)),
         ("strict", KW, False),
+        ("exclude_gaps", KW, False),  # 2.0.1, opt-in: leave nights and outages out of runs
     ],
     "insert_explicit_gaps": [
         ("panel", POS, NO),
@@ -78,6 +79,7 @@ SIGNATURES = {
         ("a6_tau", KW, 0.01),
         ("a7_tau", KW, 0.5),
         ("n_min", KW, None),
+        ("a4_projection", KW, "global"),  # 2.0.1, opt-in: project each system on its own
     ],
     "classify_from_vehicle_types": [
         ("info", POS, NO),

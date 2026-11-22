@@ -441,19 +441,45 @@ def flow_balance(panel: pd.DataFrame) -> pd.DataFrame:
 _FROZEN_COLUMNS = ["n_obs", "longest_const_run_hours", "frozen_value", "is_frozen"]
 
 
-def _run_stats(df: pd.DataFrame, keys: list[str], col: str) -> pd.DataFrame:
+#: With ``exclude_gaps``, an interval between two consecutive observations of a station
+#: counts only if it is at most this many times the station's median interval.
+_GAP_FACTOR = 3.0
+
+
+def _observed_hours(df: pd.DataFrame, keys: list[str]) -> pd.Series:
+    """Hours between each observation and the previous one of its station, 0 across a gap.
+
+    A gap is an interval longer than ``_GAP_FACTOR`` times the station's median interval:
+    the night left out by ``active_hours`` or a collection outage. The first observation of
+    a station has no previous one (0). Aligned to ``df`` (sorted by station then time).
+    """
+    t = df["fetched_at"]
+    dt = t.groupby([df[k] for k in keys], sort=False).diff().dt.total_seconds() / 3600
+    typical = dt.groupby([df[k] for k in keys], sort=False).transform("median")
+    return dt.where(dt <= _GAP_FACTOR * typical, 0.0).fillna(0.0)
+
+
+def _run_stats(
+    df: pd.DataFrame, keys: list[str], col: str, *, exclude_gaps: bool = False
+) -> pd.DataFrame:
     """Per-station run statistics for one column: longest constant run + whole-series constancy."""
     tmp = df[keys].copy()
     tmp["_v"] = pd.to_numeric(df[col], errors="coerce").to_numpy()
     tmp["_t"] = df["fetched_at"].to_numpy()
     changed = tmp["_v"] != tmp.groupby(keys, sort=False)["_v"].shift()
     tmp["_run"] = changed.cumsum()
+    if exclude_gaps:
+        # time inside the run only: the first row's interval belongs to the previous run
+        tmp["_h"] = _observed_hours(df, keys).where(~changed, 0.0).to_numpy()
     runs = (
         tmp.groupby([*keys, "_run"], sort=False)
         .agg(start=("_t", "min"), end=("_t", "max"), value=("_v", "first"))
         .reset_index()
     )
     runs["hours"] = (runs["end"] - runs["start"]).dt.total_seconds() / 3600
+    if exclude_gaps:
+        counted = tmp.groupby([*keys, "_run"], sort=False)["_h"].sum().to_numpy()
+        runs["hours"] = counted
     longest = runs.loc[runs.groupby(keys)["hours"].idxmax()].set_index(keys)
     return pd.DataFrame(
         {
@@ -472,6 +498,7 @@ def detect_frozen_stations(
     min_run_hours: float = 6.0,
     active_hours: tuple[int, int] | None = (6, 22),
     strict: bool = False,
+    exclude_gaps: bool = False,
 ) -> pd.DataFrame:
     """Flag "frozen" stations: a value stuck unchanged while the feed keeps updating.
 
@@ -498,6 +525,16 @@ def detect_frozen_stations(
         observed window (span ≥ ``min_run_hours``), not merely a long constant *run*. This
         matches a "never-moved" zombie definition; the default (``False``) is the broader
         "stuck for ≥ ``min_run_hours`` at some point".
+    exclude_gaps : bool, default False
+        How the length of a constant run is measured. By default it is the time from the
+        run's first to its last observation, so a run that goes on across the hours left out
+        by ``active_hours`` (the night) or across a collection outage **includes** that time:
+        a station that reads 4 from 18:00 to 08:00 the next morning counts 14 h, although
+        only the active hours were observed. With ``True`` only the time between consecutive
+        observations counts, and an interval longer than 3 times the station's median
+        interval (a night, an outage) is left out, so the same station counts 3 h plus 2 h.
+        The default is unchanged, because verdicts already computed with it must stay
+        reproducible; it flags more stations than ``True``.
 
     Returns
     -------
@@ -540,11 +577,14 @@ def detect_frozen_stations(
 
     span = df.groupby(keys)["fetched_at"].agg(first="min", last="max", n_obs="size")
     span_hours = (span["last"] - span["first"]).dt.total_seconds() / 3600
+    if exclude_gaps:
+        span_hours = _observed_hours(df, keys).groupby([df[k] for k in keys], sort=False).sum()
+        span_hours = span_hours.reindex(span.index)
 
     frozen = None
     primary = None
     for i, col in enumerate(cols):
-        rs = _run_stats(df, keys, col)
+        rs = _run_stats(df, keys, col, exclude_gaps=exclude_gaps)
         if strict:
             col_frozen = rs["constant"] & (span_hours >= min_run_hours)
         else:
@@ -805,6 +845,10 @@ def resample_panel(
     is four brittle lines that routinely break nullable dtypes; this is the one-call,
     dtype-safe version. It carries the last observed state forward (it does not invent
     values), so it is alignment, not imputation.
+
+    The grid is in **UTC**: a tz-aware local-time panel is converted to UTC first, so a ``"1D"``
+    bin starts at UTC midnight, not local midnight. Resample, then convert the result with
+    ``tz_convert`` (or use ``build_availability_panel(target_tz=...)``) when local days matter.
 
     Parameters
     ----------

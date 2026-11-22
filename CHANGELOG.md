@@ -5,8 +5,9 @@ All notable changes are documented here ([Keep a Changelog](https://keepachangel
 
 ## Unreleased (2.0.1)
 
-A patch release: no public function, parameter or column changes. It repairs the
-version reported by the package, the release machinery, and the bugs listed below.
+A patch release: no public function, parameter, column or default changes. It repairs the
+version reported by the package and the release machinery, fixes the bugs below (each with a
+regression test), adds two opt-in options, and writes down the API policy.
 
 ### Fixed
 
@@ -19,7 +20,108 @@ version reported by the package, the release machinery, and the bugs listed belo
   format of the 2.0.0 release; the historical `v1.x` tags stay as they are), so the
   next release PR proposes 2.0.1 instead of re-reading the whole history and proposing
   3.0.0. Released documentation is deployed by the release workflow (the site's
-  "latest" still pointed at 1.7).
+  "latest" still pointed at 1.7). See `RELEASING.md`.
+- **pandas 3.** Accessors deprecated in pandas 3 are no longer used.
+- **Synthetic data dated 1970.** Under pandas 3, `simulate_city_flows` and `simulate_city`
+  wrote `last_reported` as epoch/1000 (1970-01), so `audit_dynamic` flagged every synthetic
+  station as stale. `last_reported` is now the simulated date. `coerce_schema` also read a
+  numeric `last_reported` as nanoseconds; numbers are now unix seconds, as in GBFS 2.x.
+- **`diurnal_profiles`** (and `cluster_diurnal_profiles`, `label_diurnal_typology`) converted a
+  local-time panel back to UTC, against its docstring ("pass a local-time panel for local
+  diurnal phase"): hours and the weekday split were UTC. A tz-aware panel now keeps its
+  zone; a naive one is still read as UTC. **Results change for non-UTC panels** (they now
+  match the documentation). A single profiled station no longer raises in
+  `cluster_diurnal_profiles(n_clusters="auto")`.
+- **`temporal_context_features(holidays=...)`** never matched: naive holiday dates were compared with
+  tz-aware timestamps, so `is_holiday` was always `False`. Calendar dates are compared now.
+- **Crash on local time at the autumn clock change.** `turnover`, `availability_synchrony`,
+  `spatial_center_of_mass` and the sub-daily bins of `dynamics` raised
+  `Cannot infer dst time` on a local-time panel covering the repeated hour. The result is
+  unchanged wherever it worked.
+- **`spatial_center_of_mass`** pulled the centre towards (0, 0) when a row with a weight had no
+  coordinates (the `status_only` rows of `join_availability`): those rows now carry no weight.
+- **`stockout_episodes`** raised on a canonical frame with a missing count; an unknown count now
+  ends an episode (as it already did for float columns).
+- **`network_changes`** raised when `capacity` was a nullable integer with missing values.
+- **`GeoKDTree` and everything built on it** (`find_nearest_stations`, `stations_near`,
+  `features_within`, `two_step_fca`, `link_transit_stops`) raised `data must be finite` when a point
+  had no coordinates (GTFS `stops.txt` leaves `stop_lat` empty for some `location_type`s). Such points
+  are never returned as neighbours, and a query without coordinates has no neighbour
+  (distance `inf`).
+- **`extract_snapshot_asof`** returned extra rows (including readings after the target time) on a
+  panel built with a plain `pd.concat` of snapshots, whose index repeats.
+- **`build_availability_panel`**: polls without a parseable `last_reported` were all collapsed
+  into one row by the de-duplication; and `system_id="123"` raised an Arrow type error when the
+  system id looked like a number (hive partition values are now read as strings).
+- **`to_canonical_geofencing`** left GBFS 3.x localised names as stringified lists in `zone_id`
+  and `name`. **`zone_id` values change for 3.x feeds** (they were not usable before).
+- **`krippendorff_alpha(missing=...)`** only recognised a sentinel that was the same object;
+  `missing=999` or a string built at run time was treated as a real label.
+- **`normalize_operator`** did not match underscore- or hyphen-delimited system ids
+  (`lime_paris`, `bcycle_madison`); **operator labels change** for those ids.
+- **`filter_catalog`** used `city` and `name` as regular expressions, against its docstring
+  ("substrings"): `city="Paris (FR)"` matched nothing.
+- **`GBFSFeed.language = ...`** did not refresh `system_information()`.
+- **`generate_gbfs_parquet`** (experimental) wrote the station table over the status file when the
+  path did not end in `.parquet`, and crashed on a directory named `x.parquet`.
+
+### Added
+
+- `detect_frozen_stations(..., exclude_gaps=False)`: with `True`, nights excluded by
+  `active_hours` and collection outages do not count towards the length of a constant run.
+  Off by default, see *Open points*.
+- `audit_static(..., a4_projection="global")`: `"per_system"` projects each system around its own
+  mean latitude for A4. Off by default, see *Open points*.
+- `docs/api-policy.md`: what is public, stable and experimental names, the deprecation policy, the
+  error hierarchy and logging. Internal helpers `warn_deprecated` and `@deprecated` emit the
+  standard `FutureWarning`. Nothing is deprecated yet.
+- Every module declares `__all__`; the flow simulator and its compiler (`SimConfig`,
+  `simulate_city_flows`, `generate_gbfs_parquet`, `export_ml_dataset`, `calibrate_city`,
+  `compute_footprint`) are marked **experimental**.
+- A missing-column error that used to be a bare `KeyError` (`label_diurnal_typology`,
+  `link_transit_stops`) is now a `SchemaError` that is still a `KeyError`.
+- The `gbfs_toolkit` logger has a `NullHandler`; the library only prints in the CLI and
+  `show_versions`.
+
+### Open points
+
+Known behaviours that are kept in 2.0.x because published or in-use results depend on them. They
+are documented in the docstrings and in `METHODOLOGY.md`, and will be revisited in 2.1 or 3.0.
+
+- **A4 projection.** `audit_static` projects every station around the mean latitude of the whole
+  input, so a station's A4 verdict can depend on which other systems are in the frame (several
+  systems at very different latitudes in one call). The verdicts of the published catalogue rely on
+  it. Use `a4_projection="per_system"` to remove the dependence.
+- **Frozen stations count the night.** `detect_frozen_stations` measures a constant run from its
+  first to its last observation, so a run that continues across the hours excluded by
+  `active_hours` (or a collection outage) includes that time and flags more stations. Use
+  `exclude_gaps=True` to count only observed time.
+- **Missing counts.** `service_reliability_index`, `station_outage_rates`, `boundary_stress` and
+  `availability_stats` give different rates for a float column with `NaN` (a missing count
+  counts as "not empty", denominator includes it) and for a nullable `Int64` column with `NA`
+  (the row is skipped). Rates over valid rows only would be consistent.
+- **`station_state`** classes a row with no count at all (the `info_only` rows of
+  `join_availability`) as `empty`.
+- **`coverage_stats(zones=...)`** sums the areas of the zones: nested or overlapping zones are
+  counted once each. A correct area needs a decision on which zones define the service area.
+- **`resample_panel`** converts a local-time panel to UTC, so `"1D"` bins start at UTC midnight.
+- **`join_exogenous_timeseries`** returns the rows sorted by time with a new index.
+- **Simulator** (experimental): the "nightly" rebalancing acts at every step whose rounded hour is
+  `rebalancing_hour` (five steps at 15 minutes, with compounding strength); cells blanked by
+  `scraper_cell_nan` keep a dock count at the capacity. Correcting either changes every simulated
+  series, so it waits for a release that says so.
+
+### Documentation, tests, build
+
+- `RELEASING.md`, supported versions policy, and the README status section.
+- Tests run offline by default (`network` marker, `--run-network`); pandas 3 is exercised with
+  pyarrow; the examples run in the tests; `tests/test_public_api.py` pins the signatures and
+  results of the functions other projects call; `tests/test_api_policy.py` checks the policy.
+- All docstring examples run (76 doctests, run in CI); the strict documentation build and the
+  built wheel (`twine check --strict`, `scripts/check_dist.py`, an install in a clean
+  environment) are checked in CI; Python 3.14 is tested.
+- SPDX licence expression, classifiers up to Python 3.14, project URLs.
+- Actions are pinned by commit and Dependabot waits a week for a new release.
 
 ## [2.0.0](https://github.com/cycling-data-lab/gbfs-toolkit/compare/gbfs-toolkit-v1.7.2...gbfs-toolkit-v2.0.0) (2026-06-28)
 

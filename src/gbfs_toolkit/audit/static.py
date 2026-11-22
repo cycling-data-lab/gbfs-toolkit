@@ -508,6 +508,7 @@ def audit_static(
     a6_tau: float = A6_RATE_THRESHOLD,
     a7_tau: float = A7_RATE_THRESHOLD,
     n_min: int | None = None,
+    a4_projection: str = "global",
 ) -> pd.DataFrame:
     """Run the A1–A7 semantic audit on a canonical station-information frame.
 
@@ -537,6 +538,15 @@ def audit_static(
     n_min : int, optional
         Override the minimum system size (number of stations) for the system-level
         rules A2/A6/A7. ``None`` (default) keeps the published value of ``20``.
+    a4_projection : {"global", "per_system"}, default "global"
+        How stations are projected to metres for A4. ``"global"`` (default, the published
+        behaviour) uses one equirectangular projection around the mean latitude of the
+        **whole input**, so the east-west distances of a system far from that latitude are
+        scaled by ``cos(mean latitude) / cos(system latitude)``, and a station's A4 verdict can
+        depend on which other systems are in the frame (audit a catalogue in one call, or one
+        system at a time, and a borderline station may differ). ``"per_system"`` projects each
+        system around its own mean latitude, so its verdict does not depend on the rest of the
+        input. The default is unchanged so published verdicts stay reproducible.
 
     Returns
     -------
@@ -567,10 +577,15 @@ def audit_static(
     1          b   True     True
     """
     require_columns(stations, _REQUIRED, what="audit_static")
+    if a4_projection not in ("global", "per_system"):
+        raise ValueError(f"a4_projection must be 'global' or 'per_system', got {a4_projection!r}")
     df = stations.reset_index(drop=True)
-    projected = project_meters(
-        df["lat"].to_numpy(dtype="float64"), df["lon"].to_numpy(dtype="float64")
-    )
+    lat_all, lon_all = df["lat"].to_numpy(dtype="float64"), df["lon"].to_numpy(dtype="float64")
+    projected = project_meters(lat_all, lon_all)
+    if a4_projection == "per_system":
+        for rows in df.groupby("system_id", sort=False).indices.values():
+            if np.isfinite(lat_all[rows]).any():
+                projected[rows] = project_meters(lat_all[rows], lon_all[rows])
     a2_min = A2_MIN_STATIONS if n_min is None else n_min
     a6_min = A6_MIN_STATIONS if n_min is None else n_min
     a7_min = A7_MIN_STATIONS if n_min is None else n_min
