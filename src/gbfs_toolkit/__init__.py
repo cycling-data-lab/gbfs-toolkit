@@ -2,7 +2,7 @@
 
 The community's `gbfs-validator` checks that a feed is *syntactically* valid;
 this package checks whether it is *semantically* trustworthy and analysis-ready
-(the A1–A7 anomaly taxonomy) and normalises feeds into a stable,
+(the A1–A7 taxonomy of Fossé & Pallares) and normalises feeds into a stable,
 version-independent data model you can reuse across studies.
 
 Quick start
