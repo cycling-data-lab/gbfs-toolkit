@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import json
 import os
+from pathlib import Path
 
 import numpy as np
 import pandas as pd
@@ -63,7 +64,9 @@ def generate_gbfs_parquet(cfg: SimConfig, filepath: str) -> dict:
         "gbfs_version",
     ]
     df[keep].to_parquet(filepath, engine="pyarrow", compression="snappy", index=False)
-    info.to_parquet(filepath.replace(".parquet", "_meta.parquet"), index=False)
+    # `replace(".parquet", ...)` rewrote the status file itself for any other extension
+    out_path = Path(filepath)
+    info.to_parquet(out_path.with_name(f"{out_path.stem}_meta.parquet"), index=False)
     return {"rows": len(df), "bytes": os.path.getsize(filepath)}
 
 

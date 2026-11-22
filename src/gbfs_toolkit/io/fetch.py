@@ -285,7 +285,7 @@ class GBFSFeed:
     def language(self, value: str | None) -> None:
         if value != self._language:
             self._language = value
-            self._feeds = self._version = self._doc = None
+            self._feeds = self._version = self._doc = self._sysinfo = None
             self._raw_cache.clear()
 
     @property

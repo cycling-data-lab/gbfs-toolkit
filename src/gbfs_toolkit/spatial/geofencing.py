@@ -16,6 +16,7 @@ from typing import TYPE_CHECKING
 import pandas as pd
 
 from gbfs_toolkit.core.models import GEOFENCING_COLUMNS
+from gbfs_toolkit.io.normalize import _name
 
 if TYPE_CHECKING:  # pragma: no cover
     import geopandas as gpd
@@ -104,8 +105,8 @@ def to_canonical_geofencing(
         rows.append(
             {
                 "system_id": system_id,
-                "zone_id": str(props.get("name") or i),
-                "name": props.get("name"),
+                "zone_id": str(_name(props.get("name")) or i),
+                "name": _name(props.get("name")),
                 "ride_allowed": _ride_allowed(rule),
                 "ride_through_allowed": rule.get("ride_through_allowed"),
                 "maximum_speed_kph": rule.get("maximum_speed_kph"),

@@ -99,6 +99,27 @@ def append_to_parquet(
     )
 
 
+def _string_hive_partitioning(ds: Any, base_path: str | Path) -> Any:
+    """Hive partitioning whose keys are strings, so ``system_id=123`` stays ``"123"``.
+
+    pyarrow infers the type of a partition value: a numeric-looking system id would come
+    back as an integer (and lose leading zeros), and a string filter on it would fail.
+    """
+    import pyarrow as pa
+
+    root = Path(base_path)
+    if root.is_dir():
+        for first in root.rglob("*.parquet"):
+            keys = [
+                seg.split("=", 1)[0] for seg in first.relative_to(root).parts[:-1] if "=" in seg
+            ]
+            if keys:
+                schema = pa.schema([(k, pa.string()) for k in keys])
+                return ds.partitioning(schema, flavor="hive")
+            break
+    return "hive"
+
+
 def build_availability_panel(
     base_path: str | Path,
     *,
@@ -148,7 +169,9 @@ def build_availability_panel(
     [`stockout_episodes`][gbfs_toolkit.stockout_episodes] : Outage episodes from this panel.
     """
     ds = _require_pyarrow()
-    dataset = ds.dataset(str(base_path), format="parquet", partitioning="hive")
+    dataset = ds.dataset(
+        str(base_path), format="parquet", partitioning=_string_hive_partitioning(ds, base_path)
+    )
 
     start = _as_utc(start_time) if start_time is not None else None
     end = _as_utc(end_time) if end_time is not None else None
@@ -188,7 +211,9 @@ def build_availability_panel(
     df = df.sort_values(["system_id", "station_id", "fetched_at"])
 
     if dedup and "last_reported" in df:
-        df = df.drop_duplicates(subset=["system_id", "station_id", "last_reported"], keep="last")
+        # a poll without a parseable last_reported is not a duplicate of the next one
+        repeated = df.duplicated(subset=["system_id", "station_id", "last_reported"], keep="last")
+        df = df[~(repeated & df["last_reported"].notna())]
     if start is not None:
         df = df[df["fetched_at"] >= start]
     if end is not None:
@@ -301,7 +326,8 @@ def stockout_episodes(
     df = df.sort_values(["system_id", "station_id", "fetched_at"])
     bikes = pd.to_numeric(df["num_bikes_available"], errors="coerce")
     docks = pd.to_numeric(df["num_docks_available"], errors="coerce")
-    state = {"empty": bikes <= 0, "full": docks <= 0}
+    # an unknown count (NA in a nullable column) is not an outage: it ends the episode
+    state = {"empty": (bikes <= 0).fillna(False), "full": (docks <= 0).fillna(False)}
 
     rows = []
     keys = ["system_id", "station_id"]
@@ -955,7 +981,7 @@ def extract_snapshot_asof(
     >>> int(snap.loc["a", "num_bikes_available"])
     3
     """
-    df = panel_frame(panel).copy()
+    df = panel_frame(panel).copy().reset_index(drop=True)  # `idxmax` labels must be unique
     keys = [k for k in by if k in df.columns]
     require_columns(df, [*keys, time_col], what="extract_snapshot_asof")
     df[time_col] = pd.to_datetime(df[time_col], utc=True)

@@ -168,7 +168,9 @@ def station_state(availability: pd.DataFrame) -> pd.Series:
     Resolves two edge cases researchers re-derive constantly:
     an ``is_renting=False`` (and not returning) station is *disabled*, not merely empty;
     a *virtual* station (painted box, capacity 0/NA) must not be read as "full" just
-    because it reports zero docks.
+    because it reports zero docks. A station with **no count at all** (for instance an
+    ``info_only`` row from [`join_availability`][gbfs_toolkit.join_availability], which has no
+    status) is classed ``empty``, not unknown: drop those rows first if shares matter.
 
     Parameters
     ----------
@@ -286,9 +288,9 @@ def network_changes(
     if len(common):
         oc, nc = o.loc[common], n.loc[common]
         if "capacity" in oc.columns and "capacity" in nc.columns:
-            changed = oc["capacity"].ne(nc["capacity"]) & ~(
-                oc["capacity"].isna() & nc["capacity"].isna()
-            )
+            # NA on one side only is a change; ne() on a nullable column returns NA there
+            differs = oc["capacity"].ne(nc["capacity"]).fillna(True).astype(bool)
+            changed = differs & ~(oc["capacity"].isna() & nc["capacity"].isna())
             for sid in common[changed.to_numpy()]:
                 _row(
                     sid,

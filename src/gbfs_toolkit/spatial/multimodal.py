@@ -91,7 +91,11 @@ def link_transit_stops(
     dist, idx = np.asarray(dist).ravel(), np.asarray(idx).ravel()
     within = tree.query_radius(out["lat"].to_numpy(), out["lon"].to_numpy(), radius_m=radius_m)
 
-    out["nearest_stop_id"] = stop_ids[idx]
+    # a station without coordinates has no neighbour: the index is len(stops), not a position
+    has_stop = idx < len(stop_ids)
+    out["nearest_stop_id"] = pd.Series(
+        np.where(has_stop, stop_ids[np.minimum(idx, len(stop_ids) - 1)], None), dtype="object"
+    )
     out["nearest_stop_dist_m"] = dist
     out["n_transit_within"] = [len(h) for h in within]
     out["is_transit_feeder"] = out["nearest_stop_dist_m"] <= radius_m

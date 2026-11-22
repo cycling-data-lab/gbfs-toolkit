@@ -59,7 +59,8 @@ def _to_xyz(lat: Any, lon: Any) -> np.ndarray:
 
 def _chord_to_arc_m(chord: np.ndarray) -> np.ndarray:
     """Convert a 3-D chord length back to great-circle (arc) metres."""
-    return 2 * EARTH_RADIUS_M * np.arcsin(np.clip(chord / (2 * EARTH_RADIUS_M), -1.0, 1.0))
+    arc = 2 * EARTH_RADIUS_M * np.arcsin(np.clip(chord / (2 * EARTH_RADIUS_M), -1.0, 1.0))
+    return np.where(np.isinf(chord), np.inf, arc)  # no neighbour stays infinitely far
 
 
 def _arc_to_chord_m(arc_m: float) -> float:
@@ -78,7 +79,10 @@ class GeoKDTree:
     Parameters
     ----------
     lat, lon : array-like
-        Point coordinates in degrees (EPSG:4326).
+        Point coordinates in degrees (EPSG:4326). A point with a missing (``NaN``)
+        coordinate is kept in the numbering but never returned as a neighbour; a query
+        point with a missing coordinate has no neighbour (distance ``inf``, index ``len(tree)``,
+        the same "no neighbour" value scipy gives when ``k`` exceeds the number of points).
 
     See Also
     --------
@@ -91,21 +95,37 @@ class GeoKDTree:
         from scipy.spatial import cKDTree
 
         self._xyz = _to_xyz(lat, lon)
-        self._tree = cKDTree(self._xyz)
+        # cKDTree rejects non-finite points: index the finite ones, remember where they were
+        self._valid = np.flatnonzero(np.isfinite(self._xyz).all(axis=1))
+        self._tree = cKDTree(self._xyz[self._valid])
 
     def __len__(self) -> int:
         return len(self._xyz)
 
     def query(self, lat: Any, lon: Any, k: int = 1) -> tuple[np.ndarray, np.ndarray]:
         """Nearest ``k`` indices and great-circle distances (metres) for each query point."""
-        chord, idx = self._tree.query(_to_xyz(lat, lon), k=k)
-        return _chord_to_arc_m(np.asarray(chord)), np.asarray(idx)
+        pts = _to_xyz(lat, lon)
+        ok = np.isfinite(pts).all(axis=1)
+        chord, idx = self._tree.query(np.where(ok[:, None], pts, 0.0), k=k)
+        chord, idx = np.asarray(chord, dtype="float64"), np.asarray(idx)
+        # map back to the caller's numbering; scipy's "no neighbour" (idx == n_valid) -> len
+        idx = np.append(self._valid, len(self._xyz))[idx]
+        bad = ~ok if idx.ndim == 1 else ~ok[:, None]
+        chord = np.where(bad, np.inf, chord)
+        idx = np.where(bad, len(self._xyz), idx)
+        return _chord_to_arc_m(chord), idx
 
     def query_radius(self, lat: Any, lon: Any, radius_m: float) -> list[np.ndarray]:
         """Indices within ``radius_m`` great-circle metres of each query point."""
         pts = _to_xyz(np.atleast_1d(lat), np.atleast_1d(lon))
-        hits = self._tree.query_ball_point(pts, _arc_to_chord_m(radius_m))
-        return [np.asarray(h, dtype=int) for h in hits]
+        ok = np.isfinite(pts).all(axis=1)
+        hits = self._tree.query_ball_point(
+            np.where(ok[:, None], pts, 0.0), _arc_to_chord_m(radius_m)
+        )
+        return [
+            self._valid[np.asarray(h, dtype=int)] if good else np.empty(0, dtype=int)
+            for h, good in zip(hits, ok, strict=True)
+        ]
 
 
 def find_nearest_stations(
@@ -140,6 +160,11 @@ def find_nearest_stations(
     [`stations_near`][gbfs_toolkit.stations_near] : Radius instead of k-nearest.
     """
     out = info.copy()
+    # a station without coordinates cannot be near anything
+    out = out[
+        np.isfinite(pd.to_numeric(out["lat"], errors="coerce"))
+        & np.isfinite(pd.to_numeric(out["lon"], errors="coerce"))
+    ]
     if out.empty:
         out["distance_m"] = pd.Series(dtype="float64")
         return out.reset_index(drop=True)
@@ -266,7 +291,9 @@ def stations_near(
     out["n_stations_within"] = [len(h) for h in within]
     out["nearest_station_dist_m"] = np.asarray(dist).ravel()
     if "station_id" in info.columns:
-        out["nearest_station_id"] = info["station_id"].to_numpy()[np.asarray(idx).ravel()]
+        sid = info["station_id"].to_numpy(dtype=object)
+        found = np.asarray(idx).ravel()
+        out["nearest_station_id"] = [sid[i] if i < len(sid) else None for i in found]
     return out
 
 
