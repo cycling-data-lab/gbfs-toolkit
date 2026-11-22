@@ -3,11 +3,12 @@
 All notable changes are documented here ([Keep a Changelog](https://keepachangelog.com),
 [SemVer](https://semver.org)).
 
-## Unreleased (2.0.1)
+## Unreleased (2.1.0)
 
-A patch release: no public function, parameter, column or default changes. It repairs the
-version reported by the package and the release machinery, fixes the bugs below (each with a
-regression test), adds two opt-in options, and writes down the API policy.
+A minor release. It adds nine **experimental** modules and four CLI commands for collecting, checking,
+storing and releasing GBFS data (no existing public function, parameter, column or default changes
+because of them), and carries the 2.0.1 repairs: the version reported by the package and the release
+machinery, the bug fixes below (each with a regression test), two opt-in options, and the API policy.
 
 ### Fixed
 
@@ -65,7 +66,47 @@ regression test), adds two opt-in options, and writes down the API policy.
 - **`generate_gbfs_parquet`** (experimental) wrote the station table over the status file when the
   path did not end in `.parquet`, and crashed on a directory named `x.parquet`.
 
-### Added
+### Added: data-lake modules (experimental)
+
+New in 2.1.0, imported by path (`from gbfs_toolkit import quality`), **experimental**: names,
+parameters and output columns may change in a minor release (see the API policy and the *Data lake*
+section of the manual). No new required dependency; Parquet (`parquet`), the network (`fetch`),
+DuckDB views (new extra `duckdb`) and the terminal output (`cli`) stay optional.
+
+- `gbfs_toolkit.collect`: `Collector` polls station and vehicle feeds politely (required
+  `user_agent`, feed `ttl` and exponential back-off respected, conditional requests), keeps a value a
+  feed omits **empty and typed** (`Int64`, `boolean`; never `0` or `True`), writes one Parquet file per
+  system and UTC day atomically, and runs only when called (`poll_once`, a bounded `run`).
+  `poll_metadata` keeps dated metadata versions. `parse_station_status`, `parse_vehicle_status`,
+  `read_collected`.
+- `gbfs_toolkit.quality`: daily coverage per system and UTC day with the statuses `ok`, `partial`,
+  `outage_collector`, `outage_operator` (threshold settable, 95 % by default); collection gaps; silent
+  feeds; an incident registry (`incident_id`, `start_utc`, `end_utc`, `scope`, `cause`, `summary`; read,
+  write, extend); and the indicators `field_unsupported_by_operator`, `both_zero_suspect` and
+  `network_all_zero_anomaly`, which flag and never remove rows.
+- `gbfs_toolkit.aggregate`: `aggregate_availability` to 15 minutes, an hour or a day with fixed
+  definitions (`n_obs`, `n_valid`, bikes and docks statistics, `pct_empty`, `pct_full`, `pct_renting`,
+  `pct_both_zero`, `movement_volume`); the sum of `n_obs` is the number of input rows at every level
+  (`check_conservation`, `aggregate_levels`).
+- `gbfs_toolkit.store`: a Parquet lake partitioned by system, year and month, `harmonize` (common column
+  names, UTC and local time), `write_lake` (append, merge, replace; atomic), `read_lake`
+  (partition-pruned), `register_duckdb_views`.
+- `gbfs_toolkit.history`: `record_version` keeps a dated version of a metadata feed only when its content
+  changes (`content_fingerprint` ignores fetch time, row, column and key order, `1` versus `1.0`).
+- `gbfs_toolkit.stations.match`: `match_stations` pairs stations one to one by identifier, normalised
+  name and distance, labelling each rule; `id_continuity`.
+- `gbfs_toolkit.trips`: `read_trips`, `iter_trips`, `normalize_trips` for the Lyft/Motivate, Urban
+  Sharing and Bicycle Transit Systems trip files, or a `TripFormat` you describe, into one schema with UTC
+  times, explicit time zones, clock-change flags and no personal fields. No reader for other formats.
+- `gbfs_toolkit.release`: `freeze_release` writes a closed period as data, daily coverage, incidents, a
+  data manifest, `datapackage.json` (Frictionless), a minimal `croissant.json`, a README and `SHA256SUMS`;
+  `verify_release`. It uploads nothing and has no default licence.
+- `gbfs_toolkit.repro`: `fingerprint` (order- and tool-independent content hash, cross-checked against
+  DuckDB), data manifests, `verify_manifest`, `materialize`, `export_sample` for CI.
+- CLI: `gbfs collect`, `gbfs quality`, `gbfs release`, `gbfs verify`.
+- `ROADMAP.md`; documentation pages for every module and the commands.
+
+### Added: options and policy
 
 - `detect_frozen_stations(..., exclude_gaps=False)`: with `True`, nights excluded by
   `active_hours` and collection outages do not count towards the length of a constant run.
@@ -86,7 +127,7 @@ regression test), adds two opt-in options, and writes down the API policy.
 ### Open points
 
 Known behaviours that are kept in 2.0.x because published or in-use results depend on them. They
-are documented in the docstrings and in `METHODOLOGY.md`, and will be revisited in 2.1 or 3.0.
+are documented in the docstrings and in `METHODOLOGY.md`, and will be revisited in a later release (see `ROADMAP.md`).
 
 - **A4 projection.** `audit_static` projects every station around the mean latitude of the whole
   input, so a station's A4 verdict can depend on which other systems are in the frame (several
