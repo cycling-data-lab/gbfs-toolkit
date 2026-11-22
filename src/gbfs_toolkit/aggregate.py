@@ -74,6 +74,7 @@ from gbfs_toolkit.core.errors import GBFSValidationError
 
 __all__ = [
     "AGGREGATE_COLUMNS",
+    "AGGREGATE_DTYPES",
     "LEVELS",
     "aggregate_availability",
     "aggregate_levels",
@@ -104,6 +105,31 @@ AGGREGATE_COLUMNS: list[str] = [
     "pct_both_zero",
     "movement_volume",
 ]
+
+#: The logical type of each column of the result (``string``, ``int64``, ``Int64``, ``Int16``,
+#: ``float64``, ``datetime64[UTC]``, ``datetime64[naive]``): the exact pandas dtype of text
+#: depends on the pandas version, the kind does not.
+AGGREGATE_DTYPES: dict[str, str] = {
+    "system_id": "string",
+    "station_id": "string",
+    "bucket_start_utc": "datetime64[UTC]",
+    "bucket_start_local": "datetime64[naive]",
+    "utc_offset_min": "Int16",
+    "n_obs": "int64",
+    "n_valid": "int64",
+    "bikes_mean": "float64",
+    "bikes_min": "Int64",
+    "bikes_max": "Int64",
+    "bikes_first": "Int64",
+    "bikes_last": "Int64",
+    "docks_mean": "float64",
+    "docks_min": "Int64",
+    "pct_empty": "float64",
+    "pct_full": "float64",
+    "pct_renting": "float64",
+    "pct_both_zero": "float64",
+    "movement_volume": "Int64",
+}
 
 #: The three usual levels: name -> frequency.
 LEVELS: dict[str, str] = {"15m": "15min", "1h": "1h", "1d": "1D"}

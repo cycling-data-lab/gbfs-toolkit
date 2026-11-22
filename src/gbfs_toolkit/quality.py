@@ -78,7 +78,9 @@ __all__ = [
     "STATUSES",
     "CAUSES",
     "COVERAGE_COLUMNS",
+    "COVERAGE_DTYPES",
     "INCIDENT_COLUMNS",
+    "INCIDENT_DTYPES",
     "DEFAULT_OK_THRESHOLD_PCT",
     "DEFAULT_MIN_GAP",
     "DEFAULT_ALL_ZERO_SHARE",
@@ -134,6 +136,19 @@ COVERAGE_COLUMNS: list[str] = [
     "status",
 ]
 
+#: The logical type of each column of `daily_coverage` (``string``, ``int64``, ``float64``,
+#: ``date``: a ``datetime.date`` object).
+COVERAGE_DTYPES: dict[str, str] = {
+    "date_utc": "date",
+    "system_id": "string",
+    "expected_polls": "int64",
+    "actual_polls": "int64",
+    "completeness_pct": "float64",
+    "units_reporting_median": "float64",
+    "both_zero_pct": "float64",
+    "status": "string",
+}
+
 #: Columns of the incident registry. ``end_utc`` empty (``NaT``) means *ongoing*; ``scope`` is
 #: ``"all"`` or comma-separated system identifiers.
 INCIDENT_COLUMNS: list[str] = [
@@ -144,6 +159,16 @@ INCIDENT_COLUMNS: list[str] = [
     "cause",
     "summary",
 ]
+
+#: The logical type of each column of the incident registry.
+INCIDENT_DTYPES: dict[str, str] = {
+    "incident_id": "string",
+    "start_utc": "datetime64[UTC]",
+    "end_utc": "datetime64[UTC]",
+    "scope": "string",
+    "cause": "string",
+    "summary": "string",
+}
 
 #: A day is ``ok`` from this share of the expected polls.
 DEFAULT_OK_THRESHOLD_PCT = 95.0
@@ -862,10 +887,42 @@ def detect_incidents(
 
 @dataclass(frozen=True)
 class QualityReport:
-    """What `assess` returns: the coverage table and the incident registry."""
+    """What `assess` returns: the coverage table and the incident registry.
+
+    It reads like the pair of frames it holds: ``report.coverage`` and ``report.incidents``
+    (attributes), ``report["coverage"]`` and ``report["incidents"]`` (keys), ``report.keys()``,
+    ``report.to_frames()`` (a ``dict`` of the two) and ``report.to_frame()`` (the coverage table,
+    the one most analyses start from). Their columns and logical types are `COVERAGE_COLUMNS` /
+    `COVERAGE_DTYPES` and `INCIDENT_COLUMNS` / `INCIDENT_DTYPES`.
+
+    Examples
+    --------
+    >>> import pandas as pd
+    >>> t = pd.date_range("2026-03-01", periods=1440, freq="min", tz="UTC")
+    >>> report = assess(pd.DataFrame({"system_id": "demo", "fetched_at": t}))
+    >>> report["coverage"].equals(report.coverage), list(report.keys())
+    (True, ['coverage', 'incidents'])
+    """
 
     coverage: pd.DataFrame
     incidents: pd.DataFrame
+
+    def keys(self) -> list[str]:
+        """The names of the two tables: ``["coverage", "incidents"]``."""
+        return ["coverage", "incidents"]
+
+    def __getitem__(self, key: str) -> pd.DataFrame:
+        if key not in ("coverage", "incidents"):
+            raise KeyError(f"{key!r}: a QualityReport has 'coverage' and 'incidents'")
+        return self.coverage if key == "coverage" else self.incidents
+
+    def to_frames(self) -> dict[str, pd.DataFrame]:
+        """``{"coverage": ..., "incidents": ...}`` (the frames themselves, not copies)."""
+        return {"coverage": self.coverage, "incidents": self.incidents}
+
+    def to_frame(self) -> pd.DataFrame:
+        """The coverage table, one row per system and day."""
+        return self.coverage
 
     def summary(self) -> dict[str, Any]:
         """Counts of system-days per status, and of incidents per cause."""

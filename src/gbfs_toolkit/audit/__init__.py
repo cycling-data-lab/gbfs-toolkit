@@ -8,6 +8,9 @@ from gbfs_toolkit.audit.catalogue import audit_catalogue
 from gbfs_toolkit.audit.dynamic import audit_dynamic
 from gbfs_toolkit.audit.governance import vehicle_id_persistence
 from gbfs_toolkit.audit.static import (
+    AUDIT_REPORT_COLUMNS,
+    AUDIT_REPORT_DTYPES,
+    AuditReport,
     audit_sensitivity,
     audit_static,
     capacity_convention,
@@ -97,6 +100,9 @@ def drop_flagged(stations: pd.DataFrame) -> pd.DataFrame:
 
 
 __all__ = [
+    "AUDIT_REPORT_COLUMNS",
+    "AUDIT_REPORT_DTYPES",
+    "AuditReport",
     "audit_static",
     "audit_catalogue",
     "audit_sensitivity",
