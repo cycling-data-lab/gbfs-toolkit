@@ -14,7 +14,14 @@ import numpy as np
 import pandas as pd
 
 from gbfs_toolkit.core.models import SchemaError, require_columns
-from gbfs_toolkit.core.utils import EARTH_RADIUS_M, floor_time, num, panel_frame, project_meters
+from gbfs_toolkit.core.utils import (
+    EARTH_RADIUS_M,
+    floor_time,
+    num,
+    panel_frame,
+    project_meters,
+    warn_default_change,
+)
 from gbfs_toolkit.spatial.geometry import GeoKDTree, haversine_m
 
 __all__ = [
@@ -191,7 +198,9 @@ def _hull_area_km2(lat: np.ndarray, lon: np.ndarray) -> float:
         return float("nan")
 
 
-def coverage_stats(info: pd.DataFrame, *, zones: object = None) -> pd.Series:
+def coverage_stats(
+    info: pd.DataFrame, *, zones: object = None, dissolve_zones: bool | None = None
+) -> pd.Series:
     """Spatial coverage of a station network: density and dispersion.
 
     Reports nearest-neighbour spacing and station density. The density denominator is the
@@ -205,6 +214,12 @@ def coverage_stats(info: pd.DataFrame, *, zones: object = None) -> pd.Series:
     zones that overlap or nest (a restriction zone inside the service polygon) are counted once
     each, which raises the area and lowers the density and the Clark-Evans index. Pass only the
     polygons that define the service area, or dissolve them first.
+
+    ``dissolve_zones`` does the last for you: ``False`` (the 2.x default) keeps the sum; ``True``
+    uses the area of the **union** of the polygons you pass, so a zone inside another counts once
+    (it does not decide *which* zones define the service area: leave out, for instance,
+    no-parking zones). The default becomes ``True`` in 3.0; until then a call whose zones overlap
+    and which leaves it unset emits a ``FutureWarning``.
 
     Returns
     -------
@@ -234,9 +249,17 @@ def coverage_stats(info: pd.DataFrame, *, zones: object = None) -> pd.Series:
 
     area_km2: float | None = None
     if zones is not None:
-        from gbfs_toolkit.spatial.geofencing import zone_area_km2
+        from gbfs_toolkit.spatial.geofencing import _zone_union_area_km2, zone_area_km2
 
-        area_km2 = float(zone_area_km2(zones).sum())
+        summed = float(zone_area_km2(zones).sum())
+        united = _zone_union_area_km2(zones) if dissolve_zones is not False else summed
+        if dissolve_zones is None and not np.isclose(summed, united, rtol=1e-9, atol=1e-12):
+            warn_default_change(
+                "the area of zones that overlap or nest is summed, not united",
+                option="dissolve_zones=False in coverage_stats",
+                new="dissolve_zones=True (the area of the union of the zones)",
+            )
+        area_km2 = united if dissolve_zones else summed
         out["service_area_km2"] = round(area_km2, 3)
     elif lat.size >= 3:
         area_km2 = _hull_area_km2(lat, lon)

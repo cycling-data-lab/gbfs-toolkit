@@ -16,9 +16,12 @@ from gbfs_toolkit.core.utils import (
     deprecated_kwarg,
     floor_time,
     gini,
+    has_float_gaps,
     num,
     panel_frame,
     time_of_day_minutes,
+    valid_flag,
+    warn_default_change,
 )
 from gbfs_toolkit.io.timeseries import calculate_net_flow
 
@@ -187,6 +190,7 @@ def join_exogenous_timeseries(
     exo_time: str | None = None,
     tolerance: str = "1h",
     direction: str = "nearest",
+    keep_order: bool | None = None,
 ) -> pd.DataFrame:
     """Align an external time series (weather, traffic, air quality) onto the panel.
 
@@ -208,14 +212,21 @@ def join_exogenous_timeseries(
         Maximum gap to match across (a pandas offset alias).
     direction : {"nearest", "backward", "forward"}, default "nearest"
         Which neighbouring exogenous record to attach.
+    keep_order : bool, optional
+        ``False`` (the 2.x default): the rows come back sorted by time with a fresh
+        ``RangeIndex``. ``True``: the rows come back **in the input's order and with its index**
+        (a MultiIndexed panel is flattened first, as always), so a column can be assigned back
+        by position or by label. The default becomes ``True`` in 3.0; until then a call whose
+        input is not already sorted by time with a ``RangeIndex`` and which leaves it unset
+        emits a ``FutureWarning``.
 
     Returns
     -------
     pandas.DataFrame
         The flattened panel with the exogenous columns merged in (unmatched rows carry ``NaN``).
-        Rows come back **sorted by time with a fresh ``RangeIndex``**, not in the input's order:
-        merge on a key, or sort the input by ``on_time`` first, before assigning a column back
-        to the original frame.
+        By default rows come back **sorted by time with a fresh ``RangeIndex``**, not in the
+        input's order (see ``keep_order``): merge on a key, or pass ``keep_order=True``, before
+        assigning a column back to the original frame.
 
     See Also
     --------
@@ -244,9 +255,20 @@ def join_exogenous_timeseries(
     right = exogenous.copy()
     left[on_time] = pd.to_datetime(left[on_time])
     right[exo_time] = pd.to_datetime(right[exo_time])
-    left = left.sort_values(on_time)
+    already = left[on_time].is_monotonic_increasing and left.index.equals(pd.RangeIndex(len(left)))
+    if keep_order is None and not already:
+        warn_default_change(
+            "the rows come back sorted by time with a new index",
+            option="keep_order=False in join_exogenous_timeseries",
+            new="keep_order=True (the input's order and index are kept)",
+        )
+    original_index = left.index
+    # the historical sort (default kind) is kept unless the order is restored afterwards
+    left = left.assign(__position=np.arange(len(left))).sort_values(
+        on_time, kind="stable" if keep_order else "quicksort"
+    )
     right = right.sort_values(exo_time)
-    return pd.merge_asof(
+    merged = pd.merge_asof(
         left,
         right,
         left_on=on_time,
@@ -254,6 +276,11 @@ def join_exogenous_timeseries(
         tolerance=pd.Timedelta(tolerance),
         direction=direction,
     )
+    position = merged.pop("__position").to_numpy()
+    if keep_order:
+        merged = merged.iloc[np.argsort(position, kind="stable")]
+        merged.index = original_index
+    return merged
 
 
 def temporal_concentration(panel: pd.DataFrame, *, freq: str = "1h") -> pd.DataFrame:
@@ -528,7 +555,9 @@ def availability_synchrony(
     return edges.reset_index(drop=True)
 
 
-def availability_stats(panel: pd.DataFrame, *, time_col: str = "fetched_at") -> pd.DataFrame:
+def availability_stats(
+    panel: pd.DataFrame, *, time_col: str = "fetched_at", valid_only: bool | None = None
+) -> pd.DataFrame:
     """Per-station longitudinal statistics from an availability panel.
 
     Complements [`diurnal_profiles`][gbfs_toolkit.diurnal_profiles] (which yields the curves) with
@@ -542,6 +571,12 @@ def availability_stats(panel: pd.DataFrame, *, time_col: str = "fetched_at") -> 
         frame with ``system_id, station_id, num_bikes_available, num_docks_available`` and a
         time column. Hour-of-day uses ``time_col`` **as stored**; pass a panel built with
         ``target_tz`` for local-time peaks.
+    valid_only : bool, optional
+        How a row with a **missing** count enters ``pct_time_empty`` and ``pct_time_full``.
+        ``False`` (the 2.x default) counts a missing count as "not empty" / "not full" and keeps
+        the row in the denominator; ``True`` computes each share over the rows that have the
+        relevant count (``n_obs`` still counts all rows). The default becomes ``True`` in 3.0;
+        until then a call that would differ and leaves it unset emits a ``FutureWarning``.
 
     Returns
     -------
@@ -569,14 +604,20 @@ def availability_stats(panel: pd.DataFrame, *, time_col: str = "fetched_at") -> 
     df = panel_frame(panel)
     bikes, docks = num(df, "num_bikes_available"), num(df, "num_docks_available")
     denom = bikes + docks
+    if valid_only is None and has_float_gaps(bikes, docks):
+        warn_default_change(
+            "a missing count counts as not empty and not full",
+            option="valid_only=False in availability_stats",
+            new="valid_only=True (shares over the rows that have the count)",
+        )
     work = pd.DataFrame(
         {
             "system_id": df["system_id"],
             "station_id": df["station_id"],
             "bikes": bikes,
             "occ": (bikes / denom).where(denom > 0),
-            "empty": bikes <= 0,
-            "full": docks <= 0,
+            "empty": valid_flag(bikes <= 0, bikes) if valid_only else bikes <= 0,
+            "full": valid_flag(docks <= 0, docks) if valid_only else docks <= 0,
             "hour": pd.to_datetime(df[time_col]).dt.hour,
         }
     )

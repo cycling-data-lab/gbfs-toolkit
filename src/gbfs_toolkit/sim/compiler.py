@@ -132,6 +132,10 @@ def calibrate_city(
             weather_events=0,
             scraper_cell_nan=0.0,
             scraper_station_outages=0,
+            # the 2.x behaviours, chosen here so calibration does not warn about a default
+            # it does not expose (it moves to the corrected ones in 3.0, with the footprints)
+            rebalancing_once=False,
+            scraper_blanks_docks=False,
             beta_km=beta,
             base_demand=base,
             trip_rate=tr,

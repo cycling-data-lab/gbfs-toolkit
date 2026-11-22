@@ -73,7 +73,7 @@ def system_profile(availability: pd.DataFrame) -> pd.Series:
     out["mean_occupancy"] = round(float(occ.mean()), 4) if occ.notna().any() else float("nan")
 
     if len(df):
-        states = station_state(df).value_counts(normalize=True)
+        states = station_state(df, unknown=False).value_counts(normalize=True)
         for s in STATION_STATES:
             out[f"pct_{s}"] = round(float(states.get(s, 0.0)), 4)
 
