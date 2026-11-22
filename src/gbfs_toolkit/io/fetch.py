@@ -3,11 +3,13 @@
 The goal is to make GBFS *trivial*: point at a ``gbfs.json`` (or a system id) and
 get tidy, canonical DataFrames back, regardless of GBFS version or language.
 
-    >>> import gbfs_toolkit as gb
-    >>> df = gb.availability("https://.../gbfs.json")        # bikes/docks + name + coords
-    >>> feed = gb.GBFSFeed.from_url("https://.../gbfs.json")
-    >>> feed.version, feed.feeds.keys()
-    >>> feed.station_status(); feed.vehicles(); feed.audit()
+Illustration (needs the network, so it is not run as a doctest)::
+
+    import gbfs_toolkit as gb
+    df = gb.availability("https://.../gbfs.json")        # bikes/docks + name + coords
+    feed = gb.GBFSFeed.from_url("https://.../gbfs.json")
+    feed.version, feed.feeds.keys()
+    feed.station_status(); feed.vehicles(); feed.audit()
 
 Networking uses ``requests`` (the optional ``[fetch]`` extra). For tests / offline
 use, pass a ``get_json`` callable that maps a URL to an already-parsed dict.
