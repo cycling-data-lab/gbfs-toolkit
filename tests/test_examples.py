@@ -21,8 +21,15 @@ EXAMPLES = Path(__file__).resolve().parent.parent / "examples"
         "07_free_floating_fleets.py",
         "08_service_reliability.py",
         "09_contextualize.py",
-        # 10_macro_scale_audit.py is live (network) and intentionally not smoke-tested.
+        "11_flow_simulator.py",
     ],
 )
 def test_example_scenario_runs(script):
     runpy.run_path(str(EXAMPLES / script), run_name="__main__")
+
+
+@pytest.mark.network
+def test_live_macro_scale_audit(monkeypatch):
+    """10_macro_scale_audit.py downloads the catalogue and feeds: run with --run-network."""
+    monkeypatch.setattr("sys.argv", ["10_macro_scale_audit.py", "--country", "FR", "--limit", "2"])
+    runpy.run_path(str(EXAMPLES / "10_macro_scale_audit.py"), run_name="__main__")
