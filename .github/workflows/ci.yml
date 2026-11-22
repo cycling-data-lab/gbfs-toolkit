@@ -44,6 +44,10 @@ jobs:
           tests/test_no_optional_dep_leak.py
           tests/test_version.py
           tests/test_public_api.py
+          tests/test_api_policy.py
+          tests/test_fix_dates.py
+          tests/test_fix_robustness.py
+          tests/test_fix_options.py
 
   test:
     name: Test (${{ matrix.os }}, py${{ matrix.python-version }})
@@ -113,7 +117,9 @@ jobs:
           pytest -q
           tests/test_v160.py tests/test_v162_fixes.py tests/test_v170_consistency.py
           tests/test_v170_io_consistency.py tests/test_input_purity.py
-          tests/test_no_optional_dep_leak.py tests/test_version.py
+          tests/test_no_optional_dep_leak.py tests/test_version.py tests/test_public_api.py
+          tests/test_api_policy.py tests/test_fix_dates.py tests/test_fix_robustness.py
+          tests/test_fix_options.py
 
   nightly-deps:
     name: Nightly numpy/pandas/scipy (informational)
