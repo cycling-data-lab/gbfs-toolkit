@@ -1,31 +1,49 @@
 name: Docs
 
 # Versioned docs with mike, published to the gh-pages branch.
-#   - push to main  -> the moving "dev" docs (/dev/)
-#   - tag v*        -> the released minor (/1.5/) and the "latest" alias (the default)
+#   - push to main            -> the moving "dev" docs (/dev/)
+#   - a release (called from release-please.yml with `version`, or run by hand)
+#                             -> the released minor (/2.0/) and the "latest" alias (default)
 # One-time: repo Settings → Pages → Source = "Deploy from a branch" → gh-pages.
 
 on:
   push:
     branches: [main]
-    tags: ["v*"]
+  workflow_call:
+    inputs:
+      version:
+        description: "Released version, e.g. 2.0.1"
+        required: true
+        type: string
   workflow_dispatch:
+    inputs:
+      version:
+        description: "Released version to (re)deploy as latest, e.g. 2.0.1 (empty: dev)"
+        required: false
+        type: string
 
 permissions:
   contents: write
 
-# Serialise gh-pages deploys: a main push and a tag push must not race to push the
+# Serialise gh-pages deploys: a main push and a release must not race to push the
 # same branch (the loser is rejected with "fetch first").
 concurrency:
   group: docs-deploy
   cancel-in-progress: false
 
+env:
+  NO_MKDOCS_2_WARNING: "1"
+  DISABLE_MKDOCS_2_WARNING: "true"
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      # Credentials stay on: mike pushes the built site to gh-pages.
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1 # zizmor: ignore[artipacked]
         with:
+          # A release deploys the docs of its tag, not of whatever main has become.
+          ref: ${{ inputs.version && format('gbfs-toolkit-v{0}', inputs.version) || github.ref }}
           fetch-depth: 0
       - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         with:
@@ -36,12 +54,13 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
       - name: Deploy development docs
-        if: github.ref == 'refs/heads/main'
+        if: ${{ !inputs.version }}
         run: mike deploy --push dev
       - name: Deploy released docs
-        if: startsWith(github.ref, 'refs/tags/v')
+        if: ${{ inputs.version }}
+        env:
+          VERSION: ${{ inputs.version }}
         run: |
-          VERSION="${GITHUB_REF_NAME#v}"
           MINOR="${VERSION%.*}"
           mike deploy --push --update-aliases "$MINOR" latest
           mike set-default --push latest

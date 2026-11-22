@@ -1,12 +1,19 @@
-name: Release
+name: Release (manual fallback)
 
-# Publish to PyPI on a version tag, via Trusted Publishing (no API token stored).
-# Requires a one-time PyPI setup: project → Publishing → add this repo + workflow + environment.
+# Publishing normally happens in release-please.yml when a release PR is merged. Use
+# this only to re-run a publish that failed after the tag existed: Actions → "Release
+# (manual fallback)" → Run workflow, with the release tag (gbfs-toolkit-vX.Y.Z).
+# It never runs on a tag push, so a release cannot be published twice by accident.
+# PyPI side: Trusted Publishing (no API token stored) must list this workflow file and
+# the `pypi` environment, as it does for release-please.yml. See RELEASING.md.
 
 on:
-  push:
-    tags:
-      - "v*"
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Release tag to publish, e.g. gbfs-toolkit-v2.0.1"
+        required: true
+        type: string
 
 permissions:
   contents: read
@@ -17,9 +24,12 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: ["3.10", "3.12"]
+        python-version: ["3.10", "3.12", "3.14"]
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          ref: ${{ inputs.tag }}
       - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         with:
           python-version: ${{ matrix.python-version }}
@@ -27,7 +37,7 @@ jobs:
       - name: Tests
         run: pytest -q --cov=gbfs_toolkit --cov-fail-under=85
       - name: Doctests
-        run: pytest -q --doctest-modules src/gbfs_toolkit/analytics src/gbfs_toolkit/audit
+        run: pytest -q --doctest-modules src/gbfs_toolkit
       - name: Type check
         if: matrix.python-version == '3.12'
         run: mypy
@@ -42,11 +52,20 @@ jobs:
       attestations: write
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          ref: ${{ inputs.tag }}
       - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         with:
           python-version: "3.12"
-      - run: pip install build
+      - run: pip install build twine
       - run: python -m build
+      - name: Check the distributions against the tag
+        env:
+          TAG: ${{ inputs.tag }}
+        run: |
+          twine check --strict dist/*
+          python scripts/check_dist.py dist --expect "$TAG"
       # Cryptographic SLSA provenance binding the artifacts to this exact workflow run.
       - uses: actions/attest-build-provenance@0f67c3f4856b2e3261c31976d6725780e5e4c373 # v4.1.1
         with:
@@ -68,4 +87,4 @@ jobs:
         with:
           name: dist
           path: dist
-      - uses: pypa/gh-action-pypi-publish@dc37677b2e1c63e2034f94d8a5b11f265b73ba33 # release/v1
+      - uses: pypa/gh-action-pypi-publish@dc37677b2e1c63e2034f94d8a5b11f265b73ba33 # release/v1.14.2
