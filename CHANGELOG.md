@@ -251,6 +251,59 @@ above.
 - SPDX licence expression, classifiers up to Python 3.14, project URLs.
 - Actions are pinned by commit and Dependabot waits a week for a new release.
 
+## [2.1.0](https://github.com/cycling-data-lab/gbfs-toolkit/compare/gbfs-toolkit-v2.0.0...gbfs-toolkit-v2.1.0) (2026-11-22)
+
+
+### Added
+
+* **aggregate:** availability aggregated to 15 minutes, an hour or a day ([292399c](https://github.com/cycling-data-lab/gbfs-toolkit/commit/292399c2a3928652ae4662bb638f9f47ddef0a69))
+* **aggregate:** read an Arrow table, a DuckDB relation or a lake path, computed by DuckDB or window by window ([a2ebfce](https://github.com/cycling-data-lab/gbfs-toolkit/commit/a2ebfce3abdaf938dc99bf7be599560fd084626d))
+* **cli:** collect, quality, release and verify commands ([275db1f](https://github.com/cycling-data-lab/gbfs-toolkit/commit/275db1f1747d45172bf9fa06c5a8ae1197bf5d14))
+* **collect:** a polite collector of station and vehicle snapshots ([e60bc3a](https://github.com/cycling-data-lab/gbfs-toolkit/commit/e60bc3a1fe38e2ae98765f394b0f241816c757bd))
+* **collect:** write one fragment per poll and compact closed days atomically ([368953d](https://github.com/cycling-data-lab/gbfs-toolkit/commit/368953d1d74c6cb9af8502b730c55706eb0bf0f3))
+* **history:** keep a dated version of a metadata feed only when its content changes ([c0904fa](https://github.com/cycling-data-lab/gbfs-toolkit/commit/c0904fa9aefc6b15080458de3fdd3c2ea4535400))
+* opt-in corrections for the seven open points, with a FutureWarning announcing the 3.0 default ([7681aa3](https://github.com/cycling-data-lab/gbfs-toolkit/commit/7681aa3334b5e873b86092ff5d216fffdb5703fc))
+* **quality:** coverage, gaps, silent feeds and unsupported fields from an Arrow table, a relation or a lake path ([89a6275](https://github.com/cycling-data-lab/gbfs-toolkit/commit/89a627519c128ce05078de3766842401b483f6b1))
+* **quality:** daily coverage, collection gaps, silent feeds and an incident registry ([b211719](https://github.com/cycling-data-lab/gbfs-toolkit/commit/b211719a8557ea9a940eba0e46a432b26cacf6d1))
+* **release:** freeze a closed period of a lake into a depositable folder ([86b9b62](https://github.com/cycling-data-lab/gbfs-toolkit/commit/86b9b6250e82eb6b4f243040454693a5db7e7fcf))
+* **repro:** data manifest, content fingerprint, verification and CI samples ([4601c1d](https://github.com/cycling-data-lab/gbfs-toolkit/commit/4601c1d0fd24eadf47df70f4f55f2c2fcff7fa06))
+* **stations.match:** follow station identifiers from one period to the next ([b57bffa](https://github.com/cycling-data-lab/gbfs-toolkit/commit/b57bffa1373eebfec24dcfaad3ee29412bb45a75))
+* **store:** Parquet lake partitioned by system, year and month, with DuckDB views ([d5d2f69](https://github.com/cycling-data-lab/gbfs-toolkit/commit/d5d2f697c5be2ab6780274549b7c771662fc1d13))
+* **store:** write a lake from an Arrow table, a relation or a path, one partition at a time; read it as Arrow or a lazy relation ([e253d1f](https://github.com/cycling-data-lab/gbfs-toolkit/commit/e253d1f3a5e74ea1b4a278af3a1f6f424bf8a94e))
+* **store:** write a table or path piece by piece (a day at a time in append mode); a benchmark of the large-volume paths ([4cc95f1](https://github.com/cycling-data-lab/gbfs-toolkit/commit/4cc95f1f2a23fbbff790db5e65e286366190d27c))
+* **trips:** a reader for the Vélomagg trip file (Montpellier, ODbL), without any account column ([914f775](https://github.com/cycling-data-lab/gbfs-toolkit/commit/914f77579927a6c7b0cb7dc5ada3e836f04f8b0e))
+* **trips:** readers for published trip files into one schema ([6766362](https://github.com/cycling-data-lab/gbfs-toolkit/commit/67663629ac30a033385dcd8663a6f95fd8f471af))
+* typed results (AuditReport, QualityReport readers) and declared column types ([0ebde08](https://github.com/cycling-data-lab/gbfs-toolkit/commit/0ebde08f9fae52fc16523eb72f9a3ec1812c1db3))
+
+
+### Fixed
+
+* dates, time zones and clock changes ([327cf55](https://github.com/cycling-data-lab/gbfs-toolkit/commit/327cf5559700561325190e3de93b874dcb9e8bb5))
+* missing values, empty inputs and index handling ([dce4821](https://github.com/cycling-data-lab/gbfs-toolkit/commit/dce4821308604ee63c10e8b0f1725d600d290b90))
+* opt-in options for two behaviours kept by default, and the open points ([8188244](https://github.com/cycling-data-lab/gbfs-toolkit/commit/8188244d7e4b37efcf6e7e70894b0de769c36ac4))
+* read __version__ from the installed distribution metadata ([81f0022](https://github.com/cycling-data-lab/gbfs-toolkit/commit/81f0022205964f2ef80778cf902d8b43e9f69b29))
+* SQL time expressions accept nanosecond Parquet columns (TIMESTAMPTZ_NS) ([8d6e7be](https://github.com/cycling-data-lab/gbfs-toolkit/commit/8d6e7be0d20bfd8d37b7d2d708013fbda9816585))
+* stop using pandas accessors deprecated in pandas 3 ([bba007e](https://github.com/cycling-data-lab/gbfs-toolkit/commit/bba007e553e4f057e4e855324ab79d91853d7d9d))
+
+
+### Changed
+
+* declare the public surface, stability levels, errors and logging ([4d58142](https://github.com/cycling-data-lab/gbfs-toolkit/commit/4d581420713c2a5c4b0cff20183bec19cffc0712))
+
+
+### Documentation
+
+* a page per data-lake module, the command line, the roadmap and the API policy ([c8c01fd](https://github.com/cycling-data-lab/gbfs-toolkit/commit/c8c01fdeec47bd83b7f227cc5eac166b995055c2))
+* changelog for 2.1.0 (experimental data-lake modules) ([e8b682d](https://github.com/cycling-data-lab/gbfs-toolkit/commit/e8b682dba6865266990fbfcfc393ee28f1f0f706))
+* changelog, roadmap and API policy for the palier 2; mike configured; CI runs the new tests and validates Croissant ([2ae172b](https://github.com/cycling-data-lab/gbfs-toolkit/commit/2ae172ba25ef8e9256d072217b1f25bfbd5ea16a))
+* drop author and paper names from docstrings and comments ([e67127b](https://github.com/cycling-data-lab/gbfs-toolkit/commit/e67127b5f0d663d7ba74108390212e8ce6277668))
+* figures of the large-volume benchmark in the aggregate page ([c77c7a2](https://github.com/cycling-data-lab/gbfs-toolkit/commit/c77c7a2cae363f34c09d726e3b019183149eb752))
+* make every docstring example runnable ([bf82ba2](https://github.com/cycling-data-lab/gbfs-toolkit/commit/bf82ba202d66dd0d3e35b6b7522e7088d13d5019))
+* plain code references in the data-lake docstrings, so the manual renders them ([96b95b9](https://github.com/cycling-data-lab/gbfs-toolkit/commit/96b95b951c2f1e98da50f86d6ee1e411cc55eda8))
+* releasing process, supported versions and API policy in the site ([9058b29](https://github.com/cycling-data-lab/gbfs-toolkit/commit/9058b299afb533d68761696ff0c98ddff67dd9c2))
+* say how the hand-kept Unreleased notes join the generated changelog, and when to rebase-merge ([27a7f2a](https://github.com/cycling-data-lab/gbfs-toolkit/commit/27a7f2a7214ceff33d2f347f4a929a98e2f53ee9))
+* tutorial, four recipes, large-volume sections; fix(release): Croissant that the MLCommons validator accepts ([29b1c60](https://github.com/cycling-data-lab/gbfs-toolkit/commit/29b1c60460f99b69d512750e88ac2f2e3a478cb3))
+
 ## [2.0.0](https://github.com/cycling-data-lab/gbfs-toolkit/compare/gbfs-toolkit-v1.7.2...gbfs-toolkit-v2.0.0) (2026-06-28)
 
 > **Note.** This entry was generated by release-please's first run, which read the whole
