@@ -18,9 +18,22 @@ import gbfs_toolkit as gb
 _OPTIONAL = ("jinja2", "geopandas", "sklearn", "pyarrow", "tabulate", "requests")
 
 
+def _pandas_needs_pyarrow() -> bool:
+    """pandas 3 backs its default string dtype with pyarrow when it is installed.
+
+    pyarrow is then a runtime dependency of pandas itself, so hiding it breaks plain
+    ``pd.DataFrame`` construction rather than exposing a leak in this library. The
+    core-only and minimum-versions CI jobs install no pyarrow at all, so they still prove
+    the core paths need none.
+    """
+    return getattr(pd.Series(["x"]).dtype, "storage", None) == "pyarrow"
+
+
 @pytest.fixture
 def no_optional_deps(monkeypatch):
     for mod in _OPTIONAL:
+        if mod == "pyarrow" and _pandas_needs_pyarrow():
+            continue
         monkeypatch.setitem(sys.modules, mod, None)
     yield
 
