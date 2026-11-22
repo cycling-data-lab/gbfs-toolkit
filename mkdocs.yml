@@ -162,6 +162,18 @@ nav:
       - Measure service reliability: examples/08-service-reliability.md
       - Add transit & weather context: examples/09-contextualize.md
       - Compare systems at scale (live): examples/10-macro-scale-audit.md
+  - Data lake (experimental):
+      - Overview and full example: lake/index.md
+      - collect: lake/collect.md
+      - store: lake/store.md
+      - quality: lake/quality.md
+      - aggregate: lake/aggregate.md
+      - history: lake/history.md
+      - stations.match: lake/stations-match.md
+      - trips: lake/trips.md
+      - release: lake/release.md
+      - repro: lake/repro.md
+      - Command line: lake/cli.md
   - API reference: reference/
   - Explanation:
       - Methodology: methodology.md
@@ -172,4 +184,5 @@ nav:
       - Citing this work: citing.md
       - Contributing: contributing.md
       - Releasing: releasing.md
+      - Roadmap: roadmap.md
       - Changelog: changelog.md
