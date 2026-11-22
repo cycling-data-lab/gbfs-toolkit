@@ -375,7 +375,9 @@ class _RelationTable(Table):
     def time_range(self, col: str) -> tuple[pd.Timestamp, pd.Timestamp] | None:
         self.check_time(col)
         c = sql_name(col)
-        lo, hi = self.rel.aggregate(f"min(epoch_us({c})), max(epoch_us({c}))").fetchall()[0]
+        lo, hi = self.rel.aggregate(
+            f"min((epoch_ns({c}) // 1000)), max((epoch_ns({c}) // 1000))"
+        ).fetchall()[0]
         if lo is None:
             return None
         return pd.to_datetime(lo, unit="us", utc=True), pd.to_datetime(hi, unit="us", utc=True)
@@ -393,7 +395,9 @@ class _RelationTable(Table):
         c = sql_name(col)
         lo_us, hi_us = int(lo.value // 1000), int(hi.value // 1000)
         return (
-            self.rel.filter(f"epoch_us({c}) >= {lo_us} AND epoch_us({c}) < {hi_us}")
+            self.rel.filter(
+                f"(epoch_ns({c}) // 1000) >= {lo_us} AND (epoch_ns({c}) // 1000) < {hi_us}"
+            )
             .project(", ".join(sql_name(x) for x in cols))
             .df()
         )

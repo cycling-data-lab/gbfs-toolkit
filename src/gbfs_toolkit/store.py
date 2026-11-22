@@ -257,7 +257,7 @@ def _partitions_of(table: Table, tcol: str) -> list[tuple[str, int, int]]:
     import pyarrow.compute as pc
 
     if table.kind == "relation":
-        c = f"make_timestamp(epoch_us({sql_name(tcol)}))"
+        c = f"make_timestamp((epoch_ns({sql_name(tcol)}) // 1000))"
         got = (
             table.relation()
             .query(
@@ -297,7 +297,7 @@ def _partition_rows(
     import pyarrow.dataset as ds
 
     if table.kind == "relation":
-        c = f"epoch_us({sql_name(tcol)})"
+        c = f"(epoch_ns({sql_name(tcol)}) // 1000)"
         return table.arrow(
             where=(
                 f"CAST({sql_name('system_id')} AS VARCHAR) = {sql_text(system)} "
@@ -570,7 +570,7 @@ def read_lake(
         if systems is not None:
             names = ", ".join(sql_text(str(x)) for x in systems) or "NULL"
             conds.append(f"{sql_name('system_id')} IN ({names})")
-        c = f"epoch_us({sql_name(tcol)})"
+        c = f"(epoch_ns({sql_name(tcol)}) // 1000)"
         if lo is not None:
             conds.append(f"{c} >= {int(lo.value // 1000)}")
         if hi is not None:
