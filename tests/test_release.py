@@ -319,3 +319,26 @@ def test_table_schema_types():
         "n": "integer",
         "o": "string",
     }
+
+
+def test_croissant_fields_a_validator_asks_for(lake, tmp_path):
+    freeze(lake, tmp_path, cite_as="Doe (2026), demo bike-share snapshots, doi:10.0000/demo")
+    doc = json.loads((tmp_path / "rel" / "croissant.json").read_text())
+    assert doc["version"] == "1.0.0" and doc["citeAs"].startswith("Doe (2026)")
+    csv = next(d for d in doc["distribution"] if d["@id"] == "daily_coverage.csv")
+    listed = dict(
+        line.split("  ", 1)[::-1]
+        for line in (tmp_path / "rel" / "SHA256SUMS").read_text().splitlines()
+    )
+    assert csv["sha256"] == listed["daily_coverage.csv"]  # the checksum matches the file
+    assert {"rai", "examples", "samplingRate", "equivalentProperty"} <= set(doc["@context"])
+
+
+def test_croissant_is_valid_for_the_mlcommons_validator(lake, tmp_path):
+    """Optional: runs when ``mlcroissant`` is installed (``pip install mlcroissant``)."""
+    mlc = pytest.importorskip("mlcroissant")
+    freeze(lake, tmp_path, cite_as="Doe (2026), demo bike-share snapshots")
+    path = tmp_path / "rel" / "croissant.json"
+    dataset = mlc.Dataset(jsonld=str(path))  # raises ValidationError on any error
+    assert dataset.metadata.name == "demo-2026-03"
+    assert {rs.name for rs in dataset.metadata.record_sets} == {"station_status"}

@@ -15,7 +15,10 @@ import pytest
 pytest.importorskip("pyarrow")
 
 DOCS = Path(__file__).resolve().parent.parent / "docs" / "lake"
+ROOT_DOCS = DOCS.parent
+#: The data-lake pages, the recipes and the tutorial: every Python example of them runs.
 PAGES = sorted(DOCS.glob("*.md")) if DOCS.is_dir() else []
+PAGES += sorted((ROOT_DOCS / "recipes").glob("*.md")) + [ROOT_DOCS / "tutorial.md"]
 FENCE = re.compile(r"^```python\n(.*?)^```", re.S | re.M)
 
 
@@ -41,14 +44,18 @@ def test_every_module_has_a_page_in_the_navigation():
         "repro.md",
         "cli.md",
     } <= names
-    for name in names:
-        assert f"lake/{name}" in nav, f"{name} is not in the mkdocs navigation"
+    for page in PAGES:
+        rel = page.relative_to(ROOT_DOCS).as_posix()
+        assert rel in nav, f"{rel} is not in the mkdocs navigation"
 
 
-@pytest.mark.parametrize("page", PAGES, ids=lambda p: p.name)
+@pytest.mark.parametrize("page", PAGES, ids=lambda p: p.relative_to(ROOT_DOCS).as_posix())
 def test_page_examples_run(page, tmp_path, monkeypatch, capsys):
     code_blocks = blocks(page)
-    if page.name != "cli.md":
+    has_no_code = (
+        page.name == "cli.md" or page.relative_to(ROOT_DOCS).as_posix() == "recipes/index.md"
+    )
+    if not has_no_code:
         assert code_blocks, f"{page.name} has no runnable example"
     monkeypatch.chdir(tmp_path)
     namespace: dict = {"__name__": "docs_example"}

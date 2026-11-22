@@ -1,0 +1,71 @@
+{
+ "machine": {
+  "python": "3.12.16",
+  "platform": "Linux-7.3.4-200.fc44.x86_64-x86_64-with-glibc2.43",
+  "cpus": 16
+ },
+ "lake": {
+  "stations": 1000,
+  "days": 30,
+  "parquet_mb": 45
+ },
+ "results": [
+  {
+   "step": "aggregate_duckdb",
+   "seconds": 71.58,
+   "peak_mb": 5685,
+   "rows_in": 42240000,
+   "buckets_15m": 2816000
+  },
+  {
+   "step": "aggregate_pandas_windows",
+   "seconds": 190.45,
+   "peak_mb": 2043,
+   "rows_in": 42240000,
+   "buckets_15m": 2816000
+  },
+  {
+   "step": "coverage_duckdb",
+   "seconds": 1.85,
+   "peak_mb": 713,
+   "system_days": 30,
+   "days_by_status": {
+    "ok": 26,
+    "partial": 0,
+    "outage_collector": 4,
+    "outage_operator": 0
+   }
+  },
+  {
+   "step": "coverage_pandas_batches",
+   "seconds": 13.36,
+   "peak_mb": 1318,
+   "system_days": 30,
+   "days_by_status": {
+    "ok": 26,
+    "partial": 0,
+    "outage_collector": 4,
+    "outage_operator": 0
+   }
+  },
+  {
+   "step": "aggregate_pandas_frame",
+   "seconds": 13.59,
+   "peak_mb": 5944,
+   "rows_in": 2880000,
+   "buckets_15m": 192000
+  },
+  {
+   "step": "write_lake_from_path",
+   "seconds": 7.66,
+   "peak_mb": 722,
+   "partitions": 1,
+   "rows_in": 42240000
+  }
+ ],
+ "engines_agree": {
+  "same_buckets": true,
+  "floats_agree": true,
+  "integers_identical": true
+ }
+}

@@ -1,7 +1,7 @@
-# Command line: collect, quality, release, verify
+# Command line: collect, compact, quality, release, verify
 
 !!! warning "Experimental"
-    The four commands below were added in 2.1.0 and may change in a minor release. `gbfs audit`
+    The commands below were added in 2.1.0 and may change in a minor release. `gbfs audit`
     is stable. See the [overview](index.md).
 
 Needs the extras of the library calls behind them: `pip install "gbfs-toolkit[fetch,parquet]"` (and
@@ -10,8 +10,10 @@ mismatching release), `2` bad arguments, missing input or a refusal.
 
 ## `gbfs collect`
 
-Polls feeds politely and writes `OUT/<feed>/<system>/<day>.parquet` ([collect](collect.md)). With none
-of `--interval`, `--duration` and `--iterations` it polls **once**.
+Polls feeds politely and writes one fragment per poll under `OUT/<feed>/<system>/_fragments/<day>/`
+([collect](collect.md)); `--compact` gathers the fragments of closed days into `OUT/<feed>/<system>/<day>.parquet`
+when it is done, and `--write day` rewrites the day file at each poll instead. With none of `--interval`,
+`--duration` and `--iterations` it polls **once**.
 
 ```bash
 gbfs collect --system harbor=https://example.org/gbfs/gbfs.json \
@@ -30,10 +32,20 @@ gbfs collect --systems-file systems.csv --out data/collected \
 `--min-interval` (seconds, default 1) and the feed's `ttl` are never undercut; `--no-ttl` ignores the
 `ttl` and you then own the load.
 
+## `gbfs compact`
+
+Gathers the fragments of closed days into one file per system and day, atomically and idempotently
+(running it again changes nothing). Today's fragments (UTC) are left alone unless `--include-today`.
+
+```bash
+gbfs compact data/collected                    # both feeds
+gbfs compact data/collected --kind station_status --systems harbor
+```
+
 ## `gbfs quality`
 
 Daily coverage and incidents of a collection ([quality](quality.md)). `PATH` is a `collect` folder or a
-lake.
+lake, read in place (not loaded whole) unless `--systems` is given.
 
 ```bash
 gbfs quality data/collected --end 2026-03-31 --incidents known-incidents.json --out reports/march

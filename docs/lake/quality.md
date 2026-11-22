@@ -37,6 +37,21 @@ system identifiers separated by commas), a `cause` and a `summary`. The causes a
 its absence cannot be told apart). You declare what you know; `detect_incidents` adds the collection
 gaps and silent feeds it finds, with stable identifiers.
 
+## Large volumes
+
+`daily_coverage`, `find_collector_gaps`, `field_unsupported_by_operator`, `detect_incidents` and
+`assess` take, besides a pandas frame, an Arrow table or dataset, a DuckDB relation or a path (a lake, a
+folder of Parquet files, a file or a glob), and an `engine=` (`"auto"`, `"duckdb"`, `"pandas"`) with the
+rules of [`aggregate`](aggregate.md#large-volumes). What they need from the rows is additive (polls per
+system, day and slot; distinct minutes; non-empty and zero values per system and period), so DuckDB, or
+batches of pandas, give the same tables as the frame does. `add_quality_indicators` returns a row per input
+row and stays on pandas frames.
+
+`QualityReport` (what `assess` returns) reads like the pair of tables it holds: `report.coverage` and
+`report.incidents`, `report["coverage"]`, `report.to_frames()`, `report.to_frame()` (the coverage). The
+columns and logical types of the tables are `COVERAGE_COLUMNS` / `COVERAGE_DTYPES` and
+`INCIDENT_COLUMNS` / `INCIDENT_DTYPES`.
+
 ## Example
 
 ```python

@@ -31,6 +31,28 @@ Buckets are aligned on UTC. With `tz` (an IANA zone, or `{system_id: zone}`), th
 start of each bucket and its UTC offset are added, so a local-time analysis can group on them
 without redoing the clock change.
 
+## Large volumes
+
+Besides a pandas frame, `aggregate_availability`, `aggregate_levels` and `check_conservation` take an
+**Arrow table or dataset**, a **DuckDB relation**, or a **path**: a lake written by
+[`store`](store.md), a folder of Parquet files (the day files and fragments of
+[`collect`](collect.md) included), a file or a glob. The source is not loaded whole.
+
+| `engine=` | What computes | Memory |
+|---|---|---|
+| `"auto"` (default) | a pandas frame stays on pandas; any other source goes to DuckDB if the `duckdb` extra is installed, otherwise to the pandas windows below | see below |
+| `"duckdb"` | one SQL query over the source (windows, aggregates), spilling to a temporary folder | bounded by DuckDB (`GBFS_TOOLKIT_DUCKDB_MEMORY_LIMIT=4GB` caps it) |
+| `"pandas"` | window by window (`chunk=`, one day by default, rounded up to a multiple of `freq` so that no bucket is split), carrying each station's last row across a boundary so the `movement_volume` of a pair that straddles two windows is kept | one window |
+
+The engines **agree**: `n_obs` is conserved by each, counts and integer columns are identical, and
+the other columns differ by floating-point rounding at most. Tests compare them on random data
+(including repeated instants, missing counts and windows that cut a pair of rows). Two rows of the same
+station at the same instant are ordered as the source lists them. The time column of a table, relation or
+path must be a timestamp.
+
+On a synthetic lake of 42 million rows (1000 stations, one poll a minute, 30 days) the numbers are in
+`benchmarks/lake_volume.py`'s output; see the [roadmap](../roadmap.md) for the figures of the last run.
+
 ## Example
 
 ```python
@@ -53,6 +75,13 @@ print(hourly[["bucket_start_utc", "bucket_start_local", "utc_offset_min", "n_obs
 levels = aggregate_levels(snapshots)                  # 15m, 1h, 1d; each one checked
 print({name: int(table["n_obs"].sum()) for name, table in levels.items()})
 check_conservation(levels["15m"], snapshots)          # raises if an observation went missing
+
+# The same table from an Arrow table, by windows of two hours (what runs without DuckDB)
+import pyarrow as pa
+
+table = pa.Table.from_pandas(snapshots, preserve_index=False)
+by_windows = aggregate_availability(table, "1h", tz="Europe/Paris", engine="pandas", chunk="2h")
+pd.testing.assert_frame_equal(hourly, by_windows, check_exact=False)
 ```
 
 ## API

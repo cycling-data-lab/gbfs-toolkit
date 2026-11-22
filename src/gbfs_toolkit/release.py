@@ -22,8 +22,8 @@ is yours to do, and so is the choice of licence. `verify_release` checks a folde
 
 The coverage and incidents come from `gbfs_toolkit.quality`, computed on the released rows,
 so the README states honestly which days are complete and which are not. The Croissant file is a
-minimal description (record set, fields, the Parquet file set); check it with the MLCommons
-validator before relying on it. Needs ``pip install gbfs-toolkit[parquet]``.
+minimal Croissant 1.0 description (record set, fields, the Parquet file set); the test suite
+validates it with the MLCommons ``mlcroissant`` package when that is installed. Needs ``pip install gbfs-toolkit[parquet]``.
 
 Examples
 --------
@@ -90,20 +90,25 @@ _STATUS_LABEL = {
     "outage_collector": "collector outage",
     "outage_operator": "operator feed silent",
 }
-_CROISSANT_CONTEXT: dict[str, Any] = {
+_CROISSANT_CONTEXT: dict[
+    str, Any
+] = {  # the Croissant 1.0 @context, as in the specification's examples
     "@language": "en",
     "@vocab": "https://schema.org/",
     "citeAs": "cr:citeAs",
     "column": "cr:column",
     "conformsTo": "dct:conformsTo",
     "cr": "http://mlcommons.org/croissant/",
+    "rai": "http://mlcommons.org/croissant/RAI/",
     "data": {"@id": "cr:data", "@type": "@json"},
     "dataType": {"@id": "cr:dataType", "@type": "@vocab"},
     "dct": "http://purl.org/dc/terms/",
+    "equivalentProperty": "cr:equivalentProperty",
+    "examples": {"@id": "cr:examples", "@type": "@json"},
     "extract": "cr:extract",
     "field": "cr:field",
-    "fileObject": "cr:fileObject",
     "fileProperty": "cr:fileProperty",
+    "fileObject": "cr:fileObject",
     "fileSet": "cr:fileSet",
     "format": "cr:format",
     "includes": "cr:includes",
@@ -118,6 +123,7 @@ _CROISSANT_CONTEXT: dict[str, Any] = {
     "regex": "cr:regex",
     "repeated": "cr:repeated",
     "replace": "cr:replace",
+    "samplingRate": "cr:samplingRate",
     "sc": "https://schema.org/",
     "separator": "cr:separator",
     "source": "cr:source",
@@ -207,6 +213,8 @@ def freeze_release(
     incidents: Any = None,
     coverage_options: Mapping[str, Any] | None = None,
     croissant: bool = True,
+    version: str = "1.0.0",
+    cite_as: str | None = None,
     allow_open_period: bool = False,
     today: dt.date | None = None,
 ) -> dict[str, Any]:
@@ -242,7 +250,13 @@ def freeze_release(
         Options of `gbfs_toolkit.quality.daily_coverage` (``expected_polls``,
         ``poll_resolution``, ``ok_threshold_pct``).
     croissant : bool, default True
-        Also write ``croissant.json``.
+        Also write ``croissant.json`` (Croissant 1.0).
+    version : str, default "1.0.0"
+        The dataset version written in ``croissant.json``, which asks for ``MAJOR.MINOR.PATCH``
+        (the release ``name`` stays the identifier of the release).
+    cite_as : str, optional
+        How to cite the dataset, written as ``citeAs`` in ``croissant.json`` (Croissant
+        recommends it; leave it out until you have a DOI or a reference).
     allow_open_period : bool, default False
         Allow ``end`` to be today or later. A period still being collected is not a release.
 
@@ -399,7 +413,17 @@ def freeze_release(
     _write_json(out / "datapackage.json", package)
     if croissant:
         _write_json(
-            out / "croissant.json", _croissant(package, table, schema, licenses, created, name)
+            out / "croissant.json",
+            _croissant(
+                package,
+                table,
+                schema,
+                licenses,
+                created,
+                version,
+                cite_as,
+                _sha256(out / "daily_coverage.csv"),
+            ),
         )
     (out / "README.md").write_text(
         _readme(
@@ -455,7 +479,9 @@ def _croissant(
     schema: dict[str, Any],
     licenses: list[dict[str, str]],
     created: str,
-    name: str,
+    version: str,
+    cite_as: str | None,
+    coverage_sha256: str,
 ) -> dict[str, Any]:
     fields = [
         {
@@ -473,7 +499,7 @@ def _croissant(
         "conformsTo": "http://mlcommons.org/croissant/1.0",
         "name": package["name"],
         "description": package["description"],
-        "version": name,
+        "version": version,
         "datePublished": created,
         "distribution": [
             {
@@ -489,12 +515,15 @@ def _croissant(
                 "name": "daily_coverage.csv",
                 "contentUrl": "daily_coverage.csv",
                 "encodingFormat": "text/csv",
+                "sha256": coverage_sha256,
             },
         ],
         "recordSet": [{"@type": "cr:RecordSet", "@id": table, "name": table, "field": fields}],
     }
     if licenses and licenses[0].get("path"):
         doc["license"] = licenses[0]["path"]
+    if cite_as:
+        doc["citeAs"] = cite_as
     return doc
 
 
@@ -531,7 +560,9 @@ def _readme(
         "- `datapackage.json`: Frictionless Data Package with the Table Schema of each file.",
     ]
     if croissant:
-        lines.append("- `croissant.json`: minimal Croissant metadata (unvalidated).")
+        lines.append(
+            "- `croissant.json`: Croissant 1.0 metadata (record set, fields, the Parquet file set)."
+        )
     lines += ["- `SHA256SUMS`: one checksum per file.", "", "## Coverage", ""]
     lines += [
         "| System | Days | Complete | Partial | Collector outage | Feed silent | Mean completeness |",
