@@ -32,10 +32,20 @@ change is recorded rather than recomputed.
 
 Files are written to a temporary name and renamed, so a reader never sees half a file.
 
+`write_lake` takes a pandas frame, or, for volumes that do not fit in memory, an **Arrow table or
+dataset, a DuckDB relation, or a path** (a folder of Parquet files such as the day files of
+[`collect`](collect.md), a file, a glob, another lake). Those are written piece by piece: in `"append"`
+mode one UTC day at a time (a file per day and system), in the other two modes one (system, month) at a
+time, because merging or replacing needs the whole partition. The time column of such a source must be a
+timestamp.
+
 ## Reading
 
 `read_lake(root, systems=..., start=..., end=..., columns=...)` selects systems and the window
-`start <= time < end` (UTC), skipping the folders outside it before opening any file.
+`start <= time < end` (UTC), skipping the folders outside it before opening any file. `output="arrow"`
+returns a `pyarrow.Table` and `output="duckdb"` a lazy DuckDB relation over the selected files (nothing
+loaded). For a lake larger than memory, hand the folder itself to
+[`aggregate`](aggregate.md) and [`quality`](quality.md): they read it in place.
 
 ## DuckDB views
 

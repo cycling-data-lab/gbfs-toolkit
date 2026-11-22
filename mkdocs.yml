@@ -162,6 +162,13 @@ nav:
       - Measure service reliability: examples/08-service-reliability.md
       - Add transit & weather context: examples/09-contextualize.md
       - Compare systems at scale (live): examples/10-macro-scale-audit.md
+  - Tutorial: tutorial.md
+  - Recipes:
+      - Overview: recipes/index.md
+      - Check the quality of a collection: recipes/check-collection-quality.md
+      - Aggregate a month of snapshots: recipes/aggregate-a-month.md
+      - Freeze a version for Zenodo: recipes/freeze-for-zenodo.md
+      - Read published trips: recipes/read-published-trips.md
   - Data lake (experimental):
       - Overview and full example: lake/index.md
       - collect: lake/collect.md
