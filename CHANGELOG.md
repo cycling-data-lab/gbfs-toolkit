@@ -5,13 +5,31 @@ All notable changes are documented here ([Keep a Changelog](https://keepachangel
 
 ## Unreleased (2.1.0)
 
-A minor release. It adds nine **experimental** modules and four CLI commands for collecting, checking,
+A minor release. It adds nine **experimental** modules and five CLI commands for collecting, checking,
 storing and releasing GBFS data (no existing public function, parameter, column or default changes
 because of them), and carries the 2.0.1 repairs: the version reported by the package and the release
-machinery, the bug fixes below (each with a regression test), two opt-in options, and the API policy.
+machinery, the bug fixes below (each with a regression test), opt-in options for the behaviours that were
+open points (each announced by a `FutureWarning` that gives the default of 3.0), and the API policy.
+The data-lake modules read **Arrow tables, DuckDB relations and lake paths** as well as frames, so they
+work on collections larger than memory; the collector writes fragments instead of rewriting the day file;
+`audit_static` returns an `AuditReport` (still a DataFrame).
+
+### Deprecated
+
+Nothing is removed or renamed. Seven defaults **will change in 3.0** (the current value keeps working in
+every 2.x release, the corrected behaviour is available now through an option, and a call whose result
+would differ and which leaves the option unset emits a `FutureWarning` naming it; give the option either
+value to silence it). See *Added: options for the open points* below.
 
 ### Fixed
 
+- **`freeze_release`: a Croissant file the MLCommons validator accepts.** The first version of
+  `croissant.json` (never published) lacked the `sha256` of its file object, a `MAJOR.MINOR.PATCH` version
+  and the full Croissant 1.0 `@context`; it has them now, plus `citeAs` through `cite_as=`.
+- **`aggregate_availability`** returned `NaN` for `pct_full` and `pct_renting` when the frame's index was not
+  `0..n-1` (a filtered or reordered frame); it reads those columns by position now.
+- **`boundary_stress`** raised `TypeError` on a nullable integer column with missing values; the row is
+  skipped, as in the other rates.
 - **`gbfs_toolkit.__version__` now matches the installed version.** The 2.0.0 wheel on
   PyPI reported `"1.8.0"` (the version was written in two files and a release edit
   changed only one). The module now reads the distribution metadata, so `__version__`,
@@ -66,6 +84,85 @@ machinery, the bug fixes below (each with a regression test), two opt-in options
 - **`generate_gbfs_parquet`** (experimental) wrote the station table over the status file when the
   path did not end in `.parquet`, and crashed on a directory named `x.parquet`.
 
+### Added: options for the open points
+
+Each option keeps the historical default. The warning is raised only for an input on which the two
+behaviours give different results, never when the option is given, and it says "the default changes in
+gbfs-toolkit 3.0".
+
+- `availability_stats`, `service_reliability_index`, `station_outage_rates`, `boundary_stress`:
+  **`valid_only`**. `False` (today): a missing count is "not empty" / "not available" and stays in the
+  denominator in a float column, and the row is skipped in a nullable integer column. `True`: every
+  rate is over the rows that have the relevant count, whatever the type (`n_obs` still counts all rows).
+- `station_state(unknown=)`: `True` classes a station with no count at all (both counts missing,
+  neither disabled nor virtual) as `"unknown"`, a sixth category (`STATION_STATES_WITH_UNKNOWN`;
+  `STATION_STATES` itself is unchanged). `system_profile` keeps its historical shares and does not warn.
+- `coverage_stats(zones=..., dissolve_zones=)`: `True` uses the area of the union of the zones (nested or
+  overlapping zones count once) instead of the sum.
+- `resample_panel(keep_timezone=)`: `True` keeps a tz-aware panel in its zone, so the grid, a `"1D"` bin
+  included, follows the local wall clock; the returned time column keeps the zone.
+- `join_exogenous_timeseries(keep_order=)`: `True` returns the rows in the input's order and with its
+  index instead of sorted by time with a new index.
+- `SimConfig.rebalancing_once` (experimental): `True` makes the nightly truck act once a day, at the
+  first step of `rebalancing_hour`, instead of at every step of the hour.
+- `SimConfig.scraper_blanks_docks` (experimental): `True` blanks the dock count with the bike count of a
+  blanked cell, instead of leaving it at the capacity. `calibrate_city` sets both to their 2.x values.
+
+Not touched, as agreed: the A4 projection of `audit_static` and the nights counted by
+`detect_frozen_stations` stay open points with their options (`a4_projection`, `exclude_gaps`) and give
+no warning.
+
+### Added: large volumes (experimental modules)
+
+- `aggregate_availability`, `aggregate_levels`, `check_conservation`; `daily_coverage`,
+  `find_collector_gaps`, `field_unsupported_by_operator`, `detect_incidents`, `assess`; `write_lake`: a
+  pandas frame **or** an Arrow table or dataset, a DuckDB relation, or a path (a lake, a folder of Parquet
+  files, a file, a glob). `engine="auto"|"duckdb"|"pandas"`: DuckDB when installed, otherwise window by
+  window in pandas (`chunk=`). The engines agree (`n_obs` conserved, integers identical, floats to
+  rounding); tests check it, including windows that cut a pair of rows. A frame stays on pandas under
+  `"auto"`, unchanged. `GBFS_TOOLKIT_DUCKDB_MEMORY_LIMIT` and `GBFS_TOOLKIT_DUCKDB_THREADS` cap DuckDB.
+- `write_lake` from a table or path writes a day at a time in `"append"` mode and a (system, month) at a
+  time in the others; `mode="merge"` now always drops exact duplicates, as documented.
+  `read_lake(output="arrow"|"duckdb")` returns an Arrow table or a lazy relation.
+- `collect`: a poll writes a **fragment** (`<system>/_fragments/<day>/...`) instead of rewriting the day
+  file. `compact_collected` (also `Collector.compact`, `gbfs compact`, `gbfs collect --compact`) gathers
+  the fragments of closed days into one file per system and day, atomically and idempotently;
+  `read_collected` and path sources read both. `Collector(write="day")` restores the previous behaviour.
+- `benchmarks/lake_volume.py` and its results: on 42 million synthetic rows, the three aggregation levels
+  take 72 s with DuckDB and 190 s window by window in pandas (2 GB), the coverage report 2 s and 13 s;
+  a frame of 2 days (2.9 million rows) already needs 6 GB.
+
+### Added: typed results
+
+- `audit_static` returns an `AuditReport`, a `pandas.DataFrame` subclass (nothing changes for existing
+  code) with `AUDIT_REPORT_COLUMNS`, `AUDIT_REPORT_DTYPES`, `flag_counts`, `n_flagged`, `rule_flags`,
+  `flagged_stations()`, `by_system()` and `to_frame()`. Derived frames are plain DataFrames. One
+  difference: `pd.testing.assert_frame_equal(plain_frame, report)` (plain frame first) fails the frame-type
+  check; compare `report.to_frame()` or put the report first.
+- `QualityReport` reads like its two frames: `report["coverage"]`, `keys()`, `to_frames()`, `to_frame()`.
+- Declared columns and logical dtypes, checked by tests: `AGGREGATE_DTYPES`, `COVERAGE_DTYPES`,
+  `INCIDENT_DTYPES`, `MATCH_DTYPES`, `TRIP_DTYPES`.
+
+### Added: trips
+
+- `trips`: a `velomagg` reader for the open-data trip file of the Vélomagg bike share (Montpellier
+  Méditerranée Métropole, ODbL): local times with clock-change flags, station number and name split,
+  double-encoded text repaired, `distance_m`, and `is_operator_staff` (a nullable boolean carried from the
+  publisher's `Manager` column, never used for anything else). **The account column and the bike number
+  are never read**, with no option to keep them; a test checks that no account value reaches the output.
+  `TRIP_COLUMNS` gains `distance_m` and `is_operator_staff` (empty for the other formats); `TripFormat`
+  gains `split_station` and `repair_text`. CSV files are read as `utf-8-sig`.
+
+### Added: documentation and tests
+
+- A tutorial and four recipes (check a collection, aggregate a month, freeze a version for Zenodo, read
+  published trips), executed by the test suite; large-volume sections in the module pages.
+- Versioned documentation with `mike` is configured (`extra.version`, a strict build before every deploy,
+  a `dry_run` input of the docs workflow); nothing is deployed by this change.
+- `tests/test_properties_compute.py`: property-based tests of aggregates (row order, windows, engines),
+  coverage, fingerprints, station matching, the lake round trip and the frozen release.
+- A test validates `croissant.json` with `mlcroissant` when it is installed (a CI job installs it).
+
 ### Added: data-lake modules (experimental)
 
 New in 2.1.0, imported by path (`from gbfs_toolkit import quality`), **experimental**: names,
@@ -75,8 +172,8 @@ DuckDB views (new extra `duckdb`) and the terminal output (`cli`) stay optional.
 
 - `gbfs_toolkit.collect`: `Collector` polls station and vehicle feeds politely (required
   `user_agent`, feed `ttl` and exponential back-off respected, conditional requests), keeps a value a
-  feed omits **empty and typed** (`Int64`, `boolean`; never `0` or `True`), writes one Parquet file per
-  system and UTC day atomically, and runs only when called (`poll_once`, a bounded `run`).
+  feed omits **empty and typed** (`Int64`, `boolean`; never `0` or `True`), writes atomically (a fragment
+  per poll, gathered into one Parquet file per system and UTC day by `compact_collected`), and runs only when called (`poll_once`, a bounded `run`).
   `poll_metadata` keeps dated metadata versions. `parse_station_status`, `parse_vehicle_status`,
   `read_collected`.
 - `gbfs_toolkit.quality`: daily coverage per system and UTC day with the statuses `ok`, `partial`,
@@ -96,14 +193,14 @@ DuckDB views (new extra `duckdb`) and the terminal output (`cli`) stay optional.
 - `gbfs_toolkit.stations.match`: `match_stations` pairs stations one to one by identifier, normalised
   name and distance, labelling each rule; `id_continuity`.
 - `gbfs_toolkit.trips`: `read_trips`, `iter_trips`, `normalize_trips` for the Lyft/Motivate, Urban
-  Sharing and Bicycle Transit Systems trip files, or a `TripFormat` you describe, into one schema with UTC
+  Sharing, Bicycle Transit Systems and Vélomagg trip files, or a `TripFormat` you describe, into one schema with UTC
   times, explicit time zones, clock-change flags and no personal fields. No reader for other formats.
 - `gbfs_toolkit.release`: `freeze_release` writes a closed period as data, daily coverage, incidents, a
   data manifest, `datapackage.json` (Frictionless), a minimal `croissant.json`, a README and `SHA256SUMS`;
   `verify_release`. It uploads nothing and has no default licence.
 - `gbfs_toolkit.repro`: `fingerprint` (order- and tool-independent content hash, cross-checked against
   DuckDB), data manifests, `verify_manifest`, `materialize`, `export_sample` for CI.
-- CLI: `gbfs collect`, `gbfs quality`, `gbfs release`, `gbfs verify`.
+- CLI: `gbfs collect`, `gbfs compact`, `gbfs quality`, `gbfs release`, `gbfs verify`.
 - `ROADMAP.md`; documentation pages for every module and the commands.
 
 ### Added: options and policy
@@ -126,8 +223,7 @@ DuckDB views (new extra `duckdb`) and the terminal output (`cli`) stay optional.
 
 ### Open points
 
-Known behaviours that are kept in 2.0.x because published or in-use results depend on them. They
-are documented in the docstrings and in `METHODOLOGY.md`, and will be revisited in a later release (see `ROADMAP.md`).
+Known behaviours that are kept in 2.x because published or in-use results depend on them.
 
 - **A4 projection.** `audit_static` projects every station around the mean latitude of the whole
   input, so a station's A4 verdict can depend on which other systems are in the frame (several
@@ -137,20 +233,11 @@ are documented in the docstrings and in `METHODOLOGY.md`, and will be revisited 
   first to its last observation, so a run that continues across the hours excluded by
   `active_hours` (or a collection outage) includes that time and flags more stations. Use
   `exclude_gaps=True` to count only observed time.
-- **Missing counts.** `service_reliability_index`, `station_outage_rates`, `boundary_stress` and
-  `availability_stats` give different rates for a float column with `NaN` (a missing count
-  counts as "not empty", denominator includes it) and for a nullable `Int64` column with `NA`
-  (the row is skipped). Rates over valid rows only would be consistent.
-- **`station_state`** classes a row with no count at all (the `info_only` rows of
-  `join_availability`) as `empty`.
-- **`coverage_stats(zones=...)`** sums the areas of the zones: nested or overlapping zones are
-  counted once each. A correct area needs a decision on which zones define the service area.
-- **`resample_panel`** converts a local-time panel to UTC, so `"1D"` bins start at UTC midnight.
-- **`join_exogenous_timeseries`** returns the rows sorted by time with a new index.
-- **Simulator** (experimental): the "nightly" rebalancing acts at every step whose rounded hour is
-  `rebalancing_hour` (five steps at 15 minutes, with compounding strength); cells blanked by
-  `scraper_cell_nan` keep a dock count at the capacity. Correcting either changes every simulated
-  series, so it waits for a release that says so.
+
+The seven other open points of 2.0.1 (missing counts in the rates, `station_state`, nested zones in
+`coverage_stats`, local-time bins in `resample_panel`, the row order of `join_exogenous_timeseries`, and
+the two behaviours of the flow simulator) have an option and a deprecation warning: see *Deprecated*
+above.
 
 ### Documentation, tests, build
 

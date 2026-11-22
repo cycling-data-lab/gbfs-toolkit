@@ -6,6 +6,8 @@
     [API policy](../api-policy.md)). Import each one by its path: `from gbfs_toolkit import quality`.
     Pin `gbfs-toolkit>=2.1,<2.2` if you build on them.
 
+For a first walk through the whole chain, see the [tutorial](../tutorial.md); for one task at a time, the [recipes](../recipes/index.md). `aggregate`, `quality` and `store` accept a frame, an Arrow table, a DuckDB relation or a path, and read a folder in place.
+
 The audit modules answer *is this feed trustworthy?* These ones answer *what did we collect, how
 complete is it, and how do we hand it to someone who must be able to trust it?* They fit together
 as a pipeline, and each step also works alone:
@@ -26,16 +28,16 @@ flowchart LR
 
 | Module | What it does | Page |
 |---|---|---|
-| `gbfs_toolkit.collect` | polls feeds politely (User-Agent, `ttl`, back-off), writes one Parquet file per system and day, keeps missing values missing | [collect](collect.md) |
+| `gbfs_toolkit.collect` | polls feeds politely (User-Agent, `ttl`, back-off), writes a fragment per poll and gathers closed days into one file per system and day, keeps missing values missing | [collect](collect.md) |
 | `gbfs_toolkit.store` | a Hive-partitioned Parquet lake (system, year, month), common column names, UTC and local time, DuckDB views | [store](store.md) |
 | `gbfs_toolkit.quality` | daily coverage and status per system, collection gaps, silent feeds, incident registry, ambiguity indicators | [quality](quality.md) |
 | `gbfs_toolkit.aggregate` | availability by 15 minutes, hour or day, with fixed definitions and a conservation check | [aggregate](aggregate.md) |
 | `gbfs_toolkit.history` | a dated version of a metadata feed, kept only when its content changes | [history](history.md) |
 | `gbfs_toolkit.stations.match` | which station of this period is which of the last one | [stations.match](stations-match.md) |
-| `gbfs_toolkit.trips` | published trip files (Lyft/Motivate, Urban Sharing, Bicycle Transit Systems) into one schema | [trips](trips.md) |
+| `gbfs_toolkit.trips` | published trip files (Lyft/Motivate, Urban Sharing, Bicycle Transit Systems, Vélomagg) into one schema | [trips](trips.md) |
 | `gbfs_toolkit.release` | freeze a closed period into a folder with coverage, incidents, data package, README and checksums | [release](release.md) |
 | `gbfs_toolkit.repro` | a content fingerprint and a manifest, verification, samples for CI | [repro](repro.md) |
-| `gbfs collect / quality / release / verify` | the same, from the command line | [command line](cli.md) |
+| `gbfs collect / compact / quality / release / verify` | the same, from the command line | [command line](cli.md) |
 
 Nothing here runs in the background, uploads anything, or needs more than the extras you
 choose: `pip install "gbfs-toolkit[parquet]"` is enough for the files, `[fetch]` adds the

@@ -55,6 +55,8 @@ jobs:
           tests/test_repro.py
           tests/test_history.py
           tests/test_lake_stability.py
+          tests/test_open_points.py
+          tests/test_typed_results.py
 
   test:
     name: Test (${{ matrix.os }}, py${{ matrix.python-version }})
@@ -129,6 +131,22 @@ jobs:
           tests/test_fix_options.py tests/test_lake_quality.py tests/test_aggregate.py
           tests/test_stations_match.py tests/test_trips.py tests/test_repro.py
           tests/test_history.py tests/test_lake_stability.py
+          tests/test_open_points.py tests/test_typed_results.py
+
+  croissant:
+    name: Croissant file validated by mlcroissant
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.12"
+      # The validator is not a dependency of the library or of the dev extra: a test that needs it
+      # skips itself everywhere else, and runs here.
+      - run: pip install -e ".[parquet]" pytest mlcroissant
+      - run: pytest -q tests/test_release.py
 
   nightly-deps:
     name: Nightly numpy/pandas/scipy (informational)

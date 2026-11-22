@@ -20,38 +20,42 @@ used on more systems. They are documented under *Data lake* in the manual.
 
 | Module | What it adds |
 |---|---|
-| `collect` | a polite collector: required User-Agent, feed `ttl` and back-off respected, missing values kept missing and typed, one Parquet file per system and day |
+| `collect` | a polite collector: required User-Agent, feed `ttl` and back-off respected, missing values kept missing and typed, fragments gathered into one Parquet file per system and day |
 | `quality` | daily coverage per system (`ok`, `partial`, `outage_collector`, `outage_operator`), collection gaps, silent feeds, an incident registry, and three ambiguity indicators that flag and never delete |
 | `aggregate` | availability by 15 minutes, hour and day with fixed definitions, and the property that the sum of `n_obs` is the number of input rows at every level |
 | `store` | a Hive-partitioned Parquet lake (system, year, month), common column names, UTC and local time, optional DuckDB views |
 | `history` | a dated version of a metadata feed, kept only when its content changes |
 | `stations.match` | continuity of station identifiers from one period to the next |
-| `trips` | readers for published trip files (Lyft/Motivate, Urban Sharing, Bicycle Transit Systems) into one schema, with explicit time zones |
+| `trips` | readers for published trip files (Lyft/Motivate, Urban Sharing, Bicycle Transit Systems, Vélomagg) into one schema, with explicit time zones |
 | `release` | a frozen folder for a closed period: data, coverage, incidents, Frictionless data package, Croissant metadata, README, checksums |
 | `repro` | a content fingerprint and a data manifest, verification, samples for continuous integration |
-| CLI | `gbfs collect`, `gbfs quality`, `gbfs release`, `gbfs verify` |
+| CLI | `gbfs collect`, `gbfs compact`, `gbfs quality`, `gbfs release`, `gbfs verify` |
 
-## Next: 2.2 (volume, correctness, documentation)
+## Done in 2.1: volume, correctness, documentation
 
-- **Large volumes.** DuckDB and Arrow backends so that `aggregate`, `quality` and `store` work on lakes
-  larger than memory, a compaction step from collected day files into the lake, and benchmarks that show
-  where the pandas path stops being enough. DuckDB and `pyarrow` remain optional extras; the default
-  install stays small.
-- **Open points of 2.0.1.** Seven behaviours were documented rather than changed, because changing them
-  would move published numbers. They are listed under *Open points* in the changelog and will be decided
-  one by one, each with an opt-in switch first and a change of default only in a major version:
-  how a missing count enters the rates of `availability_stats`, `service_reliability_index` and
-  `boundary_stress`; a station with no count at all in `station_state`; nested zones in
-  `coverage_stats`; local-time bins in `resample_panel`; the row order of `join_exogenous_timeseries`;
-  and two documented behaviours of the experimental flow simulator.
-- **Typed results.** Results that are tables of known columns (coverage, incidents, matches, trips,
-  aggregates) get explicit schemas and, where useful, typed containers, so a downstream project can rely on
-  columns and dtypes with a static checker.
-- **More property-based tests** of the invariants that matter to a user: conservation of observations,
-  independence from row order and from the chunking of a read, round trips of the lake and of the
-  incident registry, idempotence of a release.
-- **Documentation.** A tutorial from a first feed to a frozen release, a how-to on running a collection
-  for months (disk, restarts, what to monitor), and a page on reading Croissant and Frictionless files.
+- **Large volumes.** `aggregate`, `quality` and `store` read an Arrow table, a DuckDB relation or a lake
+  path as well as a frame, computed by DuckDB when the extra is installed and window by window in pandas
+  otherwise, with identical results; the collector writes fragments and `compact_collected` gathers each
+  closed day atomically. A benchmark on 42 million rows is in `benchmarks/`.
+- **Open points of 2.0.1.** Seven behaviours now have an opt-in correction and a `FutureWarning` that
+  announces the default of 3.0 (the changelog's *Deprecated* section lists them). Two stay open on purpose:
+  the A4 projection of `audit_static` and the nights counted by `detect_frozen_stations`.
+- **Typed results.** `audit_static` returns an `AuditReport` (a DataFrame subclass), `QualityReport` reads
+  like its two frames, and the lake modules declare columns and logical dtypes that tests check.
+- **Property-based tests** of aggregates, coverage, fingerprints, station matching, the lake round trip
+  and a frozen release.
+- **Trips.** A reader for the Vélomagg file (Montpellier, ODbL), without the account column.
+- **Documentation.** A tutorial, four recipes, versioned docs configured with `mike`, and a Croissant file
+  validated with the MLCommons `mlcroissant` package.
+
+## Next: 2.2
+
+- **Decide the defaults of 3.0.** Collect feedback on the seven announced changes; the major release
+  switches them together, with the A4 projection and the frozen-night rule decided separately.
+- **Promote modules to stable** as they meet the criteria below (the engines, the lake layout and the
+  fragment layout are the candidates).
+- **More trip formats**, each with a sample file and a verified description.
+- **Station history by intervals**, a generic version of the validity intervals of a station's id.
 
 ## Later
 

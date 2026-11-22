@@ -146,7 +146,7 @@ def simulate_city_flows(cfg: SimConfig | None = None, *, return_extras: bool = F
 
     Examples
     --------
-    >>> info, status = simulate_city_flows(SimConfig(n_stations=5, days=1))
+    >>> info, status = simulate_city_flows(SimConfig(n_stations=5, days=1, rebalancing_once=True))
     >>> len(info), len(status)
     (5, 120)
     >>> bool((status["num_bikes_available"] <= info["capacity"].max()).all())

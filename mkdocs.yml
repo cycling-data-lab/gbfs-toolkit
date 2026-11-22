@@ -53,7 +53,9 @@ theme:
 
 extra:
   version:
-    provider: mike
+    provider: mike      # the version selector reads versions.json, written by `mike deploy`
+    default: latest     # the selector opens on the alias that follows the newest release
+    alias: true         # show "2.1 (latest)", not just "2.1"
   social:
     - icon: fontawesome/brands/github
       link: https://github.com/cycling-data-lab/gbfs-toolkit
