@@ -23,9 +23,10 @@ supported entry points. Anything else is internal and may change in any release:
 |---|---|---|
 | **Stable** | every public name not listed below | Within a major version: same name, same parameters (an added keyword-only parameter with a default is allowed), same documented behaviour, same results on the same inputs. A change of result is announced in the changelog; a change of a documented contract waits for the next major version. |
 | **Experimental** | the flow simulator and its compiler: `SimConfig`, `simulate_city_flows`, `generate_gbfs_parquet`, `export_ml_dataset`, `calibrate_city`, `compute_footprint` | May change, or go, in a minor release. Their docstrings carry an "Experimental" note. Simulated numbers have no external reference yet. |
+| **Experimental modules** | the data-lake modules added in 2.1.0: `collect`, `history`, `quality`, `aggregate`, `store`, `stations.match`, `trips`, `release`, `repro`, and the `gbfs collect`, `quality`, `release` and `verify` commands | Public, tested and documented, but names, parameters and output columns may change in a minor release while they are used on more systems. Import them by path (`from gbfs_toolkit import quality`): they are not re-exported at the top level. Their module docstrings carry an "Experimental" note. See the [roadmap](roadmap.md) for how a module becomes stable. |
 
-The experimental names are listed once, in `gbfs_toolkit/_stability.py`; a test checks
-that each one carries the note in its docstring.
+The experimental names are listed once, in `gbfs_toolkit/_stability.py` (`EXPERIMENTAL` for names,
+`EXPERIMENTAL_MODULES` for modules); a test checks that each one carries the note in its docstring.
 
 A bug fix is not a breaking change, even when it changes a result: if a function's
 docstring promises something and the code did otherwise, the code is corrected. The
