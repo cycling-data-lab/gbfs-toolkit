@@ -60,6 +60,14 @@ import numpy as np
 import pandas as pd
 
 from gbfs_toolkit.core._common import fixed_timedelta, need_columns, to_utc
+from gbfs_toolkit.core._tabular import (
+    Table,
+    is_pandas,
+    open_table,
+    relation_of,
+    resolve_engine,
+    sql_name,
+)
 from gbfs_toolkit.core.errors import GBFSValidationError
 
 __all__ = [
@@ -381,12 +389,177 @@ def _overlaps(intervals: list[_Interval], start: pd.Timestamp, end: pd.Timestamp
 # --------------------------------------------------------------------------------------
 
 
+_DAY_US = 86_400 * 1_000_000
+_MINUTE_US = 60 * 1_000_000
+_EPOCH = pd.Timestamp(0, tz="UTC")
+
+
+def _micros(times: pd.Series) -> np.ndarray:
+    """Microseconds since the epoch of a tz-aware UTC series, whatever its resolution."""
+    return np.asarray((times - _EPOCH) // pd.Timedelta(microseconds=1), dtype="int64")
+
+
+def _source(snapshots: Any, time_col: str, columns: list[str], what: str) -> Table:
+    """Open ``snapshots`` (a frame, an Arrow table, a relation or a path) and check columns."""
+    table = open_table(snapshots, what=what)
+    need_columns(pd.DataFrame(columns=table.columns()), [*columns, time_col], what=what)
+    if table.kind != "pandas":
+        table.check_time(time_col)
+    return table
+
+
+def _frames(table: Table, time_col: str, columns: list[str]) -> Any:
+    """The rows as pandas frames: the whole frame for pandas, batches for anything else."""
+    cols = [c for c in dict.fromkeys([*columns, time_col]) if c in table.columns()]
+    return table.batches(cols, rows=1_000_000 if table.kind != "pandas" else 1 << 62)
+
+
+def _distinct_minutes(
+    table: Table,
+    engine: str,
+    time_col: str,
+    lo_us: int | None = None,
+    hi_us: int | None = None,
+) -> pd.Series:
+    """Sorted distinct UTC minutes (the start of each) in which a row exists, in ``[lo, hi)``."""
+    if engine == "duckdb":
+        c = f"epoch_us({sql_name(time_col)})"
+        bounds = [f"{c} >= {lo_us}" if lo_us is not None else "true"]
+        bounds.append(f"{c} < {hi_us}" if hi_us is not None else "true")
+        sql = (
+            f"SELECT DISTINCT ({c} // {_MINUTE_US}) AS m FROM src "
+            f"WHERE {c} IS NOT NULL AND {' AND '.join(bounds)} ORDER BY m"
+        )
+        with relation_of(table) as rel:
+            m = rel.query("src", sql).df()["m"].to_numpy(dtype="int64")
+    else:
+        seen: list[np.ndarray] = []
+        for frame in _frames(table, time_col, []):
+            us = _micros(to_utc(frame[time_col], what=time_col).dropna())
+            if lo_us is not None:
+                us = us[us >= lo_us]
+            if hi_us is not None:
+                us = us[us < hi_us]
+            seen.append(np.unique(us // _MINUTE_US))
+        m = np.unique(np.concatenate(seen)) if seen else np.empty(0, dtype="int64")
+    return pd.Series(pd.to_datetime(m * _MINUTE_US, unit="us", utc=True)).reset_index(drop=True)
+
+
+def _gaps_from_minutes(
+    minutes: pd.Series, gap: pd.Timedelta, declared: list[_Interval]
+) -> pd.DataFrame:
+    rows = []
+    for prev, nxt in zip(minutes[:-1], minutes[1:], strict=True):
+        if nxt - prev <= gap:
+            continue
+        for u, v in _subtract(prev + _MINUTE, nxt, declared):
+            if v - u >= gap:
+                rows.append({"start_utc": u, "end_utc": v, "duration": v - u})
+    out = pd.DataFrame(rows, columns=["start_utc", "end_utc", "duration"])
+    if not rows:
+        out["start_utc"] = out["start_utc"].astype("datetime64[ns, UTC]")
+        out["end_utc"] = out["end_utc"].astype("datetime64[ns, UTC]")
+        out["duration"] = out["duration"].astype("timedelta64[ns]")
+    return out
+
+
+def _poll_counts(
+    table: Table,
+    engine: str,
+    time_col: str,
+    step: pd.Timedelta,
+    lo_us: int | None,
+    hi_us: int | None,
+) -> tuple[pd.DataFrame, bool]:
+    """Per (system, UTC day): polls obtained, median rows per poll, rows and rows at zero.
+
+    A poll is a ``step`` slot with a row. Returns the frame indexed by ``(system_id, day)``
+    (``day`` is a ``datetime.date``) and whether the source has both count columns.
+    """
+    cols = set(table.columns())
+    has_counts = all(c in cols for c in _COUNT_COLS)
+    step_us = int(step.value // 1000)
+    if engine == "duckdb":
+        c = f"epoch_us({sql_name(time_col)})"
+        zero = (
+            f"coalesce(TRY_CAST({sql_name(_COUNT_COLS[0])} AS DOUBLE) = 0 AND TRY_CAST({sql_name(_COUNT_COLS[1])} AS DOUBLE) = 0, false)"
+            if has_counts
+            else "false"
+        )
+        bounds = [f"{c} >= {lo_us}" if lo_us is not None else "true"]
+        bounds.append(f"{c} < {hi_us}" if hi_us is not None else "true")
+        sql = f"""
+        WITH s AS (
+            SELECT CAST({sql_name("system_id")} AS VARCHAR) AS sid, {c} AS us,
+                   CAST({zero} AS INTEGER) AS z
+            FROM src WHERE {c} IS NOT NULL AND {" AND ".join(bounds)}
+        ), per_poll AS (
+            SELECT sid, us // {_DAY_US} AS day, us // {step_us} AS slot,
+                   count(*) AS n, sum(z) AS zs
+            FROM s GROUP BY sid, day, slot
+        )
+        SELECT sid AS system_id, day, count(*) AS n_polls, median(n) AS median_rows,
+               sum(n) AS "rows", sum(zs) AS zeros
+        FROM per_poll GROUP BY sid, day
+        """
+        with relation_of(table) as rel:
+            counts = rel.query("src", sql).df()
+    else:
+        parts = []
+        for frame in _frames(table, time_col, ["system_id", *_COUNT_COLS]):
+            times = to_utc(frame[time_col], what=time_col)
+            keep = times.notna().to_numpy()
+            us = _micros(times[keep])
+            inside = np.ones(len(us), bool)
+            if lo_us is not None:
+                inside &= us >= lo_us
+            if hi_us is not None:
+                inside &= us < hi_us
+            sub = frame.loc[keep].iloc[np.flatnonzero(inside)]
+            us = us[inside]
+            flag = _both_zero(sub)
+            work = pd.DataFrame(
+                {
+                    "system_id": sub["system_id"].astype(str).to_numpy(),
+                    "day": us // _DAY_US,
+                    "slot": us // step_us,
+                    "zero": flag.to_numpy() if flag is not None else False,
+                }
+            )
+            parts.append(
+                work.groupby(["system_id", "day", "slot"], sort=False).agg(
+                    n=("slot", "size"), zs=("zero", "sum")
+                )
+            )
+        if parts:
+            per_poll = pd.concat(parts).groupby(level=["system_id", "day", "slot"]).sum()
+            counts = (
+                per_poll.groupby(level=["system_id", "day"])
+                .agg(
+                    n_polls=("n", "size"),
+                    median_rows=("n", "median"),
+                    rows=("n", "sum"),
+                    zeros=("zs", "sum"),
+                )
+                .reset_index()
+            )
+        else:
+            counts = pd.DataFrame(
+                columns=["system_id", "day", "n_polls", "median_rows", "rows", "zeros"]
+            )
+    counts["day"] = [
+        dt.date(1970, 1, 1) + dt.timedelta(days=int(d)) for d in counts["day"].to_numpy()
+    ]
+    return counts.set_index(["system_id", "day"]), has_counts
+
+
 def find_collector_gaps(
-    snapshots: pd.DataFrame,
+    snapshots: Any,
     *,
     min_gap: str | pd.Timedelta = DEFAULT_MIN_GAP,
     known: pd.DataFrame | None = None,
     time_col: str = "fetched_at",
+    engine: str = "auto",
 ) -> pd.DataFrame:
     """Stretches in which **no system at all** was polled for ``min_gap`` or more.
 
@@ -394,6 +567,9 @@ def find_collector_gaps(
     Polls are compared at one-minute resolution. ``known`` is a registry: the time it already
     explains with ``outage_collector`` incidents is subtracted, and only the stretches that
     remain and last at least ``min_gap`` are reported.
+
+    ``snapshots`` is a frame, an Arrow table, a DuckDB relation or a path (see
+    `daily_coverage` for ``engine``).
 
     Returns
     -------
@@ -408,24 +584,12 @@ def find_collector_gaps(
     >>> str(gaps.loc[0, "duration"])
     '0 days 04:58:00'
     """
-    need_columns(snapshots, [time_col], what="find_collector_gaps")
+    table = _source(snapshots, time_col, [], "find_collector_gaps")
     gap = fixed_timedelta(min_gap, what="min_gap")
-    minutes = to_utc(snapshots[time_col], what=time_col).dt.floor("min").drop_duplicates()
-    minutes = minutes.sort_values().reset_index(drop=True)
+    use = resolve_engine(engine, table, what="find_collector_gaps")
+    minutes = _distinct_minutes(table, use, time_col)
     declared = _intervals(incident_registry(known), "outage_collector")
-    rows = []
-    for prev, nxt in zip(minutes[:-1], minutes[1:], strict=True):
-        if nxt - prev <= gap:
-            continue
-        for u, v in _subtract(prev + _MINUTE, nxt, declared):
-            if v - u >= gap:
-                rows.append({"start_utc": u, "end_utc": v, "duration": v - u})
-    out = pd.DataFrame(rows, columns=["start_utc", "end_utc", "duration"])
-    if not rows:
-        out["start_utc"] = out["start_utc"].astype("datetime64[ns, UTC]")
-        out["end_utc"] = out["end_utc"].astype("datetime64[ns, UTC]")
-        out["duration"] = out["duration"].astype("timedelta64[ns]")
-    return out
+    return _gaps_from_minutes(minutes, gap, declared)
 
 
 def _both_zero(df: pd.DataFrame) -> pd.Series | None:
@@ -446,7 +610,7 @@ def _empty_coverage() -> pd.DataFrame:
 
 
 def daily_coverage(
-    snapshots: pd.DataFrame,
+    snapshots: Any,
     *,
     expected_polls: int | None = None,
     ok_threshold_pct: float = DEFAULT_OK_THRESHOLD_PCT,
@@ -456,6 +620,7 @@ def daily_coverage(
     start: str | pd.Timestamp | None = None,
     end: str | pd.Timestamp | None = None,
     time_col: str = "fetched_at",
+    engine: str = "auto",
 ) -> pd.DataFrame:
     """Per system and UTC day: polls expected and obtained, completeness and a status.
 
@@ -473,10 +638,16 @@ def daily_coverage(
 
     Parameters
     ----------
-    snapshots : pandas.DataFrame
+    snapshots : pandas.DataFrame, pyarrow.Table, duckdb relation, str or Path
         One row per station (or vehicle) per poll, with ``system_id`` and ``time_col``
         (tz-aware UTC; naive is read as UTC). ``num_bikes_available`` and
-        ``num_docks_available`` add ``both_zero_pct``.
+        ``num_docks_available`` add ``both_zero_pct``. A table, a relation or a path (a lake
+        written by `gbfs_toolkit.store`, a folder of Parquet files, a file or a glob) is
+        summarised without loading it whole; its time column must be a timestamp.
+    engine : {"auto", "duckdb", "pandas"}, default "auto"
+        Who computes. A pandas frame stays on pandas under ``"auto"``; any other source goes
+        to DuckDB when the ``duckdb`` extra is installed, and is otherwise read in batches by
+        pandas (memory: the polls, not the rows). The engines give the same table.
     ok_threshold_pct : float, default 95.0
         Completeness from which a day is ``ok``.
 
@@ -497,47 +668,36 @@ def daily_coverage(
     >>> dict(zip(cov["system_id"], cov["status"]))
     {'a': 'ok', 'b': 'partial'}
     """
-    need_columns(snapshots, ["system_id", time_col], what="daily_coverage")
+    table = _source(snapshots, time_col, ["system_id"], "daily_coverage")
     step = fixed_timedelta(poll_resolution, what="poll_resolution")
     expected = int(_DAY / step) if expected_polls is None else int(expected_polls)
     if expected <= 0:
         raise ValueError("expected_polls must be positive")
     if not 0 < ok_threshold_pct <= 100:
         raise ValueError("ok_threshold_pct must be in (0, 100]")
+    use = resolve_engine(engine, table, what="daily_coverage")
 
     reg = incident_registry(known_incidents)
-    times = to_utc(snapshots[time_col], what=time_col)
-    keep = times.notna().to_numpy()
-    df = snapshots.loc[keep].copy()
-    df[time_col] = times[keep].to_numpy()
     first_day = _as_day(start)
-    if first_day is not None:
-        df = df[df[time_col] >= pd.Timestamp(first_day, tz="UTC")]
-    last_day = _as_day(end) or (df[time_col].max().date() if len(df) else None)
-    if last_day is None:
+    lo = None if first_day is None else pd.Timestamp(first_day, tz="UTC")
+    span = table.time_range(time_col)
+    if span is None or (lo is not None and span[1] < lo):
         return _empty_coverage()
-    df = df[df[time_col] < pd.Timestamp(last_day, tz="UTC") + _DAY]
-    if df.empty:
-        return _empty_coverage()
+    last_day = _as_day(end) or span[1].date()
+    hi = pd.Timestamp(last_day, tz="UTC") + _DAY
+    lo_us = None if lo is None else int((lo - _EPOCH) // pd.Timedelta(microseconds=1))
+    hi_us = int((hi - _EPOCH) // pd.Timedelta(microseconds=1))
 
-    gaps = find_collector_gaps(df, min_gap=min_collector_gap, known=reg, time_col=time_col)
+    observed, has_counts = _poll_counts(table, use, time_col, step, lo_us, hi_us)
+    if observed.empty:
+        return _empty_coverage()
+    minutes = _distinct_minutes(table, use, time_col, lo_us, hi_us)
+    gaps = _gaps_from_minutes(
+        minutes,
+        fixed_timedelta(min_collector_gap, what="min_gap"),
+        _intervals(reg, "outage_collector"),
+    )
     gap_intervals: list[_Interval] = list(zip(gaps["start_utc"], gaps["end_utc"], strict=True))
-
-    both_zero = _both_zero(df)
-    work = pd.DataFrame(
-        {
-            "system_id": df["system_id"].astype(str).to_numpy(),
-            "day": df[time_col].dt.date.to_numpy(),
-            "slot": df[time_col].dt.floor(step).to_numpy(),
-            "zero": both_zero.to_numpy() if both_zero is not None else False,
-        }
-    )
-    per_poll = work.groupby(["system_id", "day", "slot"], sort=False).size().rename("n")
-    polls = per_poll.groupby(level=["system_id", "day"]).agg(n_polls="size", median_rows="median")
-    rows_per_day = work.groupby(["system_id", "day"], sort=False).agg(
-        rows=("slot", "size"), zeros=("zero", "sum")
-    )
-    observed = polls.join(rows_per_day)
 
     out_rows: list[dict[str, Any]] = []
     for system, sub in observed.groupby(level="system_id", sort=True):
@@ -551,7 +711,7 @@ def daily_coverage(
             if d in days.index:
                 row = days.loc[d]
                 n_polls, median_rows = int(row["n_polls"]), float(row["median_rows"])
-                if both_zero is not None and row["rows"]:
+                if has_counts and row["rows"]:
                     share = round(100 * float(row["zeros"]) / float(row["rows"]), 2)
             pct = round(100 * min(n_polls, expected) / expected, 1)
             if pct >= ok_threshold_pct:
@@ -644,11 +804,12 @@ def _fmt_duration(delta: pd.Timedelta) -> str:
 
 def detect_incidents(
     coverage: pd.DataFrame,
-    snapshots: pd.DataFrame | None = None,
+    snapshots: Any = None,
     *,
     known: pd.DataFrame | None = None,
     min_collector_gap: str | pd.Timedelta = DEFAULT_MIN_GAP,
     time_col: str = "fetched_at",
+    engine: str = "auto",
 ) -> pd.DataFrame:
     """The registry completed with what the data shows: collection gaps and silent feeds.
 
@@ -662,7 +823,7 @@ def detect_incidents(
     rows: list[dict[str, Any]] = []
     if snapshots is not None:
         gaps = find_collector_gaps(
-            snapshots, min_gap=min_collector_gap, known=reg, time_col=time_col
+            snapshots, min_gap=min_collector_gap, known=reg, time_col=time_col, engine=engine
         )
         for g in gaps.itertuples(index=False):
             rows.append(
@@ -718,7 +879,7 @@ class QualityReport:
 
 
 def assess(
-    snapshots: pd.DataFrame,
+    snapshots: Any,
     *,
     known_incidents: pd.DataFrame | None = None,
     time_col: str = "fetched_at",
@@ -726,8 +887,9 @@ def assess(
 ) -> QualityReport:
     """Coverage and incidents in one call: `daily_coverage` then `detect_incidents`.
 
-    ``coverage_options`` are the options of `daily_coverage` (``expected_polls``,
-    ``ok_threshold_pct``, ``end`` ...).
+    ``snapshots`` is a frame, an Arrow table, a DuckDB relation or a path (a lake, a folder of
+    Parquet files), summarised without loading it whole; ``coverage_options`` are the options
+    of `daily_coverage` (``expected_polls``, ``ok_threshold_pct``, ``end``, ``engine`` ...).
 
     Examples
     --------
@@ -737,15 +899,17 @@ def assess(
     >>> report.summary()["days_by_status"]["ok"]
     1
     """
+    table = _source(snapshots, time_col, ["system_id"], "assess")
     cov = daily_coverage(
-        snapshots, known_incidents=known_incidents, time_col=time_col, **coverage_options
+        table, known_incidents=known_incidents, time_col=time_col, **coverage_options
     )
     inc = detect_incidents(
         cov,
-        snapshots,
+        table,
         known=known_incidents,
         min_collector_gap=coverage_options.get("min_collector_gap", DEFAULT_MIN_GAP),
         time_col=time_col,
+        engine=coverage_options.get("engine", "auto"),
     )
     return QualityReport(cov, inc)
 
@@ -774,18 +938,75 @@ def _period_start(key: int, period: str) -> pd.Timestamp:
     return pd.Timestamp(0, tz="UTC")
 
 
+def _unsupported_counts(
+    table: Table, engine: str, columns: list[str], period: str, time_col: str
+) -> pd.DataFrame:
+    """Per (system, period, column): the non-empty values and how many of them are zero."""
+    if period not in ("M", "D", "all"):
+        raise ValueError(f"period must be 'M', 'D' or 'all', got {period!r}")
+    if engine == "duckdb":
+        ts = f"make_timestamp(epoch_us({sql_name(time_col)}))"
+        key = {
+            "M": f"year({ts}) * 100 + month({ts})",
+            "D": f"year({ts}) * 10000 + month({ts}) * 100 + day({ts})",
+            "all": "0",
+        }[period]
+        pieces = []
+        for col in columns:
+            v = f"TRY_CAST({sql_name(col)} AS DOUBLE)"
+            pieces.append(
+                f"SELECT CAST({sql_name('system_id')} AS VARCHAR) AS system_id, ({key}) AS k, "
+                f"'{col}' AS field, count(*) AS n, sum(CAST({v} = 0 AS INTEGER)) AS z "
+                f"FROM src WHERE {v} IS NOT NULL AND NOT isnan({v}) "
+                f"AND {sql_name(time_col)} IS NOT NULL GROUP BY 1, 2"
+            )
+        if not pieces:
+            return pd.DataFrame(columns=["system_id", "key", "field", "n", "z"])
+        with relation_of(table) as rel:
+            got = rel.query("src", " UNION ALL ".join(pieces)).df()
+        return got.rename(columns={"k": "key"})
+    parts = []
+    for frame in _frames(table, time_col, ["system_id", *columns]):
+        key = _period_key(to_utc(frame[time_col], what=time_col), period)
+        for col in (c for c in columns if c in frame.columns):
+            v = pd.DataFrame(
+                {
+                    "system_id": frame["system_id"].astype(str).to_numpy(),
+                    "key": key.to_numpy(),
+                    "v": pd.to_numeric(frame[col], errors="coerce").to_numpy(),
+                }
+            ).dropna(subset=["v"])
+            if v.empty:
+                continue
+            v["z"] = v["v"] == 0
+            g = v.groupby(["system_id", "key"], sort=True).agg(n=("v", "size"), z=("z", "sum"))
+            parts.append(g.reset_index().assign(field=col))
+    if not parts:
+        return pd.DataFrame(columns=["system_id", "key", "field", "n", "z"])
+    return (
+        pd.concat(parts)
+        .groupby(["system_id", "key", "field"], sort=True)[["n", "z"]]
+        .sum()
+        .reset_index()
+    )
+
+
 def field_unsupported_by_operator(
-    df: pd.DataFrame,
+    df: Any,
     *,
     columns: tuple[str, ...] = _COUNT_COLS,
     period: str = "M",
     time_col: str = "fetched_at",
+    engine: str = "auto",
 ) -> pd.DataFrame:
     """Fields an operator does not publish: ``0`` in every non-empty value of the period.
 
     A system with no docks reports ``num_docks_available = 0`` everywhere. If every non-empty
     value of a column is ``0`` for a system over a ``period`` (a UTC month, ``"M"``, by default;
     ``"D"`` a day; ``"all"`` the whole frame), the column carries no information.
+
+    ``df`` is a frame, an Arrow table, a DuckDB relation or a path; see `daily_coverage` for
+    ``engine``.
 
     Returns
     -------
@@ -801,29 +1022,18 @@ def field_unsupported_by_operator(
     >>> field_unsupported_by_operator(df)["field"].tolist()
     ['num_docks_available']
     """
-    need_columns(df, ["system_id", time_col], what="field_unsupported_by_operator")
-    key = _period_key(to_utc(df[time_col], what=time_col), period)
-    rows = []
-    for col in (c for c in columns if c in df.columns):
-        frame = pd.DataFrame(
-            {
-                "system_id": df["system_id"].astype(str),
-                "key": key,
-                "v": pd.to_numeric(df[col], errors="coerce"),
-            }
-        ).dropna(subset=["v"])
-        if frame.empty:
-            continue
-        frame["z"] = frame["v"] == 0
-        agg = frame.groupby(["system_id", "key"], sort=True).agg(n=("v", "size"), z=("z", "sum"))
-        for (system, k), _ in agg[agg["n"] == agg["z"]].iterrows():
-            rows.append(
-                {
-                    "system_id": system,
-                    "period_start_utc": _period_start(int(k), period),
-                    "field": col,
-                }
-            )
+    table = _source(df, time_col, ["system_id"], "field_unsupported_by_operator")
+    use = resolve_engine(engine, table, what="field_unsupported_by_operator")
+    present = [c for c in columns if c in table.columns()]
+    counts = _unsupported_counts(table, use, present, period, time_col)
+    rows = [
+        {
+            "system_id": r.system_id,
+            "period_start_utc": _period_start(int(r.key), period),
+            "field": r.field,
+        }
+        for r in counts[counts["n"] == counts["z"]].itertuples(index=False)
+    ]
     out = pd.DataFrame(rows, columns=["system_id", "period_start_utc", "field"])
     out["period_start_utc"] = pd.to_datetime(out["period_start_utc"], utc=True)
     return out.sort_values(["system_id", "period_start_utc", "field"]).reset_index(drop=True)
@@ -873,6 +1083,12 @@ def add_quality_indicators(
     >>> add_quality_indicators(df)["both_zero_suspect"].tolist()
     [True, False, False]
     """
+    if not is_pandas(df):
+        raise TypeError(
+            "add_quality_indicators returns one row per input row, so it takes a pandas DataFrame "
+            "(read the part you need with gbfs_toolkit.store.read_lake first); "
+            f"got {type(df).__name__}"
+        )
     need_columns(df, ["system_id", "station_id", time_col], what="add_quality_indicators")
     if not 0 < all_zero_share <= 1:
         raise ValueError("all_zero_share must be in (0, 1]")
