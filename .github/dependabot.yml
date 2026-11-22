@@ -5,6 +5,9 @@ updates:
     directory: "/"
     schedule:
       interval: "monthly"
+    # Let a new action release age a week before it is proposed (supply-chain hygiene).
+    cooldown:
+      default-days: 7
     groups:
       github-actions:
         patterns: ["*"]

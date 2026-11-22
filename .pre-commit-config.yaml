@@ -1,13 +1,16 @@
 # Install once: `pip install pre-commit && pre-commit install`.
+# Hooks are frozen to a commit (the tag in the comment), like the GitHub Actions; keep the
+# ruff hook on the same minor as the `ruff` pin of the dev extra in pyproject.toml, so the
+# hook and CI format identically. Update both together: `pre-commit autoupdate --freeze`.
 repos:
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.6.9
+    rev: 9026c9127e153371d7a78dfcb0c45ae2046a3d10  # frozen: v0.17.6
     hooks:
       - id: ruff
         args: [--fix]
       - id: ruff-format
   - repo: https://github.com/econchick/interrogate
-    rev: 1.7.0
+    rev: 4894019dc8876092bc9b6d56878798c550fad998  # frozen: 1.7.0
     hooks:
       - id: interrogate
         args: [--config=pyproject.toml]
