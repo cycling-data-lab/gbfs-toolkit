@@ -201,6 +201,11 @@ def coverage_stats(info: pd.DataFrame, *, zones: object = None) -> pd.Series:
     extra). Also reports the **Clark–Evans index** (observed mean NN distance ÷ the value
     expected under spatial randomness: ``<1`` clustered, ``≈1`` random, ``>1`` dispersed).
 
+    With ``zones``, ``service_area_km2`` is the **sum of the areas of the zones**, as given:
+    zones that overlap or nest (a restriction zone inside the service polygon) are counted once
+    each, which raises the area and lowers the density and the Clark-Evans index. Pass only the
+    polygons that define the service area, or dissolve them first.
+
     Returns
     -------
     pandas.Series

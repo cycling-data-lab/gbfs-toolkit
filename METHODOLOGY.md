@@ -50,6 +50,14 @@ Design choices worth knowing:
   over-flag genuinely remote suburban docks. The 1 km floor mitigates but does not eliminate this.
   We keep the published rule for reproducibility; if you need a different spatial-outlier model,
   run your own (e.g. DBSCAN noise) on the coordinates and treat A4 as one signal among several.
+  **Projection.** Distances are computed after one equirectangular projection around the mean
+  latitude of the *whole input frame*. For a single city this is accurate; when systems at very
+  different latitudes are audited together, east-west distances in a system far from the mean
+  latitude are scaled by the ratio of the cosines, so a borderline station's A4 verdict can depend
+  on which other systems are in the frame. This is the behaviour of the published verdicts and
+  stays the default. `audit_static(..., a4_projection="per_system")` projects each system around
+  its own mean latitude instead, so that a system's verdict does not depend on the rest of the
+  input. The two can differ by a few stations in systems far from the mean latitude.
 - **A5 is antimeridian-safe**: the longitudinal extent uses the smallest covering arc, so a
   system straddling ±180° is not reported as Earth-spanning.
 
@@ -134,6 +142,14 @@ system with null capacities is flagged. Pass `audit_static(..., a7_scope="all")`
 dead sensor rather than a stale fetch. It is also distinct from a legitimate stockout (handled by
 `stockout_episodes`). Restrict it to active hours to avoid flagging the normal overnight
 flatline.
+
+By default the length of a constant run is measured from its first to its last observation, so a
+run that continues across the hours excluded by `active_hours` (the night), or across a
+collection outage, **counts that time**: a station reading the same value from 18:00 to 08:00 the
+next morning has a 14-hour run even though only the active hours were observed. This is the
+behaviour of the verdicts already computed, and it flags more stations. With
+`exclude_gaps=True` only the time between consecutive observations counts, and an interval longer
+than three times the station's median interval is left out.
 
 ## 4. Flows are observed, not inferred: the polling Nyquist limit
 
