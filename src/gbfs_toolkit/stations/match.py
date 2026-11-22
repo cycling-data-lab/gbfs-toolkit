@@ -6,7 +6,7 @@
 
 Operators renumber stations, re-issue identifiers when they change platform, and move a dock
 a few metres. A study that spans two periods needs to know which station of the first is which
-of the second. :func:`match_stations` pairs them **one to one**, in three passes, and says
+of the second. `match_stations` pairs them **one to one**, in three passes, and says
 which rule made each pair, so you can keep the safe pairs and look at the others:
 
 1. ``same_id``: the identifier exists in both. If the two coordinates are more than
@@ -63,7 +63,7 @@ __all__ = [
 
 _log = logging.getLogger(__name__)
 
-#: Output columns of :func:`match_stations`.
+#: Output columns of `match_stations`.
 MATCH_COLUMNS: list[str] = [
     "system_id",
     "station_id_old",
@@ -235,7 +235,7 @@ def match_stations(
     Returns
     -------
     pandas.DataFrame
-        :data:`MATCH_COLUMNS`, one row per old station, per new station, or per pair, sorted
+        `MATCH_COLUMNS`, one row per old station, per new station, or per pair, sorted
         by system then identifier. Ids are text, so a leading zero survives.
 
     Examples
@@ -285,7 +285,7 @@ def id_continuity(periods: Mapping[str, pd.DataFrame], **options: float) -> pd.D
     ``periods`` maps a label to the station table of that period, in chronological order
     (a ``dict`` keeps it). For each consecutive pair and each system the result counts the
     stations kept under the same id, found under another id or place, lost and appeared, and
-    the median distance moved by those that matched. ``options`` go to :func:`match_stations`.
+    the median distance moved by those that matched. ``options`` go to `match_stations`.
 
     Returns
     -------

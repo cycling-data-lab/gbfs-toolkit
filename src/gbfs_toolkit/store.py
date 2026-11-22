@@ -9,12 +9,12 @@ this library::
 
     <root>/system_id=<id>/year=2026/month=03/data.parquet
 
-:func:`harmonize` gives station and vehicle snapshots the same column names whatever collected
+`harmonize` gives station and vehicle snapshots the same column names whatever collected
 them (``observed_at_utc``, ``system_id``, ``station_id`` ...), keeps time in UTC and, when you
 give the system's IANA time zone, adds the local wall clock and the UTC offset.
-:func:`write_lake` writes a frame into the lake (never half-written files) and
-:func:`read_lake` reads a system and a time window back, filtering on the partitions before it
-loads anything. :func:`register_duckdb_views` exposes lakes as DuckDB views (extra ``duckdb``).
+`write_lake` writes a frame into the lake (never half-written files) and
+`read_lake` reads a system and a time window back, filtering on the partitions before it
+loads anything. `register_duckdb_views` exposes lakes as DuckDB views (extra ``duckdb``).
 
 Parquet needs ``pip install gbfs-toolkit[parquet]``; the views need
 ``pip install gbfs-toolkit[duckdb]``.
@@ -449,7 +449,7 @@ def register_duckdb_views(con: Any, tables: Mapping[str, str | Path]) -> list[st
 
     ``con`` is a ``duckdb.DuckDBPyConnection``. Returns the names created. Requires
     ``pip install gbfs-toolkit[duckdb]`` only to obtain the connection: the function just runs
-    :func:`duckdb_view_sql`.
+    `duckdb_view_sql`.
 
     """
     created = []

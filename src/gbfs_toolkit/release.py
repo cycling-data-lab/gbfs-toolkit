@@ -4,7 +4,7 @@
     Part of the experimental data-lake modules added in 2.1.0: names, parameters and output
     columns may change in a minor release (see the API policy).
 
-:func:`freeze_release` takes a lake written by :mod:`gbfs_toolkit.store`, a **closed** UTC
+`freeze_release` takes a lake written by `gbfs_toolkit.store`, a **closed** UTC
 period (it refuses a period that is not over) and some systems, and writes a new folder::
 
     <out>/data/<table>/system_id=<id>/year=2026/month=03/data.parquet   cut at the period's bounds
@@ -17,10 +17,10 @@ period (it refuses a period that is not over) and some systems, and writes a new
     <out>/SHA256SUMS                                                     one checksum per file
 
 It **uploads nothing and registers nothing**: depositing the folder (Zenodo, Dataverse, a bucket)
-is yours to do, and so is the choice of licence. :func:`verify_release` checks a folder against its
+is yours to do, and so is the choice of licence. `verify_release` checks a folder against its
 ``SHA256SUMS`` (the same file ``sha256sum -c`` reads), which is what a downstream user runs.
 
-The coverage and incidents come from :mod:`gbfs_toolkit.quality`, computed on the released rows,
+The coverage and incidents come from `gbfs_toolkit.quality`, computed on the released rows,
 so the README states honestly which days are complete and which are not. The Croissant file is a
 minimal description (record set, fields, the Parquet file set); check it with the MLCommons
 validator before relying on it. Needs ``pip install gbfs-toolkit[parquet]``.
@@ -215,7 +215,7 @@ def freeze_release(
     Parameters
     ----------
     lake : path
-        A :mod:`gbfs_toolkit.store` lake.
+        A `gbfs_toolkit.store` lake.
     out_dir : path
         The release folder. It must not exist or must be empty: a release is written once.
     name : str
@@ -236,10 +236,10 @@ def freeze_release(
         Who published the original feeds, to credit: dicts with ``system_id`` and any of
         ``producer``, ``license``, ``license_url``, ``source``. Listed in the README.
     incidents : registry, path or None
-        Incidents you know of (see :mod:`gbfs_toolkit.quality`); the ones that overlap the
+        Incidents you know of (see `gbfs_toolkit.quality`); the ones that overlap the
         period are kept, and those the data reveal (collection gaps, silent feeds) are added.
     coverage_options : mapping, optional
-        Options of :func:`gbfs_toolkit.quality.daily_coverage` (``expected_polls``,
+        Options of `gbfs_toolkit.quality.daily_coverage` (``expected_polls``,
         ``poll_resolution``, ``ok_threshold_pct``).
     croissant : bool, default True
         Also write ``croissant.json``.

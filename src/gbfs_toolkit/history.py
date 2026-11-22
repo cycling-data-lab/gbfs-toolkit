@@ -7,7 +7,7 @@
 ``system_information``, ``vehicle_types``, ``system_pricing_plans``, ``system_regions`` and
 ``station_information`` change a few times a year, but a collector fetches them every day.
 Overwriting them loses the past; keeping each fetch repeats the same bytes hundreds of times.
-:func:`record_version` keeps one file per *distinct content*, named after the UTC day of the
+`record_version` keeps one file per *distinct content*, named after the UTC day of the
 fetch::
 
     <history_dir>/2026-01-14.parquet     the content as of 14 January
@@ -22,7 +22,7 @@ Two fetches have the same content when their rows are equal **ignoring**
   ``'{"b":2,"a":1}'``),
 * ``1`` against ``1.0``, and a column that is absent against a column that is empty.
 
-:func:`content_fingerprint` is that comparison, as a SHA-256 you can store. The list order
+`content_fingerprint` is that comparison, as a SHA-256 you can store. The list order
 inside a JSON array *does* matter. A version of a closed day is never rewritten; the version
 of the current UTC day may be, so a second fetch the same day replaces the first.
 
@@ -190,7 +190,7 @@ def read_version(
 
 @dataclass(frozen=True)
 class VersionResult:
-    """What :func:`record_version` decided.
+    """What `record_version` decided.
 
     ``action`` is ``"written"`` (a new or refreshed version), ``"unchanged"`` (same content as
     the latest version), ``"kept_closed_day"`` (a different version of a closed day already
