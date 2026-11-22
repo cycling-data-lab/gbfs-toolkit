@@ -2,11 +2,13 @@ name: release-please
 
 # Conventional-commit driven releases. On every push to main, release-please keeps a
 # "release PR" open with the generated changelog and the next semantic version. Merging
-# that PR tags the release and (below) builds, attests and publishes to PyPI.
+# that PR tags the release (`gbfs-toolkit-vX.Y.Z`, the only tag format) and the jobs below
+# build, check, attest and publish it to PyPI, then deploy the versioned docs.
 #
-# A tag created by release-please uses GITHUB_TOKEN, which by design does NOT trigger the
-# tag-based release.yml (anti-recursion). So this workflow does its own publish; release.yml
-# remains as a manual-tag fallback.
+# A tag created by release-please uses GITHUB_TOKEN, which by design does NOT trigger
+# other workflows (anti-recursion). So publishing and the released docs run here;
+# release.yml is a manual fallback (workflow_dispatch) for re-running a publish.
+# The process is written down in RELEASING.md.
 
 on:
   push:
@@ -29,6 +31,7 @@ jobs:
     outputs:
       release_created: ${{ steps.release.outputs.release_created }}
       tag_name: ${{ steps.release.outputs.tag_name }}
+      version: ${{ steps.release.outputs.version }}
     steps:
       - uses: googleapis/release-please-action@45996ed1f6d02564a971a2fa1b5860e934307cf7 # v5.0.0
         id: release
@@ -51,17 +54,38 @@ jobs:
       attestations: write
       contents: read
     steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v4
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          ref: ${{ needs.release-please.outputs.tag_name }}
+      # No dependency cache in the release job: a cache written by another workflow must
+      # not be able to feed what gets published.
       - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         with:
           python-version: "3.12"
-          cache: pip
-          cache-dependency-path: pyproject.toml
-      - run: pip install -e ".[dev]" build
+      - run: pip install -e ".[dev]"
       - name: Tests (a released commit must be green)
         run: pytest -q --cov=gbfs_toolkit --cov-fail-under=85
       - run: python -m build
+      # The 2.0.0 wheel said __version__ == "1.8.0": nothing is uploaded unless the wheel
+      # and sdist carry the tag's version, py.typed and a README that renders on PyPI.
+      - name: Check the distributions against the tag
+        env:
+          TAG: ${{ needs.release-please.outputs.tag_name }}
+        run: |
+          twine check --strict dist/*
+          python scripts/check_dist.py dist --expect "$TAG"
       - uses: actions/attest-build-provenance@0f67c3f4856b2e3261c31976d6725780e5e4c373 # v4.1.1
         with:
           subject-path: "dist/*"
-      - uses: pypa/gh-action-pypi-publish@dc37677b2e1c63e2034f94d8a5b11f265b73ba33 # release/v1
+      - uses: pypa/gh-action-pypi-publish@dc37677b2e1c63e2034f94d8a5b11f265b73ba33 # release/v1.14.2
+
+  docs:
+    name: Deploy the released docs
+    needs: [release-please, publish]
+    if: ${{ needs.release-please.outputs.release_created == 'true' }}
+    permissions:
+      contents: write  # mike pushes to gh-pages
+    uses: ./.github/workflows/docs.yml
+    with:
+      version: ${{ needs.release-please.outputs.version }}
