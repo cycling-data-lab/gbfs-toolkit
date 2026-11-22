@@ -1,6 +1,6 @@
 """Static semantic audit of a docked GBFS system: the A1–A7 taxonomy.
 
-Ported from the published ``gbfs-audit-catalogue`` pipeline (Fossé & Pallares),
+Ported from the published audit-catalogue pipeline,
 adapted to the toolkit's canonical `STATION_INFO_COLUMNS`
 schema. Operates purely on an in-memory frame (no I/O), so it can audit feeds you
 fetched yourself or any third-party station inventory.
@@ -53,7 +53,7 @@ def overcapacity_ratio(info: pd.DataFrame, *, n_min: int = 20) -> pd.Series:
 
     A free-floating fleet that advertises virtual stations reports a capacity
     profile by *conditional averaging* over currently-occupied anchors, which
-    overstates the physical dock count. The signature (Fossé & Pallares) compares
+    overstates the physical dock count. The signature compares
     that conditional mean to the unconditional mean::
 
         ratio = mean(c_i : c_i > 0) / (sum(c_i, NaN as 0) / N)
@@ -158,7 +158,7 @@ def capacity_convention(
     """Label each system's ``capacity``-field publication convention.
 
     The GBFS ``capacity`` field carries mutually-incompatible semantics across
-    operators (Fossé & Pallares). This assigns each system one label, in priority
+    operators. This assigns each system one label, in priority
     order:
 
     - ``"null"`` : at least ``nan_tau`` of stations declare ``NaN`` (A7 regime).
@@ -485,7 +485,7 @@ def _flag_a7(
         ``"docked"`` restricts the rate to physical docked stations, so free-floating
         and virtual anchors (which legitimately carry null capacity) do not flag every
         dockless system spuriously. ``"all"`` evaluates the rate over every station in
-        the system, reproducing the original ``gbfs-audit-catalogue`` definition, under
+        the system, reproducing the original audit-catalogue definition, under
         which a fully free-floating system with null capacities does trip A7.
     """
     if scope not in ("docked", "all"):
@@ -514,7 +514,7 @@ def audit_static(
 
     All policy thresholds are exposed so the audit can be swept for sensitivity
     analysis (see [`audit_sensitivity`][gbfs_toolkit.audit_sensitivity]); every default equals
-    the published ``gbfs-audit-catalogue`` value, so calling with no keywords
+    the published audit-catalogue value, so calling with no keywords
     reproduces the released verdicts exactly.
 
     Parameters
@@ -525,7 +525,7 @@ def audit_static(
     a7_scope : {"docked", "all"}, default "docked"
         Scope of the A7 null-capacity rule. ``"docked"`` (default) counts only physical
         docked stations, so dockless systems are not flagged spuriously. ``"all"`` counts
-        every station, reproducing the original ``gbfs-audit-catalogue`` verdicts.
+        every station, reproducing the original audit-catalogue verdicts.
     a4_sigma : float, default ``3.0``
         Multiplier of the robust (MAD-rescaled) scale in the A4 nearest-neighbour
         outlier rule.

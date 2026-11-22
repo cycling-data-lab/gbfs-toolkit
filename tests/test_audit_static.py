@@ -85,7 +85,7 @@ def test_a7_null_capacity():
 
 def test_a7_scope_all_flags_dockless_system():
     # A fully free-floating system with null capacity: docked-aware A7 ignores it,
-    # a7_scope="all" reproduces the gbfs-audit-catalogue verdict (flag the system).
+    # a7_scope="all" reproduces the audit-catalogue verdict (flag the system).
     df = _docked_grid(n=30)
     df["station_type"] = "free_floating"
     df["capacity"] = np.nan
