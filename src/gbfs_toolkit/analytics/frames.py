@@ -10,10 +10,12 @@ import numpy as np
 import pandas as pd
 
 from gbfs_toolkit.core.models import require_columns
+from gbfs_toolkit.core.utils import warn_default_change
 from gbfs_toolkit.spatial.geometry import haversine_m
 
 __all__ = [
     "STATION_STATES",
+    "STATION_STATES_WITH_UNKNOWN",
     "PRESENCE_STATES",
     "join_availability",
     "occupancy",
@@ -27,6 +29,9 @@ __all__ = [
 
 #: Ordered categories returned by [`station_state`][gbfs_toolkit.station_state].
 STATION_STATES = ("disabled", "virtual", "empty", "full", "normal")
+
+#: The categories of `station_state` with ``unknown=True``: the same, then ``"unknown"``.
+STATION_STATES_WITH_UNKNOWN = (*STATION_STATES, "unknown")
 
 #: Ordered categories of the ``presence`` indicator from [`join_availability`][gbfs_toolkit.join_availability].
 PRESENCE_STATES = ("both", "info_only", "status_only")
@@ -162,7 +167,7 @@ def ebikes(vehicles: pd.DataFrame, vehicle_types: pd.DataFrame) -> pd.DataFrame:
     return filter_vehicles(vehicles, vehicle_types, propulsion="electric")
 
 
-def station_state(availability: pd.DataFrame) -> pd.Series:
+def station_state(availability: pd.DataFrame, *, unknown: bool | None = None) -> pd.Series:
     """Classify each station as ``disabled`` / ``virtual`` / ``empty`` / ``full`` / ``normal``.
 
     Resolves two edge cases researchers re-derive constantly:
@@ -170,18 +175,27 @@ def station_state(availability: pd.DataFrame) -> pd.Series:
     a *virtual* station (painted box, capacity 0/NA) must not be read as "full" just
     because it reports zero docks. A station with **no count at all** (for instance an
     ``info_only`` row from [`join_availability`][gbfs_toolkit.join_availability], which has no
-    status) is classed ``empty``, not unknown: drop those rows first if shares matter.
+    status) is classed ``empty`` by default, not unknown: drop those rows first if shares
+    matter, or pass ``unknown=True``.
 
     Parameters
     ----------
     availability : pandas.DataFrame
         Needs ``num_bikes_available`` and ``num_docks_available``; uses
         ``is_renting`` / ``is_returning`` / ``is_virtual_station`` / ``capacity`` when present.
+    unknown : bool, optional
+        ``False`` (the 2.x default) keeps the historical rule above. ``True`` classes a station
+        that is neither disabled nor virtual and has **no count at all** (both counts missing)
+        as ``"unknown"``, a sixth category (`STATION_STATES_WITH_UNKNOWN`); a station with one
+        count is classed as before. `STATION_STATES` itself does not change, so code that loops
+        over it is unaffected. The default becomes ``True`` in 3.0; until then a call whose
+        input has such rows and leaves ``unknown`` unset emits a ``FutureWarning``.
 
     Returns
     -------
     pandas.Series
-        Categorical (categories = `STATION_STATES`), aligned to the input index.
+        Categorical (categories = `STATION_STATES`, or `STATION_STATES_WITH_UNKNOWN` with
+        ``unknown=True``), aligned to the input index.
 
     See Also
     --------
@@ -200,12 +214,11 @@ def station_state(availability: pd.DataFrame) -> pd.Series:
         availability, ["num_bikes_available", "num_docks_available"], what="station_state"
     )
     n = len(availability)
-    bikes = (
-        pd.to_numeric(availability["num_bikes_available"], errors="coerce").fillna(-1).to_numpy()
-    )
-    docks = (
-        pd.to_numeric(availability["num_docks_available"], errors="coerce").fillna(-1).to_numpy()
-    )
+    bikes_raw = pd.to_numeric(availability["num_bikes_available"], errors="coerce")
+    docks_raw = pd.to_numeric(availability["num_docks_available"], errors="coerce")
+    bikes = bikes_raw.fillna(-1).to_numpy()
+    docks = docks_raw.fillna(-1).to_numpy()
+    no_count = (bikes_raw.isna() & docks_raw.isna()).to_numpy(dtype=bool)
 
     def _bool(col: str, default: bool) -> np.ndarray:
         if col in availability:
@@ -228,8 +241,18 @@ def station_state(availability: pd.DataFrame) -> pd.Series:
             np.where(bikes <= 0, "empty", np.where(docks <= 0, "full", "normal")),
         ),
     )
+    if unknown is None and bool((no_count & (state == "empty")).any()):
+        warn_default_change(
+            "a station with no count at all is classed 'empty'",
+            option="unknown=False in station_state",
+            new="unknown=True (such a station is 'unknown')",
+        )
+    if unknown:
+        state = np.where(no_count & (state == "empty"), "unknown", state)
     return pd.Series(
-        pd.Categorical(state, categories=list(STATION_STATES)),
+        pd.Categorical(
+            state, categories=list(STATION_STATES_WITH_UNKNOWN if unknown else STATION_STATES)
+        ),
         index=availability.index,
         name="station_state",
     )

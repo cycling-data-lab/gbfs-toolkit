@@ -146,6 +146,48 @@ def warn_deprecated(
     warnings.warn(message, FutureWarning, stacklevel=stacklevel + 1)
 
 
+def warn_default_change(
+    what: str, *, option: str, new: str, since: str = "2.1.0", stacklevel: int = 2
+) -> None:
+    """Announce that a default will change in 3.0, when this call's result is affected by it.
+
+    For an opt-in correction (see "Open points" in the changelog): the option keeps its
+    current default in the 2.x series; it is left unset by the caller and the input is one on
+    which the two behaviours differ, so the warning names what changes and how to choose now.
+    It is a ``FutureWarning`` like the deprecations of the API policy and, like them, names the
+    release that announced it, the release that changes it and the way to adopt it.
+    ``stacklevel`` counts from the function that calls this helper (2 = its caller).
+    """
+    warnings.warn(
+        f"{option}: the default changes in gbfs-toolkit 3.0 (announced in {since}); today "
+        f"{what}. Pass {new} to adopt the new behaviour now, or the other value to keep the "
+        "current one and silence this warning.",
+        FutureWarning,
+        stacklevel=stacklevel + 1,
+    )
+
+
+def has_float_gaps(*columns: pd.Series) -> bool:
+    """Whether a count column is a NumPy float holding at least one missing value.
+
+    That is the case in which rates are computed differently for a float column (a missing count
+    is counted as "not empty") and for a nullable integer one (the row is skipped).
+    """
+    return any(
+        isinstance(c.dtype, np.dtype) and c.dtype.kind == "f" and bool(c.isna().any())
+        for c in columns
+    )
+
+
+def valid_flag(condition: pd.Series, count: pd.Series) -> np.ndarray:
+    """``condition`` as 0.0/1.0 with NaN where ``count`` is missing, whatever the count's dtype.
+
+    The mean of this array is the rate over the rows that have a count.
+    """
+    ok = condition.fillna(False).to_numpy(dtype=bool)
+    return np.where(count.isna().to_numpy(), np.nan, ok.astype("float64"))
+
+
 def deprecated(
     *, since: str, removal: str | None = None, alternative: str | None = None
 ) -> Callable[[_F], _F]:

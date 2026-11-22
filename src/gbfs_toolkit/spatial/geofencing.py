@@ -171,6 +171,17 @@ def zones_for_points(
     return joined.drop(columns=[c for c in ("index_right",) if c in joined.columns])
 
 
+def _zone_union_area_km2(zones: gpd.GeoDataFrame, *, equal_area_crs: str = "EPSG:6933") -> float:
+    """Area in km² of the **union** of the zones: overlapping or nested zones count once.
+
+    Same equal-area projection as `zone_area_km2`. Internal helper of ``coverage_stats``.
+    """
+    _require_geo()
+    geometry = zones.to_crs(equal_area_crs).geometry
+    merged = geometry.union_all() if hasattr(geometry, "union_all") else geometry.unary_union
+    return float(merged.area) / 1e6
+
+
 def zone_area_km2(zones: gpd.GeoDataFrame, *, equal_area_crs: str = "EPSG:6933") -> pd.Series:
     """Area of each zone in km², computed in an equal-area projection (not in degrees).
 

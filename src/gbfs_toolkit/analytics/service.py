@@ -10,7 +10,14 @@ import numpy as np
 import pandas as pd
 
 from gbfs_toolkit.core.models import require_columns
-from gbfs_toolkit.core.utils import num, panel_frame, time_of_day_minutes
+from gbfs_toolkit.core.utils import (
+    has_float_gaps,
+    num,
+    panel_frame,
+    time_of_day_minutes,
+    valid_flag,
+    warn_default_change,
+)
 from gbfs_toolkit.io.timeseries import calculate_net_flow
 
 __all__ = [
@@ -89,6 +96,7 @@ def service_reliability_index(
     freq: str = "1h",
     min_bikes: int = 1,
     min_docks: int = 1,
+    valid_only: bool | None = None,
 ) -> pd.DataFrame:
     """Empirical level-of-service probability per station and time-of-day.
 
@@ -108,6 +116,14 @@ def service_reliability_index(
         Fixed time-of-day bucket width (a pandas offset alias such as ``"1h"`` or ``"30min"``).
     min_bikes, min_docks : int
         Availability thresholds for "service available".
+    valid_only : bool, optional
+        How a row with a **missing** count enters the probabilities. ``False`` (the 2.x
+        default) keeps the historical rule: in a float column a missing count is "service not
+        available" and stays in the denominator, in a nullable integer column the row is skipped,
+        so the same data gives two answers. ``True`` computes every probability over the rows
+        that have the relevant count (both counts for ``prob_full_service``) whatever the
+        column's type; ``n_obs`` still counts all rows. The default becomes ``True`` in 3.0;
+        until then a call that would differ and leaves this unset emits a ``FutureWarning``.
 
     Returns
     -------
@@ -143,18 +159,40 @@ def service_reliability_index(
         what="service_reliability_index",
     )
     bucket = time_of_day_minutes(df["fetched_at"], freq)
-    bikes_ok = pd.to_numeric(df["num_bikes_available"], errors="coerce") >= min_bikes
-    docks_ok = pd.to_numeric(df["num_docks_available"], errors="coerce") >= min_docks
-    work = pd.DataFrame(
-        {
-            "system_id": df["system_id"].to_numpy(),
-            "station_id": df["station_id"].to_numpy(),
-            "time_of_day": pd.to_timedelta(bucket, unit="m"),
-            "_bikes": bikes_ok.to_numpy(),
-            "_docks": docks_ok.to_numpy(),
-        }
-    )
-    work["_full"] = work["_bikes"] & work["_docks"]
+    bikes_n = pd.to_numeric(df["num_bikes_available"], errors="coerce")
+    docks_n = pd.to_numeric(df["num_docks_available"], errors="coerce")
+    bikes_ok = bikes_n >= min_bikes
+    docks_ok = docks_n >= min_docks
+    if valid_only is None and has_float_gaps(bikes_n, docks_n):
+        warn_default_change(
+            "a missing count counts as service not available",
+            option="valid_only=False in service_reliability_index",
+            new="valid_only=True (probabilities over the rows that have the count)",
+        )
+    if valid_only:
+        both_missing = bikes_n.isna() | docks_n.isna()
+        both_ok = (bikes_ok.fillna(False) & docks_ok.fillna(False)).to_numpy(dtype=bool)
+        work = pd.DataFrame(
+            {
+                "system_id": df["system_id"].to_numpy(),
+                "station_id": df["station_id"].to_numpy(),
+                "time_of_day": pd.to_timedelta(bucket, unit="m"),
+                "_bikes": valid_flag(bikes_ok, bikes_n),
+                "_docks": valid_flag(docks_ok, docks_n),
+                "_full": np.where(both_missing.to_numpy(), np.nan, both_ok.astype("float64")),
+            }
+        )
+    else:
+        work = pd.DataFrame(
+            {
+                "system_id": df["system_id"].to_numpy(),
+                "station_id": df["station_id"].to_numpy(),
+                "time_of_day": pd.to_timedelta(bucket, unit="m"),
+                "_bikes": bikes_ok.to_numpy(),
+                "_docks": docks_ok.to_numpy(),
+            }
+        )
+        work["_full"] = work["_bikes"] & work["_docks"]
     out = (
         work.groupby(["system_id", "station_id", "time_of_day"])
         .agg(
@@ -209,11 +247,18 @@ def docking_pressure(panel: pd.DataFrame) -> pd.DataFrame:
     return flow
 
 
-def station_outage_rates(panel: pd.DataFrame) -> pd.DataFrame:
+def station_outage_rates(panel: pd.DataFrame, *, valid_only: bool | None = None) -> pd.DataFrame:
     """Per-station fraction of time empty (stockout) and full (saturation).
 
     The most basic service-quality statistic, the kind reported as "station X is empty 24% of the
     time". A pure boolean count over the observed snapshots.
+
+    ``valid_only`` decides how a row with a **missing** count enters the rates. ``False`` (the
+    2.x default) keeps the historical rule: in a float column a missing count is "not empty" and
+    stays in the denominator, in a nullable integer column the row is skipped. ``True`` computes
+    each rate over the rows that have the relevant count, whatever the column's type (``n_obs``
+    still counts all rows). The default becomes ``True`` in 3.0; until then a call that would
+    differ and leaves it unset emits a ``FutureWarning``.
 
     Returns
     -------
@@ -245,12 +290,18 @@ def station_outage_rates(panel: pd.DataFrame) -> pd.DataFrame:
     )
     bikes = pd.to_numeric(df["num_bikes_available"], errors="coerce")
     docks = pd.to_numeric(df["num_docks_available"], errors="coerce")
+    if valid_only is None and has_float_gaps(bikes, docks):
+        warn_default_change(
+            "a missing count counts as not empty and not full",
+            option="valid_only=False in station_outage_rates",
+            new="valid_only=True (rates over the rows that have the count)",
+        )
     work = pd.DataFrame(
         {
             "system_id": df["system_id"].to_numpy(),
             "station_id": df["station_id"].to_numpy(),
-            "_empty": (bikes == 0).to_numpy(),
-            "_full": (docks == 0).to_numpy(),
+            "_empty": valid_flag(bikes == 0, bikes) if valid_only else (bikes == 0).to_numpy(),
+            "_full": valid_flag(docks == 0, docks) if valid_only else (docks == 0).to_numpy(),
         }
     )
     return (
@@ -389,7 +440,13 @@ def capacity_utilization(panel: pd.DataFrame, info: pd.DataFrame) -> pd.DataFram
     return out
 
 
-def boundary_stress(panel: pd.DataFrame, *, bikes_le: int = 2, docks_le: int = 2) -> pd.DataFrame:
+def boundary_stress(
+    panel: pd.DataFrame,
+    *,
+    bikes_le: int = 2,
+    docks_le: int = 2,
+    valid_only: bool | None = None,
+) -> pd.DataFrame:
     """Per-station share of time *near* empty or *near* full, not just at the boundary.
 
     A user reads a station with two bikes left as unreliable (they may be the broken
@@ -409,6 +466,13 @@ def boundary_stress(panel: pd.DataFrame, *, bikes_le: int = 2, docks_le: int = 2
     bikes_le, docks_le : int, default 2
         A station is under pick-up / drop-off stress when its bikes / docks are at or
         below this absolute count.
+    valid_only : bool, optional
+        How a row with a **missing** count enters the ratios. ``False`` (the 2.x default) keeps
+        the historical rule (a float ``NaN`` is "not stressed" and stays in the denominator, a
+        nullable integer ``NA`` skips the row); ``True`` computes each ratio over the rows that
+        have the relevant count, whatever the column's type (``n_obs`` still counts all rows).
+        The default becomes ``True`` in 3.0; until then a call that would differ and leaves it
+        unset emits a ``FutureWarning``.
 
     Returns
     -------
@@ -450,12 +514,25 @@ def boundary_stress(panel: pd.DataFrame, *, bikes_le: int = 2, docks_le: int = 2
         # (NaN) capacity is unknown, not virtual, so it must not null the dock metric.
         cap = num(df, "capacity").to_numpy()
         virtual |= np.isfinite(cap) & (cap <= 0)
-    low_docks = np.where(virtual, np.nan, (docks <= docks_le).to_numpy().astype("float64"))
+    if valid_only is None and has_float_gaps(bikes, docks):
+        warn_default_change(
+            "a missing count counts as not stressed",
+            option="valid_only=False in boundary_stress",
+            new="valid_only=True (ratios over the rows that have the count)",
+        )
+    if valid_only:
+        low_bikes = valid_flag(bikes <= bikes_le, bikes)
+        low_docks = np.where(virtual, np.nan, valid_flag(docks <= docks_le, docks))
+    else:
+        low_bikes = (bikes <= bikes_le).to_numpy()
+        low_docks = np.where(
+            virtual, np.nan, (docks <= docks_le).to_numpy(dtype="float64", na_value=np.nan)
+        )
     work = pd.DataFrame(
         {
             "system_id": df["system_id"].to_numpy(),
             "station_id": df["station_id"].to_numpy(),
-            "_low_bikes": (bikes <= bikes_le).to_numpy(),
+            "_low_bikes": low_bikes,
             "_low_docks": low_docks,
         }
     )

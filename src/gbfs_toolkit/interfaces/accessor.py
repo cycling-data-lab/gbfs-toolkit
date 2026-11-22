@@ -44,8 +44,8 @@ class GBFSAccessor:
     def occupancy(self) -> pd.Series:
         return frames.occupancy(self._df)
 
-    def station_state(self) -> pd.Series:
-        return frames.station_state(self._df)
+    def station_state(self, **kw) -> pd.Series:
+        return frames.station_state(self._df, **kw)
 
     def net_flow(self) -> pd.DataFrame:
         return timeseries.calculate_net_flow(self._df)

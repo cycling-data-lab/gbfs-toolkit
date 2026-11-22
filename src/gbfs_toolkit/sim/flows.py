@@ -13,7 +13,7 @@ from dataclasses import dataclass, field
 import numpy as np
 import pandas as pd
 
-from gbfs_toolkit.core.utils import unix_seconds
+from gbfs_toolkit.core.utils import unix_seconds, warn_default_change
 
 __all__ = [
     "SimConfig",
@@ -43,7 +43,11 @@ class SimConfig:
     default (``rebalancing*``): at a sub-hourly ``internal_minutes`` the truck acts at every
     step whose rounded hour is ``rebalancing_hour`` (five steps at 15 minutes), not once.
     ``scraper_cell_nan`` blanks the bike count of a cell but leaves its dock count at the
-    capacity. The ``inject_*`` arrays replace the synthetic geometry with
+    capacity. Two options correct these behaviours and are off by default: ``rebalancing_once``
+    (the truck acts once a day, at the first step of ``rebalancing_hour``) and
+    ``scraper_blanks_docks`` (a blanked cell is blanked for docks too). Each default becomes
+    ``True`` in 3.0; until then a run whose result would differ and which leaves the option unset
+    emits a ``FutureWarning``. The ``inject_*`` arrays replace the synthetic geometry with
     real stations (used by [`calibrate_city`][gbfs_toolkit.calibrate_city]).
 
     Examples
@@ -82,10 +86,12 @@ class SimConfig:
     rebalancing: bool = True
     rebalancing_hour: int = 4
     rebalancing_strength: float = 0.6
+    rebalancing_once: bool | None = None  # None/False: every step of the hour; True: once a day
     # 3. GBFS data chaos
     ghost_rate: float = 0.0  # fraction of capacity that is unrentable ghost bikes
     scraper_cell_nan: float = 0.0  # fraction of (station, time) cells set to NaN
     scraper_station_outages: int = 0  # whole-station NaN blocks
+    scraper_blanks_docks: bool | None = None  # None/False: docks stay at capacity when blanked
     # 4. exogenous weather shocks
     weather_events: int = 0
     weather_drop: float = 0.1  # departure-demand multiplier during a downpour
@@ -217,6 +223,32 @@ def simulate_city_flows(cfg: SimConfig | None = None, *, return_extras: bool = F
     ghost = np.rint(cfg.ghost_rate * capacity)  # unrentable, always docked
     op_cap = np.maximum(capacity - ghost, 1.0)  # rentable dock budget
 
+    # steps at which the nightly truck acts: every step whose rounded hour is rebalancing_hour
+    # (the 2.x behaviour: five steps at 15 minutes) or, with rebalancing_once, the first of them
+    at_hour = np.array([int(round(h)) == cfg.rebalancing_hour for h in hod], dtype=bool)
+    first_of_block = at_hour & ~np.concatenate([[False], at_hour[:-1]])
+    truck = first_of_block if cfg.rebalancing_once else at_hour
+    if (
+        cfg.rebalancing
+        and cfg.rebalancing_once is None
+        and int(at_hour.sum()) > int(first_of_block.sum())
+    ):
+        warn_default_change(
+            "the nightly rebalancing acts at every step of its hour (compounding)",
+            option="rebalancing_once=False in SimConfig",
+            new="rebalancing_once=True (the truck acts once a day)",
+            stacklevel=2,
+        )
+    if cfg.scraper_blanks_docks is None and (
+        cfg.scraper_cell_nan > 0 or cfg.scraper_station_outages > 0
+    ):
+        warn_default_change(
+            "a blanked cell keeps its dock count at the capacity",
+            option="scraper_blanks_docks=False in SimConfig",
+            new="scraper_blanks_docks=True (the docks are blanked with the bikes)",
+            stacklevel=2,
+        )
+
     # ===================== Phase 2: the engine (single loop over t) =====================
     op_bikes = 0.5 * op_cap  # rentable fluid
     total0 = op_bikes.sum()
@@ -254,7 +286,7 @@ def simulate_city_flows(cfg: SimConfig | None = None, *, return_extras: bool = F
         # nightly rebalancing truck, vectorised and mass-conserving: move surplus -> deficit, total
         # moved = strength * min(surplus, deficit). A real TSP route is not vectorisable; this is
         # its conservative aggregate (bikes taken from full stations are docked at empty ones).
-        if cfg.rebalancing and int(round(hod[t])) == cfg.rebalancing_hour:
+        if cfg.rebalancing and truck[t]:
             dev = op_bikes - target
             surplus = np.maximum(dev, 0.0)
             deficit = np.maximum(-dev, 0.0)
@@ -302,7 +334,11 @@ def simulate_city_flows(cfg: SimConfig | None = None, *, return_extras: bool = F
             "system_id": "synthetic",
             "station_id": np.tile(station_id, steps),
             "num_bikes_available": bm.reshape(-1),
-            "num_docks_available": (capacity[None, :] - np.nan_to_num(bm, nan=0)).reshape(-1),
+            "num_docks_available": (
+                np.where(np.isnan(bm), np.nan, capacity[None, :] - bm)
+                if cfg.scraper_blanks_docks
+                else capacity[None, :] - np.nan_to_num(bm, nan=0)
+            ).reshape(-1),
             "is_renting": 1,
             "is_returning": 1,
             "is_installed": 1,

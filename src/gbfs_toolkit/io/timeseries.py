@@ -25,7 +25,7 @@ import numpy as np
 import pandas as pd
 
 from gbfs_toolkit.core.models import require_columns
-from gbfs_toolkit.core.utils import floor_time, panel_frame
+from gbfs_toolkit.core.utils import floor_time, panel_frame, warn_default_change
 
 __all__ = [
     "append_to_parquet",
@@ -836,6 +836,7 @@ def resample_panel(
     *,
     time_col: str = "fetched_at",
     by: tuple[str, ...] = ("system_id", "station_id"),
+    keep_timezone: bool | None = None,
 ) -> pd.DataFrame:
     """Resample each station series onto a fixed time grid, carrying the last state forward.
 
@@ -849,6 +850,11 @@ def resample_panel(
     The grid is in **UTC**: a tz-aware local-time panel is converted to UTC first, so a ``"1D"``
     bin starts at UTC midnight, not local midnight. Resample, then convert the result with
     ``tz_convert`` (or use ``build_availability_panel(target_tz=...)``) when local days matter.
+    ``keep_timezone=True`` keeps a tz-aware panel in its own zone instead: the grid, and so a
+    ``"1D"`` bin, follows the **local** wall clock (a local day is 23 or 25 hours across a clock
+    change) and the returned time column keeps that zone. The default becomes ``True`` in 3.0;
+    until then a call on a non-UTC panel whose grid would differ and which leaves it unset emits
+    a ``FutureWarning``. A naive column is read as UTC either way.
 
     Parameters
     ----------
@@ -860,6 +866,9 @@ def resample_panel(
         Timestamp column.
     by : tuple of str, default ("system_id", "station_id")
         Grouping keys present in ``panel`` (missing keys are ignored).
+    keep_timezone : bool, optional
+        ``False`` (the 2.x default): convert to UTC first (see above). ``True``: keep the
+        zone of a tz-aware ``time_col``.
 
     Returns
     -------
@@ -888,7 +897,24 @@ def resample_panel(
     keys = [k for k in by if k in df.columns]
     require_columns(df, [*keys, time_col], what="resample_panel")
     out = df.copy()
-    out[time_col] = pd.to_datetime(out[time_col], utc=True)
+    column = out[time_col]
+    aware = isinstance(column.dtype, pd.DatetimeTZDtype)
+    if aware and str(column.dt.tz) != "UTC" and keep_timezone is None:
+        offsets = (
+            column.dt.tz_localize(None) - column.dt.tz_convert("UTC").dt.tz_localize(None)
+        ).unique()
+        try:
+            step = pd.Timedelta(pd.tseries.frequencies.to_offset(freq).nanos, unit="ns")
+        except ValueError:  # a calendar frequency ("MS"): the grids differ
+            step = None
+        if step is None or any(pd.Timedelta(o) % step for o in offsets):
+            warn_default_change(
+                "the grid is computed in UTC, so bins do not start at local boundaries",
+                option="keep_timezone=False in resample_panel",
+                new="keep_timezone=True (the grid follows the local wall clock)",
+            )
+    local = column if (keep_timezone and aware) else pd.to_datetime(column, utc=True)
+    out[time_col] = local
     if not keys:
         resampled = out.set_index(time_col).sort_index().resample(freq).ffill()
         return resampled.reset_index()
