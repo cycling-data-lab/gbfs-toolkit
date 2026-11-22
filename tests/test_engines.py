@@ -435,3 +435,18 @@ def test_read_lake_returns_pandas_arrow_or_a_lazy_relation(tmp_path):
         read_lake(tmp_path, output="duckdb"), "1D", time_col="observed_at_utc"
     )
     assert int(agg["n_obs"].sum()) == len(df)
+
+
+def test_append_from_a_table_writes_one_file_per_day_and_loses_no_row(tmp_path):
+    t = pd.date_range("2026-03-30T22:00Z", periods=72 * 2, freq="30min")  # three days, two months
+    df = pd.DataFrame({"system_id": "a", "station_id": "s", "observed_at_utc": t})
+    table = pa.Table.from_pandas(df, preserve_index=False)
+    touched = write_lake(table, tmp_path / "days")
+    assert touched["rows"].sum() == len(df) and len(read_lake(tmp_path / "days")) == len(df)
+    march = touched[touched["month"] == 3].iloc[0]
+    assert (tmp_path / "days" / march["path"]).is_dir()  # several files: the folder is reported
+    assert len(list_partitions(tmp_path / "days")) == 2
+    assert list_partitions(tmp_path / "days")["files"].max() >= 2
+    merged = write_lake(table, tmp_path / "month", mode="merge")
+    assert (list_partitions(tmp_path / "month")["files"] == 1).all()
+    assert merged["rows"].sum() == len(df)

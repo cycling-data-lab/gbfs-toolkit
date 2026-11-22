@@ -13,6 +13,7 @@ the functions that call it.
 from __future__ import annotations
 
 import glob as _glob
+import os
 import shutil
 import tempfile
 from collections.abc import Iterator, Sequence
@@ -453,7 +454,7 @@ def open_table(source: Any, *, what: str = "This function") -> Table:
             return _ArrowTable(source)
         if isinstance(source, pa.RecordBatch):
             return _ArrowTable(pa.Table.from_batches([source]))
-    if module.startswith("duckdb"):
+    if "duckdb" in module and type(source).__name__ == "DuckDBPyRelation":
         return _RelationTable(source)
     raise TypeError(
         f"{what}: expected a pandas DataFrame, an Arrow table, a DuckDB relation or a path, "
@@ -466,7 +467,9 @@ def relation_of(table: Table) -> Iterator[Any]:
     """A DuckDB relation over ``table``, on a private connection that is closed afterwards.
 
     A relation the caller built is used as it is. Otherwise the connection reads time as UTC
-    and spills to a temporary folder that is removed, never to the working directory.
+    and spills to a temporary folder that is removed, never to the working directory. The
+    environment variables ``GBFS_TOOLKIT_DUCKDB_MEMORY_LIMIT`` (for instance ``"4GB"``) and
+    ``GBFS_TOOLKIT_DUCKDB_THREADS`` cap what DuckDB may use on a small machine.
     """
     if isinstance(table, _RelationTable):
         yield table.rel
@@ -476,6 +479,12 @@ def relation_of(table: Table) -> Iterator[Any]:
     con = duckdb.connect(config={"temp_directory": tmp})
     try:
         con.execute("SET TimeZone = 'UTC'")
+        limit = os.environ.get("GBFS_TOOLKIT_DUCKDB_MEMORY_LIMIT")
+        if limit:
+            con.execute(f"SET memory_limit = {sql_text(limit)}")
+        threads = os.environ.get("GBFS_TOOLKIT_DUCKDB_THREADS")
+        if threads:
+            con.execute(f"SET threads = {int(threads)}")
         yield table.relation(con)
     finally:
         con.close()
