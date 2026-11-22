@@ -259,14 +259,20 @@ turnover), and a network equity/coverage report.
 
 The package is stable and follows semantic versioning. The canonical schema and the public
 API are frozen within a major version, so studies built on the data model and function
-signatures remain reproducible across releases. See the [Changelog](CHANGELOG.md) for the
-current version and full release history.
+signatures remain reproducible across releases. The one exception is the flow simulator
+(`SimConfig`, `simulate_city_flows` and the functions that export or calibrate it), which is
+marked experimental and may change in a minor release. What counts as public, how a
+deprecation is announced and how errors and logging behave are written in the
+[API policy](https://cycling-data-lab.github.io/gbfs-toolkit/api-policy/); the
+[Changelog](CHANGELOG.md) has the release history, and
+[`RELEASING.md`](https://github.com/cycling-data-lab/gbfs-toolkit/blob/main/RELEASING.md)
+the release process and the supported Python versions.
 
 **Dependency policy.** Dependencies carry lower bounds only, following
 [SPEC 0](https://scientific-python.org/specs/spec-0000/): speculative upper caps are
 avoided because they cause resolution conflicts without protecting against real breakage.
 Python and core-dependency support tracks SPEC 0 / NEP 29 (roughly the last three minor
-Python releases and the last two years of numpy/scipy/pandas). CI tests Python 3.10 to 3.13.
+Python releases and the last two years of numpy/scipy/pandas). CI tests Python 3.10 to 3.14.
 
 ## Methodology & limitations
 
