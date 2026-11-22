@@ -10,7 +10,7 @@ import numpy as np
 import pandas as pd
 
 from gbfs_toolkit.core.models import require_columns
-from gbfs_toolkit.core.utils import project_meters
+from gbfs_toolkit.core.utils import floor_time, project_meters
 from gbfs_toolkit.io.timeseries import calculate_net_flow
 
 __all__ = [
@@ -158,7 +158,7 @@ def cumulative_imbalance(panel: pd.DataFrame, *, reset: str | None = "1D") -> pd
     filled = flow["net_flow"].fillna(0.0)
     groupers = [flow["system_id"], flow["station_id"]]
     if reset:
-        groupers.append(pd.to_datetime(flow["fetched_at"]).dt.floor(reset))
+        groupers.append(floor_time(pd.to_datetime(flow["fetched_at"]), reset))
     flow["cumulative_drift"] = filled.groupby(groupers).cumsum()
     return flow.reset_index(drop=True)
 
@@ -289,7 +289,7 @@ def fleet_turnover_proxy(panel: pd.DataFrame, *, freq: str = "1D") -> pd.DataFra
     """
     flow = calculate_net_flow(panel)
     require_columns(flow, ["num_bikes_available", "fetched_at"], what="fleet_turnover_proxy")
-    flow = flow.assign(period=pd.to_datetime(flow["fetched_at"]).dt.floor(freq))
+    flow = flow.assign(period=floor_time(pd.to_datetime(flow["fetched_at"]), freq))
     activity = (
         flow.assign(_a=flow["net_flow"].abs()).groupby(["system_id", "period"])["_a"].sum().div(2.0)
     )

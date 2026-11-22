@@ -30,6 +30,7 @@ import numpy as np
 import pandas as pd
 
 from gbfs_toolkit.core.models import coerce_schema, validate_schema
+from gbfs_toolkit.core.utils import unix_seconds
 
 __all__ = ["simulate_city"]
 
@@ -389,7 +390,7 @@ def simulate_city(
             "region_id": member.astype(str),
         }
     )
-    last_reported = np.asarray(grid.view("int64")) // 1_000_000_000
+    last_reported = unix_seconds(grid)
     status = pd.DataFrame(
         {
             "system_id": system_id,

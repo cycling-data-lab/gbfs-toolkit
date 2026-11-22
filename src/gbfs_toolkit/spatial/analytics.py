@@ -14,7 +14,7 @@ import numpy as np
 import pandas as pd
 
 from gbfs_toolkit.core.models import SchemaError, require_columns
-from gbfs_toolkit.core.utils import EARTH_RADIUS_M, num, panel_frame, project_meters
+from gbfs_toolkit.core.utils import EARTH_RADIUS_M, floor_time, num, panel_frame, project_meters
 from gbfs_toolkit.spatial.geometry import GeoKDTree, haversine_m
 
 __all__ = [
@@ -361,7 +361,8 @@ def spatial_center_of_mass(
     w = pd.to_numeric(df[weight_col], errors="coerce").fillna(0.0).to_numpy()
     lat = pd.to_numeric(df["lat"], errors="coerce").to_numpy()
     lon = pd.to_numeric(df["lon"], errors="coerce").to_numpy()
-    period = pd.to_datetime(df[time_col]).dt.floor(freq)
+    w = np.where(np.isfinite(lat) & np.isfinite(lon), w, 0.0)  # no coordinates, no weight
+    period = floor_time(pd.to_datetime(df[time_col]), freq)
     work = pd.DataFrame({"period": period.to_numpy(), "_wlat": w * lat, "_wlon": w * lon, "_w": w})
     agg = work.groupby("period").sum()
     out = pd.DataFrame(
