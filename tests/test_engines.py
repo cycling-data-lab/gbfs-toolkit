@@ -319,3 +319,119 @@ def test_an_empty_or_out_of_window_source_gives_an_empty_coverage(lake_df):
     table = pa.Table.from_pandas(lake_df, preserve_index=False)
     assert quality.daily_coverage(table, start="2030-01-01").empty
     assert quality.daily_coverage(table.slice(0, 0)).empty
+
+
+# ----------------------------------------------------------------------------- store
+
+from gbfs_toolkit.store import list_partitions, read_lake  # noqa: E402
+
+
+def month_frame():
+    t = pd.to_datetime(
+        [
+            "2026-01-31T23:59:00Z",
+            "2026-02-01T00:01:00Z",
+            "2026-02-15T12:00:00Z",
+            "2026-02-15T12:00:00Z",
+        ]
+    )
+    return pd.DataFrame(
+        {
+            "system_id": ["a", "a", "b", "b"],
+            "station_id": ["s1", "s1", "s2", "s2"],
+            "observed_at_utc": t,
+            "num_bikes_available": pd.array([1, None, 3, 3], dtype="Int64"),
+        }
+    )
+
+
+def lake_rows(root):
+    got = read_lake(root).sort_values(["system_id", "observed_at_utc"]).reset_index(drop=True)
+    return got.astype({"system_id": "object"})
+
+
+def test_write_lake_from_any_source_gives_the_same_lake(tmp_path):
+    df = month_frame()
+    table = pa.Table.from_pandas(df, preserve_index=False)
+    reference = tmp_path / "ref"
+    write_lake(df, reference)
+    expected = lake_rows(reference)
+    sources = {
+        "arrow": table,
+        "dataset": __import__("pyarrow.dataset", fromlist=["dataset"]).dataset(table),
+        "relation": duckdb.from_arrow(table),
+    }
+    df.to_parquet(tmp_path / "flat.parquet", index=False)
+    sources["parquet file"] = tmp_path / "flat.parquet"
+    sources["glob"] = str(tmp_path / "*.parquet")
+    for name, src in sources.items():
+        root = tmp_path / f"lake-{name.replace(' ', '-')}"
+        touched = write_lake(src, root)
+        assert touched[["system_id", "year", "month", "rows"]].values.tolist() == [
+            ["a", 2026, 1, 1],
+            ["a", 2026, 2, 1],
+            ["b", 2026, 2, 2],
+        ], name
+        got = lake_rows(root)
+        assert got["num_bikes_available"].astype("float64").fillna(-1).tolist() == (
+            expected["num_bikes_available"].astype("float64").fillna(-1).tolist()
+        ), name
+        assert got["station_id"].tolist() == expected["station_id"].tolist(), name
+        assert (got["observed_at_utc"].to_numpy() == expected["observed_at_utc"].to_numpy()).all()
+
+
+def test_a_lake_can_be_written_from_another_lake_and_merge_is_idempotent(tmp_path):
+    df = month_frame()
+    first = tmp_path / "first"
+    write_lake(df, first)
+    write_lake(df, first)  # appended twice: duplicates on purpose
+    assert len(read_lake(first)) == 2 * len(df)
+    second = tmp_path / "second"
+    write_lake(first, second, mode="merge")
+    assert len(read_lake(second)) == 3  # the exact duplicate of b's rows is dropped, once
+    write_lake(first, second, mode="merge")
+    assert len(read_lake(second)) == 3
+    assert (list_partitions(second)["files"] == 1).all()
+    replaced = tmp_path / "replaced"
+    write_lake(first, replaced, mode="replace")
+    write_lake(first, replaced, mode="replace")
+    assert len(read_lake(replaced)) == 2 * len(df)
+
+
+def test_write_lake_from_a_table_needs_a_timestamp(tmp_path):
+    bad = pa.table({"system_id": ["a"], "observed_at_utc": ["2026-03-01T00:00:00Z"]})
+    with pytest.raises(ValueError, match="timestamp"):
+        write_lake(bad, tmp_path / "lake")
+    naive = pa.table(
+        {
+            "system_id": ["a"],
+            "observed_at_utc": pa.array([pd.Timestamp("2026-03-01").to_pydatetime()]),
+        }
+    )
+    write_lake(naive, tmp_path / "ok")
+    assert str(read_lake(tmp_path / "ok")["observed_at_utc"].dt.tz) == "UTC"
+
+
+def test_read_lake_returns_pandas_arrow_or_a_lazy_relation(tmp_path):
+    df = month_frame()
+    write_lake(df, tmp_path)
+    window = {"systems": ["a", "b"], "start": "2026-02-01", "end": "2026-02-16"}
+    pandas_out = read_lake(tmp_path, **window)
+    arrow_out = read_lake(tmp_path, output="arrow", **window)
+    relation = read_lake(tmp_path, output="duckdb", **window)
+    assert isinstance(arrow_out, pa.Table) and "year" not in arrow_out.column_names
+    assert (
+        len(pandas_out)
+        == arrow_out.num_rows
+        == relation.aggregate("count(*)").fetchall()[0][0]
+        == 3
+    )
+    only_a = read_lake(tmp_path, output="duckdb", systems=["a"], columns=["station_id"])
+    assert only_a.columns == ["station_id"] and len(only_a.df()) == 2
+    with pytest.raises(ValueError, match="output"):
+        read_lake(tmp_path, output="polars")
+    # the relation is a valid source for the other modules
+    agg = aggregate_availability(
+        read_lake(tmp_path, output="duckdb"), "1D", time_col="observed_at_utc"
+    )
+    assert int(agg["n_obs"].sum()) == len(df)
