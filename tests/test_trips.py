@@ -11,6 +11,7 @@ import pytest
 from gbfs_toolkit.trips import (
     FORMATS,
     TRIP_COLUMNS,
+    TRIP_DTYPES,
     TripFormat,
     detect_format,
     iter_trips,
@@ -224,12 +225,12 @@ def test_format_selection_errors_and_custom_format():
     with pytest.raises(ValueError, match="cannot tell"):
         normalize_trips(pd.DataFrame({"a": [1]}), tz="UTC")
     with pytest.raises(ValueError, match="unknown trip format"):
-        normalize_trips(MODERN, "velomagg", tz="UTC")
+        normalize_trips(MODERN, "nonesuch", tz="UTC")
     with pytest.raises(ValueError, match="must name"):
         TripFormat("x", {"ride_id": ["id"]})
     with pytest.raises(ValueError, match="unknown common column"):
         TripFormat("x", {"started_at": ["a"], "ended_at": ["b"], "user_id": ["u"]})
-    assert "velomagg" not in FORMATS  # no format is invented
+    assert set(FORMATS) == {"lyft", "urban_sharing", "bts", "velomagg"}  # only shown formats
     fmt = TripFormat(
         "minutes",
         {"started_at": ["t0"], "ended_at": ["t1"], "ride_id": ["id"]},
@@ -285,3 +286,109 @@ def test_empty_file_gives_an_empty_frame_with_the_schema(tmp_path):
         pass
     out = read_trips(tmp_path / "e.zip", tz="UTC")
     assert out.empty and list(out.columns) == TRIP_COLUMNS
+
+
+# --- Vélomagg (Montpellier): a synthetic extract in the published format ------------------------
+
+VELOMAGG_HEADER = (
+    "﻿Departure temperature (°C),Return temperature (°C),Departure,Return,Bike,"
+    "Departure station,Return station,Formula,Covered distance (m),Duration (sec.),"
+    "Departure battery voltage (mV),Return battery voltage (mV),Departure slot,Return slot,"
+    "Lock duration (sec.),Number of bike locks,Manager,new_account\n"
+)
+# Invented rows (no real trip). Account numbers are recognisable so a leak is detectable.
+VELOMAGG_ROWS = (
+    "11,11,2025-03-29 23:55:38,2025-03-30 00:12:27,230,001 Place Exemple,"
+    "002 CafÃ© de la Gare,Ticket,2909,1001,3855,4105,219,4707,0,0,False,900001\n"
+    "9,10,2025-03-30 01:49:09,2025-03-30 03:25:26,8130,003 Rue de l'Ã\x89cusson,"
+    "001 Place Exemple,Ticket,8780,2168,4032,4222,102,5551,0,0,True,900002\n"
+    "10,9,2025-03-30 02:30:00,,618,,004 Sans numero,Ticket,0,17,3906,3892,3813,3813,0,0,,900003\n"
+    "10,9,2025-06-01 08:00:00,2025-06-01 08:10:00,619,001 Place Exemple,001 Place Exemple,"
+    "Ticket,1200.5,600,3906,3892,3813,3813,0,0,False,900001\n"
+)
+ACCOUNTS = ("900001", "900002", "900003")
+
+
+def velomagg_file(tmp_path):
+    path = tmp_path / "courses.csv"
+    path.write_bytes((VELOMAGG_HEADER + VELOMAGG_ROWS).encode("utf-8"))
+    return path
+
+
+def test_velomagg_is_detected_and_read_into_the_common_schema(tmp_path):
+    path = velomagg_file(tmp_path)
+    assert detect_format(pd.read_csv(path, nrows=0, encoding="utf-8-sig").columns) == "velomagg"
+    out = read_trips(path, tz="Europe/Paris", network="velomagg")
+    assert list(out.columns) == TRIP_COLUMNS and len(out) == 4
+    first = out.iloc[0]
+    assert first["start_station_id"] == "001" and first["start_station_name"] == "Place Exemple"
+    assert first["end_station_id"] == "002" and first["end_station_name"] == "Café de la Gare"
+    assert out.loc[1, "start_station_name"] == "Rue de l'Écusson"
+    assert pd.isna(out.loc[2, "start_station_id"]) and pd.isna(out.loc[2, "start_station_name"])
+    assert out.loc[2, "end_station_id"] == "004" and out.loc[2, "end_station_name"] == "Sans numero"
+    assert out["distance_m"].tolist() == [2909.0, 8780.0, 0.0, 1200.5]
+    assert out["duration_s"].tolist() == [1001.0, 2168.0, 17.0, 600.0]
+    assert pd.isna(out.loc[2, "ended_at"])  # a trip still open keeps an empty return
+    assert out["source_file"].unique().tolist() == ["courses.csv"]
+
+
+def test_velomagg_times_are_local_with_clock_change_flags(tmp_path):
+    out = read_trips(velomagg_file(tmp_path), tz="Europe/Paris")
+    # 2025-03-29 23:55:38 local (+01:00) is 22:55:38 UTC; 2025-06-01 08:00 local (+02:00) is 06:00 UTC
+    assert out.loc[0, "started_at"] == pd.Timestamp("2025-03-29 22:55:38", tz="UTC")
+    assert out.loc[3, "started_at"] == pd.Timestamp("2025-06-01 06:00:00", tz="UTC")
+    # 02:30 on the night of the change does not exist: shifted to 03:00 local and flagged
+    assert out.loc[2, "started_at_tz_flag"] == "nonexistent"
+    assert out.loc[2, "started_at"] == pd.Timestamp("2025-03-30 01:00:00", tz="UTC")
+    with pytest.raises(ValueError, match="tz="):
+        read_trips(velomagg_file(tmp_path))  # no default zone
+
+
+def test_velomagg_staff_flag_is_a_nullable_boolean(tmp_path):
+    out = read_trips(velomagg_file(tmp_path), tz="Europe/Paris")
+    assert str(out["is_operator_staff"].dtype) == "boolean"
+    assert out["is_operator_staff"].tolist()[:2] == [False, True]
+    assert pd.isna(out.loc[2, "is_operator_staff"])  # empty in the file: unknown, not False
+    # the other formats carry no flag: empty, never invented
+    assert pd.isna(normalize_trips(MODERN, tz="UTC")["is_operator_staff"]).all()
+
+
+def test_velomagg_never_carries_the_account_or_the_bike(tmp_path):
+    """The account number tells that two trips are by one person; it is dropped, with no option."""
+    out = read_trips(velomagg_file(tmp_path), tz="Europe/Paris")
+    assert set(out.columns) == set(TRIP_COLUMNS)
+    forbidden = {"new_account", "account", "bike", "bike_id"}
+    assert not forbidden & {c.lower() for c in out.columns}
+    text = out.astype(str).to_csv()
+    assert not any(a in text for a in ACCOUNTS)
+    # nor through the streaming reader
+    streamed = pd.concat(list(iter_trips(velomagg_file(tmp_path), tz="Europe/Paris", chunksize=2)))
+    assert not any(a in streamed.astype(str).to_csv() for a in ACCOUNTS)
+    # nor if the format is described by hand
+    fmt = TripFormat("mine", {"started_at": ["departure"], "ended_at": ["return"]})
+    mine = read_trips(velomagg_file(tmp_path), fmt, tz="Europe/Paris")
+    assert not any(a in mine.astype(str).to_csv() for a in ACCOUNTS)
+    with pytest.raises(TypeError):
+        read_trips(velomagg_file(tmp_path), tz="Europe/Paris", keep_account=True)  # type: ignore[call-arg]
+
+
+def test_a_correct_utf8_file_is_not_damaged_by_the_text_repair():
+    raw = pd.DataFrame(
+        {
+            "Departure": ["2025-06-01 08:00:00"],
+            "Return": ["2025-06-01 08:10:00"],
+            "Departure station": ["001 Comédie"],
+            "Return station": ["002 Ã"],  # a lone mojibake lead byte stays as it is
+        }
+    )
+    out = normalize_trips(raw, "velomagg", tz="Europe/Paris")
+    assert out.loc[0, "start_station_name"] == "Comédie"
+    assert out.loc[0, "end_station_name"] == "Ã"
+
+
+def test_trip_columns_have_declared_types(tmp_path):
+    out = read_trips(velomagg_file(tmp_path), tz="Europe/Paris")
+    assert set(TRIP_DTYPES) == set(TRIP_COLUMNS)
+    assert str(out["distance_m"].dtype) == "float64" and str(out["duration_s"].dtype) == "float64"
+    assert str(out["started_at"].dtype).endswith("UTC]")
+    assert pd.api.types.is_string_dtype(out["start_station_id"])
