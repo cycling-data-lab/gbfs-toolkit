@@ -8,11 +8,15 @@ version-independent data model you can reuse across studies.
 Quick start
 -----------
 
-    >>> import json, gbfs_toolkit as gb
-    >>> raw = json.load(open("station_information.json"))
-    >>> stations = gb.to_canonical_station_info(raw, system_id="velib")
-    >>> verdict = gb.audit_static(stations)
+    >>> import gbfs_toolkit as gb
+    >>> stations, status = gb.load_example()      # bundled sample, no network
+    >>> verdict = gb.audit_static(stations)       # A1-A7, one row per station
     >>> clean = stations[~verdict["flagged"].to_numpy()]
+    >>> len(clean) <= len(stations)
+    True
+
+From a feed of your own, ``gb.to_canonical_station_info(raw_json, system_id=...)``
+builds the same canonical frame from a parsed ``station_information.json``.
 """
 
 from importlib.metadata import PackageNotFoundError
